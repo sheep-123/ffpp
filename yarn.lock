@@ -6133,7 +6133,7 @@ immediate@~3.0.5:
 
 immutable@^4.0.0:
   version "4.3.7"
-  resolved "https://registry.npmmirror.com/immutable/-/immutable-4.3.7.tgz#c70145fc90d89fb02021e65c84eb0226e4e5a381"
+  resolved "https://registry.npmmirror.com/immutable/-/immutable-4.3.7.tgz"
   integrity sha512-1hqclzwYwjRDFLjcFxOM5AYkkG0rpFPpr1RLPMEuGczoS7YA8gLhy8SWXYRAA/XwfEHpfo3cw5JGioS32fnMRw==
 
 import-fresh@^3.2.1:
@@ -9529,7 +9529,7 @@ sane@^4.0.3:
 
 sass-loader@10:
   version "10.5.2"
-  resolved "https://registry.npmmirror.com/sass-loader/-/sass-loader-10.5.2.tgz#1ca30534fff296417b853c7597ca3b0bbe8c37d0"
+  resolved "https://registry.npmmirror.com/sass-loader/-/sass-loader-10.5.2.tgz"
   integrity sha512-vMUoSNOUKJILHpcNCCyD23X34gve1TS7Rjd9uXHeKqhvBG39x6XbswFDtpbTElj6XdMFezoWhkh5vtKudf2cgQ==
   dependencies:
     klona "^2.0.4"
@@ -9540,7 +9540,7 @@ sass-loader@10:
 
 sass@1.77.2:
   version "1.77.2"
-  resolved "https://registry.npmmirror.com/sass/-/sass-1.77.2.tgz#18d4ed2eefc260cdc8099c5439ec1303fd5863aa"
+  resolved "https://registry.npmmirror.com/sass/-/sass-1.77.2.tgz"
   integrity sha512-eb4GZt1C3avsX3heBNlrc7I09nyT00IUuo4eFhAbeXWU2fvA7oXI53SxODVAA+zgZCk9aunAZgO+losjR3fAwA==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
@@ -10798,7 +10798,7 @@ uuid@^8.3.2:
 
 uview-ui@^2.0.38:
   version "2.0.38"
-  resolved "https://registry.npmmirror.com/uview-ui/-/uview-ui-2.0.38.tgz#02a0585f2c966a81c2997c79cfff0e8538a89c61"
+  resolved "https://registry.npmmirror.com/uview-ui/-/uview-ui-2.0.38.tgz"
   integrity sha512-6egHDf9lXHKpG3hEjRE0vMx4+VWwKk/ReTf5x18KrIKqdvdPRqO3+B8Unh7vYYwrIxzAWIlmhZ9RJpKI/4UqPQ==
 
 v8-to-istanbul@^4.1.3:
@@ -10831,6 +10831,11 @@ verror@1.10.0:
     assert-plus "^1.0.0"
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
+
+vk-uview-ui@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.npmmirror.com/vk-uview-ui/-/vk-uview-ui-1.5.2.tgz#15c8f6a68ff700d8ebfc346d7bccb2bf99da1297"
+  integrity sha512-RRZgiEAc8qaUerSi7lSbrkCoLBgRUwFQHwP1V44pJO7Js+7HeHFEkkpPrtkOi14hl4CntR4qIhIDvaKmIJqVsw==
 
 vm-browserify@^1.0.1:
   version "1.1.2"

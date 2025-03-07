@@ -1,3 +1,3 @@
 <template>
-    <view>登录</view>
+    <view class=""></view>
 </template>

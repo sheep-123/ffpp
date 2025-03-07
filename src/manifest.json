@@ -54,13 +54,26 @@
     "quickapp" : {},
     /* 快应用特有相关 */
     "mp-weixin" : {
-        /* 微信小程序特有相关 */
-        "appid" : "wx573095a4f5c81cc2",
-        "setting" : {
-            "urlCheck" : false,
-            "minified" : true
-        },
-        "usingComponents" : true
+      /* 微信小程序特有相关 */
+      "appid": "wx71d4382aa92d117c",
+      "setting": {
+        "urlCheck": false,
+        "minified": true
+      },
+      "usingComponents": true,
+      "permission": {
+        "scope.userLocation": {
+          "desc": "需要用到定位"
+        }
+      },
+      "requiredPrivateInfos": [
+        "getLocation" // 添加定位权限声明
+      ],
+      "permission": {
+        "scope.userLocation": {
+          "desc": "您的位置信息将用于展示附近活动"
+        }
+      }
     },
     "mp-alipay" : {
         "usingComponents" : true

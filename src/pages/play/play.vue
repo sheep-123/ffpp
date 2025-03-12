@@ -5,10 +5,10 @@
       <view class="item">
         <view class="rank-num">1st</view>
         <u-image
-          src="/static/images/avatar.png"
+          src="/static/images/boy.jpg"
           shape="circle"
-          width="100"
-          height="100"
+          width="40px"
+          height="40px"
         ></u-image>
         <view class="name">健身小趴菜</view>
         <view class="score">
@@ -19,10 +19,10 @@
       <view class="item">
         <view class="rank-num">1st</view>
         <u-image
-          src="/static/images/avatar.png"
+          src="/static/images/boy.jpg"
           shape="circle"
-          width="100"
-          height="100"
+          width="40px"
+          height="40px"
         ></u-image>
         <view class="name">健身小趴菜</view>
         <view class="score">
@@ -33,10 +33,10 @@
       <view class="item">
         <view class="rank-num">1st</view>
         <u-image
-          src="/static/images/avatar.png"
+          src="/static/images/boy.jpg"
           shape="circle"
-          width="100"
-          height="100"
+          width="40px"
+          height="40px"
         ></u-image>
         <view class="name">健身小趴菜</view>
         <view class="score">
@@ -45,41 +45,54 @@
         </view>
       </view>
     </view>
-    <u-sticky offset-top="100" style="background-color: #f3f3f4">
-      <view class="search">
+      <view class="search" id="search">
         <view class="item">
-          <u-search placeholder="请输入赛事关键词" v-model="keyword"></u-search>
+          <u-input
+            placeholder="请输入赛事关键词"
+            prefixIcon="search"
+            prefixIconStyle="font-size: 22px;color: #909399"
+            shape="circle"
+          >
+            <template slot="suffix">
+              <u-button text="搜索" color="#EC384A" shape="circle"></u-button>
+            </template>
+          </u-input>
         </view>
       </view>
-    </u-sticky>
 
-    <u-sticky offset-top="165">
-      <view class="type">
-        <view class="item">
-          <view class="left">
-            <u-dropdown>
-              <u-dropdown-item
-                v-model="value1"
-                title="商圈"
-                :options="options1"
-              ></u-dropdown-item>
-              <u-dropdown-item
-                v-model="value2"
-                title="类型"
-                :options="options2"
-              ></u-dropdown-item>
-              <u-dropdown-item
-                v-model="value3"
-                title="默认排序"
-                :options="options3"
-              ></u-dropdown-item>
-            </u-dropdown>
-          </view>
+    <u-navbar v-if="isSticky">
+      <view style="margin-left: 16px">
+        <u-search
+          placeholder="请输入赛事关键词"
+          v-model="keyword"
+          bg-color="#F7F7F7"
+          :show-action="false"
+        ></u-search>
+      </view>
+    </u-navbar>
 
-          <view class="right">
-            <image src="/static/images/location.png" />
-            <view class="value">广州市</view>
+    <u-sticky>
+      <view class="type" :class="{ sticky: isSticky }">
+        <view class="left">
+          <view class="item">
+            <text>商圈</text>
+            <u-image src="/static/images/down.png" width="12px" height="12px">
+            </u-image>
           </view>
+          <view class="item">
+            <text>类型</text>
+            <u-image src="/static/images/down.png" width="12px" height="12px">
+            </u-image>
+          </view>
+          <view class="item">
+            <text>默认排序</text>
+            <u-image src="/static/images/down.png" width="12px" height="12px">
+            </u-image>
+          </view>
+        </view>
+        <view class="right">
+          <image src="/static/images/location.png" />
+          <view class="value">广州市</view>
         </view>
       </view>
     </u-sticky>
@@ -88,7 +101,7 @@
       <view class="item">
         <view class="left">
           <image
-            src="/static/images/04.jpg"
+            src="/static/images/02.jpg"
             style="width: 90px; height: 90px"
           />
           <view class="buttom">
@@ -170,7 +183,7 @@
       <view class="item">
         <view class="left">
           <image
-            src="/static/images/04.jpg"
+            src="/static/images/03.jpg"
             style="width: 90px; height: 90px"
           />
           <view class="buttom">
@@ -461,7 +474,33 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      isSticky: false,
+      keyword: "",
+    };
+  },
+  mounted() {
+    this.initIntersectionObserver();
+  },
+  methods: {
+    fix() {
+      this.isSticky = true;
+      console.log(513515631);
+    },
+    unfix() {
+      this.isSticky = false;
+    },
+    clear() {
+      this.keyword = "";
+    },
+    initIntersectionObserver() {
+      this.$nextTick(() => {
+        this.observer = uni.createIntersectionObserver(this);
+        this.observer.relativeToViewport().observe("#search", (res) => {
+          this.isSticky = res.intersectionRatio <= 0;
+        });
+      });
+    },
   },
 };
 </script>
@@ -529,24 +568,45 @@ export default {
     }
   }
 
+  .type.sticky {
+    background-color: #ffffff;
+  }
+
   .type {
-    width: 100%;
+    width: 90%;
+    margin: 10px auto;
+    background-color: #f7f7f7;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-    background-color: #F7F7F7;
-
-    .item {
-      width: 90%;
-      margin: auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
     .left {
-      width: 70%;
+      display: flex;
+      align-items: center;
+      font-weight: 400;
+      font-size: 12px;
+      color: rgba(29, 35, 38, 0.6);
+
+      .item:nth-child(1) {
+        border-right: 1px solid #e6e6e6;
+      }
+      .item:nth-child(2) {
+        border-right: 1px solid #e6e6e6;
+      }
+      .item {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        width: 70px;
+        justify-content: center;
+      }
     }
     .right {
       display: flex;
       align-items: center;
+      font-weight: 400;
+      font-size: 12px;
+      color: rgba(29, 35, 38, 0.5);
       image {
         width: 16px;
         height: 16px;
@@ -560,6 +620,7 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    padding-bottom: 60px;
 
     .item {
       display: flex;
@@ -686,9 +747,5 @@ export default {
       }
     }
   }
-}
-
-:deep(.u-sticky) {
-  background-color: #f3f3f4;
 }
 </style>

@@ -1,25 +1,56 @@
 <template>
   <view class="box">
-    <view class="search" v-if="!isMapExpanded">
-      <!-- <u-input
-        placeholder="搜搜你感兴趣的~"
-        prefixIcon="/static/images/search.png"
-        suffixIcon="/static/images/scan.png"
-        shape="circle"
-      ></u-input> -->
-      <u-search placeholder="搜搜你感兴趣的~" v-model="keyword"></u-search>
-    </view>
-    <view class="search-y" v-else>
-      <image src="/static/images/left.png" @click="back" />
-      <!-- <u-input
-        placeholder="搜搜你感兴趣的~"
-        prefixIcon="/static/images/search.png"
-        shape="circle"
-        border="none"
-      >
-      </u-input> -->
-      <u-search placeholder="搜搜你感兴趣的~" v-model="keyword"></u-search>
-    </view>
+    <u-navbar  v-if="isSticky && !isMapExpanded">
+      <view slot="left">
+        <view class="search" id="search">
+          <u-search
+            placeholder="搜搜你感兴趣的~"
+            v-model="keyword"
+            :showAction="false"
+            @clear="clear"
+            bgColor="#F7F7F7"
+          ></u-search>
+        </view>
+      </view>
+    </u-navbar>
+    <u-navbar  bgColor="rgba(0,0,0,0)" v-else>
+      <view slot="left">
+        <view class="search" v-if="!isMapExpanded">
+          <u-search
+            placeholder="搜搜你感兴趣的~"
+            v-model="keyword"
+            :showAction="false"
+            @clear="clear"
+            bgColor="#F5F7F5"
+            borderColor="#ffffff"
+          ></u-search>
+        </view>
+        <view class="search-y" v-else>
+          <image src="/static/images/left.png" @click="back" />
+
+          <u-search
+            placeholder="搜搜你感兴趣的~"
+            v-model="keyword"
+            :show-action="false"
+            bg-color="#FFFFFF"
+            @clear="clear"
+          ></u-search>
+        </view>
+      </view>
+    </u-navbar>
+
+    <!-- <view class="v-title" v-if="isSticky && !isMapExpanded">
+      <view class="first">
+        <image src="/static/images/location.png" />
+        <image src="/static/images/near.png" />
+      </view>
+      <view class="item">关注</view>
+      <view class="item">美式橄榄球</view>
+      <view class="item">飞盘</view>
+      <view class="item">桌游</view>
+      <view class="item">电竞</view>
+      <image src="/static/images/more.png" class="more" @click="edit"></image>
+    </view> -->
 
     <map
       id="myMap"
@@ -27,7 +58,7 @@
       :longitude="longitude"
       :markers="markers"
       :scale="18"
-      v-show="!isSticky"
+      v-if="!isSticky||isMapExpanded"
     >
     </map>
 
@@ -43,12 +74,8 @@
       <view class="value">下拉试试</view>
     </view>
 
-    <view
-      class="content"
-      :class="{ sticky: isSticky }"
-      :style="{ transform: `translateY(${moveY}px)` }"
-    >
-      <view class="title">
+    <view class="content" :style="{ transform: `translateY(${moveY}px)` }">
+      <view class="title" ref="title" id="title">
         <view class="first">
           <image src="/static/images/location.png" />
           <image src="/static/images/near.png" />
@@ -197,8 +224,8 @@
 export default {
   data() {
     return {
-      latitude: 23.099994,
-      longitude: 113.32452,
+      latitude: 23,
+      longitude: 113,
       markers: [
         {
           id: 0,
@@ -233,24 +260,33 @@ export default {
           },
         },
       ],
-      isMapExpanded: false,
-      isSticky: false,
-      dragStartY: 0, //下拉
-      currentTranslate: 0,
+      isMapExpanded: false, //地图展开
+      isSticky: false, //吸顶状态
+      dragStartY: 0, //下拉开始的位置
       isDragging: false, //下拉状态
       screenHeight: 0, //屏幕高度
-      moveY: 0,
-      upDragY: 0, //上拉
-      isUpDragging: false, //上拉状态
+      moveY: 0, //下拉距离
+      keyword: "",
+      isAndroid: false,
     };
   },
   onLoad() {
     this.Location();
+    const systemInfo = uni.getSystemInfoSync();
+    console.log(systemInfo.osName);
+    if (systemInfo.osName === "android") {
+      this.isAndroid = true;
+      console.log(this.isAndroid);
+    }
   },
   onReady() {
     const systemInfo = uni.getSystemInfoSync();
     this.screenHeight = systemInfo.windowHeight;
   },
+  mounted() {
+    this.initIntersectionObserver();
+  },
+
   methods: {
     async Location() {
       try {
@@ -292,52 +328,33 @@ export default {
       this.isMapExpanded = false;
       this.moveY = 0;
     },
-    contentStart(e) {
-      this.isUpDragging = true;
-      this.upDragY = e.touches[0].clientY;
-    },
-    contentMove(e) {
-      if (!this.isUpDragging) return;
-      const deltaY = e.touches[0].clientY - this.upDragY;
-      // 增加滑动范围限制
-      if (deltaY < 0 && deltaY <= this.screenHeight) {
-        this.moveY = deltaY;
-      }
-    },
-    contentEnd() {
-      this.isUpDragging = false;
-      // 如果content的位置超过了一定的阈值，将其固定在顶部
-      if (this.moveY < -50) {
-        this.isSticky = true;
-      }
-    },
+
     edit() {
       uni.navigateTo({
         url: "/pages/index/editSport",
-      }); 
-    }
+      });
+    },
+
+    initIntersectionObserver() {
+      this.$nextTick(() => {
+        this.observer = uni.createIntersectionObserver(this);
+        this.observer.relativeToViewport().observe("#title", (res) => {
+          this.isSticky = res.intersectionRatio <= 0;
+        });
+      });
+    },
+
+    clear() {
+      this.keyword = "";
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.content.sticky {
-  position: fixed;
-  top: 12%;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 0;
-  transform: none !important;
-  z-index: 9999;
-  box-shadow: none;
-  border: none;
-  height: auto;
-  overflow: auto;
-}
 .content {
+  // display: none;
   position: absolute;
-  z-index: 999999;
   top: 30%;
   width: 100%;
   border-radius: 30px;
@@ -345,10 +362,11 @@ export default {
   height: auto;
   box-shadow: 0px -2px 8px 0px rgba(98, 120, 134, 0.2);
   border: 2px solid #ffffff;
-  transition: all linear;
+  margin-bottom: 60px;
   overflow: hidden;
 
   .title {
+    width: 100%;
     display: flex;
     padding: 10px;
     align-items: center;
@@ -373,6 +391,7 @@ export default {
       font-family: "PING FANG SHAO HUA";
     }
   }
+
   .main {
     column-count: 2;
     column-gap: 10px;
@@ -435,22 +454,43 @@ export default {
   height: 16px;
 }
 
+.v-title {
+  position: fixed;
+  top: 0;
+  z-index: 99999999999;
+  width: 100%;
+  display: flex;
+  padding: 10px;
+  align-items: center;
+  justify-content: space-evenly;
+  background-color: #ffffff;
+  .first {
+    display: flex;
+    align-items: center;
+    image:nth-child(1) {
+      width: 18px;
+      height: 18px;
+    }
+    image:nth-child(2) {
+      width: 36px;
+      height: 15px;
+    }
+  }
+  .item {
+    font-size: 14px;
+    color: rgba(29, 35, 38, 0.5);
+    font-family: "PING FANG SHAO HUA";
+  }
+}
+
 .search {
-  position: sticky;
-  z-index: 99999999;
-  width: 230px;
-  top: 6%;
-  left: 2%;
-  background: rgba(255, 255, 255, 0.5);
+  background: #f7f7f7;
   border-radius: 20px;
+  display: flex;
+  align-items: center;
 }
 
 .search-y {
-  position: sticky;
-  z-index: 99999999;
-  width: 230px;
-  top: 6%;
-  left: 2%;
   background: #ffffff;
   border-radius: 20px;
   display: flex;
@@ -486,13 +526,7 @@ export default {
 }
 
 map {
-  height: 100%;
-  width: 100%;
-}
-
-.box {
-  width: 100vw;
   height: 100vh;
-  margin-top: -35px;
+  width: 100vw;
 }
 </style>

@@ -1,3 +1,0 @@
-      @touchstart="contentStart"
-      @touchmove="contentMove"
-      @touchend="contentEnd"

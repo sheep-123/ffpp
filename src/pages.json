@@ -1,11 +1,16 @@
 {
   "easycom": {
-    "autoscan": true,
-    // "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
-    "^u-(.*)": "vk-uview-ui/components/u-$1/u-$1.vue"
+    "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
   },
   "pages": [
-    {
+        {
+      "path": "pages/competition/set",
+      "style": {
+        "navigationBarTitleText": "设置",
+        "navigationStyle": "custom"
+      }
+    },
+        {
       "path": "pages/index/index",
       "style": {
         "navigationBarTitleText": "首页",
@@ -13,9 +18,9 @@
       }
     },
     {
-      "path": "pages/add/add",
+      "path": "pages/play/play",
       "style": {
-        "navigationBarTitleText": "添加",
+        "navigationBarTitleText": "去玩",
         "navigationStyle": "custom"
       }
     },
@@ -27,24 +32,32 @@
       }
     },
     {
-      "path": "pages/message/message",
+      "path": "pages/index/editSport",
       "style": {
-        "navigationBarTitleText": "消息",
+        "navigationBarTitleText": "编辑运动",
         "navigationStyle": "custom"
       }
     },
 
     {
-      "path": "pages/play/play",
+      "path": "pages/add/add",
       "style": {
-        "navigationBarTitleText": "去玩",
+        "navigationBarTitleText": "添加",
         "navigationStyle": "custom"
       }
     },
     {
-      "path": "pages/index/editSport",
+      "path": "pages/index/info",
       "style": {
-        "navigationBarTitleText": "编辑运动",
+        "navigationBarTitleText": "动态详情",
+        "navigationStyle": "custom"
+      }
+    },
+
+    {
+      "path": "pages/message/message",
+      "style": {
+        "navigationBarTitleText": "消息",
         "navigationStyle": "custom"
       }
     }
@@ -77,7 +90,8 @@
         "pagePath": "pages/add/add",
         "text": "",
         "iconPath": "static/images/send.png",
-        "selectedIconPath": "static/images/send.png"
+        "selectedIconPath": "static/images/send.png",
+        "iconWidth": "90px"
       },
       {
         "pagePath": "pages/message/message",

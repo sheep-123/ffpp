@@ -8,7 +8,7 @@
       </view>
 
       <view class="content">
-        <image src="/static/images/fasaishi.png" />
+        <image src="/static/images/fasaishi.png" @click="toSaishi"/>
         <image src="/static/images/fabuhuodong.png" />
         <image src="/static/images/faqitiaozhan.png" />
         <image src="/static/images/jifensai.png" />
@@ -36,6 +36,12 @@ export default {
         uni.showTabBar();
       }
     },
+
+    toSaishi(){
+      uni.navigateTo({
+        url: "/pages/competition/apply" 
+      })
+    }
   },
 };
 </script>

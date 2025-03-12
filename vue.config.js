@@ -1,4 +1,4 @@
 
 module.exports = {
-  transpileDependencies: ["vk-uview-ui"],
+  transpileDependencies: ["uview-ui"],
 };

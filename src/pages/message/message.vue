@@ -3,7 +3,7 @@
     <u-navbar>
       <view class="m-top" slot="left">
         <view class="left">
-          <view class="item">聊天</view>
+          <view class="item-active">聊天</view>
           <view class="item">互动</view>
         </view>
         <image
@@ -206,6 +206,11 @@
         font-weight: 600;
         font-size: 20px;
         color: rgba(29, 35, 38, 0.3);
+      }
+      .item-active{
+        font-weight: 600;
+        font-size: 20px;
+        color: black;
       }
     }
   }

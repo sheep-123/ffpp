@@ -14,4 +14,5 @@ const app = new Vue({
   ...App
 })
 
+require('./service/request.js')(app)
 app.$mount()

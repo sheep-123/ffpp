@@ -1,7 +1,9 @@
 <template>
   <view class="box">
-    <u-navbar bgColor="rgba(0,0,0,0)" >
-      <image src="/static/images/chat.png" class="more" />
+    <u-navbar bgColor="rgba(0,0,0,0)">
+      <view slot="left">
+        <image src="/static/images/更多-白色.png" class="more" />
+      </view>
     </u-navbar>
     <view class="content">
       <view class="main">
@@ -194,6 +196,7 @@
         </view>
       </view>
     </view>
+    <u-toast ref="notice"></u-toast>
   </view>
 </template>
 
@@ -202,9 +205,6 @@ export default {
   data() {
     return {
       current: 0,
-      barStyle: {
-        backgroundColor: "#EC384A",
-      },
       list: [
         {
           name: "动态",
@@ -218,6 +218,22 @@ export default {
       ],
     };
   },
+  onShow(){
+    this.player=uni.getStorageSync('player')??{}
+    if(!this.player){
+      this.$refs.notice.show({
+        type: "default",
+        message: "请登录",
+        title: "提醒",
+        duration: 2000, 
+        complete(){
+          uni.navigateTo({
+            url: '/pages/user/login' 
+          })
+        }
+      })
+    }
+  }
 };
 </script>
 

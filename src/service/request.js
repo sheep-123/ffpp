@@ -5,7 +5,7 @@ module.exports = (vm) => {
     /* config 为默认全局配置*/
 
     //#ifdef MP-WEIXIN || APP-PLUS
-    config.baseURL = "http://localhost:4567/"; /* 根域名 */
+    config.baseURL = "http://192.168.3.46:8001/"; /* 根域名 */
     //#endif
 
     //#ifdef H5

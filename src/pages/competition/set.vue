@@ -1,14 +1,15 @@
 <template>
   <view class="box">
+    <u-navbar bgColor="rgba(0,0,0,0)" autoBack  leftIconColor="#ffffff"></u-navbar>
     <view class="upload">
       <view class="img">
-        <u-upload>
+        <u-upload width="80" height="80">
           <view class="info">
             <u-icon name="photo" size="54px" color="#ffffff"></u-icon>
             <view class="value"
               >上传主图
               <image
-                src="/static/images/share.png"
+                src="/static/images/上传.png"
                 mode="scaleToFill"
                 style="width: 16px; height: 16px"
               />
@@ -95,6 +96,312 @@
         />
       </view>
     </view>
+
+    <view class="content" v-if="activeTab == 0">
+      <view class="main">
+        <image
+          src="/static/images/基础信息设置.png"
+          mode="scaleToFill"
+          style="width: 100%; height: 22px; margin-top: 15px"
+        />
+
+        <view class="o-text">
+          <view class="item">
+            <view class="left"
+              ><text>加入非凡泡泡积分赛系列</text>
+              <view class="wh">?</view></view
+            >
+            <view class="right">
+              <u-checkbox-group v-model="checked">
+                <u-checkbox activeColor="red" checked></u-checkbox>
+              </u-checkbox-group>
+            </view>
+          </view>
+          <view class="item">
+            <view class="left">赛事项目 <view class="icon">*</view></view>
+            <view class="right"
+              ><text>请选择赛事项目</text
+              ><image
+                src="/static/images/right.png"
+                mode="scaleToFill"
+                style="width: 12px; height: 12px"
+            /></view>
+          </view>
+          <view class="item">
+            <view class="left">赛事模版<view class="icon">*</view></view>
+            <view class="right"
+              ><text>请选择赛事模版</text
+              ><image
+                src="/static/images/right.png"
+                mode="scaleToFill"
+                style="width: 12px; height: 12px"
+            /></view>
+          </view>
+          <view class="item">
+            <view class="left">赛事名称 <view class="icon">*</view></view>
+            <view class="right">
+              <view style="width: 110px">
+                <u-input
+                  v-model="name"
+                  placeholder="请填写赛事名称"
+                  border="none"
+                ></u-input>
+              </view>
+            </view>
+          </view>
+          <view class="item">
+            <view class="left">赛事副标题<view class="icon">*</view></view>
+            <view class="right">
+              <view class="input">
+                <u-input
+                  v-model="fuName"
+                  placeholder="请填写赛事副标题"
+                  border="none"
+                ></u-input> </view
+            ></view>
+          </view>
+          <view class="item">
+            <view class="left">赛事类型 <view class="icon">*</view></view>
+            <view class="right">
+              <u-checkbox-group v-model="checked" placement="row">
+                <u-checkbox
+                  activeColor="red"
+                  label="公开赛"
+                  shape="circle"
+                ></u-checkbox>
+                <u-checkbox
+                  activeColor="red"
+                  label="邀请赛"
+                  shape="circle"
+                  customStyle="margin-left: 20px"
+                ></u-checkbox>
+              </u-checkbox-group>
+            </view>
+          </view>
+          <view class="item">
+            <view class="left">赛事形势 <view class="icon">*</view></view>
+            <view class="right">
+              <u-checkbox-group v-model="checked" placement="row">
+                <u-checkbox
+                  activeColor="red"
+                  label="线上赛"
+                  shape="circle"
+                ></u-checkbox>
+                <u-checkbox
+                  activeColor="red"
+                  label="线下赛"
+                  shape="circle"
+                  customStyle="margin-left: 20px"
+                ></u-checkbox>
+              </u-checkbox-group>
+            </view>
+          </view>
+          <view class="item">
+            <view class="left">赛事地点 <view class="icon">*</view></view>
+            <view class="right"
+              ><text>请选择赛事地点</text
+              ><image
+                src="/static/images/right.png"
+                mode="scaleToFill"
+                style="width: 12px; height: 12px"
+            /></view>
+          </view>
+          <view class="item">
+            <view class="left">详细地址<view class="icon">*</view></view>
+            <view class="right">
+              <view style="width: 60px">
+                <u-input
+                  v-model="fuName"
+                  placeholder="详细地址"
+                  border="none"
+                ></u-input> </view
+            ></view>
+          </view>
+          <view class="item-o">
+            <view class="left">赛事时间 <view class="icon">*</view></view>
+            <view class="right">
+              <view class="time" @click="show = true"> 开始时间 </view>
+              <text>至</text>
+              <view class="time" @click="show = true"> 结束时间 </view>
+            </view>
+          </view>
+          <view class="item">
+            <view class="left">赛事裁判 <view class="icon">*</view></view>
+            <view class="right"
+              ><text>请选择裁判</text
+              ><image
+                src="/static/images/right.png"
+                mode="scaleToFill"
+                style="width: 12px; height: 12px"
+            /></view>
+          </view>
+          <view class="item">
+            <view class="left">赛事赞助 <view class="icon">*</view></view>
+            <view class="right">
+              <u-checkbox-group v-model="checked" placement="row">
+                <u-checkbox
+                  activeColor="red"
+                  label="接受"
+                  shape="circle"
+                ></u-checkbox>
+                <u-checkbox
+                  activeColor="red"
+                  label="不接受"
+                  shape="circle"
+                  customStyle="margin-left: 20px"
+                ></u-checkbox>
+              </u-checkbox-group>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="content" v-if="activeTab == 0">
+      <view class="main">
+        <image
+          src="/static/images/赛事报名设置.png"
+          mode="scaleToFill"
+          style="width: 100%; height: 22px; margin-top: 15px"
+        />
+
+        <view class="o-text">
+          <view class="item">
+            <view class="left">报名方式 <view class="icon">*</view></view>
+            <view class="right">
+              <u-checkbox-group v-model="checked" placement="row">
+                <u-checkbox
+                  activeColor="red"
+                  label="单人"
+                  shape="circle"
+                ></u-checkbox>
+                <u-checkbox
+                  activeColor="red"
+                  label="小队"
+                  shape="circle"
+                  customStyle="margin-left: 20px"
+                ></u-checkbox>
+              </u-checkbox-group>
+            </view>
+          </view>
+          <view class="item">
+            <view class="left">报名人数 <view class="icon">*</view></view>
+            <view class="right"
+              ><text>请选择报名人数</text
+              ><image
+                src="/static/images/right.png"
+                mode="scaleToFill"
+                style="width: 12px; height: 12px"
+            /></view>
+          </view>
+          <view class="item">
+            <view class="left">性别限制 <view class="icon">*</view></view>
+            <view class="right"
+              ><text>无限制</text
+              ><image
+                src="/static/images/right.png"
+                mode="scaleToFill"
+                style="width: 12px; height: 12px"
+            /></view>
+          </view>
+          <view class="item-o">
+            <view class="top">
+              <view class="left"> 年龄限制 <view class="icon">*</view> </view>
+              <view class="right">以比赛当天计算</view>
+            </view>
+            <view class="bt">
+              <view class="left">
+                <view class="l1">最低</view>
+                <view class="l2"
+                  >0
+                  <image
+                    src="/static/images/right.png"
+                    mode="scaleToFill"
+                    style="width: 12px; height: 12px"
+                  />
+                </view>
+              </view>
+
+              <view class="right">
+                <view class="r1">最高</view>
+                <view class="r2"
+                  >99
+                  <image
+                    src="/static/images/right.png"
+                    mode="scaleToFill"
+                    style="width: 12px; height: 12px"
+                  />
+                </view>
+              </view>
+            </view>
+          </view>
+          <view class="item-o">
+            <view class="top">
+              <view class="left">
+                徽章等级要求 <view class="icon">*</view>
+              </view>
+              <view class="right">
+                <u-checkbox-group
+                  v-model="checked"
+                  placement="row"
+                  iconPlacement="right"
+                >
+                  <u-checkbox
+                    activeColor="red"
+                    shape="circle"
+                    label="需要认证徽章"
+                    customStyle="gap:10px"
+                  ></u-checkbox>
+                </u-checkbox-group>
+              </view>
+            </view>
+            <view class="bt">
+              <view class="left">
+                <view class="l1">最低</view>
+                <view class="l2"
+                  >无限制
+                  <image
+                    src="/static/images/right.png"
+                    mode="scaleToFill"
+                    style="width: 12px; height: 12px"
+                  />
+                </view>
+              </view>
+
+              <view class="right">
+                <view class="r1">最高</view>
+                <view class="r2"
+                  >无限制
+                  <image
+                    src="/static/images/right.png"
+                    mode="scaleToFill"
+                    style="width: 12px; height: 12px"
+                  />
+                </view>
+              </view>
+            </view>
+          </view>
+          <view class="item">
+            <view class="left">参赛费用设置<view class="icon">*</view></view>
+            <view class="right">
+              <view class="input">
+                <u-input
+                  v-model="fuName"
+                  placeholder="请填写参赛费用"
+                  border="none"
+                ></u-input>
+                ￥</view
+              ></view
+            >
+          </view>
+        </view>
+
+        <view class="save">
+          <text>保存</text>
+        </view>
+      </view>
+    </view>
+
     <view class="content" v-if="activeTab == 1">
       <view class="main">
         <image
@@ -172,306 +479,6 @@
       </view>
     </view>
 
-    <view class="content" v-if="activeTab == 0">
-      <view class="main">
-        <image
-          src="/static/images/基础信息设置.png"
-          mode="scaleToFill"
-          style="width: 100%; height: 22px; margin-top: 15px"
-        />
-
-        <view class="o-text">
-          <view class="item">
-            <view class="left"
-              ><text>加入非凡泡泡积分赛系列</text>
-              <view class="wh">?</view></view
-            >
-            <view class="right">
-              <u-checkbox-group v-model="checked">
-                <u-checkbox activeColor="red" checked></u-checkbox>
-              </u-checkbox-group>
-            </view>
-          </view>
-          <view class="item">
-            <view class="left">赛事项目 <view class="icon">*</view></view>
-            <view class="right"
-              ><text>请选择赛事项目</text
-              ><image
-                src="/static/images/right.png"
-                mode="scaleToFill"
-                style="width: 12px; height: 12px"
-            /></view>
-          </view>
-          <view class="item">
-            <view class="left">赛事模版<view class="icon">*</view></view>
-            <view class="right"
-              ><text>请选择赛事模版</text
-              ><image
-                src="/static/images/right.png"
-                mode="scaleToFill"
-                style="width: 12px; height: 12px"
-            /></view>
-          </view>
-          <view class="item">
-            <view class="left">赛事名称 <view class="icon">*</view></view>
-            <view class="right">
-              <view class="input">
-                <u-input
-                  v-model="name"
-                  placeholder="请填写赛事名称"
-                  border="none"
-                ></u-input>
-              </view>
-            </view>
-          </view>
-          <view class="item">
-            <view class="left">赛事副标题<view class="icon">*</view></view>
-            <view class="right">
-              <view class="input">
-                <u-input
-                  v-model="fuName"
-                  placeholder="请填写赛事副标题"
-                  border="none"
-                ></u-input> </view
-            ></view>
-          </view>
-          <view class="item">
-            <view class="left">赛事类型 <view class="icon">*</view></view>
-            <view class="right">
-              <u-checkbox-group v-model="checked" placement="row">
-                <u-checkbox
-                  activeColor="red"
-                  label="公开赛"
-                  shape="circle"
-                ></u-checkbox>
-                <u-checkbox
-                  activeColor="red"
-                  label="邀请赛"
-                  shape="circle"
-                ></u-checkbox>
-              </u-checkbox-group>
-            </view>
-          </view>
-          <view class="item">
-            <view class="left">赛事形势 <view class="icon">*</view></view>
-            <view class="right">
-              <u-checkbox-group v-model="checked" placement="row">
-                <u-checkbox
-                  activeColor="red"
-                  label="线上赛"
-                  shape="circle"
-                ></u-checkbox>
-                <u-checkbox
-                  activeColor="red"
-                  label="线下赛"
-                  shape="circle"
-                ></u-checkbox>
-              </u-checkbox-group>
-            </view>
-          </view>
-          <view class="item">
-            <view class="left">赛事地点 <view class="icon">*</view></view>
-            <view class="right"
-              ><text>请选择赛事地点</text
-              ><image
-                src="/static/images/right.png"
-                mode="scaleToFill"
-                style="width: 12px; height: 12px"
-            /></view>
-          </view>
-          <view class="item">
-            <view class="left">详细地址<view class="icon">*</view></view>
-            <view class="right">
-              <view class="input">
-                <u-input
-                  v-model="fuName"
-                  placeholder="详细地址"
-                  border="none"
-                ></u-input> </view
-            ></view>
-          </view>
-          <view class="item-o">
-            <view class="left">赛事时间 <view class="icon">*</view></view>
-            <view class="right">
-              <view class="time" @click="show = true"> 开始时间 </view>
-              <text>至</text>
-              <view class="time" @click="show = true"> 结束时间 </view>
-            </view>
-          </view>
-          <view class="item">
-            <view class="left">赛事裁判 <view class="icon">*</view></view>
-            <view class="right"
-              ><text>请选择裁判</text
-              ><image
-                src="/static/images/right.png"
-                mode="scaleToFill"
-                style="width: 12px; height: 12px"
-            /></view>
-          </view>
-          <view class="item">
-            <view class="left">赛事赞助 <view class="icon">*</view></view>
-            <view class="right">
-              <u-checkbox-group v-model="checked" placement="row">
-                <u-checkbox
-                  activeColor="red"
-                  label="接受"
-                  shape="circle"
-                ></u-checkbox>
-                <u-checkbox
-                  activeColor="red"
-                  label="不接受"
-                  shape="circle"
-                ></u-checkbox>
-              </u-checkbox-group>
-            </view>
-          </view>
-        </view>
-      </view>
-    </view>
-
-    <view class="content" v-if="activeTab == 0">
-      <view class="main">
-        <image
-          src="/static/images/赛事报名设置.png"
-          mode="scaleToFill"
-          style="width: 100%; height: 22px; margin-top: 15px"
-        />
-
-        <view class="o-text">
-          <view class="item">
-            <view class="left">报名方式 <view class="icon">*</view></view>
-            <view class="right">
-              <u-checkbox-group v-model="checked" placement="row">
-                <u-checkbox
-                  activeColor="red"
-                  label="单人"
-                  shape="circle"
-                ></u-checkbox>
-                <u-checkbox
-                  activeColor="red"
-                  label="小队"
-                  shape="circle"
-                ></u-checkbox>
-              </u-checkbox-group>
-            </view>
-          </view>
-          <view class="item">
-            <view class="left">报名人数 <view class="icon">*</view></view>
-            <view class="right"
-              ><text>请选择报名人数</text
-              ><image
-                src="/static/images/right.png"
-                mode="scaleToFill"
-                style="width: 12px; height: 12px"
-            /></view>
-          </view>
-          <view class="item">
-            <view class="left">性别限制 <view class="icon">*</view></view>
-            <view class="right"
-              ><text>无限制</text
-              ><image
-                src="/static/images/right.png"
-                mode="scaleToFill"
-                style="width: 12px; height: 12px"
-            /></view>
-          </view>
-          <view class="item-o">
-            <view class="top">
-              <view class="left"> 年龄限制 <view class="icon">*</view> </view>
-              <view class="right">以比赛当天计算</view>
-            </view>
-            <view class="bt">
-              <view class="left">
-                <view class="l1">最低</view>
-                <view class="l2"
-                  >0
-                  <image
-                    src="/static/images/right.png"
-                    mode="scaleToFill"
-                    style="width: 12px; height: 12px"
-                  />
-                </view>
-              </view>
-
-              <view class="right">
-                <view class="r1">最高</view>
-                <view class="r2"
-                  >99
-                  <image
-                    src="/static/images/right.png"
-                    mode="scaleToFill"
-                    style="width: 12px; height: 12px"
-                  />
-                </view>
-              </view>
-            </view>
-          </view>
-          <view class="item-o">
-            <view class="top">
-              <view class="left">
-                徽章等级要求 <view class="icon">*</view>
-              </view>
-              <view class="right">
-                <u-checkbox-group
-                  v-model="checked"
-                  placement="row"
-                  iconPlacement="right"
-                >
-                  <u-checkbox
-                    activeColor="red"
-                    shape="circle"
-                    label="需要认证徽章"
-                  ></u-checkbox>
-                </u-checkbox-group>
-              </view>
-            </view>
-            <view class="bt">
-              <view class="left">
-                <view class="l1">最低</view>
-                <view class="l2"
-                  >无限制
-                  <image
-                    src="/static/images/right.png"
-                    mode="scaleToFill"
-                    style="width: 12px; height: 12px"
-                  />
-                </view>
-              </view>
-
-              <view class="right">
-                <view class="r1">最高</view>
-                <view class="r2"
-                  >无限制
-                  <image
-                    src="/static/images/right.png"
-                    mode="scaleToFill"
-                    style="width: 12px; height: 12px"
-                  />
-                </view>
-              </view>
-            </view>
-          </view>
-          <view class="item">
-            <view class="left">参赛费用设置<view class="icon">*</view></view>
-            <view class="right">
-              <view class="input">
-                <u-input
-                  v-model="fuName"
-                  placeholder="请填写参赛费用"
-                  border="none"
-                ></u-input>
-                ￥</view
-              ></view
-            >
-          </view>
-        </view>
-
-        <view class="save">
-          <text>保存</text>
-        </view>
-      </view>
-    </view>
-
     <view class="content" v-if="activeTab == 2">
       <view class="main">
         <image
@@ -494,7 +501,7 @@
           <view class="item">
             <view class="left">奖金金额 <view class="icon">*</view></view>
             <view class="right">
-              <view class="input">
+              <view style="width:50px">
                 <u-input
                   v-model="name"
                   placeholder="￥0.00"
@@ -516,6 +523,7 @@
                   activeColor="red"
                   label="服务赞助"
                   shape="circle"
+                  customStyle="margin-left: 20px"
                 ></u-checkbox>
               </u-checkbox-group>
             </view>
@@ -533,11 +541,13 @@
                   activeColor="red"
                   label="到店领取"
                   shape="circle"
+                  customStyle="margin-left: 5px"
                 ></u-checkbox>
                 <u-checkbox
                   activeColor="red"
                   label="两者都支持"
                   shape="circle"
+                  customStyle="margin-left: 5px"
                 ></u-checkbox>
               </u-checkbox-group>
             </view>
@@ -546,7 +556,7 @@
             <view class="top">
               <view class="left"> 奖品名称 <view class="icon">*</view> </view>
               <view class="right">
-                <view class="input">
+                <view style="width: 110px;">
                   <u-input
                     v-model="name"
                     placeholder="请填写奖品名称"
@@ -558,7 +568,7 @@
             <view class="bt">
               <view class="left">
                 <view class="l1">数量</view>
-                <view class="l2">
+                <view style="width:60%;">
                   <u-input
                     v-model="name"
                     placeholder="请输入"
@@ -569,7 +579,7 @@
 
               <view class="right">
                 <view class="r1">单位</view>
-                <view class="r2">
+                <view style="width:60%;">
                   <u-input
                     v-model="name"
                     placeholder="请输入"
@@ -644,6 +654,235 @@
       </view>
     </view>
 
+    <view class="content" v-if="activeTab == 3">
+      <view class="main">
+        <image
+          src="/static/images/赛事直击设置.png"
+          mode="scaleToFill"
+          style="width: 100%; height: 22px; margin-top: 15px"
+        />
+
+        <u-scroll-list :indicator="false">
+          <view class="tick">
+            <view class="item-a"> 小组淘汰赛 </view>
+            <view class="item"> 八强赛8进4 </view>
+            <view class="item"> 1/4决赛 </view>
+            <view class="item"> 季军赛 </view>
+            <view class="item"> 季军赛 </view>
+          </view>
+        </u-scroll-list>
+
+        <view class="jdsz">阶段设置</view>
+
+        <view class="o-text">
+          <view class="item">
+            <view class="left">本阶段 <view class="icon">*</view></view>
+            <view class="right"><text>32人/队</text></view>
+          </view>
+          <view class="item-o">
+            <view class="top">
+              <view class="left">
+                玩家分组设置 <view class="icon">*</view>
+              </view>
+            </view>
+            <view class="bt">
+              <view class="left">
+                <view class="l1">组数</view>
+                <view class="l2"
+                  >请选择
+                  <image
+                    src="/static/images/right.png"
+                    mode="scaleToFill"
+                    style="width: 12px; height: 12px"
+                  />
+                </view>
+              </view>
+
+              <view class="right">
+                <view class="r1">匹配方式</view>
+                <view class="r2"
+                  >请选择
+                  <image
+                    src="/static/images/right.png"
+                    mode="scaleToFill"
+                    style="width: 12px; height: 12px"
+                  />
+                </view>
+              </view>
+            </view>
+          </view>
+          <view class="item-o">
+            <view class="top">
+              <view class="left">
+                分组场地设置 <view class="icon">*</view>
+              </view>
+            </view>
+            <view class="bt">
+              <view class="left">
+                <u-checkbox-group v-model="checked" placement="row">
+                  <u-checkbox
+                    activeColor="red"
+                    label="系统订单匹配"
+                    shape="circle"
+                  ></u-checkbox>
+                </u-checkbox-group>
+              </view>
+
+              <view class="right" style="width: 30%;">
+                <u-checkbox-group v-model="checked" placement="row">
+                  <u-checkbox
+                    activeColor="red"
+                    label="人工添加"
+                    shape="circle"
+                  ></u-checkbox>
+                </u-checkbox-group>
+              </view>
+            </view>
+          </view>
+          <view class="item-o">
+            <view class="top">
+              <view class="left">
+                分组裁判设置 <view class="icon">*</view>
+              </view>
+            </view>
+            <view class="bt">
+              <view class="left">
+                <u-checkbox-group v-model="checked" placement="row">
+                  <u-checkbox
+                    activeColor="red"
+                    label="系统随机匹配"
+                    shape="circle"
+                  ></u-checkbox>
+                </u-checkbox-group>
+              </view>
+
+              <view class="right" style="width: 50%;">
+                <u-checkbox-group v-model="checked" placement="row">
+                  <u-checkbox
+                    activeColor="red"
+                    label="根据场地1对1匹配"
+                    shape="circle"
+                  ></u-checkbox>
+                </u-checkbox-group>
+              </view>
+            </view>
+          </view>
+          <view class="item-o">
+            <view class="top">
+              <view class="left">
+                选择计分方式 <view class="icon">*</view>
+              </view>
+            </view>
+            <view class="bt">
+              <u-checkbox-group v-model="checked" placement="row">
+                <u-checkbox
+                  activeColor="red"
+                  label="积分"
+                  shape="circle"
+                ></u-checkbox>
+                <u-checkbox
+                  activeColor="red"
+                  label="积分"
+                  shape="circle"
+                ></u-checkbox>
+                <u-checkbox
+                  activeColor="red"
+                  label="积分"
+                  shape="circle"
+                ></u-checkbox>
+                <u-checkbox
+                  activeColor="red"
+                  label="积分"
+                  shape="circle"
+                ></u-checkbox>
+                <u-checkbox
+                  activeColor="red"
+                  label="积分"
+                  shape="circle"
+                ></u-checkbox>
+                <u-checkbox
+                  activeColor="red"
+                  label="积分"
+                  shape="circle"
+                ></u-checkbox>
+              </u-checkbox-group>
+            </view>
+          </view>
+        </view>
+
+        <view class="pp">赛事报名完成后可进行匹配</view>
+      </view>
+    </view>
+
+    <view class="content" v-if="activeTab == 4">
+      <view class="main">
+        <image
+          src="/static/images/报名条件.png"
+          mode="scaleToFill"
+          style="width: 100%; height: 22px; margin-top: 15px"
+        />
+
+        <view class="rules">
+          <view class="top">玩家参赛需要满足以下条件</view>
+          <view class="rule">
+            <view class="left"> </view>
+          </view>
+        </view>
+
+        <image
+          src="/static/images/赛事规则.png"
+          mode="scaleToFill"
+          style="width: 100%; height: 22px; margin-top: 15px"
+        />
+
+        <u-scroll-list :indicator="false">
+          <view class="tick">
+            <view class="item-a"> 小组淘汰赛 </view>
+            <view class="item"> 八强赛8进4 </view>
+            <view class="item"> 1/4决赛 </view>
+            <view class="item"> 季军赛 </view>
+            <view class="item"> 季军赛 </view>
+          </view>
+        </u-scroll-list>
+
+        <u--textarea
+          v-model="tx"
+          placeholder="请输入内容"
+          count
+          maxlength="500"
+          autoHeight
+        ></u--textarea>
+
+        <image
+          src="/static/images/注意事项.png"
+          mode="scaleToFill"
+          style="width: 100%; height: 22px; margin-top: 15px"
+        />
+
+        <u--textarea
+          v-model="tx1"
+          placeholder="请编辑比赛注意事项"
+          count
+          maxlength="2000"
+          autoHeight
+        ></u--textarea>
+
+        <view class="end" style="justify-content: space-between">
+          <view class="end-i">
+            <u-icon name="file-text" color="#ffffff" size="24"></u-icon>
+            存草稿
+          </view>
+
+          <view class="end-i">
+            <u-icon name="eye" color="#ffffff" size="24"></u-icon>
+            预览
+          </view>
+
+          <view class="save" style="margin: 0">保存</view>
+        </view>
+      </view>
+    </view>
+
     <u-datetime-picker
       :show="show"
       v-model="value1"
@@ -656,9 +895,11 @@
 export default {
   data() {
     return {
-      activeTab: 2,
+      activeTab: 0,
       checked: true,
       show: false,
+      tx: "本阶段赛制为小组单循环淘汰赛。参赛玩家按照系统随机分配成8个小组，每位玩家都要与本小组的其他玩家逐一进行比赛，以单局制，先取得21分者获胜，不加分。根据最终胜负场次来计算积分排名，积分最高者进入下-轮，若出现两名同分时，双方加赛一局，胜者进入下一轮，败者淘汰。",
+      tx1: "",
     };
   },
   methods: {
@@ -669,7 +910,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .box {
   width: 100vw;
   height: auto;
@@ -678,7 +919,7 @@ export default {
 
   .upload {
     background-color: #cccccc;
-    height: 400px;
+    height: 350px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -727,7 +968,7 @@ export default {
     .cup {
       position: absolute;
       bottom: 7%;
-      height: 40%;
+      height: 35%;
       width: 90%;
       margin: auto;
       border-radius: 5px;
@@ -737,6 +978,7 @@ export default {
         display: flex;
         justify-content: space-between;
         backdrop-filter: blur(10px);
+        height: 70%;
 
         .left {
           margin-top: 10px;
@@ -761,7 +1003,7 @@ export default {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        height: 44px;
+        height: 30%;
         background-color: #6686c1;
         padding: 0 15px;
         backdrop-filter: blur(4px);
@@ -803,12 +1045,13 @@ export default {
     align-items: center;
     justify-content: space-between;
     transition: all 0.3s linear;
+    padding: 0px 10px;
 
     .item {
       display: flex;
       flex-direction: column;
       gap: 4px;
-      padding: 15px;
+      padding: 10px;
       .value {
         font-weight: 400;
         font-size: 12px;
@@ -819,7 +1062,7 @@ export default {
       display: flex;
       flex-direction: column;
       gap: 4px;
-      padding: 20px;
+      padding: 15px;
       background-color: #1e54ba;
       box-shadow: 4px 4px 10px 0px #00000040, -4px -4px 10px 0px #00000040;
       position: relative;
@@ -858,6 +1101,37 @@ export default {
     // height: 100%;
     flex: 1;
     padding-bottom: 50px;
+
+    .tick {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+      .item-a {
+        background-color: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 84px;
+        height: 32px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 12px;
+        color: #ffffff;
+      }
+      .item {
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 84px;
+        height: 32px;
+        border-radius: 20px;
+        font-weight: 400;
+        font-size: 12px;
+        color: rgba(29, 35, 38, 0.5);
+      }
+    }
     .main {
       width: 90%;
       margin: auto;
@@ -933,6 +1207,23 @@ export default {
               color: rgba(29, 35, 38, 0.3);
             }
           }
+        }
+      }
+
+      .jdsz {
+        font-weight: 600;
+        font-size: 14px;
+        color: #ffffff;
+        position: relative;
+        &::after {
+          content: "";
+          position: absolute;
+          left: 20%;
+          border-left: 5px solid transparent;
+          border-right: 5px solid transparent;
+          border-bottom: 5px solid #ffffff;
+          top: 50%;
+          transform: translateY(-50%);
         }
       }
 
@@ -1050,10 +1341,15 @@ export default {
               color: red;
             }
           }
+
+          .many{
+
+          }
           .bt {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-wrap: wrap;
             gap: 2px;
             font-weight: 400;
             font-size: 14px;
@@ -1162,6 +1458,7 @@ export default {
         display: flex;
         align-items: center;
         margin-top: 38px;
+
         .end-i {
           display: flex;
           flex-direction: column;
@@ -1199,6 +1496,39 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+      }
+      .pp {
+        width: 262px;
+        height: 44px;
+        background-color: #cccccc;
+        margin: auto;
+        margin-top: 30px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 16px;
+        color: #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .rules {
+        border-radius: 10px;
+        overflow: hidden;
+        .top {
+          height: 36px;
+          background-color: #496fb5;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 600;
+          font-size: 14px;
+          color: #ffffff;
+        }
+      }
+
+      .tx {
+        background-color: blue;
       }
     }
   }

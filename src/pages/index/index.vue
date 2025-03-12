@@ -267,17 +267,10 @@ export default {
       screenHeight: 0, //屏幕高度
       moveY: 0, //下拉距离
       keyword: "",
-      isAndroid: false,
     };
   },
   onLoad() {
     this.Location();
-    const systemInfo = uni.getSystemInfoSync();
-    console.log(systemInfo.osName);
-    if (systemInfo.osName === "android") {
-      this.isAndroid = true;
-      console.log(this.isAndroid);
-    }
   },
   onReady() {
     const systemInfo = uni.getSystemInfoSync();

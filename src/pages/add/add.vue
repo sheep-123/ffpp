@@ -39,7 +39,7 @@ export default {
 
     toSaishi(){
       uni.navigateTo({
-        url: "/pages/competition/apply" 
+        url: "/pages/competition/set" 
       })
     }
   },

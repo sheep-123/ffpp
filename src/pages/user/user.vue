@@ -219,13 +219,13 @@ export default {
     };
   },
   onShow(){
-    this.player=uni.getStorageSync('player')??{}
-    if(!this.player){
+    this.user=uni.getStorageSync('user')??''
+    this.token=uni.getStorageSync('token')??''
+    if(!this.player&&!this.token){
       this.$refs.notice.show({
         type: "default",
         message: "请登录",
         title: "提醒",
-        duration: 2000, 
         complete(){
           uni.navigateTo({
             url: '/pages/user/login' 

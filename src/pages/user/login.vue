@@ -65,22 +65,24 @@ export default {
             });
             return false;
           }
-          let result= await uni.$u.http.post("/player/login", {code})
+          let result = await uni.$u.http.post("/player/login", { code });
 
-          if(result.status==500){
-            uni.$refs.notice.show({
-              type: "error",
-              message: "登录失败",
-            });
-
+          if (result.status == 200) {
             uni.setStorageSync("token", result.data.token);
             uni.setStorageSync("user", result.data.user);
-            uni.$refs.notice.show({
+            this.$refs.notice.show({
               type: "success",
-              message: "登录成功",
-            });   
+              message: result.msg,
+              complete() {
+                uni.navigateBack({ delta: 1 });
+              },
+            });
+          } else {
+            uni.$refs.notice.show({
+              type: "error",
+              message: result.msg,
+            });
           }
-          
         },
       });
     },

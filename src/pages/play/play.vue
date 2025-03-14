@@ -45,23 +45,24 @@
         </view>
       </view>
     </view>
-      <view class="search" id="search">
-        <view class="item">
-          <u-input
-            placeholder="请输入赛事关键词"
-            prefixIcon="search"
-            prefixIconStyle="font-size: 22px;color: #909399"
-            shape="circle"
-          >
-            <template slot="suffix">
-              <u-button text="搜索" color="#EC384A" shape="circle"></u-button>
-            </template>
-          </u-input>
-        </view>
+    <view class="search" id="search">
+      <view class="item">
+        <u-input
+          placeholder="请输入赛事关键词"
+          prefixIcon="search"
+          prefixIconStyle="font-size: 22px;color: #909399"
+          shape="circle"
+        >
+          <template slot="suffix">
+            <!-- <u-button text="搜索" color="#EC384A" shape="circle"></u-button> -->
+            <view class="bt1">搜索</view>
+          </template>
+        </u-input>
       </view>
+    </view>
 
     <u-navbar v-if="isSticky">
-      <view style="margin-left: 16px">
+      <view slot="left">
         <u-search
           placeholder="请输入赛事关键词"
           v-model="keyword"
@@ -71,31 +72,33 @@
       </view>
     </u-navbar>
 
-    <u-sticky>
-      <view class="type" :class="{ sticky: isSticky }">
-        <view class="left">
-          <view class="item">
-            <text>商圈</text>
-            <u-image src="/static/images/down.png" width="12px" height="12px">
-            </u-image>
-          </view>
-          <view class="item">
-            <text>类型</text>
-            <u-image src="/static/images/down.png" width="12px" height="12px">
-            </u-image>
-          </view>
-          <view class="item">
-            <text>默认排序</text>
-            <u-image src="/static/images/down.png" width="12px" height="12px">
-            </u-image>
-          </view>
+    <view
+      class="type"
+      :class="{ sticky: isSticky }"
+      :style="{ top: isSticky ? stickyTop : '' }"
+    >
+      <view class="left">
+        <view class="item">
+          <text>商圈</text>
+          <u-image src="/static/images/down.png" width="12px" height="12px">
+          </u-image>
         </view>
-        <view class="right">
-          <image src="/static/images/location.png" />
-          <view class="value">广州市</view>
+        <view class="item">
+          <text>类型</text>
+          <u-image src="/static/images/down.png" width="12px" height="12px">
+          </u-image>
+        </view>
+        <view class="item">
+          <text>默认排序</text>
+          <u-image src="/static/images/down.png" width="12px" height="12px">
+          </u-image>
         </view>
       </view>
-    </u-sticky>
+      <view class="right">
+        <image src="/static/images/location.png" />
+        <view class="value">广州市</view>
+      </view>
+    </view>
 
     <view class="content">
       <view class="item">
@@ -477,19 +480,16 @@ export default {
     return {
       isSticky: false,
       keyword: "",
+      statusBarHeight: 0,
+      navbarHeight: 44,
     };
   },
-  mounted() {
+  onShow() {
+    const systemInfo = uni.getSystemInfoSync();
     this.initIntersectionObserver();
+    this.statusBarHeight = systemInfo.statusBarHeight;
   },
   methods: {
-    fix() {
-      this.isSticky = true;
-      console.log(513515631);
-    },
-    unfix() {
-      this.isSticky = false;
-    },
     clear() {
       this.keyword = "";
     },
@@ -500,6 +500,12 @@ export default {
           this.isSticky = res.intersectionRatio <= 0;
         });
       });
+    },
+  },
+
+  computed: {
+    stickyTop() {
+      return `${this.statusBarHeight + this.navbarHeight}px`;
     },
   },
 };
@@ -560,8 +566,7 @@ export default {
   }
   .search {
     width: 100%;
-
-    background-color: #f7f7f7;
+    background-color: #fcfcfc;
     .item {
       width: 90%;
       margin: auto;
@@ -570,6 +575,11 @@ export default {
 
   .type.sticky {
     background-color: #ffffff;
+    position: fixed;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    margin: 0;
   }
 
   .type {
@@ -747,5 +757,13 @@ export default {
       }
     }
   }
+}
+.bt1 {
+  background-color: #ec384a;
+  font-weight: 600;
+  font-size: 12px;
+  color: #ffffff;
+  padding: 6px 15px;
+  border-radius: 20px;
 }
 </style>

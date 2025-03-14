@@ -4,20 +4,19 @@
   },
   "pages": [
     {
-      "path": "pages/user/login",
+      "path": "pages/competition/project",
       "style": {
-        "navigationBarTitleText": "登录",
+        "navigationBarTitleText": "选择赛事项目",
         "navigationStyle": "custom"
       }
     },
     {
-      "path": "pages/competition/set",
+      "path": "pages/competition/saishi",
       "style": {
-        "navigationBarTitleText": "设置",
+        "navigationBarTitleText": "发赛事",
         "navigationStyle": "custom"
       }
     },
-
     {
       "path": "pages/index/index",
       "style": {
@@ -25,6 +24,15 @@
         "navigationStyle": "custom"
       }
     },
+
+    {
+      "path": "pages/user/login",
+      "style": {
+        "navigationBarTitleText": "登录",
+        "navigationStyle": "custom"
+      }
+    },
+
     {
       "path": "pages/play/play",
       "style": {
@@ -32,6 +40,7 @@
         "navigationStyle": "custom"
       }
     },
+
     {
       "path": "pages/user/user",
       "style": {

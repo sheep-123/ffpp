@@ -1,45 +1,31 @@
 <template>
   <view class="box">
-    <u-navbar  v-if="isSticky && !isMapExpanded">
+    <u-navbar :bg-color="navbarBgColor">
       <view slot="left">
-        <view class="search" id="search">
-          <u-search
-            placeholder="搜搜你感兴趣的~"
-            v-model="keyword"
-            :showAction="false"
-            @clear="clear"
-            bgColor="#F7F7F7"
-          ></u-search>
-        </view>
-      </view>
-    </u-navbar>
-    <u-navbar  bgColor="rgba(0,0,0,0)" v-else>
-      <view slot="left">
-        <view class="search" v-if="!isMapExpanded">
-          <u-search
-            placeholder="搜搜你感兴趣的~"
-            v-model="keyword"
-            :showAction="false"
-            @clear="clear"
-            bgColor="#F5F7F5"
-            borderColor="#ffffff"
-          ></u-search>
-        </view>
-        <view class="search-y" v-else>
-          <image src="/static/images/left.png" @click="back" />
+        <view
+          :class="['search-container', isMapExpanded ? 'search-y' : 'search']"
+        >
+          <!-- 返回按钮 -->
+          <image
+            v-if="isMapExpanded"
+            src="/static/images/left.png"
+            @click="back"
+            class="back-btn"
+          />
 
+          <!-- 搜索框 -->
           <u-search
             placeholder="搜搜你感兴趣的~"
             v-model="keyword"
             :show-action="false"
-            bg-color="#FFFFFF"
+            :bg-color="searchBgColor"
             @clear="clear"
           ></u-search>
         </view>
       </view>
     </u-navbar>
 
-    <!-- <view class="v-title" v-if="isSticky && !isMapExpanded">
+    <view class="title-y" v-if="isSticky" :style="{ top: stickyTop }">
       <view class="first">
         <image src="/static/images/location.png" />
         <image src="/static/images/near.png" />
@@ -50,7 +36,7 @@
       <view class="item">桌游</view>
       <view class="item">电竞</view>
       <image src="/static/images/more.png" class="more" @click="edit"></image>
-    </view> -->
+    </view>
 
     <map
       id="myMap"
@@ -58,7 +44,7 @@
       :longitude="longitude"
       :markers="markers"
       :scale="18"
-      v-if="!isSticky||isMapExpanded"
+      v-if="!isSticky || isMapExpanded"
     >
     </map>
 
@@ -75,7 +61,7 @@
     </view>
 
     <view class="content" :style="{ transform: `translateY(${moveY}px)` }">
-      <view class="title" ref="title" id="title">
+      <view class="title" id="title">
         <view class="first">
           <image src="/static/images/location.png" />
           <image src="/static/images/near.png" />
@@ -267,19 +253,17 @@ export default {
       screenHeight: 0, //屏幕高度
       moveY: 0, //下拉距离
       keyword: "",
+      statusBarHeight: 0,
+      navbarHeight: 44,
     };
   },
-  onLoad() {
+  onShow() {
     this.Location();
-  },
-  onReady() {
     const systemInfo = uni.getSystemInfoSync();
     this.screenHeight = systemInfo.windowHeight;
-  },
-  mounted() {
     this.initIntersectionObserver();
+    this.statusBarHeight = systemInfo.statusBarHeight;
   },
-
   methods: {
     async Location() {
       try {
@@ -341,6 +325,22 @@ export default {
       this.keyword = "";
     },
   },
+
+  computed: {
+    navbarBgColor() {
+      return this.isSticky && !this.isMapExpanded ? "#fff" : "rgba(0,0,0,0)";
+    },
+    searchBgColor() {
+      return this.isMapExpanded
+        ? "#FFFFFF"
+        : this.isSticky
+        ? "#F7F7F7"
+        : "#F5F7F5";
+    },
+    stickyTop() {
+      return `${this.statusBarHeight + this.navbarHeight}px`;
+    },
+  },
 };
 </script>
 
@@ -360,6 +360,7 @@ export default {
 
   .title {
     width: 100%;
+    box-sizing: border-box;
     display: flex;
     padding: 10px;
     align-items: center;
@@ -447,35 +448,6 @@ export default {
   height: 16px;
 }
 
-.v-title {
-  position: fixed;
-  top: 0;
-  z-index: 99999999999;
-  width: 100%;
-  display: flex;
-  padding: 10px;
-  align-items: center;
-  justify-content: space-evenly;
-  background-color: #ffffff;
-  .first {
-    display: flex;
-    align-items: center;
-    image:nth-child(1) {
-      width: 18px;
-      height: 18px;
-    }
-    image:nth-child(2) {
-      width: 36px;
-      height: 15px;
-    }
-  }
-  .item {
-    font-size: 14px;
-    color: rgba(29, 35, 38, 0.5);
-    font-family: "PING FANG SHAO HUA";
-  }
-}
-
 .search {
   background: #f7f7f7;
   border-radius: 20px;
@@ -521,5 +493,57 @@ export default {
 map {
   height: 100vh;
   width: 100vw;
+  // display: none;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  background: #f7f7f7;
+  border-radius: 20px;
+
+  &.search-y {
+    background: #ffffff;
+    .back-btn {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+    }
+  }
+}
+
+.box {
+  width: 100vw;
+  height: auto;
+  position: relative;
+  .title-y {
+    box-sizing: border-box;
+    position: fixed;
+    width: 100%;
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: #fff;
+    z-index: 999999999;
+    .first {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      image:nth-child(1) {
+        width: 18px;
+        height: 18px;
+      }
+      image:nth-child(2) {
+        width: 36px;
+        height: 15px;
+      }
+    }
+    .item {
+      font-size: 14px;
+      color: rgba(29, 35, 38, 0.5);
+      font-family: "PING FANG SHAO HUA";
+    }
+  }
 }
 </style>

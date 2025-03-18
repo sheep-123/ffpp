@@ -67,7 +67,9 @@
         }
       },
       "requiredPrivateInfos": [
-        "getLocation" // 添加定位权限声明
+        "getLocation", 
+        "chooseLocation",
+        "chooseAddress"
       ],
       "permission": {
         "scope.userLocation": {

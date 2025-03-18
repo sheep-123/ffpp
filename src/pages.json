@@ -4,19 +4,52 @@
   },
   "pages": [
     {
-      "path": "pages/competition/project",
-      "style": {
-        "navigationBarTitleText": "选择赛事项目",
-        "navigationStyle": "custom"
-      }
-    },
-    {
       "path": "pages/competition/saishi",
       "style": {
         "navigationBarTitleText": "发赛事",
         "navigationStyle": "custom"
       }
     },
+    {
+      "path": "pages/competition/address",
+      "style": {
+        "navigationBarTitleText": "场次",
+        "navigationStyle": "custom"
+      }
+    },
+
+    {
+      "path": "pages/competition/place",
+      "style": {
+        "navigationBarTitleText": "赛事地点",
+        "navigationStyle": "custom"
+      }
+    },
+
+    {
+      "path": "pages/competition/judge",
+      "style": {
+        "navigationBarTitleText": "赛事裁判",
+        "navigationStyle": "custom"
+      }
+    },
+
+    {
+      "path": "pages/competition/project",
+      "style": {
+        "navigationBarTitleText": "选择赛事项目",
+        "navigationStyle": "custom"
+      }
+    },
+
+    {
+      "path": "pages/competition/templete",
+      "style": {
+        "navigationBarTitleText": "赛事模版",
+        "navigationStyle": "custom"
+      }
+    },
+
     {
       "path": "pages/index/index",
       "style": {

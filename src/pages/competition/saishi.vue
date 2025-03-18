@@ -170,7 +170,7 @@
             <view class="item">
               <view class="left">赛事项目 <view class="icon">*</view></view>
               <view class="right" @click="toSaiShiProject"
-                ><text>请选择赛事项目</text
+                ><text>{{ typeName ? typeName : "请选择赛事项目" }}</text
                 ><image
                   src="/static/images/right.png"
                   mode="scaleToFill"
@@ -179,8 +179,10 @@
             </view>
             <view class="item">
               <view class="left">赛事模版<view class="icon">*</view></view>
-              <view class="right"
-                ><text>请选择赛事模版</text
+              <view class="right" @click="toTemplete" style="width: 60%"
+                ><text>{{
+                  templateName ? templateName : "请选择赛事模版"
+                }}</text
                 ><image
                   src="/static/images/right.png"
                   mode="scaleToFill"
@@ -195,6 +197,8 @@
                     v-model="name"
                     placeholder="请填写赛事名称"
                     border="none"
+                    @blur="blur1"
+                   placeholderClass="right-align"
                   ></u-input>
                 </view>
               </view>
@@ -204,9 +208,10 @@
               <view class="right">
                 <view class="input">
                   <u-input
-                    v-model="fuName"
+                    v-model="fuTitle"
                     placeholder="请填写赛事副标题"
                     border="none"
+                    @blur="blur2"
                   ></u-input> </view
               ></view>
             </view>
@@ -252,15 +257,15 @@
             </view>
             <view class="item">
               <view class="left">赛事地点 <view class="icon">*</view></view>
-              <view class="right"
-                ><text>请选择赛事地点</text
+              <view class="right" @click="toPlace" style="width: 60%"
+                ><text>{{ fullAddress ? fullAddress : "请选择赛事地点" }}</text
                 ><image
                   src="/static/images/right.png"
                   mode="scaleToFill"
                   style="width: 12px; height: 12px"
               /></view>
             </view>
-            <view class="item">
+            <!-- <view class="item">
               <view class="left">详细地址<view class="icon">*</view></view>
               <view class="right">
                 <view style="width: 60px">
@@ -270,20 +275,24 @@
                     border="none"
                   ></u-input> </view
               ></view>
-            </view>
+            </view> -->
             <view class="item-o">
               <view class="left">赛事时间 <view class="icon">*</view></view>
               <view class="right">
-                <view class="time" @click="show = true"> 开始时间 </view>
+                <view class="time" @click="show1 = true">
+                  {{ startTime ? startTime : "开始时间" }}</view
+                >
                 <text>至</text>
-                <view class="time" @click="show = true"> 结束时间 </view>
+                <view class="time" @click="show2 = true">
+                  {{ endTime ? endTime : "结束时间" }}</view
+                >
               </view>
             </view>
             <view class="item">
               <view class="left">赛事裁判 <view class="icon">*</view></view>
-              <view class="right"
-                ><text>请选择裁判</text
-                ><image
+              <view class="right">
+                <u-avatar src="/static/images/boy.jpg"></u-avatar>
+                <image
                   src="/static/images/right.png"
                   mode="scaleToFill"
                   style="width: 12px; height: 12px"
@@ -322,42 +331,48 @@
           <image
             src="/static/images/赛事报名设置.png"
             mode="scaleToFill"
-            style="width: 100%; height: 22px; margin-top: 15px"
+            style="width: 100%; height: 22px"
           />
 
           <view class="o-text">
             <view class="item">
               <view class="left">报名方式 <view class="icon">*</view></view>
               <view class="right">
-                <u-checkbox-group v-model="checked" placement="row">
-                  <u-checkbox
+                <u-radio-group v-model="way" placement="row">
+                  <u-radio
                     activeColor="red"
                     label="单人"
                     shape="circle"
-                  ></u-checkbox>
-                  <u-checkbox
+                    name="1"
+                  ></u-radio>
+                  <u-radio
                     activeColor="red"
                     label="小队"
                     shape="circle"
                     customStyle="margin-left: 20px"
-                  ></u-checkbox>
-                </u-checkbox-group>
+                    name="2"
+                  ></u-radio>
+                </u-radio-group>
               </view>
             </view>
             <view class="item">
               <view class="left">报名人数 <view class="icon">*</view></view>
-              <view class="right"
-                ><text>请选择报名人数</text
-                ><image
-                  src="/static/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+              <view class="right">
+                <view style="width: 110px">
+                  <u-input
+                    v-model="number"
+                    placeholder="请输入报名人数"
+                    border="none"
+                    type="number"
+                    @blur="blur3"
+                  ></u-input>
+                </view>
+              </view>
             </view>
             <view class="item">
               <view class="left">性别限制 <view class="icon">*</view></view>
-              <view class="right"
-                ><text>无限制</text
+              <view class="right" @click="show3 = true"
+                ><text>{{ genderLimitName ? genderLimitName : "无限制" }}</text
                 ><image
                   src="/static/images/right.png"
                   mode="scaleToFill"
@@ -372,8 +387,8 @@
               <view class="bt">
                 <view class="left">
                   <view class="l1">最低</view>
-                  <view class="l2"
-                    >0
+                  <view class="l2" @click="show4 = true"
+                    >{{ ageLimitMin ? ageLimitMin : 0 }}
                     <image
                       src="/static/images/right.png"
                       mode="scaleToFill"
@@ -384,8 +399,8 @@
 
                 <view class="right">
                   <view class="r1">最高</view>
-                  <view class="r2"
-                    >99
+                  <view class="r2" @click="show5 = true"
+                    >{{ ageLimitMax ? ageLimitMax : 99 }}
                     <image
                       src="/static/images/right.png"
                       mode="scaleToFill"
@@ -402,7 +417,7 @@
                 </view>
                 <view class="right">
                   <u-checkbox-group
-                    v-model="checked"
+                    v-model="badge"
                     placement="row"
                     iconPlacement="right"
                   >
@@ -411,6 +426,7 @@
                       shape="circle"
                       label="需要认证徽章"
                       customStyle="gap:10px"
+                      name="0"
                     ></u-checkbox>
                   </u-checkbox-group>
                 </view>
@@ -418,8 +434,8 @@
               <view class="bt">
                 <view class="left">
                   <view class="l1">最低</view>
-                  <view class="l2"
-                    >无限制
+                  <view class="l2" @click="show6 = true"
+                    >{{ badgeLevelMinName ? badgeLevelMinName : "无限制" }}
                     <image
                       src="/static/images/right.png"
                       mode="scaleToFill"
@@ -430,8 +446,8 @@
 
                 <view class="right">
                   <view class="r1">最高</view>
-                  <view class="r2"
-                    >无限制
+                  <view class="r2" @click="show7 = true"
+                    >{{ badgeLevelMaxName ? badgeLevelMaxName : "无限制" }}
                     <image
                       src="/static/images/right.png"
                       mode="scaleToFill"
@@ -446,9 +462,10 @@
               <view class="right">
                 <view class="input">
                   <u-input
-                    v-model="fuName"
+                    v-model="entryFee"
                     placeholder="请填写参赛费用"
                     border="none"
+                    @blur="blur4"
                   ></u-input>
                   ￥</view
                 ></view
@@ -456,7 +473,7 @@
             </view>
           </view>
 
-          <view class="save">
+          <view class="save" @click="save1">
             <text>保存</text>
           </view>
         </view>
@@ -989,10 +1006,50 @@
       </view>
 
       <u-datetime-picker
-        :show="show"
-        v-model="value1"
+        :show="show1"
+        v-model="date"
         mode="datetime"
+        @cancel="cancel1"
+        @confirm="confirm1"
       ></u-datetime-picker>
+      <u-datetime-picker
+        :show="show2"
+        v-model="date"
+        mode="datetime"
+        @cancel="show2 = false"
+        @confirm="confirm2"
+      ></u-datetime-picker>
+      <u-picker
+        :show="show3"
+        :columns="columns3"
+        @cancel="show3 = false"
+        @confirm="confirm3"
+      ></u-picker>
+      <u-picker
+        :show="show4"
+        :columns="columns4"
+        @cancel="show4 = false"
+        @confirm="confirm4"
+      ></u-picker>
+      <u-picker
+        :show="show5"
+        :columns="columns4"
+        @cancel="show5 = false"
+        @confirm="confirm5"
+      ></u-picker>
+      <u-picker
+        :show="show6"
+        :columns="columns6"
+        @cancel="show6 = false"
+        @confirm="confirm6"
+      ></u-picker>
+      <u-picker
+        :show="show7"
+        :columns="columns6"
+        @cancel="show7 = false"
+        @confirm="confirm7"
+      ></u-picker>
+      <u-toast ref="notice"></u-toast>
     </view>
   </view>
 </template>
@@ -1001,6 +1058,11 @@
 export default {
   data() {
     return {
+      show1: false,
+      show2: false,
+      show5: false,
+      show6: false,
+      show7: false,
       activeTab: 0,
       checked: true,
       show: false,
@@ -1028,6 +1090,35 @@ export default {
       type: "1",
       form: "1",
       sponsor: "0",
+      name: uni.getStorageSync("name") ?? "",
+      fuTitle: uni.getStorageSync("fuTitle") ?? "",
+      labelId: uni.getStorageSync("labelId") ?? 0,
+      typeName: uni.getStorageSync("typeName") ?? "",
+      startTime: uni.getStorageSync("startTime") ?? 0,
+      date: Number(new Date()),
+      endTime: uni.getStorageSync("endTime") ?? 0,
+      way: "1",
+      fullAddress: uni.getStorageSync("fullAddress") ?? "",
+      show3: false,
+      columns3: [["无限制", "男", "女"]],
+      columns4: [],
+      number: uni.getStorageSync("number") ?? "",
+      genderLimit: 0,
+      show4: false,
+      badge: [],
+      entryFee: uni.getStorageSync("entryFee") ?? "",
+      templateId: uni.getStorageSync("templateId") ?? "",
+      templateName: uni.getStorageSync("templateName") ?? "",
+      umpireId: 101112,
+      ageLimitMin: 0,
+      ageLimitMax: 99,
+      genderLimitName: uni.getStorageSync("genderLimitName") ?? "",
+      columns6: [["网球水平1.0", "网球水平2.0", "网球水平3.0", "网球水平4.0"]],
+      badgeLevelMin: uni.getStorageSync("badgeLevelMin") ?? "",
+      badgeLevelMinName: uni.getStorageSync("badgeLevelMinName") ?? "",
+      badgeLevelMax: uni.getStorageSync("badgeLevelMax") ?? "",
+      badgeLevelMaxName: uni.getStorageSync("badgeLevelMaxName") ?? "",
+      matchId: 0,
     };
   },
   onShow() {
@@ -1036,6 +1127,7 @@ export default {
       this.serialNum = result.data.serialNum;
       uni.setStorageSync("serialNum", result.data.serialNum);
     }
+    this.getAge();
   },
   methods: {
     setActiveTab(index) {
@@ -1048,11 +1140,9 @@ export default {
         this.changeSkin = true;
       }
     },
-
     changeColor(color) {
       this.selectColor = color;
     },
-
     onSliderChange(value) {
       const index = Math.floor((value / 100) * (this.colorList.length - 1)); // 计算对应的颜色索引
       this.selectColor = this.colorList[index]; // 更新选中颜色
@@ -1114,9 +1204,6 @@ export default {
       this[`fileList${event.name}`].splice(event.index, 1);
     },
     async afterRead(event) {
-      // console.log(event);
-      // return
-      // 当设置 multiple 为 true 时, file 为数组格式，否则为对象格式
       let lists = [].concat(event.file);
       let fileListLen = this[`fileList${event.name}`].length;
       lists.map((item) => {
@@ -1142,7 +1229,6 @@ export default {
       }
     },
     uploadFilePromise(url) {
-      console.log(url);
       const token = uni.getStorageSync("token");
       const params = {
         serialNum: this.serialNum,
@@ -1180,6 +1266,133 @@ export default {
       uni.navigateTo({
         url: "/pages/competition/project",
       });
+    },
+    toTemplete() {
+      uni.navigateTo({
+        url: `/pages/competition/templete?labelId=${this.labelId}`,
+      });
+    },
+    toPlace() {
+      uni.navigateTo({
+        url: "/pages/competition/place",
+      });
+    },
+    cancel1() {
+      this.show1 = false;
+    },
+    confirm1(n) {
+      this.show1 = false;
+      const date = new Date(n.value);
+      const isoString = date.toISOString();
+      this.startTime = isoString.split(".")[0];
+      uni.setStorageSync("startTime", this.startTime);
+    },
+    confirm2(n) {
+      this.show2 = false;
+      const date = new Date(n.value);
+      const isoString = date.toISOString();
+      this.endTime = isoString.split(".")[0];
+      uni.setStorageSync("endTime", this.endTime);
+    },
+    toJudge() {
+      uni.navigateTo({
+        url: "/pages/competition/judge",
+      });
+    },
+    confirm3(n) {
+      this.show3 = false;
+      this.genderLimit = n.indexs[0];
+      this.genderLimitName = n.value[0];
+      uni.setStorageSync("genderLimitName", this.genderLimitName);
+    },
+    async save1() {
+      var result = await uni.$u.http.post("/match/saveMatchBaseInfo", {
+        serialNum: this.serialNum,
+        joinPointsRace: this.joinPointsRace,
+        labelId: this.labelId,
+        templateId: this.templateId,
+        name: this.name,
+        fuTitle: this.fuTitle,
+        type: this.type,
+        form: this.form,
+        fullAddress: this.fullAddress,
+        startTime: this.startTime,
+        endTime: this.endTime,
+        umpireId: this.umpireId,
+        sponsor: this.sponsor,
+      });
+      if (result.status == 200) {
+        this.matchId = result.data.matchId;
+      } else {
+        this.$refs.notice.show({
+          type: "error",
+          message: result.message,
+        });
+      }
+      var res = await uni.$u.http.post("/match/saveMatchRegisterInfo", {
+        matchId: this.matchId,
+        serialNum: this.serialNum,
+        way: this.way,
+        number: this.number,
+        genderLimit: this.genderLimit,
+        ageLimitMin: this.ageLimitMin,
+        ageLimitMax: this.ageLimitMax,
+        entryFee: this.entryFee,
+      });
+      if (res.status == 200) {
+        this.$refs.notice.show({
+          type: "success",
+          message: res.message,
+        });
+      } else {
+        this.$refs.notice.show({
+          type: "error",
+          message: res.message,
+        });
+      }
+    },
+    blur1(n) {
+      uni.setStorageSync("name", n);
+    },
+    blur2(n) {
+      uni.setStorageSync("fuTitle", n);
+    },
+    blur3(n) {
+      uni.setStorageSync("number", n);
+    },
+    getAge() {
+      var arr = [];
+      for (let i = 0; i <= 100; i++) {
+        arr.push(i);
+      }
+      this.columns4.push(arr);
+    },
+    confirm4(n) {
+      this.show4 = false;
+      this.ageLimitMin = n.indexs[0];
+      uni.setStorageSync("ageLimitMin", this.ageLimitMin);
+    },
+    confirm5(n) {
+      this.show5 = false;
+      this.ageLimitMax = n.indexs[0];
+      uni.setStorageSync("ageLimitMax", this.ageLimitMax);
+    },
+    blur4(n) {
+      uni.setStorageSync("entryFee", n);
+    },
+    confirm6(n) {
+      this.show6 = false;
+      this.badgeLevelMin = n.indexs[0];
+      this.badgeLevelMinName = n.value[0];
+      uni.setStorageSync("badgeLevelMin", this.badgeLevelMin);
+      uni.setStorageSync("badgeLevelMinName", this.badgeLevelMinName);
+    },
+    confirm7(n) {
+      this.show7 = false;
+      this.badgeLevelMax = n.indexs[0];
+      this.badgeLevelMaxName = n.value[0];
+      uni.setStorageSync("badgeLevelMax", this.badgeLevelMax);
+      uni.setStorageSync("badgeLevelMaxName", this.badgeLevelMaxName);
     },
   },
   computed: {
@@ -1762,13 +1975,13 @@ export default {
             color: #1d2326;
 
             .left {
-              width: 40%;
+              width: 45%;
               display: flex;
               align-items: center;
               justify-content: space-between;
             }
             .right {
-              width: 40%;
+              width: 45%;
               display: flex;
               align-items: center;
               justify-content: space-between;
@@ -1811,7 +2024,7 @@ export default {
               font-weight: 400;
               font-size: 14px;
               color: rgba(29, 35, 38, 0.3);
-              width: 45%;
+              width: 49%;
             }
 
             text {
@@ -2000,5 +2213,8 @@ export default {
   font-weight: 400;
   font-size: 14px;
   color: rgba(255, 255, 255, 0.5);
+}
+.right-align{
+  text-align: right;
 }
 </style>

@@ -54,7 +54,6 @@
           shape="circle"
         >
           <template slot="suffix">
-            <!-- <u-button text="搜索" color="#EC384A" shape="circle"></u-button> -->
             <view class="bt1">搜索</view>
           </template>
         </u-input>

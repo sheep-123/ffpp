@@ -80,6 +80,7 @@
             @afterRead="afterRead"
             :fileList="fileList"
             @delete="deletePic"
+            :multiple="false"
           >
             <view class="info">
               <u-icon name="photo" size="54px" color="#ffffff"></u-icon>
@@ -198,7 +199,7 @@
                     placeholder="请填写赛事名称"
                     border="none"
                     @blur="blur1"
-                   placeholderClass="right-align"
+                    input-align="right"
                   ></u-input>
                 </view>
               </view>
@@ -212,6 +213,7 @@
                     placeholder="请填写赛事副标题"
                     border="none"
                     @blur="blur2"
+                    input-align="right"
                   ></u-input> </view
               ></view>
             </view>
@@ -362,6 +364,7 @@
                   <u-input
                     v-model="number"
                     placeholder="请输入报名人数"
+                    input-align="right"
                     border="none"
                     type="number"
                     @blur="blur3"
@@ -464,6 +467,7 @@
                   <u-input
                     v-model="entryFee"
                     placeholder="请填写参赛费用"
+                    input-align="right"
                     border="none"
                     @blur="blur4"
                   ></u-input>
@@ -494,10 +498,14 @@
           <view class="text">
             <view class="item">
               <view class="left"
-                ><text>参赛报名时间</text> <view class="icon">*</view></view
+                ><text>报名截止时间</text> <view class="icon">*</view></view
               >
-              <view class="right"
-                ><text>请选择参赛报名时间</text
+              <view class="right" @click="show8 = true"
+                ><text>{{
+                  registrationEndTime
+                    ? registrationEndTime
+                    : "请选择报名截止时间"
+                }}</text
                 ><image
                   src="/static/images/right.png"
                   mode="scaleToFill"
@@ -506,15 +514,17 @@
             </view>
             <view class="item">
               <view class="left">赛事名单公布 <view class="icon">*</view></view>
-              <view class="right"
-                ><text>请选择名单公布日期</text
+              <view class="right" @click="show9 = true"
+                ><text>{{
+                  publicationTime ? publicationTime : "请选择名单公布日期"
+                }}</text
                 ><image
                   src="/static/images/right.png"
                   mode="scaleToFill"
                   style="width: 12px; height: 12px"
               /></view>
             </view>
-            <view class="item">
+            <!-- <view class="item">
               <view class="left">小组赛淘汰赛</view>
               <view class="right-r"
                 ><text>请选择开赛时间</text
@@ -533,7 +543,7 @@
                   mode="scaleToFill"
                   style="width: 12px; height: 12px"
               /></view>
-            </view>
+            </view> -->
           </view>
 
           <view class="add">
@@ -555,7 +565,7 @@
               退出编辑
             </view>
 
-            <view class="save">保存</view>
+            <view class="save" @click="save2">保存</view>
           </view>
         </view>
       </view>
@@ -575,8 +585,10 @@
           <view class="o-text">
             <view class="item">
               <view class="left">奖励者名称 <view class="icon">*</view></view>
-              <view class="right"
-                ><text>请选择奖励者名称</text
+              <view class="right" @click="show10 = true"
+                ><text>{{
+                  rewardTypeName ? rewardTypeName : "请选择奖励者名称"
+                }}</text
                 ><image
                   src="/static/images/right.png"
                   mode="scaleToFill"
@@ -588,9 +600,11 @@
               <view class="right">
                 <view style="width: 50px">
                   <u-input
-                    v-model="name"
+                    v-model="rewardAmount"
                     placeholder="￥0.00"
                     border="none"
+                    @blur="blur5"
+                    type="number"
                   ></u-input>
                 </view>
               </view>
@@ -598,43 +612,48 @@
             <view class="item">
               <view class="left">赞助类型 <view class="icon">*</view></view>
               <view class="right">
-                <u-checkbox-group v-model="checked" placement="row">
-                  <u-checkbox
+                <u-radio-group v-model="sponsorType" placement="row">
+                  <u-radio
                     activeColor="red"
                     label="实物赞助"
                     shape="circle"
-                  ></u-checkbox>
-                  <u-checkbox
+                    name="实物赞助"
+                  ></u-radio>
+                  <u-radio
                     activeColor="red"
                     label="服务赞助"
+                    name="服务赞助"
                     shape="circle"
                     customStyle="margin-left: 20px"
-                  ></u-checkbox>
-                </u-checkbox-group>
+                  ></u-radio>
+                </u-radio-group>
               </view>
             </view>
             <view class="item-o">
               <view class="left">领取方式 <view class="icon">*</view></view>
               <view class="right">
-                <u-checkbox-group v-model="checked" placement="row">
-                  <u-checkbox
+                <u-radio-group v-model="receiveMethod" placement="row">
+                  <u-radio
                     activeColor="red"
                     label="比赛现场发放"
+                    name="比赛现场发放"
                     shape="circle"
-                  ></u-checkbox>
-                  <u-checkbox
+                  ></u-radio>
+                  <u-radio
                     activeColor="red"
                     label="到店领取"
+                    name="到店领取"
                     shape="circle"
                     customStyle="margin-left: 5px"
-                  ></u-checkbox>
-                  <u-checkbox
+                  ></u-radio>
+                  <u-radio
                     activeColor="red"
                     label="两者都支持"
+                    name="两者都支持"
                     shape="circle"
                     customStyle="margin-left: 5px"
-                  ></u-checkbox>
-                </u-checkbox-group>
+                  ></u-radio>
+                </u-radio-group>
               </view>
             </view>
             <view class="item-o">
@@ -643,32 +662,38 @@
                 <view class="right">
                   <view style="width: 110px">
                     <u-input
-                      v-model="name"
+                      v-model="rewardName"
                       placeholder="请填写奖品名称"
                       border="none"
+                      @blur="blur7"
+                      input-align="right"
                     ></u-input>
                   </view>
                 </view>
               </view>
               <view class="bt">
-                <view class="left">
+                <view class="left" style="width: 49%">
                   <view class="l1">数量</view>
-                  <view style="width: 60%">
+                  <view style="width: 50%">
                     <u-input
-                      v-model="name"
+                      v-model="rewardNum"
                       placeholder="请输入"
                       border="none"
+                      @blur="blur8"
+                      input-align="right"
                     ></u-input>
                   </view>
                 </view>
 
-                <view class="right">
+                <view class="right" style="width: 49%">
                   <view class="r1">单位</view>
-                  <view style="width: 60%">
+                  <view>
                     <u-input
-                      v-model="name"
+                      v-model="rewardUnit"
                       placeholder="请输入"
                       border="none"
+                      @blur="blur9"
+                      input-align="right"
                     ></u-input>
                   </view>
                 </view>
@@ -676,8 +701,8 @@
             </view>
             <view class="item">
               <view class="left">到店领取地址 <view class="icon">*</view></view>
-              <view class="right"
-                ><text>请选择</text
+              <view class="right" @click="chooseAddress" style="width: 60%"
+                ><text>{{ pickupAddress ? pickupAddress : "请选择" }}</text
                 ><image
                   src="/static/images/right.png"
                   mode="scaleToFill"
@@ -687,13 +712,14 @@
             <view class="item">
               <view class="left">联系方式 <view class="icon">*</view></view>
               <view class="right">
-                <view class="input">
-                  <u-input
-                    v-model="name"
-                    placeholder="请填写联系方式"
-                    border="none"
-                  ></u-input>
-                </view>
+                <u-input
+                  v-model="contactInfo"
+                  placeholder="请填写联系方式"
+                  border="none"
+                  @blur="blur6"
+                  type="number"
+                  input-align="right"
+                ></u-input>
               </view>
             </view>
             <view class="item">
@@ -734,7 +760,7 @@
               退出编辑
             </view>
 
-            <view class="save">保存</view>
+            <view class="save" @click="save3">保存</view>
           </view>
         </view>
       </view>
@@ -753,11 +779,11 @@
 
           <u-scroll-list :indicator="false">
             <view class="tick">
-              <view class="item-a"> 小组淘汰赛 </view>
-              <view class="item"> 八强赛8进4 </view>
-              <view class="item"> 1/4决赛 </view>
-              <view class="item"> 季军赛 </view>
-              <view class="item"> 季军赛 </view>
+              <view class="item-a"> 淘汰赛制 </view>
+              <view class="item"> 循环赛制 </view>
+              <view class="item"> 1V1赛制 </view>
+              <view class="item"> 主客场赛制 </view>
+              <view class="item"> 双败赛制 </view>
             </view>
           </u-scroll-list>
 
@@ -766,7 +792,16 @@
           <view class="o-text">
             <view class="item">
               <view class="left">本阶段 <view class="icon">*</view></view>
-              <view class="right"><text>32人/队</text></view>
+              <view class="right">
+                <u-input
+                  v-model="stageExplains"
+                  placeholder="32人/队"
+                  border="none"
+                  @blur="blur10"
+                  type="number"
+                  input-align="right"
+                ></u-input>
+              </view>
             </view>
             <view class="item-o">
               <view class="top">
@@ -777,8 +812,8 @@
               <view class="bt">
                 <view class="left">
                   <view class="l1">组数</view>
-                  <view class="l2"
-                    >请选择
+                  <view class="l2" @click="show11 = true"
+                    >{{ groupNum ? groupNum : "请选择" }}
                     <image
                       src="/static/images/right.png"
                       mode="scaleToFill"
@@ -789,8 +824,8 @@
 
                 <view class="right">
                   <view class="r1">匹配方式</view>
-                  <view class="r2"
-                    >请选择
+                  <view class="r2" @click="show12 = true"
+                    >{{ matchingMannerName ? matchingMannerName : "请选择" }}
                     <image
                       src="/static/images/right.png"
                       mode="scaleToFill"
@@ -807,25 +842,21 @@
                 </view>
               </view>
               <view class="bt">
-                <view class="left">
-                  <u-checkbox-group v-model="checked" placement="row">
-                    <u-checkbox
-                      activeColor="red"
-                      label="系统订单匹配"
-                      shape="circle"
-                    ></u-checkbox>
-                  </u-checkbox-group>
-                </view>
-
-                <view class="right" style="width: 30%">
-                  <u-checkbox-group v-model="checked" placement="row">
-                    <u-checkbox
-                      activeColor="red"
-                      label="人工添加"
-                      shape="circle"
-                    ></u-checkbox>
-                  </u-checkbox-group>
-                </view>
+                <u-radio-group v-model="groupVenueType" placement="row">
+                  <u-radio
+                    activeColor="red"
+                    label="系统订单匹配"
+                    name="1"
+                    shape="circle"
+                  ></u-radio>
+                  <u-radio
+                    activeColor="red"
+                    label="人工添加"
+                    name="2"
+                    shape="circle"
+                    customStyle="margin-left: 100px"
+                  ></u-radio>
+                </u-radio-group>
               </view>
             </view>
             <view class="item-o">
@@ -835,25 +866,21 @@
                 </view>
               </view>
               <view class="bt">
-                <view class="left">
-                  <u-checkbox-group v-model="checked" placement="row">
-                    <u-checkbox
-                      activeColor="red"
-                      label="系统随机匹配"
-                      shape="circle"
-                    ></u-checkbox>
-                  </u-checkbox-group>
-                </view>
-
-                <view class="right" style="width: 50%">
-                  <u-checkbox-group v-model="checked" placement="row">
-                    <u-checkbox
-                      activeColor="red"
-                      label="根据场地1对1匹配"
-                      shape="circle"
-                    ></u-checkbox>
-                  </u-checkbox-group>
-                </view>
+                <u-radio-group v-model="groupUmpireType" placement="row">
+                  <u-radio
+                    activeColor="red"
+                    label="系统随机匹配"
+                    name="1"
+                    shape="circle"
+                  ></u-radio>
+                  <u-radio
+                    activeColor="red"
+                    label="根据场地1对1匹配"
+                    shape="circle"
+                    name="2"
+                    customStyle="margin-left: 40px"
+                  ></u-radio>
+                </u-radio-group>
               </view>
             </view>
             <view class="item-o">
@@ -863,43 +890,49 @@
                 </view>
               </view>
               <view class="bt">
-                <u-checkbox-group v-model="checked" placement="row">
-                  <u-checkbox
+                <u-radio-group v-model="scoringMethod">
+                  <u-radio
                     activeColor="red"
                     label="积分"
+                    name="1"
                     shape="circle"
-                  ></u-checkbox>
-                  <u-checkbox
+                  ></u-radio>
+                  <u-radio
                     activeColor="red"
-                    label="积分"
+                    label="时间"
+                    name="2"
                     shape="circle"
-                  ></u-checkbox>
-                  <u-checkbox
+                  ></u-radio>
+                  <u-radio
                     activeColor="red"
-                    label="积分"
+                    label="距离"
+                    name="3"
                     shape="circle"
-                  ></u-checkbox>
-                  <u-checkbox
+                  ></u-radio>
+                  <u-radio
                     activeColor="red"
-                    label="积分"
+                    label="分数"
+                    name="4"
                     shape="circle"
-                  ></u-checkbox>
-                  <u-checkbox
+                  ></u-radio>
+                  <u-radio
                     activeColor="red"
-                    label="积分"
+                    label="重量"
+                    name="5"
                     shape="circle"
-                  ></u-checkbox>
-                  <u-checkbox
+                  ></u-radio>
+                  <u-radio
                     activeColor="red"
-                    label="积分"
+                    label="胜负"
+                    name="6"
                     shape="circle"
-                  ></u-checkbox>
-                </u-checkbox-group>
+                  ></u-radio>
+                </u-radio-group>
               </view>
             </view>
           </view>
 
-          <view class="pp">赛事报名完成后可进行匹配</view>
+          <view class="pp" @click="save4">赛事报名完成后可进行匹配</view>
         </view>
       </view>
 
@@ -969,23 +1002,72 @@
           </view>
 
           <image
-            src="/static/images/注意事项.png"
+            src="/static/images/赛事说明.png"
             mode="scaleToFill"
             style="width: 100%; height: 22px; margin-top: 15px"
           />
 
-          <view class="tx-container">
+          <view class="sm">
+            <view class="title">赛事说明</view>
+            <view class="gn">
+              <view class="left">
+                <image
+                  src="/static/images/文字.png"
+                  mode="scaleToFill"
+                  style="width: 16px; height: 16px"
+                />
+                文字
+              </view>
+              <view class="right">
+                <view class="up">上移</view>
+                <view class="down">下移</view>
+                <view class="delete">删除</view>
+              </view>
+            </view>
+
             <textarea
               class="t1"
-              maxlength="2000"
+              maxlength="20000"
               placeholder="请编辑比赛注意事项..."
               placeholder-class="placeholder-class"
-              auto-height
               v-model="tx1"
             >
             </textarea>
-            <view class="count">
-              <view class="count-i">{{ tx1.length }}/<text>2000</text></view>
+
+            <view class="gn">
+              <view class="left">
+                <image
+                  src="/static/images/图片.png"
+                  mode="scaleToFill"
+                  style="width: 16px; height: 16px"
+                />
+                图片
+              </view>
+              <view class="right">
+                <view class="down">上移</view>
+                <view class="up">下移</view>
+                <view class="delete">删除</view>
+              </view>
+            </view>
+            <image mode="scaleToFill" style="width: 318px; height: 206px" />
+
+            <view class="add">
+              <view class="item">
+                <image
+                  src="/static/images/文字.png"
+                  mode="scaleToFill"
+                  style="width: 24px; height: 24px"
+                />
+                文字
+              </view>
+              <view class="item">
+                <image
+                  src="/static/images/图片.png"
+                  mode="scaleToFill"
+                  style="width: 24px; height: 24px"
+                />
+                图片
+              </view>
             </view>
           </view>
 
@@ -1009,7 +1091,7 @@
         :show="show1"
         v-model="date"
         mode="datetime"
-        @cancel="cancel1"
+        @cancel="show1 = false"
         @confirm="confirm1"
       ></u-datetime-picker>
       <u-datetime-picker
@@ -1049,6 +1131,38 @@
         @cancel="show7 = false"
         @confirm="confirm7"
       ></u-picker>
+      <u-datetime-picker
+        :show="show8"
+        v-model="date"
+        mode="datetime"
+        @cancel="show8 = false"
+        @confirm="confirm8"
+      ></u-datetime-picker>
+      <u-datetime-picker
+        :show="show9"
+        v-model="date"
+        mode="datetime"
+        @cancel="show9 = false"
+        @confirm="confirm9"
+      ></u-datetime-picker>
+      <u-picker
+        :show="show10"
+        :columns="columns10"
+        @cancel="show10 = false"
+        @confirm="confirm10"
+      ></u-picker>
+      <u-picker
+        :show="show11"
+        :columns="columns4"
+        @cancel="show11 = false"
+        @confirm="confirm11"
+      ></u-picker>
+      <u-picker
+        :show="show12"
+        :columns="columns12"
+        @cancel="show12 = false"
+        @confirm="confirm12"
+      ></u-picker>
       <u-toast ref="notice"></u-toast>
     </view>
   </view>
@@ -1063,6 +1177,7 @@ export default {
       show5: false,
       show6: false,
       show7: false,
+      show9: false,
       activeTab: 0,
       checked: true,
       show: false,
@@ -1083,7 +1198,7 @@ export default {
       isDragging: false, // 是否正在拖动
       tabs: ["报名设置", "环节设置", "奖励设置", "直击设置", "规则设置"],
       bmType: [],
-      serialNum: uni.getStorageSync("serialNum") || 0,
+      serialNum: uni.getStorageSync("serialNum") ?? "",
       fileList: [],
       joinList: ["1"],
       joinPointsRace: 0,
@@ -1118,15 +1233,47 @@ export default {
       badgeLevelMinName: uni.getStorageSync("badgeLevelMinName") ?? "",
       badgeLevelMax: uni.getStorageSync("badgeLevelMax") ?? "",
       badgeLevelMaxName: uni.getStorageSync("badgeLevelMaxName") ?? "",
-      matchId: 0,
+      matchId: uni.getStorageSync("matchId") ?? "",
+      show8: false,
+      registrationEndTime: uni.getStorageSync("registrationEndTime") ?? 0,
+      publicationTime: uni.getStorageSync("publicationTime") ?? null,
+      show10: false,
+      rewardType: uni.getStorageSync("rewardType") ?? "",
+      rewardTypeName: uni.getStorageSync("rewardTypeName") ?? "",
+      columns10: [["冠军", "亚军", "季军", "第四名", "第五名", "第六名"]],
+      rewardAmount: uni.getStorageSync("rewardAmount") ?? "",
+      sponsorType: "实物赞助",
+      receiveMethod: "到店领取",
+      pickupAddress: uni.getStorageSync("pickupAddress") ?? "",
+      contactInfo: uni.getStorageSync("contactInfo") ?? "",
+      scoringMethod: "积分",
+      scoringMethod: "1",
+      groupUmpireType: "1",
+      groupVenueType: "1",
+      show11: false,
+      groupNum: uni.getStorageSync("groupNum") ?? null,
+      show12: false,
+      columns12: [
+        ["淘汰赛制", "循环赛制", "1V1赛制", "主客场赛制", "双败赛制"],
+      ],
+      matchingMannerName: uni.getStorageSync("matchingMannerName") ?? null,
+      matchingManner: uni.getStorageSync("matchingManner") ?? null,
+      rewardName: uni.getStorageSync("rewardName") ?? "",
+      rewardNum: uni.getStorageSync("rewardNum") ?? "",
+      rewardUnit: uni.getStorageSync("rewardUnit") ?? "",
+      op: 0,
+      stageExplains: uni.getStorageSync("stageExplains") ?? "",
     };
   },
-  onShow() {
-    const result = uni.$u.http.get("/match/getSerialNum");
-    if (result.status == 200) {
-      this.serialNum = result.data.serialNum;
-      uni.setStorageSync("serialNum", result.data.serialNum);
+  async mounted() {
+    if (!this.serialNum) {
+      const result = await uni.$u.http.get("/match/getSerialNum");
+      if (result.status == 200) {
+        this.serialNum = result.data.serialNum;
+        uni.setStorageSync("serialNum", result.data.serialNum);
+      }
     }
+
     this.getAge();
   },
   methods: {
@@ -1201,35 +1348,47 @@ export default {
       uni.setStorageSync("theme", this.selectColor);
     },
     deletePic(event) {
-      this[`fileList${event.name}`].splice(event.index, 1);
+      this.fileList.splice(event.index, 1); // 删除指定索引的图片
     },
     async afterRead(event) {
+      // 清空之前的文件列表，确保只保留最新上传的图片
+      this.fileList = [];
+
       let lists = [].concat(event.file);
-      let fileListLen = this[`fileList${event.name}`].length;
       lists.map((item) => {
-        this[`fileList${event.name}`].push({
+        this.fileList.push({
           ...item,
           status: "uploading",
           message: "上传中",
         });
       });
+
       for (let i = 0; i < lists.length; i++) {
-        const result = await this.uploadFilePromise(lists[i].url);
-        let item = this[`fileList${event.name}`][fileListLen];
-        this[`fileList${event.name}`].splice(
-          fileListLen,
-          1,
-          Object.assign(item, {
-            status: "success",
-            message: "",
-            url: result,
-          })
-        );
-        fileListLen++;
+        try {
+          const result = await this.uploadFilePromise(lists[i].url);
+          let item = this.fileList[i];
+          this.fileList.splice(
+            i,
+            1,
+            Object.assign(item, {
+              status: "success",
+              message: "",
+              url: result,
+            })
+          );
+        } catch (error) {
+          this.$refs.notice.show({
+            type: "error",
+            message: "图片上传失败，请重试",
+          });
+        }
       }
     },
     uploadFilePromise(url) {
-      const token = uni.getStorageSync("token");
+      console.log(url);
+      // const token = uni.getStorageSync("token");
+      const token =
+        "eyJhbGciOiJIUzUxMiJ9.eyJ1aWQiOiJlNGUwM2MwMmE2NTk0NjJkOTQ5MjJiYmQwMzk2ZGM2ZCIsInVuaW9uaWQiOiJvcEZ2ZTZFNUREWFNkcmdmLWhnYm5DbzFhU1FZIiwib3BlbmlkIjoib0RXYVA3ZEluczZxaHd3NXpVbG00WHJwbzE0MCIsInNlc3Npb25fa2V5IjoiMGNqS1E5NE13dm1YTWhrMHRtTUtydz09IiwiaWQiOjMzMDMxNzgzMiwiaWF0IjoxNzQxOTE0NzQ1fQ.LAgk1VxIjXOBMiMhSPzUiPOKLWkeXNsXIHiGAwuQrT36Zk3lVdrHW8b7KF1eDqtfj95pcPVT9_A7vaggIwR4Bg";
       const params = {
         serialNum: this.serialNum,
         file: url,
@@ -1237,7 +1396,7 @@ export default {
         fileTypeName: "赛事主图",
       };
       return new Promise((resolve, reject) => {
-        uni.uploadFile({
+        var result = uni.uploadFile({
           url: "http://192.168.3.36:8001/file/upload",
           filePath: url,
           name: "file",
@@ -1251,6 +1410,12 @@ export default {
             }, 1000);
           },
         });
+        if (result.status == 200) {
+          this.$refs.notice.show({
+            type: "success",
+            message: result.message,
+          });
+        }
       });
     },
     a(n) {
@@ -1277,21 +1442,30 @@ export default {
         url: "/pages/competition/place",
       });
     },
-    cancel1() {
-      this.show1 = false;
-    },
     confirm1(n) {
       this.show1 = false;
       const date = new Date(n.value);
-      const isoString = date.toISOString();
-      this.startTime = isoString.split(".")[0];
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0"); // 月份从0开始，需要+1
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+
+      // 格式化为 "YYYY-MM-DD HH:mm"
+      this.startTime = `${year}-${month}-${day} ${hours}:${minutes}`;
       uni.setStorageSync("startTime", this.startTime);
     },
     confirm2(n) {
       this.show2 = false;
       const date = new Date(n.value);
-      const isoString = date.toISOString();
-      this.endTime = isoString.split(".")[0];
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0"); // 月份从0开始，需要+1
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+
+      // 格式化为 "YYYY-MM-DD HH:mm"
+      this.endTime = `${year}-${month}-${day} ${hours}:${minutes}`;
       uni.setStorageSync("endTime", this.endTime);
     },
     toJudge() {
@@ -1306,48 +1480,46 @@ export default {
       uni.setStorageSync("genderLimitName", this.genderLimitName);
     },
     async save1() {
-      var result = await uni.$u.http.post("/match/saveMatchBaseInfo", {
-        serialNum: this.serialNum,
-        joinPointsRace: this.joinPointsRace,
-        labelId: this.labelId,
-        templateId: this.templateId,
-        name: this.name,
-        fuTitle: this.fuTitle,
-        type: this.type,
-        form: this.form,
-        fullAddress: this.fullAddress,
-        startTime: this.startTime,
-        endTime: this.endTime,
-        umpireId: this.umpireId,
-        sponsor: this.sponsor,
-      });
-      if (result.status == 200) {
-        this.matchId = result.data.matchId;
-      } else {
+      try {
+        var result = await uni.$u.http.post("/match/saveMatchBaseInfo", {
+          serialNum: this.serialNum,
+          joinPointsRace: this.joinPointsRace,
+          labelId: this.labelId,
+          templateId: this.templateId,
+          name: this.name,
+          fuTitle: this.fuTitle,
+          type: this.type,
+          form: this.form,
+          fullAddress: this.fullAddress,
+          startTime: this.startTime,
+          endTime: this.endTime,
+          umpireId: this.umpireId,
+          sponsor: this.sponsor,
+        });
+        if (result.status == 200) {
+          this.matchId = result.data.matchId;
+          uni.setStorageSync("matchId", this.matchId);
+          var res = await uni.$u.http.post("/match/saveMatchRegisterInfo", {
+            matchId: this.matchId,
+            serialNum: this.serialNum,
+            way: this.way,
+            number: this.number,
+            genderLimit: this.genderLimit,
+            ageLimitMin: this.ageLimitMin,
+            ageLimitMax: this.ageLimitMax,
+            entryFee: this.entryFee,
+          });
+          if (res.status == 200) {
+            this.$refs.notice.show({
+              type: "success",
+              message: res.message,
+            });
+          }
+        }
+      } catch (err) {
         this.$refs.notice.show({
           type: "error",
-          message: result.message,
-        });
-      }
-      var res = await uni.$u.http.post("/match/saveMatchRegisterInfo", {
-        matchId: this.matchId,
-        serialNum: this.serialNum,
-        way: this.way,
-        number: this.number,
-        genderLimit: this.genderLimit,
-        ageLimitMin: this.ageLimitMin,
-        ageLimitMax: this.ageLimitMax,
-        entryFee: this.entryFee,
-      });
-      if (res.status == 200) {
-        this.$refs.notice.show({
-          type: "success",
-          message: res.message,
-        });
-      } else {
-        this.$refs.notice.show({
-          type: "error",
-          message: res.message,
+          message: err.data.message,
         });
       }
     },
@@ -1394,6 +1566,178 @@ export default {
       uni.setStorageSync("badgeLevelMax", this.badgeLevelMax);
       uni.setStorageSync("badgeLevelMaxName", this.badgeLevelMaxName);
     },
+    confirm8(n) {
+      this.show8 = false;
+      const date = new Date(n.value);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0"); // 月份从0开始，需要+1
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+
+      // 格式化为 "YYYY-MM-DD HH:mm"
+      this.registrationEndTime = `${year}-${month}-${day} ${hours}:${minutes}`;
+      uni.setStorageSync("registrationEndTime", this.registrationEndTime);
+    },
+    confirm9(n) {
+      this.show9 = false;
+      const date = new Date(n.value);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0"); // 月份从0开始，需要+1
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+
+      // 格式化为 "YYYY-MM-DD HH:mm"
+      this.publicationTime = `${year}-${month}-${day} ${hours}:${minutes}`;
+      uni.setStorageSync("publicationTime", this.publicationTime);
+    },
+    confirm10(n) {
+      this.show10 = false;
+      this.rewardType = n.indexs[0] + 1;
+      this.rewardTypeName = n.value[0];
+      uni.setStorageSync("rewardType", this.rewardType);
+      uni.setStorageSync("rewardTypeName", this.rewardTypeName);
+    },
+    blur5(n) {
+      uni.setStorageSync("rewardAmount", n);
+    },
+    chooseAddress() {
+      uni.chooseLocation({
+        success: (res) => {
+          this.pickupAddress = res.address;
+          uni.setStorageSync("pickupAddress", res.address);
+        },
+        fail: function () {},
+        complete: function () {},
+      });
+    },
+    blur6(n) {
+      uni.setStorageSync("contactInfo", n);
+    },
+    confirm11(n) {
+      this.show11 = false;
+      this.groupNum = n.indexs[0];
+      uni.setStorageSync("groupNum", this.groupNum);
+    },
+    confirm12(n) {
+      this.show12 = false;
+      this.matchingManner = n.indexs[0] + 1;
+      this.matchingMannerName = n.value[0];
+      uni.setStorageSync("matchingManner", this.matchingManner);
+      uni.setStorageSync("matchingMannerName", this.matchingMannerName);
+    },
+    async save2() {
+      try {
+        const date = new Date(new Date());
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0"); // 月份从0开始，需要+1
+        const day = String(date.getDate()).padStart(2, "0");
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+
+        // 格式化为 "YYYY-MM-DD HH:mm"
+        this.publicationTime = `${year}-${month}-${day} ${hours}:${minutes}`;
+        var result = await uni.$u.http.post("/match/saveMatchScheInfo", {
+          matchId: this.matchId,
+          serialNum: this.serialNum,
+          registrationEndTime: this.registrationEndTime,
+          registrationStartTime: `${year}-${month}-${day} ${hours}:${minutes}`,
+          publicationTime: this.publicationTime,
+        });
+        if (result.status == 200) {
+          this.$refs.notice.show({
+            type: "success",
+            message: result.message,
+          });
+        }
+      } catch (err) {
+        this.$refs.notice.show({
+          type: "error",
+          message: err.data.message,
+        });
+      }
+    },
+    async save3() {
+      try {
+        const result = await uni.$u.http.post("/match/saveMatchRewardInfo", {
+          matchId: this.matchId,
+          serialNum: this.serialNum,
+          rewards: [
+            {
+              rewardType: this.rewardType,
+              rewardAmount: this.rewardAmount,
+              sponsorType: this.sponsorType,
+              receiveMethod: this.receiveMethod,
+              pickupAddress: this.pickupAddress,
+              contactInfo: this.contactInfo,
+              prizes: [
+                {
+                  rewardName: this.rewardName,
+                  rewardNum: this.rewardNum,
+                  rewardUnit: this.rewardUnit,
+                  rewardSort: this.rewardSort,
+                },
+              ],
+            },
+          ],
+        });
+        if (result.status === 200) {
+          this.$refs.notice.show({
+            type: "success",
+            message: result.message,
+          });
+        }
+      } catch (error) {
+        this.$refs.notice.show({
+          type: "error",
+          message: error.data.message,
+        });
+      }
+    },
+    blur7(n) {
+      uni.setStorageSync("rewardName", n);
+    },
+    blur8(n) {
+      uni.setStorageSync("rewardNum", n);
+    },
+    blur9(n) {
+      uni.setStorageSync("rewardUnit", n);
+    },
+    blur10(n) {
+      uni.setStorageSync("stageExplains", n);
+    },
+    async save4() {
+      try {
+        var result = await uni.$u.http.post("/match/saveMatchHitConfig", {
+          matchId: this.matchId,
+          serialNum: this.serialNum,
+          hitConfigList: [
+            {
+              hitTypeCode: 1,
+              hitTypeName: "淘汰赛制",
+              stageExplains: this.stageExplains,
+              groupNum: this.groupNum,
+              matchingManner: this.matchingManner,
+              groupVenueType: this.groupVenueType,
+              groupUmpireType: this.groupUmpireType,
+              scoringMethod: this.scoringMethod,
+            },
+          ],
+        });
+        if (result.code == 200) {
+          this.$refs.notice.show({
+            type: "success",
+            message: result.message,
+          });
+        }
+      } catch (err) {
+        this.$refs.notice.show({
+          type: "error",
+          message: err.data.message,
+        });
+      }
+    },
   },
   computed: {
     sliderPosition() {
@@ -1417,7 +1761,7 @@ export default {
 
 <style lang="scss">
 :root {
-  --active-color: v-bind(selectColor); // 使用 Vue 的 v-bind 绑定变量
+  --active-color: v-bind(selectColor);
 }
 .new {
   width: 100vw;
@@ -1655,7 +1999,7 @@ export default {
 
   .type {
     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.2),
-      inset 0 15px 20px rgba(0, 0, 0, 0.2);
+      0px -5px 10px 0px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1973,19 +2317,6 @@ export default {
             font-weight: 400;
             font-size: 14px;
             color: #1d2326;
-
-            .left {
-              width: 45%;
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-            }
-            .right {
-              width: 45%;
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-            }
           }
 
           .left {
@@ -1995,6 +2326,8 @@ export default {
             display: flex;
             align-items: center;
             gap: 5px;
+            //不换行
+            white-space: nowrap;
 
             .wh {
               width: 16px;
@@ -2019,6 +2352,10 @@ export default {
             justify-content: flex-start;
             align-items: center;
             gap: 2px;
+
+            .r1 {
+              white-space: nowrap;
+            }
 
             .time {
               font-weight: 400;
@@ -2166,6 +2503,91 @@ export default {
         }
       }
 
+      .sm {
+        background: white;
+        border-radius: 20px;
+        margin-top: 10px;
+        padding: 10px;
+        overflow: hidden;
+        .title {
+          font-weight: 600;
+          font-size: 14px;
+          color: #1d2326;
+        }
+        .gn {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-top: 15px;
+          .left {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+          }
+          .right {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            .up {
+              font-weight: 400;
+              font-size: 12px;
+              color: rgba(29, 35, 38, 0.3);
+              width: 52px;
+              height: 24px;
+              border-radius: 20px;
+              border: 1px solid #f0f0f0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            .down {
+              font-weight: 400;
+              font-size: 12px;
+              color: #1d2326;
+              width: 52px;
+              height: 24px;
+              border-radius: 20px;
+              border: 1px solid #f0f0f0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            .delete {
+              font-weight: 400;
+              font-size: 12px;
+              color: #1d2326;
+              width: 52px;
+              height: 24px;
+              border-radius: 20px;
+              border: 1px solid #f0f0f0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+          }
+        }
+        .t1 {
+          border: 1px solid #f0f0f0;
+          border-radius: 5px;
+          width: 318px;
+          height: 160px;
+          margin-top: 10px;
+        }
+        .add {
+          display: flex;
+          gap: 24px;
+          justify-content: flex-start;
+          .item {
+            display: flex;
+            align-items: center;
+            font-weight: 400;
+            font-size: 14px;
+            color: #1d2326;
+            gap: 5px;
+          }
+        }
+      }
+
       .tx {
         background-color: blue;
       }
@@ -2213,8 +2635,5 @@ export default {
   font-weight: 400;
   font-size: 14px;
   color: rgba(255, 255, 255, 0.5);
-}
-.right-align{
-  text-align: right;
 }
 </style>

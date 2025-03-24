@@ -2,18 +2,18 @@
   <view class="box">
     <u-navbar bgColor="rgba(0,0,0,0)">
       <view slot="left">
-        <image src="/static/images/更多-白色.png" class="more" />
+        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/更多-白色.png" class="more" />
       </view>
     </u-navbar>
     <view class="content">
       <view class="main">
         <view class="first">
-          <image src="/static/images/avatar.png" />
+           <u-avatar :src="src" size="80"></u-avatar>
           <view class="v">
             <view class="v-top">半场好球先生</view>
             <view class="value">
               <view>玩家号：26734412</view>
-              <image src="/static/images/qrcode.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/qrcode.png" />
             </view>
           </view>
         </view>
@@ -33,7 +33,7 @@
         <view class="third">
           <view class="left">
             <view class="info">
-              <image src="/static/images/ssdj.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/ssdj.png" />
               <text>暂无赛事等级</text>
             </view>
 
@@ -41,41 +41,41 @@
               >还没有填写你的自我介绍呢，点击右上角编辑资料去填写吧～</view
             >
           </view>
-          <image src="/static/images/empty.png" mode="scaleToFill" />
+          <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/empty.png" mode="scaleToFill" />
         </view>
 
         <view class="fourth">
           <view class="top">
             <view class="left">
               <image
-                src="/static/images/qrcode.png"
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/qrcode.png"
                 mode="scaleToFill"
                 style="width: 16px; height: 16px"
               />
               <text>徽章</text>
               <view class="prizes">
                 <image
-                  src="/static/images/huizhang1.png"
+                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/huizhang1.png"
                   mode="scaleToFill"
                   style="width: 24px; height: 24px"
                 />
                 <image
-                  src="/static/images/huizhang1.png"
+                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/huizhang1.png"
                   mode="scaleToFill"
                   style="width: 24px; height: 24px"
                 />
                 <image
-                  src="/static/images/huizhang1.png"
+                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/huizhang1.png"
                   mode="scaleToFill"
                   style="width: 24px; height: 24px"
                 />
                 <image
-                  src="/static/images/huizhang1.png"
+                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/huizhang1.png"
                   mode="scaleToFill"
                   style="width: 24px; height: 24px"
                 />
                 <image
-                  src="/static/images/huizhang1.png"
+                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/huizhang1.png"
                   mode="scaleToFill"
                   style="width: 24px; height: 24px"
                 />
@@ -84,7 +84,7 @@
             <view class="right">
               <text>去获得</text>
               <image
-                src="/static/images/right.png"
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
                 mode="scaleToFill"
                 style="width: 12px; height: 12px"
               />
@@ -93,7 +93,7 @@
           <view class="top">
             <view class="left">
               <image
-                src="/static/images/qrcode.png"
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/qrcode.png"
                 mode="scaleToFill"
                 style="width: 16px; height: 16px"
               />
@@ -103,7 +103,7 @@
             <view class="right">
               <text>去获得</text>
               <image
-                src="/static/images/right.png"
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
                 mode="scaleToFill"
                 style="width: 12px; height: 12px"
               />
@@ -119,7 +119,7 @@
             </view>
 
             <image
-              src="/static/images/我的赛事icon.png"
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/我的赛事icon.png"
               mode="scaleToFill"
               style="width: 40px; height: 40px"
             />
@@ -131,7 +131,7 @@
             </view>
 
             <image
-              src="/static/images/我的赛事icon.png"
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/我的赛事icon.png"
               mode="scaleToFill"
               style="width: 40px; height: 40px"
             />
@@ -153,43 +153,43 @@
       </view>
       <view class="dt">
         <view class="item">
-          <image src="/static/images/02.jpg" mode="widthFix" />
+          <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg" mode="widthFix" />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
-              <image src="/static/images/avatar.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/avatar.png" />
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image src="/static/images/like.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png" />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image src="/static/images/01.jpg" mode="widthFix" />
+          <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg" mode="widthFix" />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
-              <image src="/static/images/avatar.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/avatar.png" />
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image src="/static/images/like.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png" />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image src="/static/images/01.jpg" mode="widthFix" />
+          <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg" mode="widthFix" />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
-              <image src="/static/images/avatar.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/avatar.png" />
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image src="/static/images/like.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png" />
               <view class="value">1000</view>
             </view>
           </view>
@@ -242,7 +242,7 @@ export default {
   width: 100vw;
   height: 100vh;
   position: relative;
-  background: url("/static/images/05.jpg") no-repeat;
+  background: url("https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/05.jpg") no-repeat;
 
   .more {
     width: 16px;
@@ -286,9 +286,11 @@ export default {
             color: rgba(29, 35, 38, 0.6);
             gap: 3px;
             display: flex;
+            align-items: center;
             image {
               width: 16px;
               height: 16px;
+              margin-top: 0px;
             }
           }
         }

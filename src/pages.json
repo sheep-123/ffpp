@@ -4,60 +4,12 @@
   },
   "pages": [
     {
-      "path": "pages/competition/saishi",
-      "style": {
-        "navigationBarTitleText": "发赛事",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/competition/address",
-      "style": {
-        "navigationBarTitleText": "场次",
-        "navigationStyle": "custom"
-      }
-    },
-
-    {
-      "path": "pages/competition/place",
-      "style": {
-        "navigationBarTitleText": "赛事地点",
-        "navigationStyle": "custom"
-      }
-    },
-
-    {
-      "path": "pages/competition/judge",
-      "style": {
-        "navigationBarTitleText": "赛事裁判",
-        "navigationStyle": "custom"
-      }
-    },
-
-    {
-      "path": "pages/competition/project",
-      "style": {
-        "navigationBarTitleText": "选择赛事项目",
-        "navigationStyle": "custom"
-      }
-    },
-
-    {
-      "path": "pages/competition/templete",
-      "style": {
-        "navigationBarTitleText": "赛事模版",
-        "navigationStyle": "custom"
-      }
-    },
-
-    {
       "path": "pages/index/index",
       "style": {
         "navigationBarTitleText": "首页",
         "navigationStyle": "custom"
       }
     },
-
     {
       "path": "pages/user/login",
       "style": {
@@ -65,7 +17,6 @@
         "navigationStyle": "custom"
       }
     },
-
     {
       "path": "pages/play/play",
       "style": {
@@ -73,7 +24,6 @@
         "navigationStyle": "custom"
       }
     },
-
     {
       "path": "pages/user/user",
       "style": {
@@ -88,7 +38,6 @@
         "navigationStyle": "custom"
       }
     },
-
     {
       "path": "pages/add/add",
       "style": {
@@ -156,5 +105,54 @@
         "selectedIconPath": "static/images/my-check.png"
       }
     ]
-  }
+  },
+  "subPackages": [
+    {
+      "root": "competition",
+      "pages": [
+        {
+          "path": "publish/saishi",
+          "style": {
+            "navigationBarTitleText": "发赛事",
+             "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "publish/judge",
+          "style": {
+            "navigationBarTitleText": "裁判",
+             "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "publish/place",
+          "style": {
+            "navigationBarTitleText": "地点",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "publish/project",
+          "style": {
+            "navigationBarTitleText": "项目",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "publish/templete",
+          "style": {
+            "navigationBarTitleText": "模版",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "apply/appear",
+          "style": {
+            "navigationBarTitleText": "报名比赛",
+            "navigationStyle": "custom"
+          }
+        }
+      ]
+    }
+  ]
 }

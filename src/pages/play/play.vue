@@ -1,15 +1,13 @@
 <template>
   <view class="box">
-    <image src="../../static/images/play-bg.png" class="bg" />
+    <image
+      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/play-bg.png"
+      class="bg"
+    />
     <view class="rank">
       <view class="item">
         <view class="rank-num">1st</view>
-        <u-image
-          src="/static/images/boy.jpg"
-          shape="circle"
-          width="40px"
-          height="40px"
-        ></u-image>
+        <u-avatar :src="src"></u-avatar>
         <view class="name">健身小趴菜</view>
         <view class="score">
           <div class="item">黄金1</div>
@@ -18,12 +16,7 @@
       </view>
       <view class="item">
         <view class="rank-num">1st</view>
-        <u-image
-          src="/static/images/boy.jpg"
-          shape="circle"
-          width="40px"
-          height="40px"
-        ></u-image>
+        <u-avatar :src="src"></u-avatar>
         <view class="name">健身小趴菜</view>
         <view class="score">
           <div class="item">黄金1</div>
@@ -32,12 +25,7 @@
       </view>
       <view class="item">
         <view class="rank-num">1st</view>
-        <u-image
-          src="/static/images/boy.jpg"
-          shape="circle"
-          width="40px"
-          height="40px"
-        ></u-image>
+        <u-avatar :src="src"></u-avatar>
         <view class="name">健身小趴菜</view>
         <view class="score">
           <div class="item">黄金1</div>
@@ -46,18 +34,16 @@
       </view>
     </view>
     <view class="search" id="search">
-      <view class="item">
-        <u-input
-          placeholder="请输入赛事关键词"
-          prefixIcon="search"
-          prefixIconStyle="font-size: 22px;color: #909399"
-          shape="circle"
-        >
-          <template slot="suffix">
-            <view class="bt1">搜索</view>
-          </template>
-        </u-input>
-      </view>
+      <u-input
+        placeholder="请输入赛事关键词"
+        prefixIcon="search"
+        prefixIconStyle="font-size: 22px;color: #909399"
+        shape="circle"
+      >
+        <template slot="suffix">
+          <view class="bt1">搜索</view>
+        </template>
+      </u-input>
     </view>
 
     <u-navbar v-if="isSticky">
@@ -79,22 +65,36 @@
       <view class="left">
         <view class="item">
           <text>商圈</text>
-          <u-image src="/static/images/down.png" width="12px" height="12px">
+          <u-image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/down.png"
+            width="12px"
+            height="12px"
+          >
           </u-image>
         </view>
         <view class="item">
           <text>类型</text>
-          <u-image src="/static/images/down.png" width="12px" height="12px">
+          <u-image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/down.png"
+            width="12px"
+            height="12px"
+          >
           </u-image>
         </view>
         <view class="item">
           <text>默认排序</text>
-          <u-image src="/static/images/down.png" width="12px" height="12px">
+          <u-image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/down.png"
+            width="12px"
+            height="12px"
+          >
           </u-image>
         </view>
       </view>
       <view class="right">
-        <image src="/static/images/location.png" />
+        <image
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png"
+        />
         <view class="value">广州市</view>
       </view>
     </view>
@@ -103,16 +103,11 @@
       <view class="item">
         <view class="left">
           <image
-            src="/static/images/02.jpg"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
             style="width: 90px; height: 90px"
           />
           <view class="buttom">
-            <view class="img" style="display: flex">
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-            </view>
+            <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
             <view class="value">已报名</view>
           </view>
         </view>
@@ -121,13 +116,59 @@
           <view class="top">
             <view class="title">天健S1橄榄球联赛</view>
             <view class="hot">
-              <image src="/static/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+              />
               <view class="value">900°</view>
             </view>
           </view>
           <view class="second">海珠区第1名 | 30人 | ￥80/人 </view>
           <view class="time">
-            <image src="/static/images/time.png" mode="scaleToFill" />
+            <image
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/time.png"
+              mode="scaleToFill"
+            />
+            <view class="value">2025 3.18 19:00-20:30</view>
+          </view>
+
+          <view class="right-buttom">
+            <view class="end">
+              <view class="c"></view>
+              <view class="value">明日10:00结束报名</view>
+            </view>
+
+            <view class="bt" @click="join">JOIN</view>
+          </view>
+        </view>
+      </view>
+      <view class="item">
+        <view class="left">
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            style="width: 90px; height: 90px"
+          />
+          <view class="buttom">
+            <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
+            <view class="value">已报名</view>
+          </view>
+        </view>
+
+        <view class="right">
+          <view class="top">
+            <view class="title">天健S1橄榄球联赛</view>
+            <view class="hot">
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+              />
+              <view class="value">900°</view>
+            </view>
+          </view>
+          <view class="second">海珠区第1名 | 30人 | ￥80/人 </view>
+          <view class="time">
+            <image
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/time.png"
+              mode="scaleToFill"
+            />
             <view class="value">2025 3.18 19:00-20:30</view>
           </view>
 
@@ -144,16 +185,11 @@
       <view class="item">
         <view class="left">
           <image
-            src="/static/images/04.jpg"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
             style="width: 90px; height: 90px"
           />
           <view class="buttom">
-            <view class="img" style="display: flex">
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-            </view>
+            <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
             <view class="value">已报名</view>
           </view>
         </view>
@@ -162,13 +198,18 @@
           <view class="top">
             <view class="title">天健S1橄榄球联赛</view>
             <view class="hot">
-              <image src="/static/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+              />
               <view class="value">900°</view>
             </view>
           </view>
           <view class="second">海珠区第1名 | 30人 | ￥80/人 </view>
           <view class="time">
-            <image src="/static/images/time.png" mode="scaleToFill" />
+            <image
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/time.png"
+              mode="scaleToFill"
+            />
             <view class="value">2025 3.18 19:00-20:30</view>
           </view>
 
@@ -185,16 +226,11 @@
       <view class="item">
         <view class="left">
           <image
-            src="/static/images/03.jpg"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
             style="width: 90px; height: 90px"
           />
           <view class="buttom">
-            <view class="img" style="display: flex">
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-            </view>
+            <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
             <view class="value">已报名</view>
           </view>
         </view>
@@ -203,13 +239,18 @@
           <view class="top">
             <view class="title">天健S1橄榄球联赛</view>
             <view class="hot">
-              <image src="/static/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+              />
               <view class="value">900°</view>
             </view>
           </view>
           <view class="second">海珠区第1名 | 30人 | ￥80/人 </view>
           <view class="time">
-            <image src="/static/images/time.png" mode="scaleToFill" />
+            <image
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/time.png"
+              mode="scaleToFill"
+            />
             <view class="value">2025 3.18 19:00-20:30</view>
           </view>
 
@@ -226,16 +267,11 @@
       <view class="item">
         <view class="left">
           <image
-            src="/static/images/04.jpg"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
             style="width: 90px; height: 90px"
           />
           <view class="buttom">
-            <view class="img" style="display: flex">
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-            </view>
+            <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
             <view class="value">已报名</view>
           </view>
         </view>
@@ -244,13 +280,18 @@
           <view class="top">
             <view class="title">天健S1橄榄球联赛</view>
             <view class="hot">
-              <image src="/static/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+              />
               <view class="value">900°</view>
             </view>
           </view>
           <view class="second">海珠区第1名 | 30人 | ￥80/人 </view>
           <view class="time">
-            <image src="/static/images/time.png" mode="scaleToFill" />
+            <image
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/time.png"
+              mode="scaleToFill"
+            />
             <view class="value">2025 3.18 19:00-20:30</view>
           </view>
 
@@ -267,16 +308,11 @@
       <view class="item">
         <view class="left">
           <image
-            src="/static/images/04.jpg"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
             style="width: 90px; height: 90px"
           />
           <view class="buttom">
-            <view class="img" style="display: flex">
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-            </view>
+            <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
             <view class="value">已报名</view>
           </view>
         </view>
@@ -285,13 +321,18 @@
           <view class="top">
             <view class="title">天健S1橄榄球联赛</view>
             <view class="hot">
-              <image src="/static/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+              />
               <view class="value">900°</view>
             </view>
           </view>
           <view class="second">海珠区第1名 | 30人 | ￥80/人 </view>
           <view class="time">
-            <image src="/static/images/time.png" mode="scaleToFill" />
+            <image
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/time.png"
+              mode="scaleToFill"
+            />
             <view class="value">2025 3.18 19:00-20:30</view>
           </view>
 
@@ -308,16 +349,11 @@
       <view class="item">
         <view class="left">
           <image
-            src="/static/images/04.jpg"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
             style="width: 90px; height: 90px"
           />
           <view class="buttom">
-            <view class="img" style="display: flex">
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-            </view>
+            <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
             <view class="value">已报名</view>
           </view>
         </view>
@@ -326,13 +362,18 @@
           <view class="top">
             <view class="title">天健S1橄榄球联赛</view>
             <view class="hot">
-              <image src="/static/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+              />
               <view class="value">900°</view>
             </view>
           </view>
           <view class="second">海珠区第1名 | 30人 | ￥80/人 </view>
           <view class="time">
-            <image src="/static/images/time.png" mode="scaleToFill" />
+            <image
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/time.png"
+              mode="scaleToFill"
+            />
             <view class="value">2025 3.18 19:00-20:30</view>
           </view>
 
@@ -349,16 +390,11 @@
       <view class="item">
         <view class="left">
           <image
-            src="/static/images/04.jpg"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
             style="width: 90px; height: 90px"
           />
           <view class="buttom">
-            <view class="img" style="display: flex">
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-            </view>
+            <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
             <view class="value">已报名</view>
           </view>
         </view>
@@ -367,13 +403,18 @@
           <view class="top">
             <view class="title">天健S1橄榄球联赛</view>
             <view class="hot">
-              <image src="/static/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+              />
               <view class="value">900°</view>
             </view>
           </view>
           <view class="second">海珠区第1名 | 30人 | ￥80/人 </view>
           <view class="time">
-            <image src="/static/images/time.png" mode="scaleToFill" />
+            <image
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/time.png"
+              mode="scaleToFill"
+            />
             <view class="value">2025 3.18 19:00-20:30</view>
           </view>
 
@@ -390,16 +431,11 @@
       <view class="item">
         <view class="left">
           <image
-            src="/static/images/04.jpg"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
             style="width: 90px; height: 90px"
           />
           <view class="buttom">
-            <view class="img" style="display: flex">
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-            </view>
+            <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
             <view class="value">已报名</view>
           </view>
         </view>
@@ -408,54 +444,18 @@
           <view class="top">
             <view class="title">天健S1橄榄球联赛</view>
             <view class="hot">
-              <image src="/static/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+              />
               <view class="value">900°</view>
             </view>
           </view>
           <view class="second">海珠区第1名 | 30人 | ￥80/人 </view>
           <view class="time">
-            <image src="/static/images/time.png" mode="scaleToFill" />
-            <view class="value">2025 3.18 19:00-20:30</view>
-          </view>
-
-          <view class="right-buttom">
-            <view class="end">
-              <view class="c"></view>
-              <view class="value">明日10:00结束报名</view>
-            </view>
-
-            <view class="bt">JOIN</view>
-          </view>
-        </view>
-      </view>
-      <view class="item">
-        <view class="left">
-          <image
-            src="/static/images/04.jpg"
-            style="width: 90px; height: 90px"
-          />
-          <view class="buttom">
-            <view class="img" style="display: flex">
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-              <image src="/static/images/avatar.png"></image>
-            </view>
-            <view class="value">已报名</view>
-          </view>
-        </view>
-
-        <view class="right">
-          <view class="top">
-            <view class="title">天健S1橄榄球联赛</view>
-            <view class="hot">
-              <image src="/static/images/like.png" />
-              <view class="value">900°</view>
-            </view>
-          </view>
-          <view class="second">海珠区第1名 | 30人 | ￥80/人 </view>
-          <view class="time">
-            <image src="/static/images/time.png" mode="scaleToFill" />
+            <image
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/time.png"
+              mode="scaleToFill"
+            />
             <view class="value">2025 3.18 19:00-20:30</view>
           </view>
 
@@ -481,6 +481,12 @@ export default {
       keyword: "",
       statusBarHeight: 0,
       navbarHeight: 44,
+      urls: [
+        "https://uviewui.com/album/1.jpg",
+        "https://uviewui.com/album/2.jpg",
+        "https://uviewui.com/album/3.jpg",
+        "https://uviewui.com/album/4.jpg",
+      ],
     };
   },
   onShow() {
@@ -500,6 +506,11 @@ export default {
         });
       });
     },
+    join() {
+      uni.navigateTo({
+        url: "/pages/competition/appear",
+      });
+    },
   },
 
   computed: {
@@ -512,7 +523,7 @@ export default {
 
 <style lang="scss">
 .box {
-  width: 100%;
+  width: 100vw;
   background: #f7f7f7;
 
   .bg {
@@ -564,12 +575,9 @@ export default {
     }
   }
   .search {
-    width: 100%;
+    width: 90%;
+    margin: auto;
     background-color: #fcfcfc;
-    .item {
-      width: 90%;
-      margin: auto;
-    }
   }
 
   .type.sticky {
@@ -579,6 +587,7 @@ export default {
     padding: 10px;
     box-sizing: border-box;
     margin: 0;
+    z-index: 999;
   }
 
   .type {

@@ -10,23 +10,23 @@
             <text class="lock">附近</text>
             <view class="s-item">
               橄榄球
-              <image src="/static/images/del.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/del.png" />
             </view>
             <view class="s-item">
               橄榄球
-              <image src="/static/images/del.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/del.png" />
             </view>
             <view class="s-item">
               橄榄球
-              <image src="/static/images/del.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/del.png" />
             </view>
             <view class="s-item">
               橄榄球
-              <image src="/static/images/del.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/del.png" />
             </view>
             <view class="s-item">
               橄榄球
-              <image src="/static/images/del.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/del.png" />
             </view>
           </view>
         </view>
@@ -36,51 +36,51 @@
           <view class="sport">
             <view class="s-item">
               蓝球
-              <image src="/static/images/plus.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/plus.png" />
             </view>
             <view class="s-item">
               足球
-              <image src="/static/images/plus.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/plus.png" />
             </view>
             <view class="s-item">
               羽毛球
-              <image src="/static/images/plus.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/plus.png" />
             </view>
             <view class="s-item">
               网球
-              <image src="/static/images/plus.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/plus.png" />
             </view>
             <view class="s-item">
               乒乓球
-              <image src="/static/images/plus.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/plus.png" />
             </view>
             <view class="s-item">
               乒乓球
-              <image src="/static/images/plus.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/plus.png" />
             </view>
             <view class="s-item">
               壁球
-              <image src="/static/images/plus.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/plus.png" />
             </view>
             <view class="s-item">
               匹克球
-              <image src="/static/images/plus.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/plus.png" />
             </view>
             <view class="s-item">
               台球
-              <image src="/static/images/plus.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/plus.png" />
             </view>
             <view class="s-item">
               高尔夫
-              <image src="/static/images/plus.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/plus.png" />
             </view>
             <view class="s-item">
               水球
-              <image src="/static/images/plus.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/plus.png" />
             </view>
             <view class="s-item">
               棒球
-              <image src="/static/images/plus.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/plus.png" />
             </view>
           </view>
         </view>
@@ -90,23 +90,23 @@
           <view class="sport">
             <view class="s-item">
               射箭
-              <image src="/static/images/plus.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/plus.png" />
             </view>
             <view class="s-item">
               攀岩
-              <image src="/static/images/plus.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/plus.png" />
             </view>
             <view class="s-item">
               训犬
-              <image src="/static/images/plus.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/plus.png" />
             </view>
             <view class="s-item">
               钓鱼
-              <image src="/static/images/plus.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/plus.png" />
             </view>
             <view class="s-item">
               健身
-              <image src="/static/images/plus.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/plus.png" />
             </view>
           </view>
         </view>
@@ -116,11 +116,11 @@
           <view class="sport">
             <view class="s-item">
               手游
-              <image src="/static/images/plus.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/plus.png" />
             </view>
             <view class="s-item">
               网游
-              <image src="/static/images/plus.png" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/plus.png" />
             </view>
 
           </view>

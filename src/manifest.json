@@ -61,13 +61,14 @@
         "minified": true
       },
       "usingComponents": true,
+      "lazyCodeLoading": "requiredComponents",//按需注入
       "permission": {
         "scope.userLocation": {
           "desc": "需要用到定位"
         }
       },
       "requiredPrivateInfos": [
-        "getLocation", 
+        "getLocation",
         "chooseLocation",
         "chooseAddress"
       ],

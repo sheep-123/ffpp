@@ -9,7 +9,7 @@
     >
       <view class="info-top">
         <image
-          src="/static/images/avatar.png"
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/avatar.png"
           mode="scaleToFill"
           style="width: 36px; height: 36px"
         />
@@ -38,7 +38,7 @@
         <view class="right">
           <view class="do">去看看</view>
           <image
-            src="/static/images/right.png"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
             mode="scaleToFill"
             style="width: 12px; height: 12px"
           />
@@ -52,7 +52,7 @@
         <view class="right">
           <view class="do">899m</view>
           <image
-            src="/static/images/right.png"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
             mode="scaleToFill"
             style="width: 12px; height: 12px"
           />
@@ -64,7 +64,7 @@
       <view class="list">
         <view class="item">
         <image
-            src="/static/images/avatar.png"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/avatar.png"
             mode="scaleToFill"
             style="width: 34px;height: 34px;"
         />
@@ -94,9 +94,9 @@ export default {
   data() {
     return {
       list: [
-        "/static/images/01.jpg",
-        "/static/images/02.jpg",
-        "/static/images/03.jpg",
+        "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/01.jpg",
+        "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg",
+        "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/03.jpg",
       ],
     };
   },

@@ -7,14 +7,14 @@
           <view class="item">互动</view>
         </view>
         <image
-          src="/static/images/message.png"
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/message.png"
           mode="scaleToFill"
           style="width: 28px; height: 28px; margin-right: 16px"
         />
       </view>
     </u-navbar>
 
-    <view class="main">
+    <view class="main" :style="{ marginTop: stickyTop }">
       <view class="search">
         <u-search
           placeholder="搜索好友、群聊、等聊天记录"
@@ -32,8 +32,7 @@
 
       <view class="list">
         <view class="item">
-          <!-- <u-avatar src="../../static/images/avatar.png" size="96"></u-avatar> -->
-          <image src="/static/images/avatar.png" />
+          <u-avatar :src="src" size="48"></u-avatar>
           <view class="right">
             <view class="top-value">
               <view class="name">奶瓶打不开</view>
@@ -43,8 +42,7 @@
           </view>
         </view>
         <view class="item">
-          <!-- <u-avatar src="../../static/images/avatar.png" size="96"></u-avatar> -->
-          <image src="/static/images/avatar.png" />
+          <u-avatar :src="src" size="48"></u-avatar>
           <view class="right">
             <view class="top-value">
               <view class="name">奶瓶打不开</view>
@@ -54,8 +52,7 @@
           </view>
         </view>
         <view class="item">
-          <!-- <u-avatar src="../../static/images/avatar.png" size="96"></u-avatar> -->
-          <image src="/static/images/avatar.png" />
+          <u-avatar :src="src" size="48"></u-avatar>
           <view class="right">
             <view class="top-value">
               <view class="name">奶瓶打不开</view>
@@ -65,8 +62,7 @@
           </view>
         </view>
         <view class="item">
-          <!-- <u-avatar src="../../static/images/avatar.png" size="96"></u-avatar> -->
-          <image src="/static/images/avatar.png" />
+          <u-avatar :src="src" size="48"></u-avatar>
           <view class="right">
             <view class="top-value">
               <view class="name">奶瓶打不开</view>
@@ -76,8 +72,7 @@
           </view>
         </view>
         <view class="item">
-          <!-- <u-avatar src="../../static/images/avatar.png" size="96"></u-avatar> -->
-          <image src="/static/images/avatar.png" />
+          <u-avatar :src="src" size="48"></u-avatar>
           <view class="right">
             <view class="top-value">
               <view class="name">奶瓶打不开</view>
@@ -87,8 +82,7 @@
           </view>
         </view>
         <view class="item">
-          <!-- <u-avatar src="../../static/images/avatar.png" size="96"></u-avatar> -->
-          <image src="/static/images/avatar.png" />
+          <u-avatar :src="src" size="48"></u-avatar>
           <view class="right">
             <view class="top-value">
               <view class="name">奶瓶打不开</view>
@@ -98,8 +92,7 @@
           </view>
         </view>
         <view class="item">
-          <!-- <u-avatar src="../../static/images/avatar.png" size="96"></u-avatar> -->
-          <image src="/static/images/avatar.png" />
+          <u-avatar :src="src" size="48"></u-avatar>
           <view class="right">
             <view class="top-value">
               <view class="name">奶瓶打不开</view>
@@ -109,8 +102,7 @@
           </view>
         </view>
         <view class="item">
-          <!-- <u-avatar src="../../static/images/avatar.png" size="96"></u-avatar> -->
-          <image src="/static/images/avatar.png" />
+          <u-avatar :src="src" size="48"></u-avatar>
           <view class="right">
             <view class="top-value">
               <view class="name">奶瓶打不开</view>
@@ -120,8 +112,7 @@
           </view>
         </view>
         <view class="item">
-          <!-- <u-avatar src="../../static/images/avatar.png" size="96"></u-avatar> -->
-          <image src="/static/images/avatar.png" />
+          <u-avatar :src="src" size="48"></u-avatar>
           <view class="right">
             <view class="top-value">
               <view class="name">奶瓶打不开</view>
@@ -131,8 +122,7 @@
           </view>
         </view>
         <view class="item">
-          <!-- <u-avatar src="../../static/images/avatar.png" size="96"></u-avatar> -->
-          <image src="/static/images/avatar.png" />
+          <u-avatar :src="src" size="48"></u-avatar>
           <view class="right">
             <view class="top-value">
               <view class="name">奶瓶打不开</view>
@@ -142,8 +132,7 @@
           </view>
         </view>
         <view class="item">
-          <!-- <u-avatar src="../../static/images/avatar.png" size="96"></u-avatar> -->
-          <image src="/static/images/avatar.png" />
+          <u-avatar :src="src" size="48"></u-avatar>
           <view class="right">
             <view class="top-value">
               <view class="name">奶瓶打不开</view>
@@ -153,8 +142,7 @@
           </view>
         </view>
         <view class="item">
-          <!-- <u-avatar src="../../static/images/avatar.png" size="96"></u-avatar> -->
-          <image src="/static/images/avatar.png" />
+          <u-avatar :src="src" size="48"></u-avatar>
           <view class="right">
             <view class="top-value">
               <view class="name">奶瓶打不开</view>
@@ -164,8 +152,7 @@
           </view>
         </view>
         <view class="item">
-          <!-- <u-avatar src="../../static/images/avatar.png" size="96"></u-avatar> -->
-          <image src="/static/images/avatar.png" />
+          <u-avatar :src="src" size="48"></u-avatar>
           <view class="right">
             <view class="top-value">
               <view class="name">奶瓶打不开</view>
@@ -175,8 +162,7 @@
           </view>
         </view>
         <view class="item">
-          <!-- <u-avatar src="../../static/images/avatar.png" size="96"></u-avatar> -->
-          <image src="/static/images/avatar.png" />
+          <u-avatar :src="src" size="48"></u-avatar>
           <view class="right">
             <view class="top-value">
               <view class="name">奶瓶打不开</view>
@@ -189,6 +175,27 @@
     </view>
   </view>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      keyword: "",
+      statusBarHeight: 0,
+      navbarHeight: 44,
+    };
+  },
+  onShow() {
+    const systemInfo = uni.getSystemInfoSync();
+    this.statusBarHeight = systemInfo.statusBarHeight;
+  },
+  computed: {
+    stickyTop() {
+      return `${this.statusBarHeight + this.navbarHeight}px`;
+    },
+  },
+};
+</script>
 
 <style lang="scss">
 .box {
@@ -207,7 +214,7 @@
         font-size: 20px;
         color: rgba(29, 35, 38, 0.3);
       }
-      .item-active{
+      .item-active {
         font-weight: 600;
         font-size: 20px;
         color: black;
@@ -228,7 +235,8 @@
       align-items: center;
       gap: 12px;
       .player {
-        background: url("/static/images/group.png") no-repeat center;
+        background: url("https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/group.png")
+          no-repeat center;
         width: 70px;
         height: 36px;
         font-weight: 600;

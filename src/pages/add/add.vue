@@ -1,20 +1,20 @@
 <template>
   <view class="box">
-    <image src="/static/images/fabu-bg.png" style="width: 100%" />
+    <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/fabu-bg.png" style="width: 100%" />
     <view class="main">
       <view class="tips">
-        <image src="/static/images/tips.png" />
+        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/tips.png" />
         <text>你已加入泡泡365天</text>
       </view>
 
       <view class="content">
-        <image src="/static/images/fasaishi.png" @click="toSaishi"/>
-        <image src="/static/images/fabuhuodong.png" />
-        <image src="/static/images/faqitiaozhan.png" />
-        <image src="/static/images/jifensai.png" />
+        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/fasaishi.png" @click="toSaishi"/>
+        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/fabuhuodong.png" />
+        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/faqitiaozhan.png" />
+        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/jifensai.png" />
       </view>
 
-      <image src="/static/images/delete.png" class="delete" @click="back" />
+      <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/delete.png" class="delete" @click="back" />
     </view>
   </view>
 </template>
@@ -39,7 +39,7 @@ export default {
 
     toSaishi(){
       uni.navigateTo({
-        url: "/pages/competition/saishi" 
+        url: "/competition/publish/saishi" 
       })
     }
   },

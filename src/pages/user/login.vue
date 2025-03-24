@@ -3,7 +3,7 @@
     <u-navbar bgColor="rgba(0,0,0,0)">
       <view slot="left" class="nav">
         <image
-          src="/static/images/back.png"
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/back.png"
           mode="scaleToFill"
           style="width: 24px; height: 24px"
           @click="back"
@@ -14,7 +14,7 @@
 
     <view class="main">
       <image
-        src="/static/images/LOGO.png"
+        src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/LOGO.svg"
         mode="scaleToFill"
         style="width: 106px; height: 106px"
       />
@@ -41,7 +41,7 @@
 export default {
   data() {
     return {
-      checked: false,
+      checked: [],
     };
   },
   methods: {
@@ -52,35 +52,41 @@ export default {
     },
 
     login() {
+      if (!this.checked.length) {
+        this.$refs.notice.show({
+          type: "error",
+          message: "请先阅读并同意用户协议和隐私政策",
+        });
+        return false;
+      }
       uni.login({
         provider: "weixin", //使用微信登录
         success: async (res) => {
           let code = res.code ?? "";
-          console.log(code);
           if (!code) {
             this.$refs.notice.show({
               type: "error",
-              icon: false,
               message: "临时凭证获取失败",
             });
             return false;
           }
-          let result = await uni.$u.http.post("/player/login", { code });
-
-          if (result.status == 200) {
-            uni.setStorageSync("token", result.data.token);
-            uni.setStorageSync("user", result.data.user);
+          try {
+            let result = await uni.$u.http.post("/player/login", { code });
+            if (result.status == 200) {
+              uni.setStorageSync("token", result.data.token);
+              uni.setStorageSync("user", result.data.user);
+              this.$refs.notice.show({
+                type: "success",
+                message: result.message,
+                complete() {
+                  uni.navigateBack();
+                },
+              });
+            }
+          } catch (err) {
             this.$refs.notice.show({
-              type: "success",
-              message: result.msg,
-              complete() {
-                uni.navigateBack({ delta: 1 });
-              },
-            });
-          } else {
-            uni.$refs.notice.show({
               type: "error",
-              message: result.msg,
+              message: err.data.message,
             });
           }
         },

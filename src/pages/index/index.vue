@@ -8,7 +8,7 @@
           <!-- 返回按钮 -->
           <image
             v-if="isMapExpanded"
-            src="/static/images/left.png"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/left.png"
             @click="back"
             class="back-btn"
           />
@@ -19,23 +19,35 @@
             v-model="keyword"
             :show-action="false"
             :bg-color="searchBgColor"
-            @clear="clear"
+            @clear="keyword = ''"
           ></u-search>
         </view>
       </view>
     </u-navbar>
 
-    <view class="title-y" v-if="isSticky" :style="{ top: stickyTop }">
+    <view
+      class="title-y"
+      v-if="isSticky && !isMapExpanded"
+      :style="{ top: stickyTop }"
+    >
       <view class="first">
-        <image src="/static/images/location.png" />
-        <image src="/static/images/near.png" />
+        <image
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png"
+        />
+        <image
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/near.png"
+        />
       </view>
       <view class="item">关注</view>
       <view class="item">美式橄榄球</view>
       <view class="item">飞盘</view>
       <view class="item">桌游</view>
       <view class="item">电竞</view>
-      <image src="/static/images/more.png" class="more" @click="edit"></image>
+      <image
+        src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/more.png"
+        class="more"
+        @click="edit"
+      ></image>
     </view>
 
     <map
@@ -53,150 +65,205 @@
       @touchstart="handleTouchStart"
       @touchmove="handleTouchMove"
       @touchend="handleTouchEnd"
-      :style="{ transform: `translateY(${moveY}px)` }"
+      :style="{ top: pullTop }"
       v-show="!isSticky"
     >
-      <image src="/static/images/pull.png" />
+      <image
+        src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/pull.png"
+      />
       <view class="value">下拉试试</view>
     </view>
 
-    <view class="content" :style="{ transform: `translateY(${moveY}px)` }">
+    <view class="content" :style="{ top: contentTop }">
       <view class="title" id="title">
         <view class="first">
-          <image src="/static/images/location.png" />
-          <image src="/static/images/near.png" />
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png"
+          />
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/near.png"
+          />
         </view>
         <view class="item">关注</view>
         <view class="item">美式橄榄球</view>
         <view class="item">飞盘</view>
         <view class="item">桌游</view>
         <view class="item">电竞</view>
-        <image src="/static/images/more.png" class="more" @click="edit"></image>
+        <image
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/more.png"
+          class="more"
+          @click="edit"
+        ></image>
       </view>
 
       <view class="main">
         <view class="item">
-          <image src="/static/images/02.jpg" mode="widthFix" />
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
-              <image src="/static/images/avatar.png" />
+              <u-avatar :src="src" size="18"></u-avatar>
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image src="/static/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+              />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image src="/static/images/01.jpg" mode="widthFix" />
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
-              <image src="/static/images/avatar.png" />
+              <u-avatar :src="src" size="18"></u-avatar>
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image src="/static/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+              />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image src="/static/images/01.jpg" mode="widthFix" />
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
-              <image src="/static/images/avatar.png" />
+              <u-avatar :src="src" size="18"></u-avatar>
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image src="/static/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+              />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image src="/static/images/03.jpg" mode="widthFix" />
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
-              <image src="/static/images/avatar.png" />
+              <u-avatar :src="src" size="18"></u-avatar>
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image src="/static/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+              />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image src="/static/images/01.jpg" mode="widthFix" />
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
-              <image src="/static/images/avatar.png" />
+              <u-avatar :src="src" size="18"></u-avatar>
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image src="/static/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+              />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image src="/static/images/01.jpg" mode="widthFix" />
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
-              <image src="/static/images/avatar.png" />
+              <u-avatar :src="src" size="18"></u-avatar>
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image src="/static/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+              />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image src="/static/images/01.jpg" mode="widthFix" />
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
-              <image src="/static/images/avatar.png" />
+              <u-avatar :src="src" size="18"></u-avatar>
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image src="/static/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+              />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image src="/static/images/01.jpg" mode="widthFix" />
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
-              <image src="/static/images/avatar.png" />
+              <u-avatar :src="src" size="18"></u-avatar>
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image src="/static/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+              />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image src="/static/images/01.jpg" mode="widthFix" />
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
-              <image src="/static/images/avatar.png" />
+              <u-avatar :src="src" size="18"></u-avatar>
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image src="/static/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+              />
               <view class="value">1000</view>
             </view>
           </view>
@@ -218,7 +285,8 @@ export default {
           latitude: 0,
           longitude: 0,
           title: "当前位置",
-          iconPath: "/static/images/Frame.png",
+          iconPath:
+            "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/Frame.png",
           width: 60, // 新增宽度
           height: 60, // 新增高度
           label: {
@@ -230,7 +298,8 @@ export default {
           },
         },
         {
-          iconPath: "/static/images/Frame.png",
+          iconPath:
+            "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/Frame.png",
           id: 1,
           latitude: 0,
           longitude: 0,
@@ -251,12 +320,21 @@ export default {
       dragStartY: 0, //下拉开始的位置
       isDragging: false, //下拉状态
       screenHeight: 0, //屏幕高度
-      moveY: 0, //下拉距离
       keyword: "",
       statusBarHeight: 0,
       navbarHeight: 44,
+      pullTop: "26%",
+      contentTop: "30%",
+      address: "",
     };
   },
+  // onLoad() {
+  //   uni.reLaunch({
+  //     url: "/competition/apply/appear",
+  //     // url: "/competition/publish/saishi",
+
+  //   });
+  // },
   onShow() {
     this.Location();
     const systemInfo = uni.getSystemInfoSync();
@@ -274,6 +352,23 @@ export default {
         this.markers[0].longitude = res.longitude;
         this.markers[1].latitude = res.latitude + 0.0005;
         this.markers[1].longitude = res.longitude + 0.0005;
+        // 调用逆地理编码接口
+        const apiKey = "ODABZ-7BBWG-5IBQH-QFRRK-C5GIO-IZFZC"; // 替换为你的高德地图 API Key
+        const url = `https://apis.map.qq.com/ws/geocoder/v1/?location=${this.latitude},${this.longitude}&key=${apiKey}`;
+
+        const addressRes = await uni.request({ url });
+        if (addressRes.statusCode === 200 && addressRes.data.status === 0) {
+          this.address = addressRes.data.result.address; // 获取完整地址
+          if (this.address) {
+            var result = await uni.$u.http.post("/saveWjLocation", {
+              address: this.address,
+              locationLat: this.latitude,
+              locationLng: this.longitude,
+            });
+          }
+        } else {
+          console.error("逆地理编码失败:", addressRes.data);
+        }
       } catch (err) {
         console.error("定位失败:", err);
       }
@@ -289,21 +384,30 @@ export default {
       const deltaY = e.touches[0].clientY - this.dragStartY;
 
       if (deltaY >= 0 && deltaY <= this.screenHeight) {
-        this.moveY = deltaY;
+        // 动态计算 top 值
+        this.pullTop = `${26 + deltaY / 10}%`; // 根据下拉距离调整百分比
+        this.contentTop = `${30 + deltaY / 10}%`;
       }
     },
     // 新增触摸结束处理
     handleTouchEnd() {
       this.isDragging = false;
+
       // 判断是否达到滑动阈值，决定是否展开地图
-      if (this.moveY >= 300) {
+      if (parseFloat(this.contentTop) >= 40) {
         this.isMapExpanded = true;
-        this.moveY = this.screenHeight;
+        this.pullTop = "100%"; // 隐藏下拉组件
+        this.contentTop = "100%"; // 隐藏内容组件
+      } else {
+        // 恢复初始位置
+        this.pullTop = "26%";
+        this.contentTop = "30%";
       }
     },
     back() {
       this.isMapExpanded = false;
-      this.moveY = 0;
+      this.pullTop = "26%";
+      this.contentTop = "30%";
     },
 
     edit() {
@@ -319,10 +423,6 @@ export default {
           this.isSticky = res.intersectionRatio <= 0;
         });
       });
-    },
-
-    clear() {
-      this.keyword = "";
     },
   },
 
@@ -478,6 +578,7 @@ export default {
   justify-content: center;
   align-items: center;
   transition: all linear;
+  height: 30px;
 
   .value {
     font-weight: 400;

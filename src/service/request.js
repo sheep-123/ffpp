@@ -4,8 +4,9 @@ module.exports = (vm) => {
   uni.$u.http.setConfig((config) => {
     /* config 为默认全局配置*/
 
+    const to=require("@/config")
     //#ifdef MP-WEIXIN || APP-PLUS
-    config.baseURL = "http://192.168.3.36:8001/"; /* 根域名 */
+    config.baseURL = `${to.url}`; /* 根域名 */
     //#endif
 
     //#ifdef H5
@@ -26,14 +27,10 @@ module.exports = (vm) => {
       // 初始化请求拦截器时，会执行此方法，此时data为undefined，赋予默认{}
       config.data = config.data || {};
 
-      // const token = uni.getStorageSync("token");
-      // if (token) {
-      //   config.header["Authorization"] = `Bearer ${token}`;
-      // }
-      config.header[
-        "Authorization"
-      ] = `Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1aWQiOiJlNGUwM2MwMmE2NTk0NjJkOTQ5MjJiYmQwMzk2ZGM2ZCIsInVuaW9uaWQiOiJvcEZ2ZTZFNUREWFNkcmdmLWhnYm5DbzFhU1FZIiwib3BlbmlkIjoib0RXYVA3ZEluczZxaHd3NXpVbG00WHJwbzE0MCIsInNlc3Npb25fa2V5IjoiMGNqS1E5NE13dm1YTWhrMHRtTUtydz09IiwiaWQiOjMzMDMxNzgzMiwiaWF0IjoxNzQxOTE0NzQ1fQ.LAgk1VxIjXOBMiMhSPzUiPOKLWkeXNsXIHiGAwuQrT36Zk3lVdrHW8b7KF1eDqtfj95pcPVT9_A7vaggIwR4Bg`;
-
+      const token = uni.getStorageSync("token");
+      if (token) {
+        config.header["Authorization"] = `Bearer ${token}`;
+      }
       return config;
     },
     (config) => {

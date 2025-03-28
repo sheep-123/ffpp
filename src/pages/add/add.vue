@@ -1,20 +1,38 @@
 <template>
   <view class="box">
-    <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/fabu-bg.png" style="width: 100%" />
+    <image
+      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/fabu-bg.png"
+      style="width: 100%"
+    />
     <view class="main">
       <view class="tips">
-        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/tips.png" />
+        <image
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/tips.png"
+        />
         <text>你已加入泡泡365天</text>
       </view>
 
       <view class="content">
-        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/fasaishi.png" @click="toSaishi"/>
-        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/fabuhuodong.png" />
-        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/faqitiaozhan.png" />
-        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/jifensai.png" />
+        <image
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/发赛事.svg"
+          @click="toSaishi"
+        />
+        <image
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/发动态.svg"
+        />
+        <image
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/发活动.svg"
+        />
+        <image
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/1v1挑战.svg"
+        />
       </view>
 
-      <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/delete.png" class="delete" @click="back" />
+      <image
+        src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/delete.png"
+        class="delete"
+        @click="back"
+      />
     </view>
   </view>
 </template>
@@ -37,11 +55,11 @@ export default {
       }
     },
 
-    toSaishi(){
+    toSaishi() {
       uni.navigateTo({
-        url: "/competition/publish/saishi" 
-      })
-    }
+        url: "/competition/publish/saishi",
+      });
+    },
   },
 };
 </script>

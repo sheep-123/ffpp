@@ -1,8 +1,8 @@
 <template>
   <view class="box">
-    <u-navbar leftText="赛事项目" @leftClick="back"></u-navbar>
+    <u-navbar leftText="赛事项目" @leftClick="back" :fixed="false"></u-navbar>
 
-    <view class="main" :style="{ marginTop: top }">
+    <view class="main">
       <view class="type">
         <view
           :class="typeId == item.id ? 'item-action' : 'item'"
@@ -18,14 +18,17 @@
           v-for="(item, index) in selectList"
           :key="index"
           @click="selectItem(item, index)"
-          :class="['item', { 'item-active': index == selectIndex }]"
+          :class="[
+            'item',
+            { 'item-active': index == selectIndex || labelId == item.labelId },
+          ]"
         >
           {{ item.labelName }}
           <u-icon
             name="checkmark"
             size="15"
             color="#EC384A"
-            v-if="index == selectIndex"
+            v-if="index == selectIndex || labelId == item.labelId"
           ></u-icon>
           <u-icon name="plus-circle" size="15" v-else></u-icon>
         </view>
@@ -44,17 +47,13 @@ export default {
     return {
       selectIndex: null,
       selectList: [],
-      statusBarHeight: 0,
-      navbarHeight: 44,
       typeList: [],
       typeId: 1,
-      labelId: 0,
-      typeName:'',
+      labelId: uni.getStorageSync("labelId") || "",
+      typeName: "",
     };
   },
   async onShow() {
-    const systemInfo = uni.getSystemInfoSync();
-    this.statusBarHeight = systemInfo.statusBarHeight;
     const result = await uni.$u.http.get("/match/matchLabelTypes");
     if (result.status == 200) {
       this.typeList = result.data;
@@ -85,16 +84,11 @@ export default {
       this.matchLabelTypes();
     },
     enter() {
-      uni.setStorageSync("labelId", this.labelId)
-      uni.setStorageSync("typeName", this.typeName)
+      uni.setStorageSync("labelId", this.labelId);
+      uni.setStorageSync("typeName", this.typeName);
       uni.navigateTo({
         url: `/competition/publish/saishi`,
       });
-    },
-  },
-  computed: {
-    top() {
-      return this.statusBarHeight + this.navbarHeight + 20 + "px";
     },
   },
 };

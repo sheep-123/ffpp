@@ -114,14 +114,14 @@
           "path": "publish/saishi",
           "style": {
             "navigationBarTitleText": "发赛事",
-             "navigationStyle": "custom"
+            "navigationStyle": "custom"
           }
         },
         {
           "path": "publish/judge",
           "style": {
             "navigationBarTitleText": "裁判",
-             "navigationStyle": "custom"
+            "navigationStyle": "custom"
           }
         },
         {
@@ -149,6 +149,41 @@
           "path": "apply/appear",
           "style": {
             "navigationBarTitleText": "报名比赛",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "apply/more",
+          "style": {
+            "navigationBarTitleText": "更多赞助",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "apply/sponsor",
+          "style": {
+            "navigationBarTitleText": "赞助",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "apply/sponsorship",
+          "style": {
+            "navigationBarTitleText": "申请赞助",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "apply/pay",
+          "style": {
+            "navigationBarTitleText": "支付订单",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "apply/share",
+          "style": {
+            "navigationBarTitleText": "支付订单",
             "navigationStyle": "custom"
           }
         }

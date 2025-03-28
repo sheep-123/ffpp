@@ -36,12 +36,12 @@
             <u-avatar :src="src" size="24"></u-avatar>
             <u-avatar :src="src" size="24"></u-avatar>
             <u-avatar :src="src" size="24"></u-avatar>
-            <view class="more"
-              >更多
+            <view class="more" @click="toMore">
+              更多
               <u-icon name="play-right-fill" color="#fff" size="8"></u-icon>
             </view>
           </view>
-          <view class="button" @click="changeSkin = true">我要赞助</view>
+          <view class="button" @click="toSponsor">我要赞助</view>
         </view>
       </view>
       <image
@@ -56,7 +56,7 @@
           z-index: 9;
         "
       />
-      <view class="know">赛事须知</view>
+      <view class="know" @click="openModal">赛事须知</view>
       <view class="share">
         <u-icon name="share-square" color="#fff"></u-icon>分享</view
       >
@@ -85,7 +85,7 @@
 
     <view
       class="content"
-      v-if="activeTab == 0"
+      v-if="activeTab == 0 && !isFinish && !isOver"
       :style="{ background: selectColor }"
     >
       <view class="main">
@@ -101,7 +101,7 @@
           v-if="applyStatus != 1"
         />
         <image
-          src="/static/images/基础信息.svg"
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/基础信息.svg"
           mode="scaleToFill"
           style="
             width: 213px;
@@ -217,6 +217,7 @@
                     border="none"
                     @change="blur1"
                     input-align="right"
+                    placeholderClass="placeholderClass"
                   ></u-input>
                 </view>
               </view>
@@ -231,6 +232,7 @@
                     border="none"
                     @change="blur1"
                     input-align="right"
+                    placeholderClass="placeholderClass"
                   ></u-input>
                 </view>
               </view>
@@ -245,6 +247,7 @@
                     border="none"
                     @change="blur1"
                     input-align="right"
+                    placeholderClass="placeholderClass"
                   ></u-input>
                 </view>
               </view>
@@ -264,11 +267,13 @@
               <view class="right">
                 <view style="width: 110px">
                   <u-input
-                    v-model="name"
+                    v-model="mobile"
                     placeholder="请填写手机号"
                     border="none"
-                    @change="blur1"
+                    @change="change1"
+                    placeholderClass="placeholderClass"
                     input-align="right"
+                    type="number"
                   ></u-input>
                 </view>
               </view>
@@ -277,9 +282,9 @@
               <view class="left">性别 <view class="icon">*</view></view>
               <view class="right">
                 <u-radio-group
-                  v-model="type"
+                  v-model="gender"
                   placement="row"
-                  @change="groupChange"
+                  @change="genderChange"
                 >
                   <u-radio
                     activeColor="red"
@@ -302,11 +307,13 @@
               <view class="right">
                 <view style="width: 110px">
                   <u-input
-                    v-model="name"
+                    v-model="age"
                     placeholder="请填写年龄"
+                    placeholderClass="placeholderClass"
                     border="none"
-                    @change="blur1"
+                    @change="change2"
                     input-align="right"
+                    type="number"
                   ></u-input>
                 </view>
               </view>
@@ -318,23 +325,22 @@
               <view class="right">
                 <view style="width: 170px">
                   <u-input
-                    v-model="name"
+                    v-model="contact"
                     placeholder="请填写紧急联系人手机号"
                     border="none"
-                    @change="blur1"
+                    @change="change3"
                     input-align="right"
+                    placeholderClass="placeholderClass"
+                    type="number"
                   ></u-input>
                 </view>
               </view>
             </view>
             <view class="item">
               <view class="left">血型<view class="icon">*</view></view>
-              <view
-                class="right"
-                @click="toTemplete"
-                :style="{ width: templateName ? '60%' : '' }"
-                ><text :style="{ color: templateName ? 'black' : '' }">{{
-                  templateName || "请选择血型"
+              <view class="right" @click="show1 = true"
+                ><text :style="{ color: blood_type ? 'black' : '' }">{{
+                  blood_type || "请选择血型"
                 }}</text
                 ><image
                   src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
@@ -344,12 +350,9 @@
             </view>
             <view class="item">
               <view class="left">基础疾病<view class="icon">*</view></view>
-              <view
-                class="right"
-                @click="toTemplete"
-                :style="{ width: templateName ? '60%' : '' }"
-                ><text :style="{ color: templateName ? 'black' : '' }">{{
-                  templateName || "请选择基础疾病"
+              <view class="right" @click="show2 = true"
+                ><text :style="{ color: disease ? 'black' : '' }">{{
+                  disease || "请选择基础疾病"
                 }}</text
                 ><image
                   src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
@@ -359,12 +362,9 @@
             </view>
             <view class="item">
               <view class="left">保险保障<view class="icon">*</view></view>
-              <view
-                class="right"
-                @click="toTemplete"
-                :style="{ width: templateName ? '60%' : '' }"
-                ><text :style="{ color: templateName ? 'black' : '' }">{{
-                  templateName || "参与者意外保险"
+              <view class="right" @click="show3 = true"
+                ><text :style="{ color: insurance ? 'black' : '' }">{{
+                  insurance || "参与者意外保险"
                 }}</text
                 ><image
                   src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
@@ -379,13 +379,13 @@
 
     <view
       class="content"
-      v-if="activeTab == 0"
+      v-if="activeTab == 0 && !isFinish && !isOver"
       :style="{ background: selectColor }"
       style="padding-bottom: 102px"
     >
       <view class="main">
         <image
-          src="/static/images/报名参赛.svg"
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/报名参赛.svg"
           mode="scaleToFill"
           style="
             width: 228px;
@@ -424,7 +424,7 @@
               <view class="item">
                 <view class="left">
                   <image
-                    src="/static/images/保险.svg"
+                    src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/保险.svg"
                     mode="scaleToFill"
                     style="width: 16px; height: 16px"
                   />
@@ -453,7 +453,50 @@
               :showText="false"
             ></u-line-progress>
           </view>
-          <view class="botton"> ￥504报名参赛 </view>
+          <view class="botton" @click="apply"> ￥504报名参赛 </view>
+        </view>
+      </view>
+    </view>
+
+    <view
+      class="content"
+      v-if="activeTab == 0 && isFinish"
+      :style="{ background: selectColor }"
+      style="padding-bottom: 102px"
+    >
+      <view class="main">
+        <view class="finish">
+          <u-avatar :src="src" size="60"></u-avatar>
+          <view class="title"
+            >您已完成赛事报名<u-icon
+              name="checkmark-circle-fill"
+              color="#06B66C"
+              size="16"
+            ></u-icon
+          ></view>
+          <view class="gray">请等待赛事名单公布及选手对战表</view>
+          <view class="gray">公布时间：10月11日20:00</view>
+          <view class="time">
+            <view class="item">24</view><text>:</text>
+            <view class="item">24</view><text>:</text>
+            <view class="item">24</view>
+          </view>
+          <view class="bt">取消参赛</view>
+        </view>
+      </view>
+    </view>
+
+    <view
+      class="content"
+      v-if="activeTab == 0 && isOver"
+      :style="{ background: selectColor }"
+      style="padding-bottom: 102px"
+    >
+      <view class="main">
+        <view class="finish">
+          <u-icon name="clock-fill" color="#17A7EF" size="44"></u-icon>
+          <view class="title">赛事报名已结束</view>
+          <view class="gray">敬请期待下一场赛事</view>
         </view>
       </view>
     </view>
@@ -506,7 +549,7 @@
 
         <view class="sshj">
           <image
-            src="/static/images/赛事环节.svg"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/赛事环节.svg"
             mode="scaleToFill"
             style="width: 100%; height: 22px; margin: 24px 0 16px"
           />
@@ -538,26 +581,52 @@
       class="content"
       v-if="activeTab == 2"
       :style="{ background: selectColor }"
-      style="padding-bottom: 96px"
+      style="padding-bottom: 96px; position: relative"
     >
+      <image
+        src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/左滑.svg"
+        mode="scaleToFill"
+        style="
+          position: absolute;
+          left: 10px;
+          width: 24px;
+          height: 54px;
+          top: 185px;
+        "
+      />
+      <image
+        src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/右滑.svg"
+        mode="scaleToFill"
+        style="
+          position: absolute;
+          right: 10px;
+          width: 24px;
+          height: 54px;
+          top: 185px;
+        "
+      />
       <view class="look">
         <view class="main">
+          <view class="rank">1st</view>
           <view class="avatar" style="position: relative">
             <u-avatar :src="src" size="90"></u-avatar>
             <image
-              src="/static/images/奖励边框.svg"
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/奖励边框.svg"
               mode="scaleToFill"
               style="
                 position: absolute;
                 top: 0;
                 right: 0;
-                width: 100px;
-                height: 100px;
+                left: 0;
+                bottom: 0;
+                width: 142px;
+                height: 151px;
               "
             />
           </view>
 
           <view class="nickname">无名之辈</view>
+          <view class="xian"></view>
           <view class="zbf">主办方奖励</view>
           <view class="money">
             <text>5000</text>
@@ -568,13 +637,221 @@
           <view class="food">尤尼克斯球拍×2</view>
           <view class="zzs">赞助商奖励</view>
           <view class="money">
-            <text>5000</text>
+            <text>2000</text>
             RMB奖金
-            <u-icon name="checkmark-circle" color="green"></u-icon
-          ></view>
+          </view>
           <view class="lesson">
             <view class="left">康复拉伸课×1</view>
-            <view>康复工作室</view>
+            <view class="right"><u-icon name="level"></u-icon>康复工作室</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="rank-list">
+        <view class="item">
+          <view class="title">4th</view>
+          <view class="avatar">
+            <u-avatar :src="src" size="30"></u-avatar>
+          </view>
+          龙猫
+        </view>
+        <view class="item">
+          <view class="title">4th</view>
+          <view class="avatar">
+            <u-avatar :src="src" size="30"></u-avatar>
+          </view>
+          龙猫
+        </view>
+        <view class="item">
+          <view class="title">4th</view>
+          <view class="avatar">
+            <u-avatar :src="src" size="30"></u-avatar>
+          </view>
+          龙猫
+        </view>
+        <view class="item">
+          <view class="title">4th</view>
+          <view class="avatar">
+            <u-avatar :src="src" size="30"></u-avatar>
+          </view>
+          龙猫
+        </view>
+        <view class="item">
+          <view class="title">4th</view>
+          <view class="avatar">
+            <u-avatar :src="src" size="30"></u-avatar>
+          </view>
+          龙猫
+        </view>
+      </view>
+
+      <view class="thank">
+        <image
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/特别鸣谢.svg"
+          mode="scaleToFill"
+          style="width: 274px; height: 25px"
+        />
+        <view class="thank-list">
+          <view class="item">
+            <view class="first">
+              <u-avatar :src="src" size="20"></u-avatar>
+              腾讯体育
+            </view>
+            <text>赞助现金</text>
+            <text>3000RMB</text>
+          </view>
+          <view class="item">
+            <view class="first">
+              <u-avatar :src="src" size="20"></u-avatar>
+              腾讯体育
+            </view>
+            <text>赞助现金</text>
+            <text>3000RMB</text>
+          </view>
+
+          <view class="item">
+            <view class="first">
+              <u-avatar :src="src" size="20"></u-avatar>
+              腾讯体育
+            </view>
+            <text>赞助现金</text>
+            <text>3000RMB</text>
+          </view>
+          <view class="item">
+            <view class="first">
+              <u-avatar :src="src" size="20"></u-avatar>
+              腾讯体育
+            </view>
+            <text>赞助现金</text>
+            <text>3000RMB</text>
+          </view>
+          <view class="item">
+            <view class="first">
+              <u-avatar :src="src" size="20"></u-avatar>
+              腾讯体育
+            </view>
+            <text>赞助现金</text>
+            <text>3000RMB</text>
+          </view>
+          <view class="item">
+            <view class="first">
+              <u-avatar :src="src" size="20"></u-avatar>
+              腾讯体育
+            </view>
+            <text>赞助现金</text>
+            <text>3000RMB</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="award">
+        <image
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/赛事奖励.svg"
+          mode="scaleToFill"
+          style="
+            width: 150px;
+            height: 22px;
+            margin: 52px auto 16px;
+            display: block;
+          "
+        />
+
+        <view class="table">
+          <view class="item">
+            <view class="rank">冠军奖励</view>
+            <view class="some">
+              <view class="zbf">主办方奖励</view>
+              <view class="money">
+                <text>5000</text>
+                RMB奖金
+                <u-icon name="checkmark-circle" color="green"></u-icon>
+                <view class="wen">?</view>
+              </view>
+              <view class="food">尤尼克斯球拍×2</view>
+              <view class="zzs">赞助商奖励</view>
+              <view class="money">
+                <text>2000</text>
+                RMB奖金
+              </view>
+              <view class="lesson">
+                <view class="left">康复拉伸课×1</view>
+                <view class="right"
+                  ><u-icon name="level"></u-icon>康复工作室</view
+                >
+              </view>
+            </view>
+          </view>
+          <view class="item">
+            <view class="rank">冠军奖励</view>
+            <view class="some">
+              <view class="zbf">主办方奖励</view>
+              <view class="money">
+                <text>5000</text>
+                RMB奖金
+                <u-icon name="checkmark-circle" color="green"></u-icon>
+                <view class="wen">?</view>
+              </view>
+              <view class="food">尤尼克斯球拍×2</view>
+              <view class="zzs">赞助商奖励</view>
+              <view class="money">
+                <text>2000</text>
+                RMB奖金
+              </view>
+              <view class="lesson">
+                <view class="left">康复拉伸课×1</view>
+                <view class="right"
+                  ><u-icon name="level"></u-icon>康复工作室</view
+                >
+              </view>
+            </view>
+          </view>
+          <view class="item">
+            <view class="rank">冠军奖励</view>
+            <view class="some">
+              <view class="zbf">主办方奖励</view>
+              <view class="money">
+                <text>5000</text>
+                RMB奖金
+                <u-icon name="checkmark-circle" color="green"></u-icon>
+                <view class="wen">?</view>
+              </view>
+              <view class="food">尤尼克斯球拍×2</view>
+              <view class="zzs">赞助商奖励</view>
+              <view class="money">
+                <text>2000</text>
+                RMB奖金
+              </view>
+              <view class="lesson">
+                <view class="left">康复拉伸课×1</view>
+                <view class="right"
+                  ><u-icon name="level"></u-icon>康复工作室</view
+                >
+              </view>
+            </view>
+          </view>
+          <view class="item">
+            <view class="rank">冠军奖励</view>
+            <view class="some">
+              <view class="zbf">主办方奖励</view>
+              <view class="money">
+                <text>5000</text>
+                RMB奖金
+                <u-icon name="checkmark-circle" color="green"></u-icon>
+                <view class="wen">?</view>
+              </view>
+              <view class="food">尤尼克斯球拍×2</view>
+              <view class="zzs">赞助商奖励</view>
+              <view class="money">
+                <text>2000</text>
+                RMB奖金
+              </view>
+              <view class="lesson">
+                <view class="left">康复拉伸课×1</view>
+                <view class="right"
+                  ><u-icon name="level"></u-icon>康复工作室</view
+                >
+              </view>
+            </view>
           </view>
         </view>
       </view>
@@ -813,7 +1090,7 @@
             class="t1"
             maxlength="500"
             placeholder="请输入内容"
-            placeholder-class="placeholder-class"
+            placeholderClass="placeholderClass"
             auto-height
             @input="saveTextareaContent"
             v-model="textareaContent[op]"
@@ -920,6 +1197,43 @@
     </view>
 
     <u-toast ref="notice"></u-toast>
+    <u-modal :show="know" @confirm="closeModal">
+      <view class="modal-content">
+        <view class="x" @click="closeModal1"
+          ><u-icon name="close"></u-icon
+        ></view>
+        <view class="section-title">赛事须知</view>
+        <view class="section-content">
+          {{ matchNotice }}
+        </view>
+
+        <view class="section-title">保险须知</view>
+        <view class="section-content">
+          {{ insuranceNotice }}
+        </view>
+      </view>
+      <view slot="confirmButton" class="modal-footer" @click="closeModal">
+        我知道了 {{ interval ? countdown + "s" : "" }}
+      </view>
+    </u-modal>
+    <u-picker
+      :show="show1"
+      :columns="columns1"
+      @cancel="show1 = false"
+      @confirm="confirm1"
+    ></u-picker>
+    <u-picker
+      :show="show2"
+      :columns="columns2"
+      @cancel="show2 = false"
+      @confirm="confirm2"
+    ></u-picker>
+    <u-picker
+      :show="show3"
+      :columns="columns3"
+      @cancel="show3 = false"
+      @confirm="confirm3"
+    ></u-picker>
   </view>
 </template>
 
@@ -941,6 +1255,28 @@ export default {
         { stage: "季军赛", time: "10月20日 18:00" },
         { stage: "决赛", time: "10月20日 20:00" },
       ],
+      isFinish: false,
+      isOver: false,
+      know: false,
+      countdown: 25,
+      interval: null,
+      applyData: [],
+      mobile: "",
+      gender: "1",
+      age: "",
+      contact: "",
+      disease: "",
+      show1: false,
+      columns1: [],
+      blood_type: "",
+      show2: false,
+      columns2: [],
+      insurance: "",
+      show3: false,
+      columns3: [],
+      disclaimer: "",
+      insuranceNotice: "",
+      matchNotice: "",
     };
   },
   methods: {
@@ -959,12 +1295,171 @@ export default {
       const b = bigint & 255;
       return { r, g, b };
     },
+    toMore() {
+      uni.navigateTo({
+        url: "/competition/apply/more",
+      });
+    },
+    toSponsor() {
+      uni.navigateTo({
+        url: "/competition/apply/sponsor",
+      });
+    },
+    openModal() {
+      this.startCountdown();
+      this.countdown = 25;
+      this.getMatchTemplateNotice();
+    },
+    startCountdown() {
+      this.interval = setInterval(() => {
+        if (this.countdown > 0) {
+          this.countdown--;
+        } else {
+          clearInterval(this.interval);
+          this.interval = null;
+        }
+      }, 1000);
+    },
+    closeModal() {
+      if (this.interval > 0) {
+        return;
+      }
+      this.know = false;
+      if (this.interval) {
+        clearInterval(this.interval); // 清除定时器
+        this.interval = null; // 确保置空
+      }
+    },
+    closeModal1() {
+      this.know = false;
+      if (this.interval) {
+        clearInterval(this.interval); // 清除定时器
+        this.interval = null; // 确保置空
+      }
+    },
+    async apply() {
+      try {
+        const arr = this.applyData;
+        arr[0].value = this.mobile;
+        arr[3].value = this.gender;
+        arr[2].value = this.age;
+        arr[7].value = this.contact;
+        arr[12].value = this.blood_type;
+        arr[13].value = this.disease;
+        arr[14].value = this.insurance;
+        var result = await uni.$u.http.post("/match/saveMatchRegister", {
+          matchId: 11,
+          serialNum: 202503000001,
+          templateId: 15,
+          way: 1,
+          userId: uni.getStorageSync("user").id,
+          requestJson: this.applyData,
+          responseJson: arr,
+          amount: 500,
+        });
+        if (result.status == 200) {
+          this.$refs.notice.show({
+            type: "success",
+            message: result.message,
+          });
+          // 清空缓存
+          uni.removeStorageSync("mobile");
+          uni.removeStorageSync("gender");
+          uni.removeStorageSync("age");
+          uni.removeStorageSync("contact");
+          uni.removeStorageSync("blood_type");
+          uni.removeStorageSync("disease");
+          uni.removeStorageSync("insurance");
+          this.mobile = "";
+          this.gender = "1";
+          this.age = "";
+          this.contact = "";
+          this.blood_type = "";
+          this.disease = "";
+          this.insurance = "";
+          uni.navigateTo({
+            url: "/competition/apply/pay",
+          });
+        }
+      } catch (err) {
+        this.$refs.notice.show({
+          type: "error",
+          message: err.data.message,
+        });
+      }
+    },
+    async getMatchTemplateRegister() {
+      try {
+        var result = await uni.$u.http.get("/match/getMatchTemplateRegister", {
+          params: {
+            templateId: 15,
+          },
+        });
+        if (result.status == 200) {
+          this.applyData = result.data;
+          this.age = uni.getStorageSync("age") || this.applyData[2].applyValue;
+          const blood = this.applyData[12].applyValue;
+          this.columns1 = [blood.split(",")];
+          const disease = this.applyData[13].applyValue;
+          this.columns2 = [disease.split(",")];
+          const insurance = this.applyData[14].applyValue;
+          this.columns3 = [insurance.split(",")];
+        }
+      } catch (err) {
+        this.$refs.notice.show({
+          type: "error",
+          message: err.data.message,
+        });
+      }
+    },
+    change1(n) {
+      uni.setStorageSync("mobile", n);
+    },
+    change2(n) {
+      uni.setStorageSync("age", n);
+    },
+    change3(n) {
+      uni.setStorageSync("contact", n);
+    },
+    confirm1(n) {
+      this.show1 = false;
+      this.blood_type = n.value[0];
+      uni.setStorageSync("blood_type", n.value[0]);
+    },
+    confirm2(n) {
+      this.show2 = false;
+      this.disease = n.value[0];
+      uni.setStorageSync("disease", n.value[0]);
+    },
+    confirm3(n) {
+      this.show3 = false;
+      this.insurance = n.value[0];
+      uni.setStorageSync("insurance", n.value[0]);
+    },
+    genderChange(n) {
+      console.log(n);
+    },
+    async getMatchTemplateNotice() {
+      var result = await uni.$u.http.get("/match/getMatchTemplateNotice", {
+        params: {
+          templateId: 15,
+        },
+      });
+      if (result.status == 200) {
+        console.log(result.data.disclaimer);
+        uni.setStorageSync("disclaimer", result.data.disclaimer);
+        this.insuranceNotice = result.data.insuranceNotice;
+        this.matchNotice = result.data.matchNotice;
+        this.know = true;
+      }
+    },
+  },
+  onLoad() {
+    this.getMatchTemplateRegister();
   },
   computed: {
     activeTabColor() {
       const color = this.selectColor;
-      if (!color) return "#1e54ba"; // 默认颜色
-
       // 将颜色转换为 RGB 格式并调整亮度
       const rgb = this.hexToRgb(color);
       const adjustedR = Math.min(255, rgb.r + 15); // 确保不超过 255
@@ -1357,6 +1852,7 @@ export default {
       .al {
         background-color: rgba(255, 255, 255, 0.2);
         margin-top: 18px;
+        border-radius: 10px;
         .al-top {
           height: 85px;
           display: flex;
@@ -2174,19 +2670,37 @@ export default {
           font-size: 14px;
           color: #ffffff;
         }
+        .rank {
+          font-weight: 400;
+          font-size: 16px;
+          color: #ffffff;
+          margin-top: 25px;
+        }
 
         .avatar {
           display: flex;
           justify-content: center;
           align-items: center;
-          width: 100px;
-          height: 100px;
+          width: 143px;
+          height: 143px;
+        }
+        .xian {
+          width: 80%;
+          height: 2px;
+          background: linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0),
+            rgba(255, 255, 255, 0.5),
+            rgba(255, 255, 255, 0)
+          );
+          margin-top: 12px;
         }
 
         .zbf {
           font-weight: 600;
           font-size: 12px;
           color: #15181a;
+          margin-top: 9px;
         }
 
         .money {
@@ -2195,12 +2709,14 @@ export default {
           color: rgba(29, 35, 38, 0.6);
           display: flex;
           align-items: center;
+          margin-top: 9px;
+          gap: 5px;
           text {
             font-weight: 600;
             font-size: 12px;
             color: #1d2326;
           }
-          .wen{
+          .wen {
             color: white;
             border-radius: 50%;
             border: 1px solid #fff;
@@ -2211,6 +2727,277 @@ export default {
             align-items: center;
           }
         }
+        .food {
+          margin-top: 4px;
+          font-weight: 400;
+          font-size: 12px;
+          color: rgba(29, 35, 38, 0.6);
+        }
+        .zzs {
+          font-weight: 600;
+          font-size: 12px;
+          color: #15181a;
+          margin-top: 12px;
+        }
+        .lesson {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          margin-top: 6px;
+          .left {
+            font-weight: 400;
+            font-size: 12px;
+            color: rgba(29, 35, 38, 0.6);
+          }
+          .right {
+            font-weight: 400;
+            font-size: 10px;
+            color: #2a8aba;
+            display: flex;
+            align-items: center;
+          }
+        }
+      }
+    }
+
+    .rank-list {
+      width: 90%;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 10px 0px;
+      margin-top: 23px;
+      .item {
+        text-align: center;
+        font-weight: 400;
+        font-size: 10px;
+        color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        .title {
+          font-weight: 400;
+          font-size: 12px;
+          color: #ffffff;
+        }
+        .avatar {
+          width: 36px;
+          height: 36px;
+          border: 3px solid rgba(255, 255, 255, 0.2);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+
+    .thank {
+      width: 90%;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 43px;
+
+      .thank-list {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+        background-color: rgba(255, 255, 255, 0.1);
+        height: 130px;
+        overflow-y: scroll;
+        border-radius: 10px;
+        gap: 20px;
+        padding-top: 40px;
+
+        box-sizing: border-box;
+
+        .item {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-evenly;
+          font-weight: 400;
+          font-size: 13px;
+          color: #ffffff;
+          .first {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+          }
+        }
+      }
+    }
+
+    .award {
+      width: 90%;
+      margin: auto;
+      .table {
+        display: flex;
+        flex-direction: column;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        box-sizing: border-box;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        .item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          .rank {
+            width: 20%;
+            height: 206px;
+            font-weight: 400;
+            font-size: 12px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+          }
+          .some {
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            box-sizing: border-box;
+            height: 206px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            .zbf {
+              font-weight: 600;
+              font-size: 12px;
+              color: #fff;
+            }
+
+            .money {
+              font-weight: 400;
+              font-size: 12px;
+              color: #fff;
+              display: flex;
+              align-items: center;
+              margin-top: 9px;
+              gap: 5px;
+              text {
+                font-weight: 600;
+                font-size: 12px;
+                color: #fff;
+              }
+              .wen {
+                color: white;
+                border-radius: 50%;
+                border: 1px solid #fff;
+                width: 12px;
+                height: 12px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              }
+            }
+            .food {
+              margin-top: 4px;
+              font-weight: 400;
+              font-size: 12px;
+              color: #fff;
+            }
+            .zzs {
+              font-weight: 600;
+              font-size: 12px;
+              color: #fff;
+              margin-top: 12px;
+            }
+            .lesson {
+              display: flex;
+              align-items: center;
+              gap: 5px;
+              margin-top: 6px;
+              .left {
+                font-weight: 400;
+                font-size: 12px;
+                color: #fff;
+              }
+              .right {
+                font-weight: 400;
+                font-size: 10px;
+                color: #fff;
+                display: flex;
+                align-items: center;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .finish {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 30px;
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 36px 0;
+      .title {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-weight: 600;
+        font-size: 16px;
+        color: #1d2326;
+        margin-top: 14px;
+      }
+      .gray {
+        font-weight: 400;
+        font-size: 12px;
+        color: rgba(29, 35, 38, 0.5);
+        margin-top: 8px;
+      }
+      .time {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        text {
+          margin-top: 10px;
+        }
+        .item {
+          background-color: black;
+          width: 40px;
+          height: 34px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 800;
+          font-size: 18px;
+          color: #ffffff;
+          margin-top: 19px;
+        }
+      }
+
+      .bt {
+        width: 216px;
+        height: 44px;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #f0f0f0;
+        border-radius: 20px;
+        margin-top: 50px;
+        font-weight: 400;
+        font-size: 16px;
+        color: #1d2326;
       }
     }
   }
@@ -2252,9 +3039,46 @@ export default {
   }
 }
 
-.placeholder-class {
+.placeholderClass {
   font-weight: 400;
   font-size: 14px;
   color: rgba(255, 255, 255, 0.5);
+}
+
+.modal-content {
+  position: relative;
+  .x {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .section-title {
+    font-weight: 600;
+    font-size: 16px;
+    color: #1d2326;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .section-content {
+    margin-bottom: 20px;
+    font-weight: 400;
+    font-size: 12px;
+    color: #1d2326;
+  }
+}
+
+.modal-footer {
+  text-align: center;
+  width: 152px;
+  height: 44px;
+  margin: auto;
+  background-color: #b9baba;
+  font-weight: 600;
+  font-size: 16px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
 }
 </style>

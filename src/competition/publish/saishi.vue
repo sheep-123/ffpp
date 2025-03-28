@@ -64,7 +64,6 @@
         @leftClick="back"
         leftIconColor="#ffffff"
       ></u-navbar>
-
       <view class="upload">
         <view class="top">
           <image
@@ -143,7 +142,7 @@
           <image
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/biao.png"
             mode="scaleToFill"
-            style="width: 100%; height: 1px"
+            style="width: 100%; height: 2px"
             v-show="activeTab == index"
           />
         </view>
@@ -402,7 +401,7 @@
                 </u-radio-group>
               </view>
             </view>
-            <view class="item">
+            <view class="item" v-if="way == 1">
               <view class="left">报名人数 <view class="icon">*</view></view>
               <view class="right">
                 <view style="width: 110px">
@@ -417,6 +416,30 @@
                   ></u-input>
                 </view>
               </view>
+            </view>
+            <view class="item" v-if="way == 2">
+              <view class="left">参赛组数限制 <view class="icon">*</view></view>
+              <view class="right" @click="show3 = true"
+                ><text style="color: black">{{
+                  genderLimitName || "请选择参赛组数限制"
+                }}</text
+                ><image
+                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
+                  mode="scaleToFill"
+                  style="width: 12px; height: 12px"
+              /></view>
+            </view>
+            <view class="item" v-if="way == 2">
+              <view class="left">单组人数限制 <view class="icon">*</view></view>
+              <view class="right" @click="show3 = true"
+                ><text style="color: black">{{
+                  genderLimitName || "请选择单组人数限制"
+                }}</text
+                ><image
+                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
+                  mode="scaleToFill"
+                  style="width: 12px; height: 12px"
+              /></view>
             </view>
             <view class="item">
               <view class="left">性别限制 <view class="icon">*</view></view>
@@ -466,7 +489,7 @@
                 <view class="left">
                   徽章等级要求 <view class="icon">*</view>
                 </view>
-                <view class="right">
+                <!-- <view class="right">
                   <u-checkbox-group
                     v-model="badge"
                     placement="row"
@@ -480,7 +503,54 @@
                       name="0"
                     ></u-checkbox>
                   </u-checkbox-group>
+                </view> -->
+              </view>
+              <view class="bt">
+                <view class="left">
+                  <view class="l1">最低</view>
+                  <view class="l2" @click="show6 = true"
+                    >{{ badgeLevelMinName ? badgeLevelMinName : "无限制" }}
+                    <image
+                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
+                      mode="scaleToFill"
+                      style="width: 12px; height: 12px"
+                    />
+                  </view>
                 </view>
+
+                <view class="right">
+                  <view class="r1">最高</view>
+                  <view class="r2" @click="show7 = true"
+                    >{{ badgeLevelMaxName ? badgeLevelMaxName : "无限制" }}
+                    <image
+                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
+                      mode="scaleToFill"
+                      style="width: 12px; height: 12px"
+                    />
+                  </view>
+                </view>
+              </view>
+            </view>
+            <view class="item-o" v-if="way == 2">
+              <view class="top">
+                <view class="left">
+                  赛事等级要求 <view class="icon">*</view>
+                </view>
+                <!-- <view class="right">
+                  <u-checkbox-group
+                    v-model="badge"
+                    placement="row"
+                    iconPlacement="right"
+                  >
+                    <u-checkbox
+                      activeColor="red"
+                      shape="circle"
+                      label="需要认证徽章"
+                      customStyle="gap:10px"
+                      name="0"
+                    ></u-checkbox>
+                  </u-checkbox-group>
+                </view> -->
               </view>
               <view class="bt">
                 <view class="left">
@@ -578,10 +648,13 @@
                   placeholder="请输入添加内容"
                   border="none"
                   v-model="item.scheTypeName"
+                  placeholder-class="pl-class"
                 ></u-input>
               </view>
               <view class="right-r" @click="showTimePicker(index)">
-                <text>{{ item.scheTime || "请选择开赛时间" }}</text>
+                <text :style="{ color: item.scheTime ? 'black' : '' }">{{
+                  item.scheTime || "请选择开赛时间"
+                }}</text>
                 <image
                   src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
                   mode="scaleToFill"
@@ -1275,24 +1348,24 @@ export default {
       isDragging: false, // 是否正在拖动
       tabs: [
         {
-          img:"/static/images/报名设置.svg",
-          name:"报名设置"
+          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/报名设置.svg",
+          name: "报名设置",
         },
-                {
-          img:"/static/images/环节设置.svg",
-          name:"环节设置"
+        {
+          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/环节设置.svg",
+          name: "环节设置",
         },
-                {
-          img:"/static/images/奖励设置.svg",
-          name:"奖励设置"
+        {
+          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/奖励设置.svg",
+          name: "奖励设置",
         },
-                {
-          img:"/static/images/直击设置.svg",
-          name:"直击设置"
+        {
+          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/直击设置.svg",
+          name: "直击设置",
         },
-                {
-          img:"/static/images/规则设置.svg",
-          name:"规则设置"
+        {
+          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/规则设置.svg",
+          name: "规则设置",
         },
       ],
       bmType: [],
@@ -1369,21 +1442,29 @@ export default {
       textareaContent: uni.getStorageSync("textareaContent") || [],
       contentList: uni.getStorageSync("contentList") || [],
       mainFile: "",
+      count: 0,
     };
   },
   async mounted() {
-    const result = await uni.$u.http.get("/match/getSerialNum");
-    if (result.status == 200) {
-      this.serialNum = result.data.serialNum;
-      uni.setStorageSync("serialNum", result.data.serialNum);
+    if (!this.serialNum) {
+      const result = await uni.$u.http.get("/match/getSerialNum");
+      if (result.status == 200) {
+        this.serialNum = result.data.serialNum;
+        uni.setStorageSync("serialNum", result.data.serialNum);
+      }
     }
 
     this.getAge();
+    // this.getGame();
   },
   methods: {
     setActiveTab(index) {
       this.activeTab = index;
       uni.setStorageSync("activeTab", index);
+      console.log(index);
+      if (index == 3) {
+        this.getMatchTemplateHit();
+      }
     },
     skin() {
       if (this.changeSkin) {
@@ -1473,7 +1554,7 @@ export default {
     },
     toTemplete() {
       uni.navigateTo({
-        url: `/competition/publish/templete?labelId=${this.labelId}`,
+        url: `/competition/publish/templete`,
       });
     },
     toPlace() {
@@ -1559,7 +1640,7 @@ export default {
             uni.removeStorageSync("joinList");
             uni.removeStorageSync("labelId");
             uni.removeStorageSync("typeName");
-            uni.removeStorageSync("templateId");
+            // uni.removeStorageSync("templateId");
             uni.removeStorageSync("templateName");
             uni.removeStorageSync("startTime");
             uni.removeStorageSync("endTime");
@@ -1608,6 +1689,8 @@ export default {
             this.entryFee = "";
 
             this.activeTab++;
+            // this.serialNum=''
+            // uni.removeStorageSync("serialNum");
           }
         }
       } catch (err) {
@@ -1615,6 +1698,7 @@ export default {
           type: "error",
           message: err.data.message,
         });
+        uni.removeStorageSync("serialNum");
       }
     },
     blur1(n) {
@@ -1875,9 +1959,9 @@ export default {
       uni.setStorageSync("way", n);
     },
     async getGame() {
-      var result = await uni.$u.http.get("/match/getMatchScheTypeInfo", {
+      var result = await uni.$u.http.get("/match/getMatchTemplateSche", {
         params: {
-          matchId: this.matchId,
+          templateId: this.templateId,
         },
       });
       if (result.status == 200) {
@@ -1888,14 +1972,28 @@ export default {
     change(n) {
       uni.setStorageSync("scheTypeName", n);
     },
-    addItem() {
-      this.items.push({
-        scheTypeCode: this.counter,
-        scheTypeName: "",
-        scheTypeSort: this.counter,
-        scheTime: "",
-      });
-      this.counter++;
+    async addItem() {
+      try {
+        var result = await uni.$u.http.get("/match/getMatchTemplateSche", {
+          params: { templateId: this.templateId },
+        });
+        if (result.status == 200) {
+          this.items.push({
+            scheTypeCode: result.data[this.count]?.scheTypeCode || this.counter,
+            scheTypeName: result.data[this.count]?.scheTypeName || "",
+            scheTypeSort: result.data[this.count]?.scheTypeSort || this.counter,
+            scheTime: result.data[this.count]?.scheTypeSort || "",
+          });
+          this.counter++;
+          this.count++;
+        }
+      } catch (err) {
+        console.log(err);
+        this.$refs.notice.show({
+          type: "error",
+          message: err.data.message,
+        });
+      }
     },
     showTimePicker(index) {
       this.currentIndex = index; // 记录当前选中的索引
@@ -2143,6 +2241,46 @@ export default {
     back() {
       uni.switchTab({ url: "/pages/add/add" });
     },
+    async getMatchTemplateHit() {
+      const hitTypeCode = uni.getStorageSync("gameList")[this.op].scheTypeCode;
+      console.log(hitTypeCode);
+      var result = await uni.$u.http.get("/match/getMatchTemplateHit", {
+        params: {
+          templateId: this.templateId,
+          hitTypeCode,
+        },
+      });
+      if (result.status == 200) {
+        uni.setStorageSync("groupNum", result.data.groupNum);
+        this.groupNum = result.data.groupNum;
+        uni.setStorageSync("stageExplains", result.data.stageExplains);
+        this.stageExplains = result.data.stageExplains;
+        uni.setStorageSync("groupUmpireType", result.data.groupUmpireType);
+        this.groupUmpireType = result.data.groupUmpireType;
+        uni.setStorageSync("groupVenueType", result.data.groupVenueType);
+        this.groupVenueType = result.data.groupVenueType;
+        uni.setStorageSync("matchingManner", result.data.matchingManner);
+        this.matchingManner = result.data.matchingManner;
+        if (result.data.matchingManner == 1) {
+          this.matchingMannerName = "淘汰赛制";
+        }
+        if (result.data.matchingManner == 2) {
+          this.matchingMannerName = "循环赛制";
+        }
+        if (result.data.matchingManner == 3) {
+          this.matchingMannerName = "1v1赛制";
+        }
+        if (result.data.matchingManner == 4) {
+          this.matchingMannerName = "主客场赛制";
+        }
+        if (result.data.matchingManner == 5) {
+          this.matchingMannerName = "双败赛制";
+        }
+        uni.setStorageSync("matchingMannerName", this.matchingMannerName);
+        uni.setStorageSync("scoringMethod", result.data.scoringMethod);
+        this.scoringMethod = result.data.scoringMethod;
+      }
+    },
   },
   computed: {
     sliderPosition() {
@@ -2289,7 +2427,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 70%;
+      height: 75%;
       width: 100%;
       background-color: #cccccc;
 
@@ -2321,6 +2459,8 @@ export default {
     .next-u {
       width: 100%;
       height: 30%;
+      position: absolute;
+      bottom: 0;
     }
 
     .cup {
@@ -2445,7 +2585,6 @@ export default {
         transform: translateX(-50%);
         width: 100%; // 固定宽度
         height: 5px; // 保持高度不变
-        // background-color: #1e54ba;
         background-color: var(--active-color); // 动态绑定颜色
       }
       &::before {
@@ -2456,7 +2595,6 @@ export default {
         right: 0;
         border-left: 40px solid transparent;
         border-right: 40px solid transparent;
-        // border-top: 10px solid #1e54ba;
         border-top: 10px solid var(--active-color); // 动态绑定颜色
       }
 
@@ -2857,6 +2995,8 @@ export default {
         border-radius: 10px;
         overflow: hidden;
         background: rgba(255, 255, 255, 0.2);
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2),
+          -5px -5px 10px rgba(0, 0, 0, 0.2);
         .top {
           height: 36px;
 

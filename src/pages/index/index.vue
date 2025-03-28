@@ -328,13 +328,14 @@ export default {
       address: "",
     };
   },
-  // onLoad() {
-  //   uni.reLaunch({
-  //     url: "/competition/apply/appear",
-  //     // url: "/competition/publish/saishi",
-
-  //   });
-  // },
+  onLoad() {
+    uni.reLaunch({
+      // url: "/competition/apply/appear",
+      url: "/competition/apply/pay",
+      // url: "/competition/publish/saishi",
+      // url: "/competition/apply/share",
+    });
+  },
   onShow() {
     this.Location();
     const systemInfo = uni.getSystemInfoSync();
@@ -491,7 +492,7 @@ export default {
     column-gap: 10px;
     background: #ffffff;
     border-radius: 20px;
-    padding: 10px; // 新增内边距
+    padding: 10px 10px 50px 10px; // 新增内边距
 
     .item {
       width: 100%;

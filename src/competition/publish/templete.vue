@@ -1,12 +1,12 @@
 <template>
   <view>
-    <u-navbar leftText="赛事模版" @leftClick="back"></u-navbar>
-    <view class="main" :style="{ marginTop: top }">
+    <u-navbar leftText="赛事模版" autoback :fixed="false"></u-navbar>
+    <view class="main">
       <view class="content" v-if="list.length > 0">
         <view class="title"> 标准极限飞盘赛制（竞技向） </view>
         <view class="c-item">
           <view
-            :class="selectIndex == index ? 'item-active' : 'item'"
+            :class="selectIndex == index||templateId==item.templateId ? 'item-active' : 'item'"
             v-for="(item, index) in list"
             :key="index"
             @click="selectItem(item, index)"
@@ -15,7 +15,7 @@
             <u-icon
               name="checkmark"
               size="15"
-              v-if="index == selectIndex"
+              v-if="index == selectIndex||templateId==item.templateId"
               color="#EC384A"
             ></u-icon>
             <u-icon name="plus-circle" size="15" v-else></u-icon>
@@ -27,6 +27,7 @@
     <view class="bt" v-if="list.length > 0">
       <view class="enter" @click="enter">确认选择</view>
     </view>
+    <u-toast ref="notice"></u-toast>
   </view>
 </template>
 
@@ -34,52 +35,52 @@
 export default {
   data() {
     return {
-      statusBarHeight: 0,
-      navbarHeight: 44,
       labelId: 0,
       list: [],
       selectIndex: null,
-      templateId: null,
-      templateName: null,
+      templateId: uni.getStorageSync("templateId") || "",
+      templateName: uni.getStorageSync("templateName") || "",
     };
   },
   methods: {
-    back() {
-      uni.navigateBack();
-    },
     async getList() {
-      const res = await uni.$u.http.get("/match/searchTemplate", {
-        params: { labelId: this.labelId },
-      });
-      this.list = res.data;
+      try {
+        const res = await uni.$u.http.get("/match/getMatchTemplateMain", {
+          params: { labelId: this.labelId },
+        });
+        this.list = res.data;
+      } catch (err) {
+        this.$refs.notice.show({
+          type:"error",
+          message:err.data.message
+        })
+      }
     },
     selectItem(item, index) {
       this.selectIndex = index;
-      this.templateId = item.id;
+      this.templateId = item.templateId;
       this.templateName = item.templateName;
     },
-    enter() {
-      uni.setStorageSync("templateId",this.templateId)
-      uni.setStorageSync("templateName",this.templateName)
+    async enter() {
+      var result= await uni.$u.http.get("/match/getMatchTemplateRegisterInfo",{
+        params:{templateId:this.templateId}
+      })
+      uni.setStorageSync("entryFee", result.data.entryFee);
+      uni.setStorageSync("genderLimit", result.data.genderLimit);
+      uni.setStorageSync("number", result.data.registerNum);
+      uni.setStorageSync("way", result.data.way);
+      uni.setStorageSync("templateId", this.templateId);
+      uni.setStorageSync("templateName", this.templateName);
       uni.navigateTo({
         url: `/competition/publish/saishi`,
       });
     },
   },
   onShow() {
-    const systemInfo = uni.getSystemInfoSync();
-    this.statusBarHeight = systemInfo.statusBarHeight;
-    const pages = getCurrentPages();
-    const currentPage = pages[pages.length - 1];
-    const labelId = currentPage.options.labelId || 0;
-    this.labelId = labelId;
+    this.labelId = uni.getStorageSync("labelId") || "";
     this.getList();
   },
-  computed: {
-    top() {
-      return this.statusBarHeight + this.navbarHeight + 20 + "px";
-    },
-  },
+
 };
 </script>
 

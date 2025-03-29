@@ -65,7 +65,7 @@
       @touchstart="handleTouchStart"
       @touchmove="handleTouchMove"
       @touchend="handleTouchEnd"
-      :style="{ top: pullTop }"
+      :style="{ transform: `translateY(${pullTranslateY}px)` }"
       v-show="!isSticky"
     >
       <image
@@ -74,7 +74,10 @@
       <view class="value">下拉试试</view>
     </view>
 
-    <view class="content" :style="{ top: contentTop }">
+    <view
+      class="content"
+      :style="{ transform: `translateY(${pullTranslateY}px)` }"
+    >
       <view class="title" id="title">
         <view class="first">
           <image
@@ -274,6 +277,7 @@
 </template>
 
 <script>
+import _ from "lodash";
 export default {
   data() {
     return {
@@ -323,9 +327,8 @@ export default {
       keyword: "",
       statusBarHeight: 0,
       navbarHeight: 44,
-      pullTop: "26%",
-      contentTop: "30%",
       address: "",
+      pullTranslateY: 0,
     };
   },
   // onLoad() {
@@ -338,9 +341,12 @@ export default {
   // },
   onShow() {
     this.Location();
+    this.Location().then(() => {
+      // 确保地理位置信息加载完成后，再调用其他方法
+      this.initIntersectionObserver();
+    });
     const systemInfo = uni.getSystemInfoSync();
     this.screenHeight = systemInfo.windowHeight;
-    this.initIntersectionObserver();
     this.statusBarHeight = systemInfo.statusBarHeight;
   },
   methods: {
@@ -380,35 +386,30 @@ export default {
       this.isDragging = true;
     },
 
-    handleTouchMove(e) {
+    handleTouchMove: _.throttle(function (e) {
       if (!this.isDragging) return;
       const deltaY = e.touches[0].clientY - this.dragStartY;
-
       if (deltaY >= 0 && deltaY <= this.screenHeight) {
-        // 动态计算 top 值
-        this.pullTop = `${26 + deltaY / 10}%`; // 根据下拉距离调整百分比
-        this.contentTop = `${30 + deltaY / 10}%`;
+        this.pullTranslateY = deltaY; // 根据下拉距离调整
       }
-    },
+    }, 16), // 每 16ms 触发一次，约等于 60fps
     // 新增触摸结束处理
     handleTouchEnd() {
       this.isDragging = false;
 
       // 判断是否达到滑动阈值，决定是否展开地图
-      if (parseFloat(this.contentTop) >= 40) {
+      if (this.pullTranslateY >= 60) {
+        // 假设阈值为 10
         this.isMapExpanded = true;
-        this.pullTop = "100%"; // 隐藏下拉组件
-        this.contentTop = "100%"; // 隐藏内容组件
+        this.pullTranslateY = this.screenHeight; // 隐藏下拉组件
       } else {
         // 恢复初始位置
-        this.pullTop = "26%";
-        this.contentTop = "30%";
+        this.pullTranslateY = 0;
       }
     },
     back() {
       this.isMapExpanded = false;
-      this.pullTop = "26%";
-      this.contentTop = "30%";
+      this.pullTranslateY = 0;
     },
 
     edit() {
@@ -418,12 +419,13 @@ export default {
     },
 
     initIntersectionObserver() {
-      this.$nextTick(() => {
-        this.observer = uni.createIntersectionObserver(this);
-        this.observer.relativeToViewport().observe("#title", (res) => {
+      this.observer = uni.createIntersectionObserver(this);
+      this.observer.relativeToViewport().observe(
+        "#title",
+        _.throttle((res) => {
           this.isSticky = res.intersectionRatio <= 0;
-        });
-      });
+        }, 500)
+      ); // 每 100ms 触发一次
     },
   },
 
@@ -445,7 +447,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .content {
   // display: none;
   position: absolute;
@@ -457,8 +459,8 @@ export default {
   box-shadow: 0px -2px 8px 0px rgba(98, 120, 134, 0.2);
   border: 2px solid #ffffff;
   margin-bottom: 60px;
-  transition: all linear;
   overflow: hidden;
+  transition: all linear;
 
   .title {
     width: 100%;
@@ -579,7 +581,6 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transition: all linear;
   height: 30px;
   transition: all linear;
 

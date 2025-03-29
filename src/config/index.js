@@ -7,5 +7,6 @@ const configs = {
   },
 };
 
-const env = process.env.NODE_ENV || 'development';
+const env = "development";
+// const env = "production";
 module.exports = configs[env];

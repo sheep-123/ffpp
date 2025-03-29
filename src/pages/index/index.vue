@@ -328,14 +328,14 @@ export default {
       address: "",
     };
   },
-  onLoad() {
-    uni.reLaunch({
-      // url: "/competition/apply/appear",
-      // url: "/competition/apply/pay",
-      url: "/competition/publish/saishi",
-      // url: "/competition/apply/share",
-    });
-  },
+  // onLoad() {
+  //   uni.reLaunch({
+  //     // url: "/competition/apply/appear",
+  //     // url: "/competition/apply/pay",
+  //     url: "/competition/publish/saishi",
+  //     // url: "/competition/apply/share",
+  //   });
+  // },
   onShow() {
     this.Location();
     const systemInfo = uni.getSystemInfoSync();

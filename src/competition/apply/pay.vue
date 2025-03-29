@@ -117,10 +117,10 @@ export default {
           },
         });
         if (result.status == 200) {
-          this.$refs.notice.show({
-            type: "success",
-            message: "支付成功",
+          uni.navigateTo({
+            url: "/competition/apply/appear",
           });
+          uni.setStorageSync("isFinish", true);
         }
       } catch (err) {
         this.$refs.notice.show({

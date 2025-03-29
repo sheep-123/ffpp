@@ -331,8 +331,8 @@ export default {
   onLoad() {
     uni.reLaunch({
       // url: "/competition/apply/appear",
-      url: "/competition/apply/pay",
-      // url: "/competition/publish/saishi",
+      // url: "/competition/apply/pay",
+      url: "/competition/publish/saishi",
       // url: "/competition/apply/share",
     });
   },
@@ -353,23 +353,23 @@ export default {
         this.markers[0].longitude = res.longitude;
         this.markers[1].latitude = res.latitude + 0.0005;
         this.markers[1].longitude = res.longitude + 0.0005;
-        // 调用逆地理编码接口
-        const apiKey = "ODABZ-7BBWG-5IBQH-QFRRK-C5GIO-IZFZC"; // 替换为你的高德地图 API Key
-        const url = `https://apis.map.qq.com/ws/geocoder/v1/?location=${this.latitude},${this.longitude}&key=${apiKey}`;
+        // // 调用逆地理编码接口
+        // const apiKey = "ODABZ-7BBWG-5IBQH-QFRRK-C5GIO-IZFZC"; // 替换为你的高德地图 API Key
+        // const url = `https://apis.map.qq.com/ws/geocoder/v1/?location=${this.latitude},${this.longitude}&key=${apiKey}`;
 
-        const addressRes = await uni.request({ url });
-        if (addressRes.statusCode === 200 && addressRes.data.status === 0) {
-          this.address = addressRes.data.result.address; // 获取完整地址
-          if (this.address) {
-            var result = await uni.$u.http.post("/saveWjLocation", {
-              address: this.address,
-              locationLat: this.latitude,
-              locationLng: this.longitude,
-            });
-          }
-        } else {
-          console.error("逆地理编码失败:", addressRes.data);
-        }
+        // const addressRes = await uni.request({ url });
+        // if (addressRes.statusCode === 200 && addressRes.data.status === 0) {
+        //   this.address = addressRes.data.result.address; // 获取完整地址
+        //   if (this.address) {
+        //     var result = await uni.$u.http.post("/saveWjLocation", {
+        //       address: this.address,
+        //       locationLat: this.latitude,
+        //       locationLng: this.longitude,
+        //     });
+        //   }
+        // } else {
+        //   console.error("逆地理编码失败:", addressRes.data);
+        // }
       } catch (err) {
         console.error("定位失败:", err);
       }
@@ -457,6 +457,7 @@ export default {
   box-shadow: 0px -2px 8px 0px rgba(98, 120, 134, 0.2);
   border: 2px solid #ffffff;
   margin-bottom: 60px;
+  transition: all linear;
   overflow: hidden;
 
   .title {
@@ -580,6 +581,7 @@ export default {
   align-items: center;
   transition: all linear;
   height: 30px;
+  transition: all linear;
 
   .value {
     font-weight: 400;

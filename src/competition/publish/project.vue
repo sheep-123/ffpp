@@ -51,6 +51,7 @@ export default {
       typeId: 1,
       labelId: uni.getStorageSync("labelId") || "",
       typeName: "",
+      labelCode: "",
     };
   },
   async onShow() {
@@ -66,6 +67,7 @@ export default {
       this.selectIndex = index;
       this.labelId = item.labelId;
       this.typeName = item.labelName;
+      this.labelCode = item.labelCode;
     },
     back() {
       uni.navigateBack();
@@ -86,6 +88,7 @@ export default {
     enter() {
       uni.setStorageSync("labelId", this.labelId);
       uni.setStorageSync("typeName", this.typeName);
+      uni.setStorageSync("labelCode", this.labelCode);
       uni.navigateTo({
         url: `/competition/publish/saishi`,
       });

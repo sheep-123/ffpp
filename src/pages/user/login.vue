@@ -87,6 +87,7 @@ export default {
             this.$refs.notice.show({
               type: "error",
               message: err.data.message,
+              // message: err,
             });
           }
         },

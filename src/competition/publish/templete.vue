@@ -1,12 +1,16 @@
 <template>
   <view>
-    <u-navbar leftText="赛事模版" autoback :fixed="false"></u-navbar>
+    <u-navbar leftText="赛事模版" @leftClick="back" :fixed="false"></u-navbar>
     <view class="main">
       <view class="content" v-if="list.length > 0">
         <view class="title"> 标准极限飞盘赛制（竞技向） </view>
         <view class="c-item">
           <view
-            :class="selectIndex == index||templateId==item.templateId ? 'item-active' : 'item'"
+            :class="
+              selectIndex == index || templateId == item.templateId
+                ? 'item-active'
+                : 'item'
+            "
             v-for="(item, index) in list"
             :key="index"
             @click="selectItem(item, index)"
@@ -15,7 +19,7 @@
             <u-icon
               name="checkmark"
               size="15"
-              v-if="index == selectIndex||templateId==item.templateId"
+              v-if="index == selectIndex || templateId == item.templateId"
               color="#EC384A"
             ></u-icon>
             <u-icon name="plus-circle" size="15" v-else></u-icon>
@@ -51,9 +55,9 @@ export default {
         this.list = res.data;
       } catch (err) {
         this.$refs.notice.show({
-          type:"error",
-          message:err.data.message
-        })
+          type: "error",
+          message: err.data.message,
+        });
       }
     },
     selectItem(item, index) {
@@ -62,9 +66,12 @@ export default {
       this.templateName = item.templateName;
     },
     async enter() {
-      var result= await uni.$u.http.get("/match/getMatchTemplateRegisterInfo",{
-        params:{templateId:this.templateId}
-      })
+      var result = await uni.$u.http.get(
+        "/match/getMatchTemplateRegisterInfo",
+        {
+          params: { templateId: this.templateId },
+        }
+      );
       uni.setStorageSync("entryFee", result.data.entryFee);
       uni.setStorageSync("genderLimit", result.data.genderLimit);
       uni.setStorageSync("number", result.data.registerNum);
@@ -75,12 +82,16 @@ export default {
         url: `/competition/publish/saishi`,
       });
     },
+    back() {
+      uni.navigateBack({
+        delta: 1,
+      });
+    },
   },
   onShow() {
     this.labelId = uni.getStorageSync("labelId") || "";
     this.getList();
   },
-
 };
 </script>
 

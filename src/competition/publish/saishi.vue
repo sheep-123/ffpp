@@ -419,9 +419,9 @@
             </view>
             <view class="item" v-if="way == 2">
               <view class="left">参赛组数限制 <view class="icon">*</view></view>
-              <view class="right" @click="show3 = true"
-                ><text style="color: black">{{
-                  genderLimitName || "请选择参赛组数限制"
+              <view class="right" @click="show19 = true"
+                ><text :style="{ color: groupNumName ? 'black' : '' }">{{
+                  groupNumName || "请选择参赛组数限制"
                 }}</text
                 ><image
                   src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
@@ -431,9 +431,9 @@
             </view>
             <view class="item" v-if="way == 2">
               <view class="left">单组人数限制 <view class="icon">*</view></view>
-              <view class="right" @click="show3 = true"
-                ><text style="color: black">{{
-                  genderLimitName || "请选择单组人数限制"
+              <view class="right" @click="show20 = true"
+                ><text :style="{ color: groupPerNumName ? 'black' : '' }">{{
+                  groupPerNumName || "请选择单组人数限制"
                 }}</text
                 ><image
                   src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
@@ -459,7 +459,7 @@
                 <view class="right">以比赛当天计算</view>
               </view>
               <view class="bt">
-                <view class="left">
+                <view class="left-l">
                   <view class="l1">最低</view>
                   <view class="l2" @click="show4 = true"
                     >{{ ageLimitMin ? ageLimitMin : 0 }}
@@ -471,7 +471,7 @@
                   </view>
                 </view>
 
-                <view class="right">
+                <view class="right-l">
                   <view class="r1">最高</view>
                   <view class="r2" @click="show5 = true"
                     >{{ ageLimitMax ? ageLimitMax : 99 }}
@@ -489,7 +489,7 @@
                 <view class="left">
                   徽章等级要求 <view class="icon">*</view>
                 </view>
-                <!-- <view class="right">
+                <view class="right">
                   <u-checkbox-group
                     v-model="badge"
                     placement="row"
@@ -503,10 +503,10 @@
                       name="0"
                     ></u-checkbox>
                   </u-checkbox-group>
-                </view> -->
+                </view>
               </view>
               <view class="bt">
-                <view class="left">
+                <view class="left-l">
                   <view class="l1">最低</view>
                   <view class="l2" @click="show6 = true"
                     >{{ badgeLevelMinName ? badgeLevelMinName : "无限制" }}
@@ -518,7 +518,7 @@
                   </view>
                 </view>
 
-                <view class="right">
+                <view class="right-l">
                   <view class="r1">最高</view>
                   <view class="r2" @click="show7 = true"
                     >{{ badgeLevelMaxName ? badgeLevelMaxName : "无限制" }}
@@ -531,32 +531,17 @@
                 </view>
               </view>
             </view>
-            <view class="item-o" v-if="way == 2">
+            <view class="item-o">
               <view class="top">
                 <view class="left">
                   赛事等级要求 <view class="icon">*</view>
                 </view>
-                <!-- <view class="right">
-                  <u-checkbox-group
-                    v-model="badge"
-                    placement="row"
-                    iconPlacement="right"
-                  >
-                    <u-checkbox
-                      activeColor="red"
-                      shape="circle"
-                      label="需要认证徽章"
-                      customStyle="gap:10px"
-                      name="0"
-                    ></u-checkbox>
-                  </u-checkbox-group>
-                </view> -->
               </view>
               <view class="bt">
-                <view class="left">
+                <view class="left-l">
                   <view class="l1">最低</view>
-                  <view class="l2" @click="show6 = true"
-                    >{{ badgeLevelMinName ? badgeLevelMinName : "无限制" }}
+                  <view class="l2" @click="show14 = true"
+                    >{{ matchLevelMinName || "无限制" }}
                     <image
                       src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
                       mode="scaleToFill"
@@ -565,10 +550,10 @@
                   </view>
                 </view>
 
-                <view class="right">
+                <view class="right-l">
                   <view class="r1">最高</view>
-                  <view class="r2" @click="show7 = true"
-                    >{{ badgeLevelMaxName ? badgeLevelMaxName : "无限制" }}
+                  <view class="r2" @click="show15 = true"
+                    >{{ matchLevelMaxName || "无限制" }}
                     <image
                       src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
                       mode="scaleToFill"
@@ -582,6 +567,7 @@
               <view class="left">参赛费用设置<view class="icon">*</view></view>
               <view class="right">
                 <view class="input">
+                  ￥
                   <u-input
                     v-model="entryFee"
                     placeholder="请填写参赛费用"
@@ -589,13 +575,33 @@
                     border="none"
                     @change="blur4"
                     placeholderClass="pl-class"
-                  ></u-input>
-                  ￥</view
-                ></view
-              >
+                    type="number"
+                  ></u-input> </view
+              ></view>
+            </view>
+            <view class="item">
+              <view class="left">退款政策 <view class="icon">*</view></view>
+              <view class="right" @click="show16 = true"
+                ><text :style="{ color: refundDaysName ? 'black' : '' }">{{
+                  refundDaysName || "请选择退款政策"
+                }}</text
+                ><image
+                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
+                  mode="scaleToFill"
+                  style="width: 12px; height: 12px"
+              /></view>
+            </view>
+            <view class="item">
+              <view class="left">保险保障 <view class="icon">*</view></view>
+              <view class="right" @click="show17 = true"
+                ><text>{{ insuranceId || "无保障" }}</text
+                ><image
+                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
+                  mode="scaleToFill"
+                  style="width: 12px; height: 12px"
+              /></view>
             </view>
           </view>
-
           <view class="save" @click="save1">
             <text>保存</text>
           </view>
@@ -798,7 +804,7 @@
                 </view>
               </view>
               <view class="bt">
-                <view class="left" style="width: 49%">
+                <view class="left" style="width: 45%">
                   <view class="l1">数量</view>
                   <view style="width: 50%">
                     <u-input
@@ -808,13 +814,14 @@
                       @change="blur8"
                       input-align="right"
                       placeholderClass="pl-class"
+                      type="number"
                     ></u-input>
                   </view>
                 </view>
 
-                <view class="right" style="width: 49%">
+                <view class="right" style="width: 45%">
                   <view class="r1">单位</view>
-                  <view>
+                  <view style="width: 50%">
                     <u-input
                       v-model="rewardUnit"
                       placeholder="请输入"
@@ -1314,6 +1321,99 @@
         @cancel="show13 = false"
         @confirm="confirm13"
       ></u-datetime-picker>
+      <u-picker
+        :show="show14"
+        :columns="columns14"
+        @cancel="show14 = false"
+        @confirm="confirm14"
+      ></u-picker>
+      <u-picker
+        :show="show15"
+        :columns="columns14"
+        @cancel="show15 = false"
+        @confirm="confirm15"
+      ></u-picker>
+      <u-picker
+        :show="show19"
+        :columns="columns19"
+        @cancel="show19 = false"
+        @confirm="confirm19"
+      ></u-picker>
+      <u-picker
+        :show="show20"
+        :columns="columns20"
+        @cancel="show20 = false"
+        @confirm="confirm20"
+      ></u-picker>
+      <u-popup :show="show16" mode="bottom" @close="show16 = false" :round="10">
+        <view class="refund">
+          <view class="title">请选择退款政策（报名费）</view>
+
+          <view class="content">
+            <view
+              :class="refundDays == 1 ? 'left-active' : 'left'"
+              @click="chooseThis(1)"
+            >
+              <view class="title">赛前退<text>100%</text> </view>
+              <view class="text"
+                >赛前随时申请，全额退款 比赛开始不支持退款</view
+              >
+              <u-radio-group v-model="refundDays">
+                <u-radio shape="circle" name="1" activeColor="red"></u-radio>
+              </u-radio-group>
+            </view>
+            <view
+              :class="refundDays == 2 ? 'left-active' : 'left'"
+              @click="chooseThis(2)"
+            >
+              <view
+                class="title"
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: flex-start;
+                  padding-bottom: 8px;
+                "
+              >
+                <view>赛前<text>7</text>天退<text>100%</text> </view>
+                <view>赛前退<text>50%</text></view>
+              </view>
+              <view class="text" style="padding-bottom: 6px"
+                ><view style="padding-bottom: 12px"
+                  >比赛开始前7天, 全额退款</view
+                >
+                <view style="padding-bottom: 12px"
+                  >比赛开始前7天~比赛开始, 退款50%</view
+                >
+                <view>比赛开始后不支持退款</view></view
+              >
+              <u-radio-group v-model="refundDays">
+                <u-radio shape="circle" name="2" activeColor="red"></u-radio>
+              </u-radio-group>
+            </view>
+          </view>
+
+          <view class="enter" @click="confirmRefundPolicy">确认选择</view>
+        </view>
+      </u-popup>
+      <u-popup :show="show17" mode="bottom" @close="show17 = false" :round="10">
+        <view class="insurance">
+          <view class="fist">
+            <image
+              src="/static/images/safe.svg"
+              mode="scaleToFill"
+              style="width: 18px; heigth: 18px"
+            />
+            保险保障</view
+          >
+          <view class="second">
+            <view class="left">
+              <view class="top">无保障</view>
+              <view></view>
+            </view>
+          </view>
+        </view>
+      </u-popup>
       <u-toast ref="notice"></u-toast>
     </view>
   </view>
@@ -1399,11 +1499,15 @@ export default {
       ageLimitMin: uni.getStorageSync("ageLimitMin") || 0,
       ageLimitMax: uni.getStorageSync("ageLimitMax") || 99,
       genderLimitName: uni.getStorageSync("genderLimitName") ?? "",
-      columns6: [["网球水平1.0", "网球水平2.0", "网球水平3.0", "网球水平4.0"]],
+      columns6: [],
       badgeLevelMin: uni.getStorageSync("badgeLevelMin") ?? "",
       badgeLevelMinName: uni.getStorageSync("badgeLevelMinName") ?? "",
       badgeLevelMax: uni.getStorageSync("badgeLevelMax") ?? "",
       badgeLevelMaxName: uni.getStorageSync("badgeLevelMaxName") ?? "",
+      matchLevelMin: uni.getStorageSync("matchLevelMin") ?? "",
+      matchLevelMinName: uni.getStorageSync("matchLevelMinName") ?? "",
+      matchLevelMax: uni.getStorageSync("matchLevelMax") ?? "",
+      matchLevelMaxName: uni.getStorageSync("matchLevelMaxName") ?? "",
       matchId: uni.getStorageSync("matchId") ?? "",
       show8: false,
       registrationEndTime: uni.getStorageSync("registrationEndTime") ?? 0,
@@ -1443,6 +1547,22 @@ export default {
       contentList: uni.getStorageSync("contentList") || [],
       mainFile: "",
       count: 0,
+      show14: false,
+      show15: false,
+      columns14: [],
+      labelCode: uni.getStorageSync("labelCode") || "",
+      show19: false,
+      show20: false,
+      groupNum: uni.getStorageSync("groupNum") ?? "",
+      groupNumName: uni.getStorageSync("groupNumName") ?? "",
+      groupPerNum: uni.getStorageSync("groupPerNum") ?? "",
+      groupPerNumName: uni.getStorageSync("groupPerNumName") ?? "",
+      columns19: [],
+      columns20: [],
+      show16: false,
+      refundDays: "1",
+      refundDaysName: "",
+      show17: false,
     };
   },
   async mounted() {
@@ -1453,15 +1573,18 @@ export default {
         uni.setStorageSync("serialNum", result.data.serialNum);
       }
     }
-
+    this.getMatchRank();
     this.getAge();
-    // this.getGame();
+    if (this.labelCode) {
+      this.getMatchLevel();
+    }
+    this.getGroupNum();
+    this.getGroupPerNum();
   },
   methods: {
     setActiveTab(index) {
       this.activeTab = index;
       uni.setStorageSync("activeTab", index);
-      console.log(index);
       if (index == 3) {
         this.getMatchTemplateHit();
       }
@@ -1600,6 +1723,20 @@ export default {
       uni.setStorageSync("genderLimitName", this.genderLimitName);
       uni.setStorageSync("genderLimit", this.genderLimit);
     },
+    async getMatchRank() {
+      var result = await uni.$u.http.get("/match/getSysDictByName", {
+        params: {
+          sysDicName: "match_rank",
+        },
+      });
+      if (result.status == 200) {
+        const arr = [];
+        result.data.map((item, index) => {
+          arr.push(item.label);
+        });
+        this.columns14 = [arr];
+      }
+    },
     async save1() {
       try {
         var result = await uni.$u.http.post("/match/saveMatchBaseInfo", {
@@ -1620,6 +1757,45 @@ export default {
         if (result.status == 200) {
           this.matchId = result.data.matchId;
           uni.setStorageSync("matchId", this.matchId);
+          if (this.way == "1") {
+            const params = {
+              matchId: this.matchId,
+              serialNum: this.serialNum,
+              way: this.way,
+              number: this.number,
+              genderLimit: this.genderLimit,
+              ageLimitMin: this.ageLimitMin,
+              ageLimitMax: this.ageLimitMax,
+              entryFee: this.entryFee,
+              badgeLevelMin: this.badgeLevelMin,
+              badgeLevelMax: this.badgeLevelMax,
+              matchLevelMax: this.matchLevelMax,
+              matchLevelMin: this.matchLevelMin,
+              entryFee: this.entryFee,
+              refundDays: this.refundDays,
+              insuranceId: this.insuranceId,
+              registerNum: this.registerNum,
+            };
+          } else if (this.way == "2") {
+            const params = {
+              matchId: this.matchId,
+              serialNum: this.serialNum,
+              way: this.way,
+              number: this.number,
+              genderLimit: this.genderLimit,
+              ageLimitMin: this.ageLimitMin,
+              ageLimitMax: this.ageLimitMax,
+              entryFee: this.entryFee,
+              badgeLevelMin: this.badgeLevelMin,
+              badgeLevelMax: this.badgeLevelMax,
+              matchLevelMax: this.matchLevelMax,
+              matchLevelMin: this.matchLevelMin,
+              entryFee: this.entryFee,
+              refundDays: this.refundDays,
+              insuranceId: this.insuranceId,
+              registerNum: this.registerNum,
+            };
+          }
           var res = await uni.$u.http.post("/match/saveMatchRegisterInfo", {
             matchId: this.matchId,
             serialNum: this.serialNum,
@@ -1663,6 +1839,7 @@ export default {
             uni.removeStorageSync("umpireId");
             uni.removeStorageSync("sponsor");
             uni.removeStorageSync("genderLimit");
+            uni.removeStorageSync("labelCode");
 
             this.joinList = ["1"];
             this.joinPointsRace = 1;
@@ -1687,10 +1864,9 @@ export default {
             this.badgeLevelMinName = "无限制";
             this.badgeLevelMaxName = "无限制";
             this.entryFee = "";
+            this.labelCode = "";
 
             this.activeTab++;
-            // this.serialNum=''
-            // uni.removeStorageSync("serialNum");
           }
         }
       } catch (err) {
@@ -1710,12 +1886,17 @@ export default {
     blur3(n) {
       uni.setStorageSync("number", n);
     },
-    getAge() {
+    async getAge() {
+      var result = await uni.$u.http.get("/match/getSysDictByName", {
+        params: {
+          sysDicName: "age_limit",
+        },
+      });
       var arr = [];
-      for (let i = 0; i <= 100; i++) {
-        arr.push(i);
-      }
-      this.columns4.push(arr);
+      result.data.map((item, index) => {
+        arr.push(item.value);
+      });
+      this.columns4 = [arr];
     },
     confirm4(n) {
       this.show4 = false;
@@ -1988,7 +2169,6 @@ export default {
           this.count++;
         }
       } catch (err) {
-        console.log(err);
         this.$refs.notice.show({
           type: "error",
           message: err.data.message,
@@ -2243,7 +2423,6 @@ export default {
     },
     async getMatchTemplateHit() {
       const hitTypeCode = uni.getStorageSync("gameList")[this.op].scheTypeCode;
-      console.log(hitTypeCode);
       var result = await uni.$u.http.get("/match/getMatchTemplateHit", {
         params: {
           templateId: this.templateId,
@@ -2281,6 +2460,88 @@ export default {
         this.scoringMethod = result.data.scoringMethod;
       }
     },
+    async getMatchLevel() {
+      var result = await uni.$u.http.get("/match/getSysDictByName", {
+        params: {
+          sysDicName: this.labelCode,
+        },
+      });
+      var arr = [];
+      result.data.map((item, index) => {
+        arr.push(item.label);
+      });
+      this.columns6 = [arr];
+    },
+    confirm14(n) {
+      this.show14 = false;
+      this.matchLevelMin = n.indexs[0] + 1;
+      this.matchLevelMinName = n.value[0];
+      uni.setStorageSync("matchLevelMin", this.matchLevelMin);
+      uni.setStorageSync("matchLevelMinName", this.matchLevelMinName);
+    },
+    confirm15(n) {
+      this.show15 = false;
+      this.matchLevelMax = n.indexs[0] + 1;
+      this.matchLevelMaxName = n.value[0];
+      uni.setStorageSync("matchLevelMax", this.matchLevelMax);
+      uni.setStorageSync("matchLevelMaxName", this.matchLevelMaxName);
+    },
+    async getGroupNum() {
+      var result = await uni.$u.http.get("/match/getSysDictByName", {
+        params: {
+          sysDicName: "group_num",
+        },
+      });
+      var arr = [];
+      result.data.map((item, index) => {
+        arr.push(item.label);
+      });
+      this.columns19 = [arr];
+    },
+    confirm19(n) {
+      this.show19 = false;
+      this.groupNum = n.indexs[0] + 1;
+      this.groupNumName = n.value[0];
+      uni.setStorageSync("groupNum", this.groupNum);
+      uni.setStorageSync("groupNumName", this.groupNumName);
+    },
+    async getGroupPerNum() {
+      var result = await uni.$u.http.get("/match/getSysDictByName", {
+        params: {
+          sysDicName: "group_per_num",
+        },
+      });
+      var arr = [];
+      result.data.map((item, index) => {
+        arr.push(item.label);
+      });
+      this.columns20 = [arr];
+    },
+    confirm20(n) {
+      this.show20 = false;
+      this.groupPerNum = n.indexs[0] + 2;
+      this.groupPerNumName = n.value[0];
+      uni.setStorageSync("groupPerNum", this.groupPerNum);
+      uni.setStorageSync("groupPerNumName", this.groupPerNumName);
+    },
+    chooseThis(n) {
+      this.refundDays = String(n);
+    },
+    confirmRefundPolicy() {
+      if (!this.refundDays) {
+        this.$refs.notice.show({
+          type: "error",
+          message: "请选择退款政策",
+        });
+        return;
+      }
+      if (this.refundDays == 1) {
+        this.refundDaysName = "赛前退100%";
+      } else {
+        this.refundDaysName = "赛前7天退100%，赛前退50%";
+      }
+      this.show16 = false;
+    },
   },
   computed: {
     sliderPosition() {
@@ -2303,9 +2564,6 @@ export default {
 </script>
 
 <style lang="scss">
-:root {
-  --active-color: v-bind(selectColor);
-}
 .new {
   width: 100vw;
   height: auto;
@@ -2837,17 +3095,19 @@ export default {
             }
           }
 
-          .many {
-          }
           .bt {
+            width: 100%;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
             gap: 2px;
             font-weight: 400;
             font-size: 14px;
             color: #1d2326;
+            .right {
+              display: flex;
+              justify-content: flex-end;
+            }
           }
 
           .left {
@@ -2859,6 +3119,36 @@ export default {
             gap: 5px;
             //不换行
             white-space: nowrap;
+
+            .wh {
+              width: 16px;
+              height: 16px;
+              border-radius: 50%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              color: #4aa9df;
+              border: 1px solid gray;
+              background-color: #f2f7ff;
+              font-size: 10px;
+            }
+
+            .icon {
+              color: red;
+            }
+          }
+
+          .left-l {
+            font-weight: 400;
+            font-size: 14px;
+            color: #1d2326;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            //不换行
+            white-space: nowrap;
+            width: 40%;
+            justify-content: space-between;
 
             .wh {
               width: 16px;
@@ -2905,6 +3195,33 @@ export default {
               width: 120px;
             }
           }
+          .right-l {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 40%;
+
+            .r1 {
+              white-space: nowrap;
+            }
+
+            .time {
+              font-weight: 400;
+              font-size: 14px;
+              color: rgba(29, 35, 38, 0.3);
+              width: 49%;
+            }
+
+            text {
+              font-weight: 400;
+              font-size: 14px;
+              color: rgba(29, 35, 38, 0.3);
+            }
+
+            .input {
+              width: 120px;
+            }
+          }
           .right-r {
             display: flex;
             align-items: center;
@@ -2918,7 +3235,6 @@ export default {
           }
         }
       }
-
       .add {
         background-color: white;
         border-radius: 10px;
@@ -3167,5 +3483,99 @@ export default {
   font-weight: 400;
   font-size: 14px;
   color: rgba(255, 255, 255, 0.3);
+}
+
+.refund {
+  height: 350px;
+  .title {
+    font-weight: 600;
+    font-size: 16px;
+    color: #15181a;
+    height: 56px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #efefef;
+    display: flex;
+    align-items: center;
+    text-indent: 10%;
+    white-space: nowrap;
+  }
+  .content {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 90%;
+    margin: auto;
+    margin-top: 18px;
+    padding-bottom: 40px;
+    .left {
+      background-color: #f7f7f7;
+      padding: 12px;
+      box-sizing: border-box;
+      width: 47%;
+      border-radius: 5px;
+      .title {
+        font-weight: 600;
+        font-size: 14px;
+        color: #1d2326;
+        height: auto;
+        padding-bottom: 28px;
+        text-indent: 0;
+        text {
+          font-weight: 600;
+          font-size: 14px;
+          color: #ed5060;
+        }
+      }
+      .text {
+        font-weight: 400;
+        font-size: 12px;
+        color: rgba(29, 35, 38, 0.6);
+        margin-top: 12px;
+        padding-bottom: 58px;
+      }
+    }
+    .left-active {
+      background: linear-gradient(#faebeb 0%, rgba(255, 255, 255, 0) 100%);
+      padding: 12px;
+      box-sizing: border-box;
+      width: 47%;
+      border-radius: 5px;
+      border: 1px solid red;
+      .title {
+        font-weight: 600;
+        font-size: 14px;
+        color: #1d2326;
+        height: auto;
+        padding-bottom: 28px;
+        text-indent: 0;
+        text {
+          font-weight: 600;
+          font-size: 14px;
+          color: #ed5060;
+        }
+      }
+      .text {
+        font-weight: 400;
+        font-size: 12px;
+        color: rgba(29, 35, 38, 0.6);
+        margin-top: 12px;
+        padding-bottom: 58px;
+      }
+    }
+  }
+  .enter {
+    width: 80%;
+    height: 44px;
+    margin: auto;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+    color: #ffffff;
+    border-radius: 22px;
+  }
 }
 </style>

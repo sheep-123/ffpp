@@ -1,38 +1,42 @@
 <template>
   <view class="box">
-    <image
-      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/play-bg.png"
-      class="bg"
-    />
-    <view class="rank">
-      <view class="item">
-        <view class="rank-num">1st</view>
-        <u-avatar :src="src"></u-avatar>
-        <view class="name">健身小趴菜</view>
-        <view class="score">
-          <div class="item">黄金1</div>
-          <div class="item">445</div>
+    <view class="first">
+      <image
+        src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/play-bg.png"
+        class="bg"
+      >
+      </image>
+      <view class="rank">
+        <view class="item">
+          <view class="rank-num">1st</view>
+          <u-avatar :src="src"></u-avatar>
+          <view class="name">健身小趴菜</view>
+          <view class="score">
+            <div class="item">黄金1</div>
+            <div class="item">445</div>
+          </view>
         </view>
-      </view>
-      <view class="item">
-        <view class="rank-num">1st</view>
-        <u-avatar :src="src"></u-avatar>
-        <view class="name">健身小趴菜</view>
-        <view class="score">
-          <div class="item">黄金1</div>
-          <div class="item">445</div>
+        <view class="item">
+          <view class="rank-num">1st</view>
+          <u-avatar :src="src"></u-avatar>
+          <view class="name">健身小趴菜</view>
+          <view class="score">
+            <div class="item">黄金1</div>
+            <div class="item">445</div>
+          </view>
         </view>
-      </view>
-      <view class="item">
-        <view class="rank-num">1st</view>
-        <u-avatar :src="src"></u-avatar>
-        <view class="name">健身小趴菜</view>
-        <view class="score">
-          <div class="item">黄金1</div>
-          <div class="item">445</div>
+        <view class="item">
+          <view class="rank-num">1st</view>
+          <u-avatar :src="src"></u-avatar>
+          <view class="name">健身小趴菜</view>
+          <view class="score">
+            <div class="item">黄金1</div>
+            <div class="item">445</div>
+          </view>
         </view>
       </view>
     </view>
+
     <view class="search" id="search">
       <u-input
         placeholder="请输入赛事关键词"
@@ -105,6 +109,7 @@
           <image
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
             style="width: 90px; height: 90px"
+            mode="aspectFill"
           />
           <view class="buttom">
             <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
@@ -146,6 +151,7 @@
           <image
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
             style="width: 90px; height: 90px"
+            mode="aspectFill"
           />
           <view class="buttom">
             <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
@@ -187,6 +193,7 @@
           <image
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
             style="width: 90px; height: 90px"
+            mode="aspectFill"
           />
           <view class="buttom">
             <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
@@ -228,6 +235,7 @@
           <image
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
             style="width: 90px; height: 90px"
+            mode="aspectFill"
           />
           <view class="buttom">
             <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
@@ -269,6 +277,7 @@
           <image
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
             style="width: 90px; height: 90px"
+            mode="aspectFill"
           />
           <view class="buttom">
             <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
@@ -310,6 +319,7 @@
           <image
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
             style="width: 90px; height: 90px"
+            mode="aspectFill"
           />
           <view class="buttom">
             <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
@@ -351,6 +361,7 @@
           <image
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
             style="width: 90px; height: 90px"
+            mode="aspectFill"
           />
           <view class="buttom">
             <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
@@ -392,6 +403,7 @@
           <image
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
             style="width: 90px; height: 90px"
+            mode="aspectFill"
           />
           <view class="buttom">
             <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
@@ -433,6 +445,7 @@
           <image
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
             style="width: 90px; height: 90px"
+            mode="aspectFill"
           />
           <view class="buttom">
             <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
@@ -508,7 +521,7 @@ export default {
     },
     join() {
       uni.navigateTo({
-        url: "/pages/competition/appear",
+        url: "/competition/apply/appear",
       });
     },
   },
@@ -525,55 +538,58 @@ export default {
 .box {
   width: 100vw;
   background: #f7f7f7;
-
-  .bg {
-    width: 100%;
-    height: 323px;
-  }
-  .rank {
-    position: absolute;
-    top: 21%;
-    left: 0;
-    right: 0;
-    margin: auto;
-    width: 80%;
-    height: 120px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .item {
+  .first {
+    position: relative;
+    .bg {
+      width: 100%;
+      height: 323px;
+    }
+    .rank {
+      position: absolute;
+      top: 48%;
+      left: 0;
+      right: 0;
+      margin: auto;
+      width: 80%;
+      height: 120px;
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      gap: 5px;
-      .rank-num {
-        font-weight: 400;
-        font-size: 12px;
-        color: #1d2326;
-      }
-      .name {
-        font-weight: 400;
-        font-size: 14px;
-        color: #242424;
-      }
-      .score {
+      .item {
         display: flex;
-        border: 1px solid #f0f0f0;
-        width: 64px;
-        height: 20px;
+        flex-direction: column;
         align-items: center;
-        justify-content: space-evenly;
-        .item {
-          font-weight: 600;
-          font-size: 10px;
-          color: rgba(29, 35, 38, 0.5);
-          &:first-child {
-            border-right: 1px solid #f0f0f0;
+        gap: 5px;
+        .rank-num {
+          font-weight: 400;
+          font-size: 12px;
+          color: #1d2326;
+        }
+        .name {
+          font-weight: 400;
+          font-size: 14px;
+          color: #242424;
+        }
+        .score {
+          display: flex;
+          border: 1px solid #f0f0f0;
+          width: 64px;
+          height: 20px;
+          align-items: center;
+          justify-content: space-evenly;
+          .item {
+            font-weight: 600;
+            font-size: 10px;
+            color: rgba(29, 35, 38, 0.5);
+            &:first-child {
+              border-right: 1px solid #f0f0f0;
+            }
           }
         }
       }
     }
   }
+
   .search {
     width: 90%;
     margin: auto;

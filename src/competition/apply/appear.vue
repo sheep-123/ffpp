@@ -58,7 +58,8 @@
       />
       <view class="know" @click="openModal">赛事须知</view>
       <view class="share">
-        <u-icon name="share-square" color="#fff"></u-icon>分享</view
+        <u-icon name="share-square" color="#fff" @click="toShare"></u-icon
+        >分享</view
       >
     </view>
 
@@ -1255,7 +1256,7 @@ export default {
         { stage: "季军赛", time: "10月20日 18:00" },
         { stage: "决赛", time: "10月20日 20:00" },
       ],
-      isFinish: false,
+      isFinish: uni.getStorageSync("isFinish") || false,
       isOver: false,
       know: false,
       countdown: 25,
@@ -1277,12 +1278,19 @@ export default {
       disclaimer: "",
       insuranceNotice: "",
       matchNotice: "",
+      matchLink: [],
     };
   },
   methods: {
     setActiveTab(index) {
       this.activeTab = index;
       uni.setStorageSync("activeTab", index);
+      if (index == 1) {
+        this.getMatchRegisterSuc();
+      }
+      if (index == 2) {
+        this.getMatchReward();
+      }
     },
     switchTeam(index) {
       this.activeIndex = index;
@@ -1453,9 +1461,46 @@ export default {
         this.know = true;
       }
     },
+    toShare() {
+      uni.navigateTo({
+        url: "/competition/apply/share",
+      });
+    },
+    async getMatchRegisterSuc() {
+      var result = await uni.$u.http.get("/match/getMatchRegisterSuc", {
+        params: {
+          matchId: 11,
+        },
+      });
+    },
+    async getMatchRegisterSuc() {
+      var result = await uni.$u.http.get("/match/getMatchRegisterSuc", {
+        params: {
+          matchId: 11,
+        },
+      });
+      if (result.status == 200) {
+        this.matchLink = result.data.map((item) => {
+          return item;
+        });
+        console.log(this.matchLink);
+      }
+    },
+    async getMatchReward() {
+      var result = await uni.$u.http.get("/match/getMatchRegisterSuc", {
+        params: {
+          matchId: 11,
+        },
+      });
+    },
   },
   onLoad() {
     this.getMatchTemplateRegister();
+  },
+  onShow() {
+    if (this.isFinish) {
+      this.getMatchRegisterSuc();
+    }
   },
   computed: {
     activeTabColor() {
@@ -1473,10 +1518,6 @@ export default {
 </script>
 
 <style lang="scss">
-:root {
-  --active-color: v-bind(selectColor);
-}
-
 .box {
   width: 100vw;
   height: auto;
@@ -2615,6 +2656,7 @@ export default {
           display: flex;
           height: 350px;
           overflow: hidden;
+          box-sizing: border-box;
           .side-text {
             width: 10%;
             //让字体竖着排列
@@ -2640,6 +2682,8 @@ export default {
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                box-sizing: border-box;
+                border-right: none;
               }
               .stage {
                 width: 40%;

@@ -384,14 +384,14 @@ export default {
       this.isDragging = true;
     },
 
-    handleTouchMove: _.throttle(function (e) {
+    handleTouchMove(e) {
       if (!this.isDragging) return;
       const deltaY = e.touches[0].clientY - this.dragStartY;
       if (deltaY >= 0 && deltaY <= this.screenHeight) {
         this.pullTranslateY = deltaY;
       }
-    }, 16), // 每 16ms 触发一次，约等于 60fps
-    handleTouchEnd() {
+    },
+    handleTouchEnd(e) {
       this.isDragging = false;
       if (this.pullTranslateY >= 60) {
         this.isMapExpanded = true;
@@ -413,12 +413,9 @@ export default {
 
     initIntersectionObserver() {
       this.observer = uni.createIntersectionObserver(this);
-      this.observer.relativeToViewport().observe(
-        "#title",
-        _.throttle((res) => {
-          this.isSticky = res.intersectionRatio <= 0;
-        }, 500)
-      ); // 每 100ms 触发一次
+      this.observer.relativeToViewport().observe("#title", (res) => {
+        this.isSticky = res.intersectionRatio <= 0;
+      });
     },
   },
 

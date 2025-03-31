@@ -153,6 +153,13 @@
           }
         },
         {
+          "path": "publish/dongTaiPreview",
+          "style": {
+            "navigationBarTitleText": "动态预览",
+            "navigationStyle": "custom"
+          }
+        },
+        {
           "path": "apply/appear",
           "style": {
             "navigationBarTitleText": "报名比赛",

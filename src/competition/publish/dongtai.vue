@@ -4,15 +4,20 @@
     <view>
       <scroll-view scroll-y :style="{ height: windowHeight - bottomBoxHeight - statusBarHeight - 44 + 'px' }">
         <view class="contentBox">
-          <u-upload :fileList="fileList" @afterRead="afterRead" @delete="deletePic" name="6" multiple :maxCount="6"
-            width="86" height="86" :deleteIcon="'close'" :deleteIconColor="'#ff0000'" :deleteIconSize="20">
-            <view class="custom-upload">
-              <view class="plusIcon">
-                <u-icon name="plus" size="13px" color="#CCCCCC"></u-icon>
-              </view>
-              <text class="upload-text">图片/视频</text>
-            </view>
-          </u-upload>
+          <view>
+            <scroll-view scroll-x style="width: 100%;">
+              <u-upload class="custom-upload" :fileList="fileList" @afterRead="afterRead" @delete="deletePic" name="6"
+                multiple :maxCount="6" width="86" height="86" :deleteIcon="'close'" :deleteIconColor="'#ff0000'"
+                :deleteIconSize="20">
+                <view class="custom-upload">
+                  <view class="plusIcon">
+                    <u-icon name="plus" size="13px" color="#CCCCCC"></u-icon>
+                  </view>
+                  <text class="upload-text">图片/视频</text>
+                </view>
+              </u-upload>
+            </scroll-view>
+          </view>
           <view class="tipsBox">
             <image class="topIcon" src="@/static/top.png" mode="scaleToFill" />
             <view class="box1">
@@ -26,10 +31,11 @@
             </view>
           </view>
           <view class="textBox">
-            <u-input v-model="title" type="text" placeholder="添加标题" :maxlength="20" border="none" @input="inputEvent">
+            <u-input v-model="title" type="text" placeholder="添加标题" :maxlength="300" border="none" @input="inputEvent"
+              @change="changeEvent">
               <template slot="suffix">
                 <view style="display: flex;align-items: center;">
-                  <image src="@/static/clear.png" mode="scaleToFill" style="width: 20px;height: 20px;"
+                  <image v-show="isShow" src="@/static/close.png" mode="scaleToFill" style="width: 20px;height: 20px;"
                     @click="onClearTitle" />
                   <text style="font-family: PingFang SC, PingFang SC;
                        font-weight: 400;
@@ -42,6 +48,12 @@
                 </view>
               </template>
             </u-input>
+            <!-- <view>
+              <u-popup :show="isShowPopup" mode="center">
+                <view>123</view>
+              </u-popup>
+
+            </view> -->
             <u-divider color="#F0F0F0"></u-divider>
             <textarea placeholder-style="color:rgba(29,35,38,0.3);font-size:14px;font-weight: 400;"
               style="width: 100%;height: 278px;overflow: scroll;" v-model="titleContent" type="text" maxlength="300"
@@ -91,7 +103,7 @@
             <u-icon name="file-text" color="#000" size="24"></u-icon>
             <view>存草稿</view>
           </view>
-          <view class="previewBox">
+          <view class="previewBox" @click="toPreview">
             <u-icon name="eye" color="#000" size="24"></u-icon>
             <view>预览</view>
           </view>
@@ -111,7 +123,9 @@ export default {
       titleContent: '',
       bottomBoxHeight: 0,
       windowHeight: uni.getSystemInfoSync().windowHeight,
-      statusBarHeight: uni.getSystemInfoSync().statusBarHeight
+      statusBarHeight: uni.getSystemInfoSync().statusBarHeight,
+      isShow: false,
+      isShowPopup: false
     }
   },
   methods: {
@@ -130,12 +144,36 @@ export default {
     //标题输入事件
     inputEvent(e) {
       this.titleLength = 20
-      this.titleLength = this.titleLength - e.length
+      if (e.length <= 20) {
+        this.titleLength = this.titleLength - e.length
+        this.isShowPopup = false
+      } else {
+        this.titleLength = 0
+        uni.showToast({
+          icon: 'none',
+          title: '标题最多输入20个字',
+          mask: false
+        })
+      }
+      if (e.length >= 1) {
+        this.isShow = true
+      }
+      else {
+        this.isShow = false
+      }
+
+    },
+    changeEvent(e) {
+      console.log(e);
+
     },
     onClearTitle() {
       this.title = ''
-    }
+    },
+    toPreview() {
+      uni.navigateTo({ url: '/competition/publish/dongTaiPreview' })
 
+    }
   },
   onLoad() {
     this.$nextTick(() => {
@@ -146,15 +184,25 @@ export default {
       }).exec()
     })
 
-  }
+  },
 }
 </script>
 
 
 <style scoped lang='scss'>
+::v-deep .custom-upload .u-upload__wrap {
+  display: flex;
+  flex-direction: row;
+  /* 横向排列 */
+  flex-wrap: nowrap;
+  /* 禁止换行 */
+  overflow-x: auto;
+  /* 横向滚动 */
+}
+
 ::v-deep .u-upload__deletable.data-v-49deb6f2 {
-  background-color: #8a8a8a !important;
-  border-bottom-left-radius: 0 !important;
+  white-space: nowrap;
+  /* 禁止换行 */
 }
 
 ::v-deep .u-icon__icon.data-v-172979f2.uicon-close {
@@ -192,6 +240,7 @@ export default {
   width: 220px;
   height: 44px;
 }
+
 
 
 .box {

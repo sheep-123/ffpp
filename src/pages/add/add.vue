@@ -1,38 +1,24 @@
 <template>
   <view class="box">
-    <image
-      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/fabu-bg.png"
-      style="width: 100%"
-    />
+    <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/fabu-bg.png"
+      style="width: 100%" />
     <view class="main">
       <view class="tips">
-        <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/tips.png"
-        />
+        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/tips.png" />
         <text>你已加入泡泡365天</text>
       </view>
 
       <view class="content">
-        <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/发赛事.svg"
-          @click="toSaishi"
-        />
-        <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/发动态.svg"
-        />
-        <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/发活动.svg"
-        />
-        <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/1v1挑战.svg"
-        />
+        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/发赛事.svg"
+          @click="toSaishi" />
+        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/发动态.svg"
+          @click="toDongTai" />
+        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/发活动.svg" />
+        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/1v1挑战.svg" />
       </view>
 
-      <image
-        src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/delete.png"
-        class="delete"
-        @click="back"
-      />
+      <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/delete.png" class="delete"
+        @click="back" />
     </view>
   </view>
 </template>
@@ -60,6 +46,11 @@ export default {
         url: "/competition/publish/saishi",
       });
     },
+    toDongTai() {
+      uni.navigateTo({
+        url: "/competition/publish/dongtai",
+      });
+    }
   },
 };
 </script>
@@ -68,10 +59,12 @@ export default {
 .box {
   width: 100vw;
   height: 100vh;
+
   .main {
     width: 90%;
     margin: auto;
     position: relative;
+
     .tips {
       background: #f3f3f3;
       display: inline-flex;
@@ -83,6 +76,7 @@ export default {
         width: 45px;
         height: 16px;
       }
+
       text {
         font-weight: 400;
         font-size: 12px;
@@ -95,6 +89,7 @@ export default {
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 60%;
+
       image {
         width: 48%;
         height: 90px;

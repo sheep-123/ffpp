@@ -146,6 +146,13 @@
           }
         },
         {
+          "path": "publish/dongtai",
+          "style": {
+            "navigationBarTitleText": "发布动态",
+            "navigationStyle": "custom"
+          }
+        },
+        {
           "path": "apply/appear",
           "style": {
             "navigationBarTitleText": "报名比赛",

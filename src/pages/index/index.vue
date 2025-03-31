@@ -277,7 +277,6 @@
 </template>
 
 <script>
-import _ from "lodash";
 export default {
   data() {
     return {
@@ -342,7 +341,6 @@ export default {
   onShow() {
     this.Location();
     this.Location().then(() => {
-      // 确保地理位置信息加载完成后，再调用其他方法
       this.initIntersectionObserver();
     });
     const systemInfo = uni.getSystemInfoSync();
@@ -390,20 +388,15 @@ export default {
       if (!this.isDragging) return;
       const deltaY = e.touches[0].clientY - this.dragStartY;
       if (deltaY >= 0 && deltaY <= this.screenHeight) {
-        this.pullTranslateY = deltaY; // 根据下拉距离调整
+        this.pullTranslateY = deltaY;
       }
     }, 16), // 每 16ms 触发一次，约等于 60fps
-    // 新增触摸结束处理
     handleTouchEnd() {
       this.isDragging = false;
-
-      // 判断是否达到滑动阈值，决定是否展开地图
       if (this.pullTranslateY >= 60) {
-        // 假设阈值为 10
         this.isMapExpanded = true;
-        this.pullTranslateY = this.screenHeight; // 隐藏下拉组件
+        this.pullTranslateY = this.screenHeight;
       } else {
-        // 恢复初始位置
         this.pullTranslateY = 0;
       }
     },

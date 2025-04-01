@@ -51,48 +51,22 @@ module.exports = (vm) => {
         return {};
       }
 
-      // 检查 Token 是否过期
-      if (data.status === 401) {
-        console.warn("Token 已过期，跳转到登录页面...");
-        handleTokenExpired(); // 处理 Token 过期
-        return Promise.reject(data); // 阻止后续逻辑
-      }
-
       return data;
     },
     (error) => {
       // 响应错误处理
       console.error("响应拦截器错误:", error);
-
-      // 提示用户网络错误或其他异常
       if (error.statusCode === 401) {
-        uni.showToast({
-          title: "登录已过期，请重新登录",
-          icon: "none",
-        });
-        handleTokenExpired(); // 处理 Token 过期
-      } else {
-        uni.showToast({
-          title: "网络错误，请稍后重试",
-          icon: "none",
-        });
+        uni.removeStorageSync("token");
+        uni.removeStorageSync("user");
+        // 记录登录前的页面路径
+        const pages = getCurrentPages();
+        if (pages.length > 0) {
+          uni.setStorageSync("loginPage", pages[pages.length - 1].route);
+        }
+        uni.navigateTo({ url: "/pages/user/login" });
       }
-
       return Promise.reject(error);
     }
   );
-
-  /**
-   * 处理 Token 过期逻辑
-   */
-  function handleTokenExpired() {
-    // 清除本地存储的 Token
-    uni.removeStorageSync("token");
-    uni.removeStorageSync("user");
-
-    // 跳转到登录页面
-    uni.navigateTo({
-      url: "/pages/user/login",
-    });
-  }
 };

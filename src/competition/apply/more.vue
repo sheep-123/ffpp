@@ -3,84 +3,59 @@
     <u-navbar leftText="更多赞助" :autoBack="true" :fixed="false"> </u-navbar>
     <view class="main">
       <view class="list">
-        <view class="item">
-          <u-avatar :src="src"></u-avatar>
+        <view class="item" v-for="(item, index) in list" :key="index">
+          <u-avatar :src="item.sponsorAvatarUrl"></u-avatar>
           <view class="right">
             <view class="title"
-              >腾讯体育
-              <text>2024-12-14</text>
+              >{{ item.sponsorName }}
+              <text>{{ item.createTime }}</text>
             </view>
-            <view class="value">现金赞助 <text>3000</text>元</view>
-          </view>
-        </view>
-        <view class="item">
-          <u-avatar :src="src"></u-avatar>
-          <view class="right">
-            <view class="title"
-              >腾讯体育
-              <text>2024-12-14</text>
-            </view>
-            <view class="value">现金赞助 <text>3000</text>元</view>
-          </view>
-        </view>
-        <view class="item">
-          <u-avatar :src="src"></u-avatar>
-          <view class="right">
-            <view class="title"
-              >腾讯体育
-              <text>2024-12-14</text>
-            </view>
-            <view class="value">现金赞助 <text>3000</text>元</view>
-          </view>
-        </view>
-        <view class="item">
-          <u-avatar :src="src"></u-avatar>
-          <view class="right">
-            <view class="title"
-              >腾讯体育
-              <text>2024-12-14</text>
-            </view>
-            <view class="value">现金赞助 <text>3000</text>元</view>
-          </view>
-        </view>
-        <view class="item">
-          <u-avatar :src="src"></u-avatar>
-          <view class="right">
-            <view class="title"
-              >腾讯体育
-              <text>2024-12-14</text>
-            </view>
-            <view class="value">现金赞助 <text>3000</text>元</view>
-          </view>
-        </view>
-        <view class="item">
-          <u-avatar :src="src"></u-avatar>
-          <view class="right">
-            <view class="title"
-              >腾讯体育
-              <text>2024-12-14</text>
-            </view>
-            <view class="value">现金赞助 <text>3000</text>元</view>
-          </view>
-        </view>
-        <view class="item">
-          <u-avatar :src="src"></u-avatar>
-          <view class="right">
-            <view class="title"
-              >腾讯体育
-              <text>2024-12-14</text>
-            </view>
-            <view class="value">现金赞助 <text>3000</text>元</view>
+            <!-- <view class="value">现金赞助 <text>3000</text>元</view> -->
+            <view class="value">{{ item.rewardName }}</view>
           </view>
         </view>
       </view>
     </view>
 
     <view class="bt">
-        <view class="b">我要赞助</view>
+      <view class="b">我要赞助</view>
     </view>
   </view>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      list: [],
+      price: [],
+    };
+  },
+  onShow() {
+    this.load();
+  },
+  methods: {
+    async load() {
+      var result = await uni.$u.http.get("/match/getMatchSponsorUser", {
+        params: {
+          matchId: 11,
+        },
+      });
+      this.list = result.data.sponsors;
+      this.price = result.data.prizes;
+      this.add();
+      console.log(this.list);
+    },
+    async add() {
+      this.price.map((item, index) => {
+        if (this.list[index]) {
+          Object.assign(this.list[index], { rewardName: item.rewardName });
+        }
+      });
+    },
+  },
+};
+</script>
 
 <style lang="scss">
 .box {
@@ -141,19 +116,19 @@
     width: 100%;
     height: 100px;
     background-color: #fff;
-    .b{
-        width: 80%;
-        height: 44px;
-        background-color: black;
-        margin: auto;
-        border-radius: 22px;
-        margin-top: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        font-size: 16px;
-        font-weight: 400;
+    .b {
+      width: 80%;
+      height: 44px;
+      background-color: black;
+      margin: auto;
+      border-radius: 22px;
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 400;
     }
   }
 }

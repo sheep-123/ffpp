@@ -8,6 +8,15 @@
       </image>
       <view class="rank">
         <view class="item">
+          <view class="rank-num">2st</view>
+          <u-avatar :src="src"></u-avatar>
+          <view class="name">健身小趴菜</view>
+          <view class="score">
+            <div class="item">黄金1</div>
+            <div class="item">445</div>
+          </view>
+        </view>
+        <view class="item" style="margin-top: -10px">
           <view class="rank-num">1st</view>
           <u-avatar :src="src"></u-avatar>
           <view class="name">健身小趴菜</view>
@@ -17,16 +26,7 @@
           </view>
         </view>
         <view class="item">
-          <view class="rank-num">1st</view>
-          <u-avatar :src="src"></u-avatar>
-          <view class="name">健身小趴菜</view>
-          <view class="score">
-            <div class="item">黄金1</div>
-            <div class="item">445</div>
-          </view>
-        </view>
-        <view class="item">
-          <view class="rank-num">1st</view>
+          <view class="rank-num">3st</view>
           <u-avatar :src="src"></u-avatar>
           <view class="name">健身小趴菜</view>
           <view class="score">
@@ -573,7 +573,7 @@ export default {
         .score {
           display: flex;
           border: 1px solid #f0f0f0;
-          width: 64px;
+          width: 100%;
           height: 20px;
           align-items: center;
           justify-content: space-evenly;

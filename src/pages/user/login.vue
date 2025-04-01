@@ -79,7 +79,20 @@ export default {
                 type: "success",
                 message: result.message,
                 complete() {
-                  uni.navigateBack();
+                  // uni.navigateBack({
+                  //   delta: 1,
+                  // });
+                  const loginPage = uni.getStorageSync("loginPage");
+                  if (loginPage) {
+                    uni.removeStorageSync("loginPage"); // 清除记录
+                    uni.reLaunch({
+                      url: `/${loginPage}`,
+                    });
+                  } else {
+                    uni.switchTab({
+                      url: "/pages/index/index", // 默认跳转到首页
+                    });
+                  }
                 },
               });
             }
@@ -87,7 +100,6 @@ export default {
             this.$refs.notice.show({
               type: "error",
               message: err.data.message,
-              // message: err,
             });
           }
         },

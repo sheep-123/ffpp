@@ -205,7 +205,7 @@ export default {
     margin-left: 5%;
     display: flex;
     justify-content: space-between;
-    width: 250px;
+    width: 280px;
     .left {
       display: flex;
       gap: 27px;

@@ -136,13 +136,13 @@
           <image
             :src="tab.img"
             mode="scaleToFill"
-            style="width: 52px; height: 22px"
+            style="width: 52px; height: 12px"
             v-else
           />
           <image
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/biao.png"
             mode="scaleToFill"
-            style="width: 100%; height: 2px"
+            style="width: 100%; height: 1px"
             v-show="activeTab == index"
           />
         </view>
@@ -462,7 +462,7 @@
                 <view class="left-l">
                   <view class="l1">最低</view>
                   <view class="l2" @click="show4 = true"
-                    >{{ ageLimitMin ? ageLimitMin : 0 }}
+                    >{{ ageLimitMinName || 0 }}
                     <image
                       src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
                       mode="scaleToFill"
@@ -474,7 +474,7 @@
                 <view class="right-l">
                   <view class="r1">最高</view>
                   <view class="r2" @click="show5 = true"
-                    >{{ ageLimitMax ? ageLimitMax : 99 }}
+                    >{{ ageLimitMaxName || 99 }}
                     <image
                       src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
                       mode="scaleToFill"
@@ -567,7 +567,6 @@
               <view class="left">参赛费用设置<view class="icon">*</view></view>
               <view class="right">
                 <view class="input">
-                  ￥
                   <u-input
                     v-model="entryFee"
                     placeholder="请填写参赛费用"
@@ -576,8 +575,10 @@
                     @change="blur4"
                     placeholderClass="pl-class"
                     type="number"
-                  ></u-input> </view
-              ></view>
+                  ></u-input>
+                  ￥</view
+                ></view
+              >
             </view>
             <view class="item">
               <view class="left">退款政策 <view class="icon">*</view></view>
@@ -594,7 +595,9 @@
             <view class="item">
               <view class="left">保险保障 <view class="icon">*</view></view>
               <view class="right" @click="show17 = true"
-                ><text>{{ insuranceId || "无保障" }}</text
+                ><text :style="{ color: insuranceName ? 'black' : '' }">{{
+                  insuranceName || "无保障"
+                }}</text
                 ><image
                   src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
                   mode="scaleToFill"
@@ -616,7 +619,7 @@
       >
         <view class="main">
           <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/richeng.png"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/赛事环节设置.png"
             mode="scaleToFill"
             style="width: 100%; height: 22px; margin-top: 15px"
           />
@@ -707,7 +710,7 @@
       >
         <view class="main">
           <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/基础信息设置.png"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/赛事奖励设置.png"
             mode="scaleToFill"
             style="width: 100%; height: 22px; margin-top: 15px"
           />
@@ -1398,20 +1401,51 @@
       </u-popup>
       <u-popup :show="show17" mode="bottom" @close="show17 = false" :round="10">
         <view class="insurance">
-          <view class="fist">
+          <view class="first">
             <image
-              src="/static/images/safe.svg"
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/safe.svg"
               mode="scaleToFill"
-              style="width: 18px; heigth: 18px"
+              style="width: 18px; height: 18px"
             />
             保险保障</view
           >
           <view class="second">
             <view class="left">
               <view class="top">无保障</view>
-              <view></view>
+              <view class="bottom">
+                <u-icon name="close" color="#CCCCCC"></u-icon>
+                <u-icon name="close" color="#CCCCCC"></u-icon>
+                <u-icon name="close" color="#CCCCCC"></u-icon>
+              </view>
+              <view style="margin-left: 12px">
+                <u-radio-group v-model="insuranceId">
+                  <u-radio shape="circle" name="0" activeColor="red"></u-radio>
+                </u-radio-group>
+              </view>
+            </view>
+            <view class="right">
+              <view class="top">参与者意外保险 ￥2/人</view>
+              <view class="bottom">
+                <view class="item">意外伤害身故、残疾 <text>￥10万</text></view>
+                <view class="item">意外伤害医疗 <text>￥1万</text></view>
+                <view class="item">意外伤害住院津贴 <text>￥100/天</text></view>
+                <view>（绝对免赔3天，单次最高90天，累计不超过180天）</view>
+              </view>
+              <view class="tk">
+                <u-radio-group v-model="insuranceId">
+                  <u-radio shape="circle" name="1" activeColor="red"></u-radio>
+                </u-radio-group>
+                保险条款
+              </view>
             </view>
           </view>
+
+          <view class="notice">
+            <u-icon name="checkmark-circle-fill" color="red"></u-icon>
+            选择即同意广州极热玩家运动科技有限公司作为投保人进行投保
+          </view>
+
+          <view class="enter" @click="insuranceEnter">确认选择</view>
         </view>
       </u-popup>
       <u-toast ref="notice"></u-toast>
@@ -1448,23 +1482,23 @@ export default {
       isDragging: false, // 是否正在拖动
       tabs: [
         {
-          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/报名设置.svg",
+          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/报名设置.png",
           name: "报名设置",
         },
         {
-          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/环节设置.svg",
+          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/环节设置.png",
           name: "环节设置",
         },
         {
-          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/奖励设置.svg",
+          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/奖励设置.png",
           name: "奖励设置",
         },
         {
-          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/直击设置.svg",
+          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/直击设置.png",
           name: "直击设置",
         },
         {
-          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/规则设置.svg",
+          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/规则设置.png",
           name: "规则设置",
         },
       ],
@@ -1563,6 +1597,10 @@ export default {
       refundDays: "1",
       refundDaysName: "",
       show17: false,
+      insuranceId: "1",
+      insuranceName: "",
+      ageLimitMaxName: uni.getStorageSync("ageLimitMaxName") || "",
+      ageLimitMinName: uni.getStorageSync("ageLimitMinName") || "",
     };
   },
   async mounted() {
@@ -1735,6 +1773,8 @@ export default {
           arr.push(item.label);
         });
         this.columns14 = [arr];
+        this.matchLevelMin = 1;
+        this.matchLevelMax = arr.length;
       }
     },
     async save1() {
@@ -1757,46 +1797,7 @@ export default {
         if (result.status == 200) {
           this.matchId = result.data.matchId;
           uni.setStorageSync("matchId", this.matchId);
-          if (this.way == "1") {
-            const params = {
-              matchId: this.matchId,
-              serialNum: this.serialNum,
-              way: this.way,
-              number: this.number,
-              genderLimit: this.genderLimit,
-              ageLimitMin: this.ageLimitMin,
-              ageLimitMax: this.ageLimitMax,
-              entryFee: this.entryFee,
-              badgeLevelMin: this.badgeLevelMin,
-              badgeLevelMax: this.badgeLevelMax,
-              matchLevelMax: this.matchLevelMax,
-              matchLevelMin: this.matchLevelMin,
-              entryFee: this.entryFee,
-              refundDays: this.refundDays,
-              insuranceId: this.insuranceId,
-              registerNum: this.registerNum,
-            };
-          } else if (this.way == "2") {
-            const params = {
-              matchId: this.matchId,
-              serialNum: this.serialNum,
-              way: this.way,
-              number: this.number,
-              genderLimit: this.genderLimit,
-              ageLimitMin: this.ageLimitMin,
-              ageLimitMax: this.ageLimitMax,
-              entryFee: this.entryFee,
-              badgeLevelMin: this.badgeLevelMin,
-              badgeLevelMax: this.badgeLevelMax,
-              matchLevelMax: this.matchLevelMax,
-              matchLevelMin: this.matchLevelMin,
-              entryFee: this.entryFee,
-              refundDays: this.refundDays,
-              insuranceId: this.insuranceId,
-              registerNum: this.registerNum,
-            };
-          }
-          var res = await uni.$u.http.post("/match/saveMatchRegisterInfo", {
+          let params = {
             matchId: this.matchId,
             serialNum: this.serialNum,
             way: this.way,
@@ -1804,69 +1805,95 @@ export default {
             genderLimit: this.genderLimit,
             ageLimitMin: this.ageLimitMin,
             ageLimitMax: this.ageLimitMax,
+            badgeLevelMin: this.badgeLevelMin,
+            badgeLevelMax: this.badgeLevelMax,
+            matchLevelMax: this.matchLevelMax,
+            matchLevelMin: this.matchLevelMin,
             entryFee: this.entryFee,
-          });
-          if (res.status == 200) {
+            refundDays: this.refundDays,
+            insuranceId: this.insuranceId,
+          };
+
+          if (this.way === "2") {
+            params.groupNum = this.groupNum;
+            params.groupPerNum = this.groupPerNum;
+          }
+          try {
+            var res = await uni.$u.http.post(
+              "/match/saveMatchRegisterInfo",
+              params
+            );
+            if (res.status == 200) {
+              this.$refs.notice.show({
+                type: "success",
+                message: res.message,
+              });
+              uni.removeStorageSync("joinPointsRace");
+              uni.removeStorageSync("joinList");
+              uni.removeStorageSync("labelId");
+              uni.removeStorageSync("typeName");
+              uni.removeStorageSync("templateName");
+              uni.removeStorageSync("startTime");
+              uni.removeStorageSync("endTime");
+              uni.removeStorageSync("genderLimitName");
+              uni.removeStorageSync("ageLimitMin");
+              uni.removeStorageSync("ageLimitMax");
+              uni.removeStorageSync("entryFee");
+              uni.removeStorageSync("way");
+              uni.removeStorageSync("number");
+              uni.removeStorageSync("badgeLevelMin");
+              uni.removeStorageSync("badgeLevelMinName");
+              uni.removeStorageSync("badgeLevelMax");
+              uni.removeStorageSync("badgeLevelMaxName");
+              uni.removeStorageSync("name");
+              uni.removeStorageSync("fuTitle");
+              uni.removeStorageSync("fuTitleName");
+              uni.removeStorageSync("type");
+              uni.removeStorageSync("form");
+              uni.removeStorageSync("fullAddress");
+              uni.removeStorageSync("umpireId");
+              uni.removeStorageSync("sponsor");
+              uni.removeStorageSync("genderLimit");
+              uni.removeStorageSync("labelCode");
+
+              this.joinList = ["1"];
+              this.joinPointsRace = 1;
+              this.typeName = "";
+              this.templateName = "";
+              this.name = "";
+              this.fuTitle = "";
+              this.type = "1";
+              this.form = "1";
+              this.fullAddress = "";
+              this.startTime = "";
+              this.endTime = "";
+              this.sponsor = "1";
+              this.way = "1";
+              this.number = "";
+              this.genderLimitName = "无限制";
+              this.genderLimit = 0;
+              this.ageLimitMin = 0;
+              this.ageLimitMax = 99;
+              this.badgeLevelMin = "";
+              this.badgeLevelMax = "";
+              this.badgeLevelMinName = "无限制";
+              this.badgeLevelMaxName = "无限制";
+              this.entryFee = "";
+              this.labelCode = "";
+
+              this.activeTab++;
+            }
+          } catch (err) {
             this.$refs.notice.show({
-              type: "success",
-              message: res.message,
+              type: "error",
+              message: err.data.message,
             });
-            // 删除本地存储
-            uni.removeStorageSync("joinPointsRace");
-            uni.removeStorageSync("joinList");
-            uni.removeStorageSync("labelId");
-            uni.removeStorageSync("typeName");
-            // uni.removeStorageSync("templateId");
-            uni.removeStorageSync("templateName");
-            uni.removeStorageSync("startTime");
-            uni.removeStorageSync("endTime");
-            uni.removeStorageSync("genderLimitName");
-            uni.removeStorageSync("ageLimitMin");
-            uni.removeStorageSync("ageLimitMax");
-            uni.removeStorageSync("entryFee");
-            uni.removeStorageSync("way");
-            uni.removeStorageSync("number");
-            uni.removeStorageSync("badgeLevelMin");
-            uni.removeStorageSync("badgeLevelMinName");
-            uni.removeStorageSync("badgeLevelMax");
-            uni.removeStorageSync("badgeLevelMaxName");
-            uni.removeStorageSync("name");
-            uni.removeStorageSync("fuTitle");
-            uni.removeStorageSync("fuTitleName");
-            uni.removeStorageSync("type");
-            uni.removeStorageSync("form");
-            uni.removeStorageSync("fullAddress");
-            uni.removeStorageSync("umpireId");
-            uni.removeStorageSync("sponsor");
-            uni.removeStorageSync("genderLimit");
-            uni.removeStorageSync("labelCode");
-
-            this.joinList = ["1"];
-            this.joinPointsRace = 1;
-            this.typeName = "";
-            this.templateName = "";
-            this.name = "";
-            this.fuTitle = "";
-            this.type = "1";
-            this.form = "1";
-            this.fullAddress = "";
-            this.startTime = "";
-            this.endTime = "";
-            this.sponsor = "1";
-            this.way = "1";
-            this.number = "";
-            this.genderLimitName = "无限制";
-            this.genderLimit = 0;
-            this.ageLimitMin = 0;
-            this.ageLimitMax = 99;
-            this.badgeLevelMin = "";
-            this.badgeLevelMax = "";
-            this.badgeLevelMinName = "无限制";
-            this.badgeLevelMaxName = "无限制";
-            this.entryFee = "";
-            this.labelCode = "";
-
-            this.activeTab++;
+            uni.removeStorageSync("serialNum");
+            const result = await uni.$u.http.get("/match/getSerialNum");
+            if (result.status == 200) {
+              this.serialNum = result.data.serialNum;
+              uni.setStorageSync("serialNum", result.data.serialNum);
+            }
           }
         }
       } catch (err) {
@@ -1875,6 +1902,11 @@ export default {
           message: err.data.message,
         });
         uni.removeStorageSync("serialNum");
+        const result = await uni.$u.http.get("/match/getSerialNum");
+        if (result.status == 200) {
+          this.serialNum = result.data.serialNum;
+          uni.setStorageSync("serialNum", result.data.serialNum);
+        }
       }
     },
     blur1(n) {
@@ -1901,12 +1933,16 @@ export default {
     confirm4(n) {
       this.show4 = false;
       this.ageLimitMin = n.indexs[0];
+      this.ageLimitMinName = n.value[0];
       uni.setStorageSync("ageLimitMin", this.ageLimitMin);
+      uni.setStorageSync("ageLimitMinName", this.ageLimitMinName);
     },
     confirm5(n) {
       this.show5 = false;
       this.ageLimitMax = n.indexs[0];
+      this.ageLimitMaxName = n.value[0];
       uni.setStorageSync("ageLimitMax", this.ageLimitMax);
+      uni.setStorageSync("ageLimitMaxName", this.ageLimitMaxName);
     },
     blur4(n) {
       uni.setStorageSync("entryFee", n);
@@ -2024,6 +2060,7 @@ export default {
           type: "error",
           message: err.data.message,
         });
+        return;
       }
     },
     async save3() {
@@ -2217,26 +2254,28 @@ export default {
               matchRules: item,
             };
           });
+
           var result = await uni.$u.http.post("/match/saveMatchRulesInfo", {
             matchId: this.matchId,
             serialNum: this.serialNum,
             list: arr,
             saveState: "1",
           });
-          if (!result || result.status !== 200) {
-            throw new Error(result?.message || "保存规则信息失败");
-          }
         }
+      } catch (err) {
+        this.$refs.notice.show({
+          type: "error",
+          message: err.data.message,
+        });
+      }
 
+      try {
         var res = await uni.$u.http.post("/match/saveMatchRulesDescri", {
           matchId: this.matchId,
           serialNum: this.serialNum,
           rulesType: 1,
           list: this.contentList,
         });
-        if (!res || res.status !== 200) {
-          throw new Error(res?.message || "保存规则描述失败");
-        }
 
         // 删除本地缓存
         uni.removeStorageSync("gameList");
@@ -2247,15 +2286,16 @@ export default {
         this.gameList = [];
         this.textareaContent = [];
         this.contentList = [];
-
-        this.$refs.notice.show({
-          type: "success",
-          message: "保存成功",
-        });
+        if (res.status == 200) {
+          this.$refs.notice.show({
+            type: "success",
+            message: "保存成功",
+          });
+        }
       } catch (err) {
         this.$refs.notice.show({
           type: "error",
-          message: err.message || "保存失败，请稍后重试",
+          message: err.data.message,
         });
       }
     },
@@ -2471,6 +2511,8 @@ export default {
         arr.push(item.label);
       });
       this.columns6 = [arr];
+      this.badgeLevelMin = 1;
+      this.badgeLevelMax = arr.length;
     },
     confirm14(n) {
       this.show14 = false;
@@ -2541,6 +2583,14 @@ export default {
         this.refundDaysName = "赛前7天退100%，赛前退50%";
       }
       this.show16 = false;
+    },
+    insuranceEnter() {
+      this.show17 = false;
+      if (this.insuranceId == 1) {
+        this.insuranceName = "参与者意外保险";
+      } else {
+        this.insuranceName = "无保障";
+      }
     },
   },
   computed: {
@@ -3486,7 +3536,7 @@ export default {
 }
 
 .refund {
-  height: 350px;
+  height: 380px;
   .title {
     font-weight: 600;
     font-size: 16px;
@@ -3576,6 +3626,131 @@ export default {
     font-size: 16px;
     color: #ffffff;
     border-radius: 22px;
+  }
+}
+
+.insurance {
+  height: 380px;
+  .first {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0px 12px;
+    height: 56px;
+    gap: 5px;
+    font-weight: 600;
+    font-size: 18px;
+    color: #09aa95;
+    background-color: #f2fbf8;
+    border-radius: 10px;
+  }
+  .second {
+    display: flex;
+    align-items: center;
+    width: 90%;
+    margin: auto;
+    margin-top: 18px;
+    gap: 12px;
+    position: relative;
+
+    .left {
+      height: 196px;
+      background-color: #f7f7f7;
+      box-sizing: border-box;
+      .top {
+        font-weight: 400;
+        font-size: 14px;
+        color: #1d2326;
+        padding: 18px 55px 8px 12px;
+        border-bottom: 1px solid #f0f0f0;
+        white-space: nowrap;
+      }
+      .bottom {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-left: 12px;
+        margin-top: 17px;
+        gap: 12px;
+        padding-bottom: 29px;
+      }
+    }
+    .right {
+      width: 65%;
+      height: 196px;
+      background: linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0) 0%,
+        #e6faf7 100%
+      );
+      .top {
+        height: 48px;
+        border-bottom: 1px solid #f0f0f0;
+        padding-top: 20px;
+        padding-left: 16px;
+        box-sizing: border-box;
+        font-weight: 600;
+        font-size: 14px;
+        color: #1d2326;
+      }
+      .bottom {
+        box-sizing: border-box;
+        padding-top: 8px;
+        padding-left: 16px;
+        font-weight: 400;
+        font-size: 12px;
+        color: rgba(29, 35, 38, 0.6);
+        text-indent: 0;
+        gap: 6px;
+        display: flex;
+        flex-direction: column;
+
+        .item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          font-weight: 400;
+          font-size: 12px;
+          color: rgba(29, 35, 38, 0.6);
+          text {
+            color: #18af9b;
+          }
+        }
+      }
+      .tk {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 19px;
+        font-weight: 400;
+        font-size: 12px;
+        color: #2a8aba;
+      }
+    }
+  }
+  .notice {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 400;
+    font-size: 10px;
+    color: rgba(29, 35, 38, 0.6);
+    width: 90%;
+    margin: auto;
+    padding-top: 10px;
+  }
+  .enter {
+    width: 70%;
+    height: 44px;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: black;
+    margin: 12px auto;
   }
 }
 </style>

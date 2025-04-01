@@ -50,9 +50,11 @@
               </view>
             </view>
             <view class="price">
-              ￥<view class="num">5000</view> 现金池
+              ￥<view class="num">{{ list.cashSponsorVO.cashPool }}</view>
+              现金池
               <text>|</text>
-              ￥<view class="num">2500</view> 待分配奖金
+              ￥<view class="num">{{ list.cashSponsorVO.pendingBonus }}</view>
+              待分配奖金
             </view>
           </view>
           <view class="second">
@@ -60,12 +62,14 @@
               <u-avatar-group
                 :urls="urls"
                 size="24"
-                gap="0.4"
+                gap="0"
                 maxCount="4"
               ></u-avatar-group>
-              等10人已赞助
+              等{{ urls.length }}人已赞助
             </view>
-            <view class="right"> 您已赞助 <text>￥0</text> </view>
+            <view class="right">
+              您已赞助 <text>￥{{ list.cashSponsorVO.pendingBonus }}</text>
+            </view>
           </view>
         </view>
       </view>
@@ -181,30 +185,48 @@ export default {
   data() {
     return {
       bgColor: uni.getStorageSync("theme") || "#1B4CA7",
-      urls: [
-        "https://uviewui.com/album/1.jpg",
-        "https://uviewui.com/album/2.jpg",
-        "https://uviewui.com/album/3.jpg",
-        "https://uviewui.com/album/4.jpg",
-        "https://uviewui.com/album/7.jpg",
-        "https://uviewui.com/album/6.jpg",
-        "https://uviewui.com/album/5.jpg",
-      ],
-      t1: "实物赞助 羽毛球64个（1-4名平分）",
+      urls: [],
+      t1: "",
       t2: "现场服务 赛后被动拉伸体验",
       show: false,
       column: ["赞助现金", "赞助奖品", "提供现场服务"],
       select: "",
+      list: [],
     };
+  },
+  onShow() {
+    this.load();
   },
   methods: {
     enter() {
+      this.show = false;
       uni.navigateTo({
-        url: "/competition/apply/sponsorship",
+        url: `/competition/apply/sponsorship?action=${this.select}`,
       });
     },
     checkboxChange(index) {
       this.select = index;
+    },
+    async load() {
+      var result = await uni.$u.http.get("/match/getMatchSponsor", {
+        params: {
+          matchId: 11,
+        },
+      });
+
+      this.list = result.data;
+      this.urls = result.data.sponsorInfoVOList.map((item) => {
+        return item.sponsorAvatar;
+      });
+
+      const prizeList = result.data.prizeSponsorVOList;
+      this.t1 = prizeList
+        .map((item) => `${item.rewardName} ${item.rewardNum}${item.rewardUnit}`)
+        .join("\n");
+
+      this.t2 = result.data.serveSponsorVOList
+        .map((item) => item.serveContent)
+        .join("\n");
     },
   },
 };

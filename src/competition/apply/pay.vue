@@ -4,34 +4,32 @@
     <view class="main">
       <view class="first">
         <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+          :src="payInfo.mainImage"
           mode="aspectFill"
           style="width: 60px; height: 60px; border-radius: 5px"
         />
         <view class="right">
-          <view class="top"
-            >火爆猴子S1赛季羽毛球男子单打第一场32进制积分赛</view
-          >
+          <view class="top">{{ payInfo.matchName }}</view>
           <view class="next">
             <image
               src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png"
               style="width: 16px; height: 16px"
-            />华穗路·体育中心57号
+            />{{ payInfo.matchLocation }}
           </view>
         </view>
       </view>
       <view class="second">
         <view class="item">
           <view class="left">赛事时间</view>
-          <view class="right">10月22日-10月20日</view>
+          <view class="right">{{ payInfo.matchTime }}</view>
         </view>
         <view class="item">
           <view class="left">支付金额</view>
-          <view class="right">￥48.8</view>
+          <view class="right">￥{{ payInfo.paymentAmount }}</view>
         </view>
         <view class="item">
           <view class="left">支付方式</view>
-          <view class="right">微信</view>
+          <view class="right">{{ payInfo.paymentMethod }}</view>
         </view>
       </view>
       <view class="third">
@@ -41,15 +39,23 @@
             <view class="top"
               ><u-icon name="clock" size="13"></u-icon>申请退款时间</view
             >
-            <view class="time">10月11日20:00前</view>
-            <view class="time">10月11日20:00后</view>
+            <view
+              class="time"
+              v-for="(item, index) in refundPolicies"
+              :key="index"
+              >{{ item.refundTime }}</view
+            >
           </view>
           <view class="left" style="border: none; margin-left: 20px">
             <view class="top"
               ><u-icon name="man-delete" size="13"></u-icon>退款规则</view
             >
-            <view class="time">可全额退款</view>
-            <view class="time">不可退款</view>
+            <view
+              class="time"
+              v-for="(item, index) in refundPolicies"
+              :key="index"
+              >{{ item.refundRule }}</view
+            >
           </view>
         </view>
       </view>
@@ -71,10 +77,13 @@ export default {
     return {
       disclaimer: uni.getStorageSync("disclaimer") || "",
       outTradeNo: "",
+      payInfo: {},
+      refundPolicies: [],
     };
   },
   onLoad() {
     this.getMatchRegisterInfo();
+    this.getMatchPayInfo();
   },
   methods: {
     async pay() {
@@ -128,6 +137,14 @@ export default {
           message: err.data.message,
         });
       }
+    },
+    async getMatchPayInfo() {
+      var result = await uni.$u.http.post("/wechat/getMatchPayInfo", {
+        matchId: 11,
+        wjUserId: uni.getStorageSync("user").id,
+      });
+      this.payInfo = result.data;
+      this.refundPolicies = result.data.refundPolicies;
     },
   },
 };

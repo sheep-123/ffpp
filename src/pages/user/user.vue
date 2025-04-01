@@ -2,18 +2,23 @@
   <view class="box">
     <u-navbar bgColor="rgba(0,0,0,0)">
       <view slot="left">
-        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/更多-白色.png" class="more" />
+        <image
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/更多-白色.png"
+          class="more"
+        />
       </view>
     </u-navbar>
     <view class="content">
       <view class="main">
         <view class="first">
-           <u-avatar :src="src" size="80"></u-avatar>
+          <u-avatar :src="src" size="80"></u-avatar>
           <view class="v">
             <view class="v-top">半场好球先生</view>
             <view class="value">
               <view>玩家号：26734412</view>
-              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/qrcode.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/qrcode.png"
+              />
             </view>
           </view>
         </view>
@@ -33,7 +38,9 @@
         <view class="third">
           <view class="left">
             <view class="info">
-              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/ssdj.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/ssdj.png"
+              />
               <text>暂无赛事等级</text>
             </view>
 
@@ -41,7 +48,10 @@
               >还没有填写你的自我介绍呢，点击右上角编辑资料去填写吧～</view
             >
           </view>
-          <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/empty.png" mode="scaleToFill" />
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/empty.png"
+            mode="scaleToFill"
+          />
         </view>
 
         <view class="fourth">
@@ -153,43 +163,115 @@
       </view>
       <view class="dt">
         <view class="item">
-          <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg" mode="widthFix" />
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
-              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/avatar.png" />
+              <u-avatar :src="src" size="18"></u-avatar>
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
+              />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg" mode="widthFix" />
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
-              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/avatar.png" />
+              <u-avatar :src="src" size="18"></u-avatar>
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
+              />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg" mode="widthFix" />
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
-              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/avatar.png" />
+              <u-avatar :src="src" size="18"></u-avatar>
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png" />
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
+              />
+              <view class="value">1000</view>
+            </view>
+          </view>
+        </view>
+        <view class="item">
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
+          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+          <view class="buttom">
+            <view class="left">
+              <u-avatar :src="src" size="18"></u-avatar>
+              <view class="value">滑板高手</view>
+            </view>
+            <view class="right">
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
+              />
+              <view class="value">1000</view>
+            </view>
+          </view>
+        </view>
+        <view class="item">
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
+          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+          <view class="buttom">
+            <view class="left">
+              <u-avatar :src="src" size="18"></u-avatar>
+              <view class="value">滑板高手</view>
+            </view>
+            <view class="right">
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
+              />
+              <view class="value">1000</view>
+            </view>
+          </view>
+        </view>
+        <view class="item">
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
+          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+          <view class="buttom">
+            <view class="left">
+              <u-avatar :src="src" size="18"></u-avatar>
+              <view class="value">滑板高手</view>
+            </view>
+            <view class="right">
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
+              />
               <view class="value">1000</view>
             </view>
           </view>
@@ -218,22 +300,10 @@ export default {
       ],
     };
   },
-  onShow(){
-    this.user=uni.getStorageSync('user')??''
-    this.token=uni.getStorageSync('token')??''
-    if(!this.player&&!this.token){
-      this.$refs.notice.show({
-        type: "default",
-        message: "请登录",
-        title: "提醒",
-        complete(){
-          uni.navigateTo({
-            url: '/pages/user/login' 
-          })
-        }
-      })
-    }
-  }
+  onShow() {
+    uni.removeStorageSync("token");
+    uni.removeStorageSync("user");
+  },
 };
 </script>
 
@@ -242,7 +312,8 @@ export default {
   width: 100vw;
   height: 100vh;
   position: relative;
-  background: url("https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/05.jpg") no-repeat;
+  background: url("https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/05.jpg")
+    no-repeat;
 
   .more {
     width: 16px;

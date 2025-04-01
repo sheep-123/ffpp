@@ -2,7 +2,7 @@
   <view class="box">
     <u-navbar
       bgColor="rgba(0,0,0,0)"
-      autoBack
+      @leftClick="back"
       leftIconColor="#ffffff"
     ></u-navbar>
 
@@ -440,15 +440,18 @@
         <view class="apply-second">
           <view class="top">
             <view class="left">
-              已报名<text>16</text>个
+              已报名<text>{{ registerNumber.registerNum }}</text
+              >个
               <u-avatar-group :urls="urls" size="24" gap="0.3"></u-avatar-group>
             </view>
 
-            <view class="right"> 16/32 </view>
+            <view class="right">
+              {{ registerNumber.registerNum }}/{{ registerNumber.number }}
+            </view>
           </view>
           <view class="progress">
             <u-line-progress
-              :percentage="30"
+              :percentage="scale"
               height="8"
               activeColor="#EC384A"
               :showText="false"
@@ -476,11 +479,12 @@
             ></u-icon
           ></view>
           <view class="gray">请等待赛事名单公布及选手对战表</view>
-          <view class="gray">公布时间：10月11日20:00</view>
+          <view class="gray">公布时间：{{ publicationTime }}</view>
           <view class="time">
-            <view class="item">24</view><text>:</text>
-            <view class="item">24</view><text>:</text>
-            <view class="item">24</view>
+            <view class="item">{{ timeDifference.days }}</view
+            ><text>:</text> <view class="item">{{ timeDifference.hours }}</view
+            ><text>:</text>
+            <view class="item">{{ timeDifference.minutes }}</view>
           </view>
           <view class="bt">取消参赛</view>
         </view>
@@ -511,39 +515,16 @@
       <view class="main">
         <view class="time-line">
           <view class="name">
-            <view class="item">
-              <view class="title-active">参赛报名时间</view>
-              <view class="time-active">10.7-10.11</view>
-            </view>
-            <view class="item">
-              <view class="title">赛事名单公布</view>
-              <view class="time">10.11 20:00</view>
-            </view>
-            <view class="item">
-              <view class="title">八强赛</view>
-              <view class="time">10.12 14:00</view>
-            </view>
-            <view class="item">
-              <view class="title">小组淘汰赛</view>
-              <view class="time">10.13 14:00</view>
-            </view>
-          </view>
-          <view class="line">
-            <view class="line-item">
-              <view class="item-active"></view>
-              <view class="dian-active">...................</view>
-            </view>
-            <view class="line-item">
-              <view class="item"></view>
-              <view class="dian">..................</view>
-            </view>
-            <view class="line-item">
-              <view class="item"></view>
-              <view class="dian">.................</view>
-            </view>
-            <view class="line-item">
-              <view class="item"></view>
-              <view class="dian">..................</view>
+            <view
+              :class="itemIndex == index ? 'item-active' : 'item'"
+              v-for="(item, index) in scheTimeList"
+              :key="index"
+            >
+              <view class="title">{{ item.scheTypeName }}</view>
+              <view class="time">{{ item.scheTime }}</view>
+              <view class="line">
+                <view class="dian">····················</view>
+              </view>
             </view>
           </view>
         </view>
@@ -566,11 +547,11 @@
               <!-- 表格行 -->
               <view
                 class="table-row"
-                v-for="(item, index) in scheduleData"
+                v-for="(item, index) in scheTimeList"
                 :key="index"
               >
-                <view class="table-cell stage">{{ item.stage }}</view>
-                <view class="table-cell time">{{ item.time }}</view>
+                <view class="table-cell stage">{{ item.scheTypeName }}</view>
+                <view class="table-cell time">{{ item.scheTime }}</view>
               </view>
             </view>
           </view>
@@ -758,98 +739,33 @@
         />
 
         <view class="table">
-          <view class="item">
+          <view class="item" v-for="(item, index) in list" :key="index">
             <view class="rank">冠军奖励</view>
             <view class="some">
               <view class="zbf">主办方奖励</view>
               <view class="money">
-                <text>5000</text>
+                <text>{{ item.rewardAmount }}</text>
                 RMB奖金
                 <u-icon name="checkmark-circle" color="green"></u-icon>
                 <view class="wen">?</view>
               </view>
-              <view class="food">尤尼克斯球拍×2</view>
+              <view class="food">{{ item.rewardName }}×2</view>
               <view class="zzs">赞助商奖励</view>
               <view class="money">
-                <text>2000</text>
+                <text>{{ item.sponsorAmount }}</text>
                 RMB奖金
               </view>
               <view class="lesson">
-                <view class="left">康复拉伸课×1</view>
+                <view class="left">{{ item.spReward }}</view>
                 <view class="right"
-                  ><u-icon name="level"></u-icon>康复工作室</view
+                  ><u-icon name="level"></u-icon
+                  >{{ item.sponsorsUsername }}</view
                 >
               </view>
-            </view>
-          </view>
-          <view class="item">
-            <view class="rank">冠军奖励</view>
-            <view class="some">
-              <view class="zbf">主办方奖励</view>
-              <view class="money">
-                <text>5000</text>
-                RMB奖金
-                <u-icon name="checkmark-circle" color="green"></u-icon>
-                <view class="wen">?</view>
-              </view>
-              <view class="food">尤尼克斯球拍×2</view>
-              <view class="zzs">赞助商奖励</view>
-              <view class="money">
-                <text>2000</text>
-                RMB奖金
-              </view>
               <view class="lesson">
-                <view class="left">康复拉伸课×1</view>
+                <view class="left">{{ item.serveContent }}</view>
                 <view class="right"
-                  ><u-icon name="level"></u-icon>康复工作室</view
-                >
-              </view>
-            </view>
-          </view>
-          <view class="item">
-            <view class="rank">冠军奖励</view>
-            <view class="some">
-              <view class="zbf">主办方奖励</view>
-              <view class="money">
-                <text>5000</text>
-                RMB奖金
-                <u-icon name="checkmark-circle" color="green"></u-icon>
-                <view class="wen">?</view>
-              </view>
-              <view class="food">尤尼克斯球拍×2</view>
-              <view class="zzs">赞助商奖励</view>
-              <view class="money">
-                <text>2000</text>
-                RMB奖金
-              </view>
-              <view class="lesson">
-                <view class="left">康复拉伸课×1</view>
-                <view class="right"
-                  ><u-icon name="level"></u-icon>康复工作室</view
-                >
-              </view>
-            </view>
-          </view>
-          <view class="item">
-            <view class="rank">冠军奖励</view>
-            <view class="some">
-              <view class="zbf">主办方奖励</view>
-              <view class="money">
-                <text>5000</text>
-                RMB奖金
-                <u-icon name="checkmark-circle" color="green"></u-icon>
-                <view class="wen">?</view>
-              </view>
-              <view class="food">尤尼克斯球拍×2</view>
-              <view class="zzs">赞助商奖励</view>
-              <view class="money">
-                <text>2000</text>
-                RMB奖金
-              </view>
-              <view class="lesson">
-                <view class="left">康复拉伸课×1</view>
-                <view class="right"
-                  ><u-icon name="level"></u-icon>康复工作室</view
+                  ><u-icon name="level"></u-icon>{{ item.serveName }}</view
                 >
               </view>
             </view>
@@ -1243,19 +1159,10 @@ export default {
   data() {
     return {
       activeTab: uni.getStorageSync("activeTab") || 0,
-      activeIndex: 0, // 默认选中第一项 - 小青爱健身
+      activeIndex: 0,
       selectColor: uni.getStorageSync("theme") || "#1B4CA7",
       tabs: ["报名比赛", "赛事环节", "赛事奖励", "赛事直击", "赛事规则"],
       applyStatus: 1, //1——单人报名 2——团队报名
-      scheduleData: [
-        { stage: "参赛报名时间", time: "10月7日-10月11日" },
-        { stage: "赛事名单公布", time: "10月11日 20:00" },
-        { stage: "小组淘汰赛", time: "10月12日 14:00" },
-        { stage: "8强赛", time: "10月13日 14:00" },
-        { stage: "1/4决赛", time: "10月19日 18:00" },
-        { stage: "季军赛", time: "10月20日 18:00" },
-        { stage: "决赛", time: "10月20日 20:00" },
-      ],
       isFinish: uni.getStorageSync("isFinish") || false,
       isOver: false,
       know: false,
@@ -1279,22 +1186,42 @@ export default {
       insuranceNotice: "",
       matchNotice: "",
       matchLink: [],
+      publicationTime: "",
+      scheTimeList: [],
+      itemIndex: 0,
+      timeDifference: { days: 0, hours: 0, minutes: 0 }, // 初始化时间差
+      list: [],
+      MatchReward: [],
+      MatchRewardInfo: [],
+      MatchSponsorRequest: [],
+      MatchSponsorPrize: [],
+      MatchSponsorServe: [],
+      registerNumber: {},
     };
   },
   methods: {
     setActiveTab(index) {
       this.activeTab = index;
       uni.setStorageSync("activeTab", index);
-      if (index == 1) {
+      if (index == 0 && this.isFinish) {
         this.getMatchRegisterSuc();
+      }
+      if (index == 0) {
+        this.getMatchRegisterUserNum();
+      }
+      if (index == 1) {
+        this.getMatchSche();
       }
       if (index == 2) {
         this.getMatchReward();
+        this.getMatchRewardInfo();
+        this.getMatchSponsorRequest();
+        this.getMatchSponsorPrize();
+        this.getMatchSponsorServe();
       }
     },
     switchTeam(index) {
       this.activeIndex = index;
-      // 可以在这里添加其他逻辑，如更新表单数据等
     },
     hexToRgb(hex) {
       const bigint = parseInt(hex.slice(1), 16);
@@ -1472,26 +1399,129 @@ export default {
           matchId: 11,
         },
       });
+      this.publicationTime = result.data.publicationTime;
+      this.updateTimeDifference();
     },
-    async getMatchRegisterSuc() {
-      var result = await uni.$u.http.get("/match/getMatchRegisterSuc", {
+    async getMatchSche() {
+      var result = await uni.$u.http.get("/match/getMatchSche", {
         params: {
           matchId: 11,
         },
       });
-      if (result.status == 200) {
-        this.matchLink = result.data.map((item) => {
-          return item;
-        });
-        console.log(this.matchLink);
+      this.scheTimeList = result.data;
+    },
+    calculateTimeDifference() {
+      const now = new Date(); // 当前时间
+      const publicationDate = new Date(this.publicationTime); // 目标时间
+      const diffMs = publicationDate - now; // 时间差（毫秒）
+
+      if (diffMs <= 0) {
+        return { days: 0, hours: 0, minutes: 0 }; // 如果时间已过期，返回 0
       }
+
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)); // 计算天数
+      const diffHours = Math.floor(
+        (diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      ); // 计算小时数
+      const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60)); // 计算分钟数
+
+      return { days: diffDays, hours: diffHours, minutes: diffMinutes };
+    },
+    updateTimeDifference() {
+      this.timeDifference = this.calculateTimeDifference();
+    },
+    async aggregateMatchReward() {
+      // 根据 MatchReward 的数量初始化 list
+      this.list = this.MatchReward.map((reward) => ({
+        rewardAmount: reward.rewardAmount,
+      }));
+      // 合并其他数据到 list 中
+      this.MatchRewardInfo.forEach((info, index) => {
+        if (this.list[index]) {
+          Object.assign(this.list[index], { rewardName: info.rewardName });
+        }
+      });
+
+      this.MatchSponsorRequest.forEach((request, index) => {
+        if (this.list[index]) {
+          Object.assign(this.list[index], {
+            sponsorAmount: request.sponsorAmount,
+          });
+        }
+      });
+
+      this.MatchSponsorPrize.forEach((prize, index) => {
+        if (this.list[index]) {
+          Object.assign(this.list[index], {
+            spReward: prize.rewardName,
+            sponsorsUsername: prize.sponsorsUsername,
+          });
+        }
+      });
+
+      this.MatchSponsorServe.forEach((serve, index) => {
+        if (this.list[index]) {
+          Object.assign(this.list[index], {
+            serveContent: serve.serveContent,
+            serveName: serve.sponsorsUsername,
+          });
+        }
+      });
     },
     async getMatchReward() {
-      var result = await uni.$u.http.get("/match/getMatchRegisterSuc", {
-        params: {
-          matchId: 11,
-        },
+      var result = await uni.$u.http.get("/match/getMatchReward", {
+        params: { matchId: 11 },
       });
+      if (result.status == 200) {
+        this.MatchReward = result.data;
+        this.aggregateMatchReward();
+      }
+    },
+    async getMatchRewardInfo() {
+      var result = await uni.$u.http.get("/match/getMatchRewardInfo", {
+        params: { matchId: 11 },
+      });
+      if (result.status == 200) {
+        this.MatchRewardInfo = result.data;
+        this.aggregateMatchReward();
+      }
+    },
+    async getMatchSponsorRequest() {
+      var result = await uni.$u.http.get("/match/getMatchSponsorRequest", {
+        params: { matchId: 11 },
+      });
+      if (result.status == 200) {
+        this.MatchSponsorRequest = result.data;
+        this.aggregateMatchReward();
+      }
+    },
+    async getMatchSponsorPrize() {
+      var result = await uni.$u.http.get("/match/getMatchSponsorPrize", {
+        params: { matchId: 11 },
+      });
+      if (result.status == 200) {
+        this.MatchSponsorPrize = result.data;
+        this.aggregateMatchReward();
+      }
+    },
+    async getMatchSponsorServe() {
+      var result = await uni.$u.http.get("/match/getMatchSponsorServe", {
+        params: { matchId: 11 },
+      });
+      if (result.status == 200) {
+        this.MatchSponsorServe = result.data;
+        this.aggregateMatchReward();
+      }
+    },
+    async getMatchRegisterUserNum() {
+      var result = await uni.$u.http.get("/match/getMatchRegisterUserNum", {
+        params: { matchId: 11 },
+      });
+      this.registerNumber = result.data;
+      console.log(this.registerNumber);
+    },
+    back() {
+      uni.switchTab({ url: "/pages/play/play" });
     },
   },
   onLoad() {
@@ -1500,6 +1530,26 @@ export default {
   onShow() {
     if (this.isFinish) {
       this.getMatchRegisterSuc();
+      this.updateTimeDifference();
+      setInterval(() => {
+        this.updateTimeDifference();
+      }, 60000); // 每分钟更新一次
+    }
+    if (this.activeTab === 0) {
+      this.getMatchRegisterUserNum();
+    }
+    if (this.activeTab === 0) {
+      this.getMatchRegisterUserNum();
+    }
+    if (this.activeTab == 1) {
+      this.getMatchSche();
+    }
+    if (this.activeTab == 2) {
+      this.getMatchReward();
+      this.getMatchRewardInfo();
+      this.getMatchSponsorRequest();
+      this.getMatchSponsorPrize();
+      this.getMatchSponsorServe();
     }
   },
   computed: {
@@ -1512,6 +1562,11 @@ export default {
       const adjustedB = Math.min(255, rgb.b + 15);
 
       return `rgb(${adjustedR}, ${adjustedG}, ${adjustedB})`;
+    },
+    scale() {
+      return (
+        (this.registerNumber.registerNum / this.registerNumber.number) * 100
+      );
     },
   },
 };
@@ -2567,17 +2622,60 @@ export default {
           display: flex;
           align-items: center;
           gap: 30px;
-          .item {
+          .item-active {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            .title-active {
+            align-items: center;
+
+            .title {
               font-weight: 400;
               font-size: 10px;
               color: #ffffff;
               white-space: nowrap;
               text-align: center;
             }
+
+            .time {
+              padding: 6px 12px;
+              font-weight: 600;
+              font-size: 10px;
+              color: rgba(255, 255, 255, 0.5);
+              border-radius: 10px;
+              color: #15181a;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              white-space: nowrap;
+              background: linear-gradient(
+                94deg,
+                #ffffff 0%,
+                #ffdfe8 47%,
+                #71d0ff 100%
+              );
+            }
+            .line {
+              width: 10px;
+              height: 10px;
+              border-radius: 50%;
+              border: 2px solid #fff;
+              background-color: #17a7ef;
+              position: relative;
+              .dian {
+                position: absolute;
+                left: 180%;
+                top: 50%;
+                transform: translateY(-55%);
+                color: white;
+              }
+            }
+          }
+          .item {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+
             .title {
               font-weight: 400;
               font-size: 10px;
@@ -2585,65 +2683,29 @@ export default {
               white-space: nowrap;
               text-align: center;
             }
-            .time-active {
-              height: 20px;
-              border-radius: 10px;
-              background: linear-gradient(
-                94deg,
-                #ffffff 0%,
-                #ffdfe8 47%,
-                #71d0ff 100%
-              );
-              font-weight: 600;
-              font-size: 10px;
-              color: #15181a;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              width: 70px;
-            }
+
             .time {
               font-weight: 600;
               font-size: 10px;
               color: rgba(255, 255, 255, 0.5);
               white-space: nowrap;
             }
-          }
-        }
-        .line {
-          display: flex;
-          align-items: center;
-          margin-top: 12px;
-          gap: 5px;
-          margin-left: 25px;
-          .line-item {
-            display: flex;
-            align-items: center;
 
-            .item {
+            .line {
+              display: block;
               width: 10px;
               height: 10px;
-              border: 2px solid rgba(255, 255, 255, 0.4);
               border-radius: 50%;
+              border: 2px solid rgba(255, 255, 255, 0.3);
+              margin-top: 10px;
               position: relative;
-            }
-            .item-active {
-              width: 10px;
-              height: 10px;
-              border: 2px solid #ffffff;
-              border-radius: 50%;
-              position: relative;
-              background-color: #17a7ef;
-            }
-            .dian {
-              margin-top: -12px;
-              margin-left: 5px;
-              color: rgba(255, 255, 255, 0.2);
-            }
-            .dian-active {
-              margin-top: -12px;
-              margin-left: 5px;
-              color: rgba(255, 255, 255, 0.8);
+              .dian {
+                position: absolute;
+                left: 180%;
+                top: 50%;
+                transform: translateY(-55%);
+                color: rgba(255, 255, 255, 0.3);
+              }
             }
           }
         }

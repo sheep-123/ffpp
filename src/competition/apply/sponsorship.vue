@@ -1,7 +1,7 @@
 <template>
   <view class="box">
     <u-navbar autoBack leftText="申请赞助" :fixed="false"></u-navbar>
-    <view class="title">
+    <view class="title" v-if="action == 0">
       <view class="name">现金赞助</view>
       <image
         src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/删减.png"
@@ -9,14 +9,14 @@
         style="width: 24px; height: 24px"
       />
     </view>
-    <view class="content">
+    <view class="content" v-if="action == 0">
       <view class="item">
         <view class="left">赞助金额</view>
         <view style="width: 60px" class="right">
           ￥<u-input
             placeholder="0.00"
             border="none"
-            v-model="value"
+            v-model="sponsorAmount"
             input-algin="right"
             placeholderClass="pl-class"
           ></u-input>
@@ -24,7 +24,7 @@
       </view>
     </view>
 
-    <view class="title">
+    <view class="title" v-if="action == 1">
       <view class="name">奖品赞助</view>
       <image
         src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/删减.png"
@@ -32,35 +32,50 @@
         style="width: 24px; height: 24px"
       />
     </view>
-    <view class="content">
+    <view class="content" v-if="action == 1">
       <view class="item">
         <view class="left">赞助类型 <view class="icon">*</view></view>
         <view class="right">
-          <u-radio-group v-model="value">
+          <u-radio-group v-model="sponsorType">
             <u-radio
               shape="circle"
               label="实物赞助"
               customStyle="margin-right: 20px"
+              name="1"
+              activeColor="red"
             ></u-radio>
-            <u-radio shape="circle" label="服务赞助"></u-radio>
+            <u-radio
+              shape="circle"
+              label="服务赞助"
+              name="2"
+              activeColor="red"
+            ></u-radio>
           </u-radio-group>
         </view>
       </view>
       <view class="item-l">
         <view class="top">领取方式 <view class="icon">*</view></view>
         <view class="down">
-          <u-radio-group v-model="value">
+          <u-radio-group v-model="receiveMethod">
             <u-radio
               shape="circle"
               label="比赛现场发放"
               customStyle="margin-right: 20px"
+              name="1"
+              activeColor="red"
             ></u-radio>
             <u-radio
               shape="circle"
               label="到店领取"
               customStyle="margin-right: 20px"
+              name="2"
+              activeColor="red"
             ></u-radio>
-            <u-radio shape="circle" label="两者都支持"></u-radio>
+            <u-radio
+              shape="circle"
+              label="两者都支持"
+              activeColor="red"
+            ></u-radio>
           </u-radio-group>
         </view>
       </view>
@@ -73,7 +88,6 @@
                 v-model="rewardName"
                 placeholder="请填写奖品名称"
                 border="none"
-                @change="blur7"
                 input-align="right"
                 placeholderClass="pl-class"
               ></u-input>
@@ -88,7 +102,6 @@
                 v-model="rewardNum"
                 placeholder="请输入"
                 border="none"
-                @change="blur8"
                 input-align="right"
                 placeholderClass="pl-class"
               ></u-input>
@@ -102,7 +115,6 @@
                 v-model="rewardUnit"
                 placeholder="请输入"
                 border="none"
-                @change="blur9"
                 input-align="right"
                 placeholderClass="pl-class"
               ></u-input>
@@ -111,20 +123,21 @@
 
           <view class="new">
             <view class="n1">目标对象</view>
-            <view class="n2"
-              >请选择<u-icon
-                name="arrow-right"
-                size="12"
-                color="#CCCCCC"
-              ></u-icon
+            <view
+              class="n2"
+              @click="show = true"
+              :style="targetAudienceName ? 'color: black' : ''"
+              >{{ targetAudienceName || "请选择"
+              }}<u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
             ></view>
           </view>
         </view>
       </view>
       <view class="item">
         <view class="left">到店领取地址 <view class="icon">*</view></view>
-        <view class="right">
-          请选择<u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
+        <view class="right" @click="chooseAddress">
+          {{ pickupAddress || "请选择"
+          }}<u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
         </view>
       </view>
       <view class="item">
@@ -132,12 +145,12 @@
         <view class="right">
           <view style="width: 110px">
             <u-input
-              v-model="rewardName"
+              v-model="contactInfo"
               placeholder="请填写联系方式"
               border="none"
-              @change="blur7"
               input-align="right"
               placeholderClass="pl-class"
+              type="number"
             ></u-input>
           </view>
         </view>
@@ -161,7 +174,7 @@
       </view>
     </view>
 
-    <view class="title">
+    <view class="title" v-if="action == 2">
       <view class="name">现场服务</view>
       <image
         src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/删减.png"
@@ -169,16 +182,15 @@
         style="width: 24px; height: 24px"
       />
     </view>
-    <view class="content">
+    <view class="content" v-if="action == 2">
       <view class="item">
         <view class="left">服务内容 <view class="icon">*</view></view>
         <view class="right">
           <view style="width: 110px">
             <u-input
-              v-model="rewardName"
+              v-model="serveContent"
               placeholder="请填写服务内容"
               border="none"
-              @change="blur7"
               input-align="right"
               placeholderClass="pl-class"
             ></u-input>
@@ -187,8 +199,9 @@
       </view>
       <view class="item">
         <view class="left">目标对象 <view class="icon">*</view></view>
-        <view class="right">
-          请选择<u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
+        <view class="right" @click="show = true">
+          {{ targetAudienceName || "请选择"
+          }}<u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
         </view>
       </view>
       <view class="item">
@@ -215,19 +228,131 @@
     </view>
     <view class="content" style="padding-bottom: 25px">
       <view class="title" style="margin-top: 16px">要求说明</view>
-      <textarea placeholder-class="pl-class" auto-height class="t1" />
+      <textarea placeholder-class="pl-class" class="t1" v-model="explain" />
       <view class="title" style="margin-top: 32px">赞助宣言</view>
       <textarea
         placeholder-class="pl-class"
-        auto-height
         class="t1"
         placeholder="最多不超过25个字"
       />
     </view>
 
-    <view class="button"> 提交赞助申请 </view>
+    <view class="button" @click="save"> 提交赞助申请 </view>
+    <u-picker
+      :show="show"
+      :columns="columns"
+      @cancel="show = false"
+      @confirm="confirm"
+    ></u-picker>
+    <u-toast ref="notice"></u-toast>
   </view>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      action: null,
+      explain: "",
+      sponsorType: "1",
+      receiveMethod: "1",
+      contactInfo: "",
+      rewardNum: "",
+      rewardUnit: "",
+      show: false,
+      columns: [],
+      targetAudienceName: "",
+      pickupAddress: "",
+      prizeSort: 1,
+      rewardName: "",
+      serveContent: "",
+    };
+  },
+  onLoad: function (options) {
+    this.action = options.action;
+    this.getType();
+  },
+  methods: {
+    async save() {
+      var data = {
+        matchId: 11,
+        serialNum: 202503000001,
+        sponsorsId: 10,
+        sponsorAmount: this.sponsorAmount,
+        explain: this.explain,
+        sponsorPrizes: [],
+        sponsorServes: [],
+      };
+      if (this.action == 1) {
+        data.sponsorPrizes.push({
+          sponsorType: this.sponsorType,
+          receiveMethod: this.receiveMethod,
+          rewardName: this.rewardName,
+          rewardNum: this.rewardNum,
+          rewardUnit: this.rewardUnit,
+          targetAudience: this.targetAudience,
+          pickupAddress: this.pickupAddress,
+          contactInfo: this.contactInfo,
+          prizeSort: this.prizeSort,
+        });
+      }
+      if (this.action == 2) {
+        data.sponsorServes.push({
+          serveContent: this.serveContent,
+          targetAudience: this.targetAudience,
+          serveSort: this.serveSort,
+        });
+      }
+      try {
+        var result = await uni.$u.http.post(
+          "/match/saveMatchSponsorRequest",
+          data
+        );
+        if (result.status == 200) {
+          this.$refs.notice.show({
+            type: "success",
+            message: result.message,
+          });
+          uni.navigateBack({
+            delta: 1,
+          });
+        }
+      } catch (err) {
+        this.$refs.notice.show({
+          type: "error",
+          message: err.data.message,
+        });
+      }
+    },
+    async getType() {
+      var result = await uni.$u.http.get("/match/getSysDictByName", {
+        params: {
+          sysDicName: "target_audience",
+        },
+      });
+      var arr = [];
+      this.columns = result.data.map((item) => {
+        arr.push(item.label);
+      });
+      this.columns = [arr];
+    },
+    confirm(e) {
+      this.show = false;
+      this.targetAudience = e.indexs[0] + 1;
+      this.targetAudienceName = e.value[0];
+    },
+    chooseAddress() {
+      uni.chooseLocation({
+        success: (res) => {
+          this.pickupAddress = res.address;
+        },
+        fail: function () {},
+        complete: function () {},
+      });
+    },
+  },
+};
+</script>
 
 <style lang="scss">
 .box {
@@ -452,6 +577,8 @@
       border: 1px solid #f0f0f0;
       border-radius: 5px;
       margin-top: 12px;
+      height: 160px;
+      padding: 12px;
     }
   }
 
@@ -474,6 +601,6 @@
 .pl-class {
   font-weight: 400;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(0, 0, 0, 0.5);
 }
 </style>

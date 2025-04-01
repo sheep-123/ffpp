@@ -32,10 +32,12 @@
     >
       <view class="first">
         <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png"
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/定位.png"
+          style="width: 16px; height: 16px"
         />
         <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/near.png"
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/附近.png"
+          style="width: 36px; height: 15px"
         />
       </view>
       <view class="item">关注</view>
@@ -113,7 +115,7 @@
             </view>
             <view class="right">
               <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
               />
               <view class="value">1000</view>
             </view>
@@ -132,7 +134,7 @@
             </view>
             <view class="right">
               <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
               />
               <view class="value">1000</view>
             </view>
@@ -151,7 +153,7 @@
             </view>
             <view class="right">
               <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
               />
               <view class="value">1000</view>
             </view>
@@ -170,7 +172,7 @@
             </view>
             <view class="right">
               <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
               />
               <view class="value">1000</view>
             </view>
@@ -189,7 +191,7 @@
             </view>
             <view class="right">
               <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
               />
               <view class="value">1000</view>
             </view>
@@ -208,7 +210,7 @@
             </view>
             <view class="right">
               <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
               />
               <view class="value">1000</view>
             </view>
@@ -227,7 +229,7 @@
             </view>
             <view class="right">
               <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
               />
               <view class="value">1000</view>
             </view>
@@ -246,7 +248,7 @@
             </view>
             <view class="right">
               <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
               />
               <view class="value">1000</view>
             </view>
@@ -265,7 +267,140 @@
             </view>
             <view class="right">
               <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
+              />
+              <view class="value">1000</view>
+            </view>
+          </view>
+        </view>
+        <view class="item">
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
+          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+          <view class="buttom">
+            <view class="left">
+              <u-avatar :src="src" size="18"></u-avatar>
+              <view class="value">滑板高手</view>
+            </view>
+            <view class="right">
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
+              />
+              <view class="value">1000</view>
+            </view>
+          </view>
+        </view>
+        <view class="item">
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
+          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+          <view class="buttom">
+            <view class="left">
+              <u-avatar :src="src" size="18"></u-avatar>
+              <view class="value">滑板高手</view>
+            </view>
+            <view class="right">
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
+              />
+              <view class="value">1000</view>
+            </view>
+          </view>
+        </view>
+        <view class="item">
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
+          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+          <view class="buttom">
+            <view class="left">
+              <u-avatar :src="src" size="18"></u-avatar>
+              <view class="value">滑板高手</view>
+            </view>
+            <view class="right">
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
+              />
+              <view class="value">1000</view>
+            </view>
+          </view>
+        </view>
+        <view class="item">
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
+          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+          <view class="buttom">
+            <view class="left">
+              <u-avatar :src="src" size="18"></u-avatar>
+              <view class="value">滑板高手</view>
+            </view>
+            <view class="right">
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
+              />
+              <view class="value">1000</view>
+            </view>
+          </view>
+        </view>
+        <view class="item">
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
+          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+          <view class="buttom">
+            <view class="left">
+              <u-avatar :src="src" size="18"></u-avatar>
+              <view class="value">滑板高手</view>
+            </view>
+            <view class="right">
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
+              />
+              <view class="value">1000</view>
+            </view>
+          </view>
+        </view>
+        <view class="item">
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
+          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+          <view class="buttom">
+            <view class="left">
+              <u-avatar :src="src" size="18"></u-avatar>
+              <view class="value">滑板高手</view>
+            </view>
+            <view class="right">
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
+              />
+              <view class="value">1000</view>
+            </view>
+          </view>
+        </view>
+        <view class="item">
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
+          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+          <view class="buttom">
+            <view class="left">
+              <u-avatar :src="src" size="18"></u-avatar>
+              <view class="value">滑板高手</view>
+            </view>
+            <view class="right">
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
               />
               <view class="value">1000</view>
             </view>
@@ -330,15 +465,12 @@ export default {
       pullTranslateY: 0,
     };
   },
-  // onLoad() {
-  //   uni.reLaunch({
-  //     // url: "/competition/apply/appear",
-  //     // url: "/competition/apply/pay",
-  //     url: "/competition/publish/saishi",
-  //     // url: "/competition/apply/share",
-  //   });
-  // },
-  onShow() {
+  onLoad() {
+    // uni.reLaunch({
+    //   // url: "/competition/apply/appear",
+    //   url: "/competition/apply/pay",
+    //   // url: "/competition/publish/saishi",
+    // });
     this.Location();
     this.Location().then(() => {
       this.initIntersectionObserver();
@@ -347,6 +479,7 @@ export default {
     this.screenHeight = systemInfo.windowHeight;
     this.statusBarHeight = systemInfo.statusBarHeight;
   },
+
   methods: {
     async Location() {
       try {

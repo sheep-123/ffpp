@@ -68,7 +68,7 @@
     "@dcloudio/uni-stacktracey": "2.0.2-4050520250307001",
     "@dcloudio/uni-stat": "2.0.2-4050520250307001",
     "@vue/shared": "^3.0.0",
-    "core-js": "^3.8.3",
+    "core-js": "^3.33.0",
     "flyio": "^0.6.2",
     "sass": "1.77.2",
     "sass-loader": "10",

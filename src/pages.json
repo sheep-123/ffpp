@@ -146,6 +146,13 @@
           }
         },
         {
+          "path": "publish/addLocation",
+          "style": {
+            "navigationBarTitleText": "添加位置",
+            "navigationStyle": "custom"
+          }
+        },
+        {
           "path": "publish/dongtai",
           "style": {
             "navigationBarTitleText": "发布动态",
@@ -156,6 +163,13 @@
           "path": "publish/dongTaiPreview",
           "style": {
             "navigationBarTitleText": "动态预览",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "publish/dongTaiDetail",
+          "style": {
+            "navigationBarTitleText": "动态详情",
             "navigationStyle": "custom"
           }
         },
@@ -203,5 +217,23 @@
         }
       ]
     }
-  ]
+  ],
+  "plugins": {
+    "chooseLocation": {
+      "version": "1.0.2",  // ✅ 必须为x.x.x格式
+      "provider": "wx57d7ae552cbb3084" // 腾讯官方插件ID
+    }
+    // "qqmap-wx-jssdk": {
+    //   "version": "1.0.0",          // 插件版本号（需与插件文档一致）
+    //   "provider": "wx5bc2ac602a747594"  // 腾讯地图插件的官方 AppID
+    // }
+
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "需要获取您的位置以展示周边地点" // 匹配图像中的定位需求
+    }
+  }
+ 
+
 }

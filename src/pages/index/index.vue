@@ -2,106 +2,61 @@
   <view class="box">
     <u-navbar :bg-color="navbarBgColor">
       <view slot="left">
-        <view
-          :class="['search-container', isMapExpanded ? 'search-y' : 'search']"
-        >
+        <view :class="['search-container', isMapExpanded ? 'search-y' : 'search']">
           <!-- 返回按钮 -->
-          <image
-            v-if="isMapExpanded"
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/left.png"
-            @click="back"
-            class="back-btn"
-          />
+          <image v-if="isMapExpanded"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/left.png" @click="back"
+            class="back-btn" />
 
           <!-- 搜索框 -->
-          <u-search
-            placeholder="搜搜你感兴趣的~"
-            v-model="keyword"
-            :show-action="false"
-            :bg-color="searchBgColor"
-            @clear="keyword = ''"
-          ></u-search>
+          <u-search placeholder="搜搜你感兴趣的~" v-model="keyword" :show-action="false" :bg-color="searchBgColor"
+            @clear="keyword = ''"></u-search>
         </view>
       </view>
     </u-navbar>
 
-    <view
-      class="title-y"
-      v-if="isSticky && !isMapExpanded"
-      :style="{ top: stickyTop }"
-    >
+    <view class="title-y" v-if="isSticky && !isMapExpanded" :style="{ top: stickyTop }">
       <view class="first">
-        <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png"
-        />
-        <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/near.png"
-        />
+        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png" />
+        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/near.png" />
       </view>
       <view class="item">关注</view>
       <view class="item">美式橄榄球</view>
       <view class="item">飞盘</view>
       <view class="item">桌游</view>
       <view class="item">电竞</view>
-      <image
-        src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/more.png"
-        class="more"
-        @click="edit"
-      ></image>
+      <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/more.png" class="more"
+        @click="edit"></image>
     </view>
 
-    <map
-      id="myMap"
-      :latitude="latitude"
-      :longitude="longitude"
-      :markers="markers"
-      :scale="18"
-      v-if="!isSticky || isMapExpanded"
-    >
+    <map id="myMap" :latitude="latitude" :longitude="longitude" :markers="markers" :scale="18"
+      v-if="!isSticky || isMapExpanded">
     </map>
 
-    <view
-      class="pull"
-      @touchstart="handleTouchStart"
-      @touchmove="handleTouchMove"
-      @touchend="handleTouchEnd"
-      :style="{ top: pullTop }"
-      v-show="!isSticky"
-    >
-      <image
-        src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/pull.png"
-      />
+    <view class="pull" @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd"
+      :style="{ top: pullTop }" v-show="!isSticky">
+      <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/pull.png" />
       <view class="value">下拉试试</view>
     </view>
 
     <view class="content" :style="{ top: contentTop }">
       <view class="title" id="title">
         <view class="first">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png"
-          />
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/near.png"
-          />
+          <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png" />
+          <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/near.png" />
         </view>
         <view class="item">关注</view>
         <view class="item">美式橄榄球</view>
         <view class="item">飞盘</view>
         <view class="item">桌游</view>
         <view class="item">电竞</view>
-        <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/more.png"
-          class="more"
-          @click="edit"
-        ></image>
+        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/more.png" class="more"
+          @click="edit"></image>
       </view>
 
       <view class="main">
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
+        <view class="item" @tap="toDongTaiDetail">
+          <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg" mode="widthFix" />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
@@ -109,18 +64,13 @@
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
-              />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png" />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
+          <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg" mode="widthFix" />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
@@ -128,18 +78,13 @@
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
-              />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png" />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
+          <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg" mode="widthFix" />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
@@ -147,18 +92,13 @@
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
-              />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png" />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
+          <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg" mode="widthFix" />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
@@ -166,18 +106,13 @@
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
-              />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png" />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
+          <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg" mode="widthFix" />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
@@ -185,18 +120,13 @@
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
-              />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png" />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
+          <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg" mode="widthFix" />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
@@ -204,18 +134,13 @@
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
-              />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png" />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
+          <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg" mode="widthFix" />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
@@ -223,18 +148,13 @@
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
-              />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png" />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
+          <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg" mode="widthFix" />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
@@ -242,18 +162,13 @@
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
-              />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png" />
               <view class="value">1000</view>
             </view>
           </view>
         </view>
         <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
+          <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg" mode="widthFix" />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
           <view class="buttom">
             <view class="left">
@@ -261,9 +176,7 @@
               <view class="value">滑板高手</view>
             </view>
             <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
-              />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png" />
               <view class="value">1000</view>
             </view>
           </view>
@@ -425,6 +338,11 @@ export default {
         });
       });
     },
+    toDongTaiDetail() {
+
+      uni.navigateTo({ url: '../../competition/publish/dongTaiDetail' });
+
+    }
   },
 
   computed: {
@@ -435,8 +353,8 @@ export default {
       return this.isMapExpanded
         ? "#FFFFFF"
         : this.isSticky
-        ? "#F7F7F7"
-        : "#F5F7F5";
+          ? "#F7F7F7"
+          : "#F5F7F5";
     },
     stickyTop() {
       return `${this.statusBarHeight + this.navbarHeight}px`;
@@ -468,19 +386,23 @@ export default {
     align-items: center;
     justify-content: space-evenly;
     background-color: #f8f9f9;
+
     .first {
       display: flex;
       align-items: center;
       gap: 3px;
+
       image:nth-child(1) {
         width: 18px;
         height: 18px;
       }
+
       image:nth-child(2) {
         width: 36px;
         height: 15px;
       }
     }
+
     .item {
       font-size: 14px;
       color: rgba(29, 35, 38, 0.5);
@@ -497,43 +419,53 @@ export default {
 
     .item {
       width: 100%;
-      break-inside: avoid; /* 防止元素被分割到不同列 */
+      break-inside: avoid;
+      /* 防止元素被分割到不同列 */
       margin-bottom: 10px;
+
       image {
         width: 100%;
         border-radius: 10px;
       }
+
       .value {
         font-size: 14px;
         color: #353738;
         font-weight: 600;
       }
+
       .buttom {
         display: flex;
         justify-content: space-between;
         margin-top: 7px;
+
         .left {
           display: flex;
           align-items: center;
           gap: 5px;
+
           image {
             width: 18px;
             height: 18px !important;
           }
+
           .value {
             font-size: 12px;
             font-weight: 400;
             color: #474747;
           }
         }
+
         .right {
           display: flex;
           align-items: center;
           gap: 2px;
+
           image {
             width: 20px;
             height: 20px;
           }
+
           .value {
             font-weight: 400;
             font-size: 12px;
@@ -562,6 +494,7 @@ export default {
   border-radius: 20px;
   display: flex;
   align-items: center;
+
   image {
     width: 20px;
     height: 20px;
@@ -588,6 +521,7 @@ export default {
     font-size: 10px;
     color: rgba(29, 35, 38, 0.5);
   }
+
   image {
     width: 16px;
     height: 8px;
@@ -608,6 +542,7 @@ map {
 
   &.search-y {
     background: #ffffff;
+
     .back-btn {
       width: 20px;
       height: 20px;
@@ -620,6 +555,7 @@ map {
   width: 100vw;
   height: auto;
   position: relative;
+
   .title-y {
     box-sizing: border-box;
     position: fixed;
@@ -630,19 +566,23 @@ map {
     justify-content: space-evenly;
     background-color: #fff;
     z-index: 999999999;
+
     .first {
       display: flex;
       align-items: center;
       gap: 3px;
+
       image:nth-child(1) {
         width: 18px;
         height: 18px;
       }
+
       image:nth-child(2) {
         width: 36px;
         height: 15px;
       }
     }
+
     .item {
       font-size: 14px;
       color: rgba(29, 35, 38, 0.5);

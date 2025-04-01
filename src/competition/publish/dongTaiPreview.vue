@@ -69,15 +69,18 @@
             <view></view>
             <view class="rightPart">
               <view>
-                <image src="@/static/frie.png" mode="scaleToFill" style="width: 30px;height: 30px;" />
+                <!-- <view class="frie-svg"></view> -->
+                <image class="frie-svg" src="@/static/images/frie.svg" mode="scaleToFill" />
                 <text>0</text>
               </view>
               <view>
-                <image src="@/static/star.png" mode="scaleToFill" style="width: 30px;height: 30px;" />
+                <!-- <view class="star-svg"></view> -->
+                <image class="star-svg" src="@/static/images/collect.svg" mode="scaleToFill" />
                 <text>0</text>
               </view>
               <view>
-                <image src="@/static/comment.png" mode="scaleToFill" style="width: 30px;height: 30px;" />
+                <!-- <view class="comment-svg"></view> -->
+                <image class="comment-svg" src="@/static/images/comment.svg" mode="scaleToFill" />
                 <text>0</text>
               </view>
 
@@ -383,7 +386,23 @@ export default {
           display: flex;
           align-items: center;
 
-          image {
+          .frie-svg {
+            width: 30px;
+            height: 30px;
+            margin-left: 14px;
+
+          }
+
+          .star-svg {
+            width: 30px;
+            height: 30px;
+            margin-left: 14px;
+
+          }
+
+          .comment-svg {
+            width: 30px;
+            height: 30px;
             margin-left: 14px;
           }
 

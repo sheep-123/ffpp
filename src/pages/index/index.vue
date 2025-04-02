@@ -31,6 +31,12 @@
 
     <map id="myMap" :latitude="latitude" :longitude="longitude" :markers="markers" :scale="18"
       v-if="!isSticky || isMapExpanded">
+      <view class="mapBox">
+        <view class="button" @tap="toMarkSite">
+          <view><text>标记</text></view>
+          <view><text>场地</text></view>
+        </view>
+      </view>
     </map>
 
     <view class="pull" @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd"
@@ -342,6 +348,9 @@ export default {
 
       uni.navigateTo({ url: '../../competition/publish/dongTaiDetail' });
 
+    },
+    toMarkSite() {
+      uni.navigateTo({ url: '/pages/index/markSite' });
     }
   },
 
@@ -555,6 +564,38 @@ map {
   width: 100vw;
   height: auto;
   position: relative;
+
+  .mapBox {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+
+    .button {
+      width: 24px;
+      height: 30px;
+      padding: 6px 9px;
+      margin-right: 30px;
+      margin-bottom: 200px;
+      background-color: #15181A;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      text {
+        font-family: PingFang SC, PingFang SC;
+        font-weight: 600;
+        font-size: 12px;
+        color: #FFFFFF;
+        font-style: normal;
+        text-transform: none;
+      }
+    }
+
+  }
 
   .title-y {
     box-sizing: border-box;

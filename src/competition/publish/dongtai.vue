@@ -1,23 +1,16 @@
 <template>
   <view class="box">
     <u-navbar class="nav" autoBack leftText="发布动态" :fixed="false" bgColor="#fff"> </u-navbar>
-    <!-- <view class="content">
-      <view class="text-area"><text class="title">支持多端，支持手势缩放/描述文字/长按事件</text></view>
-      <view>
-        <image v-for="(img, i) in imgs" :key="i" :src="img" :data-src="img" mode="widthFix" @tap="previewOpen"></image>
-      </view>
-      <view class="text-area"><text class="title">（以上图片均为本人拍摄）</text></view>
-      <previewImage ref="previewImage" :opacity="0.8" :circular="true" :imgs="imgs" :descs="descs"
-        @longPress="longPress"></previewImage>
-    </view> -->
     <view>
-      <scroll-view scroll-y :style="{ height: windowHeight - bottomBoxHeight - statusBarHeight - 44 + 'px' }">
+
+      <scroll-view scroll-y scrollbar="true"
+        :style="{ height: windowHeight - bottomBoxHeight - statusBarHeight - 44 + 'px' }">
         <view class="contentBox">
           <view>
-            <scroll-view scroll-x style="width: 100%;">
-              <u-upload class="custom-upload" :fileList="fileList" @clickPreview="clickPreview" @afterRead="afterRead"
-                @delete="deletePic" accept="image" name="6" multiple :maxCount="18" width="86" height="86"
-                :deleteIcon="'close'" :deleteIconColor="'#ff0000'" :deleteIconSize="20" :previewFullImage="true">
+            <scroll-view scroll-x style="width: 100%; ">
+              <u-upload class="custom-upload" :fileList="fileList" @afterRead="afterRead" @delete="deletePic"
+                accept="image" name="6" multiple :maxCount="18" width="86" height="86" :deleteIcon="'close'"
+                :deleteIconColor="'#ff0000'" :deleteIconSize="20" :previewFullImage="true">
                 <view class="custom-upload">
                   <view class="plusIcon">
                     <u-icon name="plus" size="13px" color="#CCCCCC"></u-icon>
@@ -25,12 +18,6 @@
                   <text class="upload-text">图片/视频</text>
                 </view>
               </u-upload>
-              <!-- 自定义预览弹窗 -->
-              <u-modal :show="showPreview" :showConfirmButton="false">
-                <view>21312323123</view>
-                <image class="custom-preview-image" :src="previewImage" mode="scaleToFill" />
-                <button @click="showPreview = false" class="close-btn">关闭</button>
-              </u-modal>
             </scroll-view>
           </view>
           <view class="tipsBox">
@@ -64,10 +51,27 @@
               </template>
             </u-input>
             <u-divider color="#F0F0F0"></u-divider>
-            <textarea placeholder-style="color:rgba(29,35,38,0.3);font-size:14px;font-weight: 400;"
-              style="width: 100%;height: 278px;overflow: scroll;" v-model="titleContent" type="text" maxlength="300"
-              disable-default-padding="true" placeholder="和大家聊聊你的热爱吧..." border="none"></textarea>
+
+
+            <view style="display: flex;">
+              <scroll-view scroll-y style="height:100px;" @scroll="onScroll">
+                <textarea placeholder-style="color:rgba(29,35,38,0.3);font-size:14px;font-weig1ht: 400;"
+                  style="width: 100%;overflow: scroll !important;-webkit-overflow-scrolling: touch !important;"
+                  v-model="titleContent" type="text" maxlength="800" disable-default-padding="true"
+                  placeholder="和大家聊聊你的热爱吧..." border="none" autoHeight="true"></textarea>
+              </scroll-view>
+              <view style="height: 100px;">
+                <view style="width: 5px;height: 10px;background-color: #F0F0F0;"
+                  :style="{ paddingTop: obj.lineTop + 'px' }">
+                  {{ obj.lineTop }}
+                </view>
+              </view>
+            </view>
+
+            <!-- <scroll-view scroll-y :scroll-top="obj.lineTop" style="height: 278px;">
+                    </scroll-view> -->
           </view>
+
         </view>
         <view class="siteSelectionBox">
           <view class="box1">
@@ -84,11 +88,13 @@
                 text-transform: none;">添加位置</text>
             </view>
             <view class="right" @tap="toAddLocation()">
-              <text>去选择</text>
+
+              <text v-if="obj.addAddressName != ''">{{ obj.addAddressName }}</text>
+              <text v-else>去选择</text>
               <u-icon name="arrow-right" size="6 10" color="#CCCCCC"></u-icon>
             </view>
           </view>
-          <view class="box2">
+          <!-- <view class="box2">
             <image class="top2Icon" src="@/static/images/topArrow2.svg" mode="scaleToFill" />
             <view class="scrollxBox">
               <scroll-view scroll-x style="width:100%;">
@@ -100,7 +106,7 @@
                 </view>
               </scroll-view>
             </view>
-          </view>
+          </view> -->
         </view>
       </scroll-view>
     </view>
@@ -136,6 +142,11 @@ export default {
       isShow: false,
       isShowPopup: false,
       showPreview: false,
+      obj: {
+        lineTop: 0,
+        addAddressName: ''
+      },
+
     }
   },
   methods: {
@@ -185,12 +196,36 @@ export default {
 
     },
     toAddLocation() {
-      uni.navigateTo({ url: '/competition/publish/addLocation' })
+      var that = this
+      uni.chooseLocation({
+        success: function (res) {
+          console.log(res);
+
+          // this.addAddressName = res.name
+          that.$set(that.obj, 'addAddressName', res.name)
+          console.log(that.obj.addAddressName);
+
+          // uni.setStorageSync("fullAddress", res.address);
+          // uni.navigateTo({
+          //   url: `/competition/publish/saishi`,
+          // });
+        },
+        fail: function () { },
+        complete: function () { },
+      });
+      // uni.navigateTo({ url: '/competition/publish/addLocation' })
     },
-    clickPreview(file) {
-      console.log(123);
-      this.previewImage = file.url;
-      this.showPreview = true;
+    onScroll(e) {
+      this.$set(this.obj, 'lineTop', e.detail.scrollTop)
+      console.log(e.detail.scrollTop);
+
+      // this.$nextTick(() => {
+      //   this.obj.lineTop = e.detail.scrollTop
+      //   console.log(this.obj.lineTop);
+
+      // })
+
+
     }
   },
   onLoad() {
@@ -203,11 +238,6 @@ export default {
     })
 
   }
-  // mounted() {
-  //   this.$refs.uploadRef.$on('clickPreview', (file) => {
-  //     console.log('手动监听成功:', file)
-  //   })
-  // }
 }
 </script>
 
@@ -220,6 +250,8 @@ export default {
   font-style: normal;
   font-display: swap;
 }
+
+
 
 
 ::v-deep .u-upload__deletable.data-v-49deb6f2 {

@@ -11,6 +11,13 @@
       }
     },
     {
+      "path": "pages/index/markSite",
+      "style": {
+        "navigationBarTitleText": "标记地点",
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/user/login",
       "style": {
         "navigationBarTitleText": "登录",
@@ -219,10 +226,10 @@
     }
   ],
   "plugins": {
-    "chooseLocation": {
-      "version": "1.0.2",  // ✅ 必须为x.x.x格式
-      "provider": "wx57d7ae552cbb3084" // 腾讯官方插件ID
-    }
+    // "chooseLocation": {
+    //   "version": "1.0.2",  // ✅ 必须为x.x.x格式
+    //   "provider": "wx57d7ae552cbb3084" // 腾讯官方插件ID
+    // }
     // "qqmap-wx-jssdk": {
     //   "version": "1.0.0",          // 插件版本号（需与插件文档一致）
     //   "provider": "wx5bc2ac602a747594"  // 腾讯地图插件的官方 AppID

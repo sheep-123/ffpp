@@ -58,7 +58,7 @@
           <view class="top">
             <view class="left">
               <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/qrcode.png"
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/小徽章.png"
                 mode="scaleToFill"
                 style="width: 16px; height: 16px"
               />
@@ -103,7 +103,7 @@
           <view class="top">
             <view class="left">
               <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/qrcode.png"
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/小奖杯.png"
                 mode="scaleToFill"
                 style="width: 16px; height: 16px"
               />
@@ -124,8 +124,20 @@
         <view class="fifth">
           <view class="item">
             <view class="left">
-              <view class="v1">我的赛事</view>
+              <view class="v1">我的订单</view>
               <view class="v2">新增赛事6个</view>
+            </view>
+
+            <image
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/我的订单.png"
+              mode="scaleToFill"
+              style="width: 40px; height: 40px"
+            />
+          </view>
+          <view class="item">
+            <view class="left">
+              <view class="v1">我的赛事</view>
+              <view class="v2">新增课程2个</view>
             </view>
 
             <image
@@ -136,12 +148,12 @@
           </view>
           <view class="item">
             <view class="left">
-              <view class="v1">我的订单</view>
+              <view class="v1">我的赞助</view>
               <view class="v2">新增课程2个</view>
             </view>
 
             <image
-              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/我的赛事icon.png"
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/我的赞助.png"
               mode="scaleToFill"
               style="width: 40px; height: 40px"
             />
@@ -158,6 +170,7 @@
             fonst-size="16"
             inactive-color="#1D2326"
             :bar-style="barStyle"
+            lineColor="red"
           ></u-tabs
         ></view>
       </view>
@@ -504,19 +517,22 @@ export default {
         display: flex;
         gap: 10px;
         margin-top: 24px;
+        overflow-x: scroll;
         .item {
           display: flex;
           align-items: center;
           justify-content: space-between;
           border: 1px solid #f0f0f0;
-          padding: 4px 10px;
-          width: 167px;
+          box-sizing: border-box;
+          padding: 10px;
+          width: 118px;
           height: 52px;
+          flex-shrink: 0;
           .left {
             .v1 {
               font-weight: 600;
               font-size: 12px;
-              color: rgba(29, 35, 38, 0.8);
+              color: #1d2326;
             }
             .v2 {
               font-weight: 400;

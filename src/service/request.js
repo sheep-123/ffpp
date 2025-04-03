@@ -64,7 +64,7 @@ module.exports = (vm) => {
         if (pages.length > 0) {
           uni.setStorageSync("loginPage", pages[pages.length - 1].route);
         }
-        uni.navigateTo({ url: "/pages/user/login" });
+        uni.navigateTo({ url: "/else/user/login" });
       }
       return Promise.reject(error);
     }

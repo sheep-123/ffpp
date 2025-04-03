@@ -79,9 +79,6 @@ export default {
                 type: "success",
                 message: result.message,
                 complete() {
-                  // uni.navigateBack({
-                  //   delta: 1,
-                  // });
                   const loginPage = uni.getStorageSync("loginPage");
                   if (loginPage) {
                     uni.removeStorageSync("loginPage"); // 清除记录

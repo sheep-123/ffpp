@@ -68,9 +68,9 @@
         <view class="top">
           <image
             :src="mainFile"
-            mode="scaleToFill"
+            mode="aspectFill"
             v-if="mainFile"
-            style="width: 100%; height: 100%"
+            style="width: 100%; height: 350px"
           />
           <view class="img" v-else>
             <view class="info">
@@ -83,6 +83,7 @@
                   style="width: 16px; height: 16px"
                 />
               </view>
+              <view class="notice">最佳图片比例1:1</view>
             </view>
           </view>
         </view>
@@ -90,15 +91,17 @@
         <view
           class="next-u"
           :style="{
-            background: `linear-gradient(180deg,#cccccc 0%,${selectColor} 30%)`,
+            background: `linear-gradient(180deg,rgba(255,255,255,0.1) 0%,${selectColor} 30%)`,
           }"
         ></view>
 
         <view class="cup">
           <view class="top">
             <view class="left">
-              <view class="first">这里是赛事名称</view>
-              <view class="second">这里是赛事副标题</view>
+              <view class="first">{{ name_copy || "这里是赛事名称" }}</view>
+              <view class="second">{{
+                fuTitle_copy || "这里是赛事副标题"
+              }}</view>
             </view>
           </view>
 
@@ -207,30 +210,49 @@
               <view class="left">赛事名称 <view class="icon">*</view></view>
               <view class="right">
                 <view style="width: 110px">
-                  <u-input
+                  <!-- <u-input
                     v-model="name"
                     placeholder="请填写赛事名称"
                     border="none"
                     @change="blur1"
                     input-align="right"
                     placeholderClass="pl-class"
-                  ></u-input>
+                  ></u-input> -->
+                  <textarea
+                    style="width: 110px"
+                    maxlength="500"
+                    placeholder="请填写赛事名称"
+                    placeholder-class="pl-class1"
+                    auto-height
+                    v-model="name"
+                    @blur="blur1"
+                  >
+                  </textarea>
                 </view>
               </view>
             </view>
             <view class="item">
               <view class="left">赛事副标题<view class="icon">*</view></view>
               <view class="right">
-                <view class="input">
-                  <u-input
+                <!-- <u-input
                     v-model="fuTitle"
                     placeholder="请填写赛事副标题"
                     border="none"
                     @change="blur2"
                     input-align="right"
                     placeholderClass="pl-class"
-                  ></u-input> </view
-              ></view>
+                  ></u-input>  -->
+                <textarea
+                  style="width: 115px"
+                  maxlength="500"
+                  placeholder="请填写赛事副标题"
+                  placeholder-class="pl-class1"
+                  auto-height
+                  v-model="fuTitle"
+                  @blur="blur2"
+                >
+                </textarea>
+              </view>
             </view>
             <view class="item">
               <view class="left">赛事类型 <view class="icon">*</view></view>
@@ -679,7 +701,7 @@
             </view>
           </view>
 
-          <view class="add" @click="addItem">
+          <view class="add" @click="addNext">
             <image
               src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/add-red.png"
               mode="scaleToFill"
@@ -689,15 +711,6 @@
           </view>
 
           <view class="end">
-            <view class="end-i">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/edit.png"
-                mode="scaleToFill"
-                style="width: 24px; height: 24px"
-              />
-              退出编辑
-            </view>
-
             <view class="save" @click="save2">保存</view>
           </view>
         </view>
@@ -715,159 +728,186 @@
             style="width: 100%; height: 22px; margin-top: 15px"
           />
 
-          <view class="o-text">
+          <view
+            class="o-text"
+            v-for="(reward, rIndex) in rewards"
+            :key="rIndex"
+          >
             <view class="item">
               <view class="left">奖励者名称 <view class="icon">*</view></view>
-              <view class="right" @click="show10 = true"
-                ><text :style="{ color: rewardTypeName ? 'black' : '' }">{{
-                  rewardTypeName || "请选择奖励者名称"
-                }}</text
+              <view class="right" @click="showPicker10(rIndex)"
+                ><text
+                  :style="{ color: reward.rewardTypeName ? 'black' : '' }"
+                  >{{ reward.rewardTypeName || "请选择奖励者名称" }}</text
                 ><image
                   src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
                   mode="scaleToFill"
                   style="width: 12px; height: 12px"
-              /></view>
+                />
+              </view>
             </view>
             <view class="item">
               <view class="left">奖金金额 <view class="icon">*</view></view>
               <view class="right">
                 <view style="width: 50px">
                   <u-input
-                    v-model="rewardAmount"
+                    v-model="reward.rewardAmount"
                     placeholder="￥0.00"
                     border="none"
-                    @change="blur5"
+                    @change="(n) => blur5(n, rIndex)"
                     type="number"
                     placeholderClass="pl-class"
                   ></u-input>
                 </view>
               </view>
             </view>
-            <view class="item">
-              <view class="left">赞助类型 <view class="icon">*</view></view>
-              <view class="right">
-                <u-radio-group v-model="sponsorType" placement="row">
-                  <u-radio
-                    activeColor="red"
-                    label="实物赞助"
-                    shape="circle"
-                    name="实物赞助"
-                  ></u-radio>
-                  <u-radio
-                    activeColor="red"
-                    label="服务赞助"
-                    name="服务赞助"
-                    shape="circle"
-                    customStyle="margin-left: 20px"
-                  ></u-radio>
-                </u-radio-group>
-              </view>
-            </view>
-            <view class="item-o">
-              <view class="left">领取方式 <view class="icon">*</view></view>
-              <view class="right">
-                <u-radio-group v-model="receiveMethod" placement="row">
-                  <u-radio
-                    activeColor="red"
-                    label="比赛现场发放"
-                    name="比赛现场发放"
-                    shape="circle"
-                  ></u-radio>
-                  <u-radio
-                    activeColor="red"
-                    label="到店领取"
-                    name="到店领取"
-                    shape="circle"
-                    customStyle="margin-left: 5px"
-                  ></u-radio>
-                  <u-radio
-                    activeColor="red"
-                    label="两者都支持"
-                    name="两者都支持"
-                    shape="circle"
-                    customStyle="margin-left: 5px"
-                  ></u-radio>
-                </u-radio-group>
-              </view>
-            </view>
-            <view class="item-o">
-              <view class="top">
-                <view class="left"> 奖品名称 <view class="icon">*</view> </view>
-                <view class="right">
-                  <view style="width: 110px">
-                    <u-input
-                      v-model="rewardName"
-                      placeholder="请填写奖品名称"
-                      border="none"
-                      @change="blur7"
-                      input-align="right"
-                      placeholderClass="pl-class"
-                    ></u-input>
-                  </view>
+            <view
+              v-for="(item, index) in reward.prizes"
+              :key="index"
+              class="reward-item"
+            >
+              <view style="background-color: #f7f7f7">
+                <view class="del">
+                  奖品
+                  <image
+                    src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/删减.png"
+                    mode="scaleToFill"
+                    style="width: 24px; height: 24px"
+                    @click="delPrize(rIndex, index)"
+                  />
                 </view>
               </view>
-              <view class="bt">
-                <view class="left" style="width: 45%">
-                  <view class="l1">数量</view>
-                  <view style="width: 50%">
-                    <u-input
-                      v-model="rewardNum"
-                      placeholder="请输入"
-                      border="none"
-                      @change="blur8"
-                      input-align="right"
-                      placeholderClass="pl-class"
-                      type="number"
-                    ></u-input>
-                  </view>
-                </view>
 
-                <view class="right" style="width: 45%">
-                  <view class="r1">单位</view>
-                  <view style="width: 50%">
-                    <u-input
-                      v-model="rewardUnit"
-                      placeholder="请输入"
-                      border="none"
-                      @change="blur9"
-                      input-align="right"
-                      placeholderClass="pl-class"
-                    ></u-input>
+              <view class="item">
+                <view class="left">奖励类型 <view class="icon">*</view></view>
+                <view class="right">
+                  <u-radio-group v-model="item.sponsorType" placement="row">
+                    <u-radio
+                      activeColor="red"
+                      label="实物"
+                      shape="circle"
+                      name="实物"
+                    ></u-radio>
+                    <u-radio
+                      activeColor="red"
+                      label="服务"
+                      name="服务"
+                      shape="circle"
+                      customStyle="margin-left: 20px"
+                    ></u-radio>
+                  </u-radio-group>
+                </view>
+              </view>
+              <view class="item-o">
+                <view class="left">领取方式 <view class="icon">*</view></view>
+                <view class="right">
+                  <u-radio-group v-model="item.receiveMethod" placement="row">
+                    <u-radio
+                      activeColor="red"
+                      label="比赛现场发放"
+                      name="比赛现场发放"
+                      shape="circle"
+                    ></u-radio>
+                    <u-radio
+                      activeColor="red"
+                      label="到店领取"
+                      name="到店领取"
+                      shape="circle"
+                      customStyle="margin-left: 5px"
+                    ></u-radio>
+                    <u-radio
+                      activeColor="red"
+                      label="两者都支持"
+                      name="两者都支持"
+                      shape="circle"
+                      customStyle="margin-left: 5px"
+                    ></u-radio>
+                  </u-radio-group>
+                </view>
+              </view>
+              <view class="item-o">
+                <view class="top">
+                  <view class="left">
+                    奖品名称 <view class="icon">*</view>
                   </view>
+                  <view class="right">
+                    <view style="width: 110px">
+                      <u-input
+                        v-model="item.rewardName"
+                        placeholder="请填写奖品名称"
+                        border="none"
+                        @change="(n) => blur7(n, index)"
+                        input-align="right"
+                        placeholderClass="pl-class"
+                      ></u-input>
+                    </view>
+                  </view>
+                </view>
+                <view class="bt">
+                  <view class="left" style="width: 45%">
+                    <view class="l1">数量</view>
+                    <view style="width: 50%">
+                      <u-input
+                        v-model="item.rewardNum"
+                        placeholder="请输入"
+                        border="none"
+                        @change="(n) => blur8(n, index)"
+                        input-align="right"
+                        placeholderClass="pl-class"
+                        type="number"
+                      ></u-input>
+                    </view>
+                  </view>
+
+                  <view class="right" style="width: 45%">
+                    <view class="r1">单位</view>
+                    <view style="width: 50%">
+                      <u-input
+                        v-model="item.rewardUnit"
+                        placeholder="请输入"
+                        border="none"
+                        @change="(n) => blur9(n, index)"
+                        input-align="right"
+                        placeholderClass="pl-class"
+                      ></u-input>
+                    </view>
+                  </view>
+                </view>
+              </view>
+              <view class="item">
+                <view class="left"
+                  >到店领取地址 <view class="icon">*</view></view
+                >
+                <view
+                  class="right"
+                  @click="chooseAddress(rIndex, index)"
+                  :style="item.pickupAddress ? 'width: 60%;' : ''"
+                  ><text
+                    :style="{ color: item.pickupAddress ? 'black' : '' }"
+                    >{{ item.pickupAddress || "请选择" }}</text
+                  ><image
+                    src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
+                    mode="scaleToFill"
+                    style="width: 12px; height: 12px"
+                /></view>
+              </view>
+              <view class="item">
+                <view class="left">联系方式 <view class="icon">*</view></view>
+                <view class="right">
+                  <u-input
+                    v-model="item.contactInfo"
+                    placeholder="请填写联系方式"
+                    border="none"
+                    @change="(n) => blur6(n, index)"
+                    type="number"
+                    input-align="right"
+                    placeholderClass="pl-class"
+                  ></u-input>
                 </view>
               </view>
             </view>
             <view class="item">
-              <view class="left">到店领取地址 <view class="icon">*</view></view>
-              <view
-                class="right"
-                @click="chooseAddress"
-                :style="pickupAddress ? 'width: 60%;' : ''"
-                ><text :style="{ color: pickupAddress ? 'black' : '' }">{{
-                  pickupAddress || "请选择"
-                }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
-            </view>
-            <view class="item">
-              <view class="left">联系方式 <view class="icon">*</view></view>
-              <view class="right">
-                <u-input
-                  v-model="contactInfo"
-                  placeholder="请填写联系方式"
-                  border="none"
-                  @change="blur6"
-                  type="number"
-                  input-align="right"
-                  placeholderClass="pl-class"
-                ></u-input>
-              </view>
-            </view>
-            <view class="item">
-              <view class="left">
+              <view class="left" @click="addReward(rIndex)">
                 <image
                   src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/添加.png"
                   mode="scaleToFill"
@@ -875,7 +915,7 @@
                 />
                 新增奖品
               </view>
-              <view class="right">
+              <view class="right" @click="delReward(rIndex)">
                 <image
                   src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/删除.png"
                   mode="scaleToFill"
@@ -885,7 +925,7 @@
             </view>
           </view>
 
-          <view class="add">
+          <view class="add" @click="addRewardMember">
             <image
               src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/add-red.png"
               mode="scaleToFill"
@@ -895,15 +935,6 @@
           </view>
 
           <view class="end">
-            <view class="end-i">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/edit.png"
-                mode="scaleToFill"
-                style="width: 24px; height: 24px"
-              />
-              退出编辑
-            </view>
-
             <view class="save" @click="save3">保存</view>
           </view>
         </view>
@@ -1029,45 +1060,62 @@
                   选择计分方式 <view class="icon">*</view>
                 </view>
               </view>
-              <view class="bt">
-                <u-radio-group v-model="scoringMethod">
-                  <u-radio
-                    activeColor="red"
-                    label="积分"
-                    name="1"
-                    shape="circle"
-                  ></u-radio>
-                  <u-radio
-                    activeColor="red"
-                    label="时间"
-                    name="2"
-                    shape="circle"
-                  ></u-radio>
-                  <u-radio
-                    activeColor="red"
-                    label="距离"
-                    name="3"
-                    shape="circle"
-                  ></u-radio>
-                  <u-radio
-                    activeColor="red"
-                    label="分数"
-                    name="4"
-                    shape="circle"
-                  ></u-radio>
-                  <u-radio
-                    activeColor="red"
-                    label="重量"
-                    name="5"
-                    shape="circle"
-                  ></u-radio>
-                  <u-radio
-                    activeColor="red"
-                    label="胜负"
-                    name="6"
-                    shape="circle"
-                  ></u-radio>
-                </u-radio-group>
+              <view class="bt-radio">
+                <view class="item-radio">
+                  <u-radio-group v-model="scoringMethod">
+                    <u-radio
+                      activeColor="red"
+                      label="积分"
+                      name="1"
+                      shape="circle"
+                    ></u-radio>
+                  </u-radio-group>
+                </view>
+                <view class="item-radio">
+                  <u-radio-group v-model="scoringMethod">
+                    <u-radio
+                      activeColor="red"
+                      label="时间"
+                      name="2"
+                      shape="circle"
+                    ></u-radio> </u-radio-group
+                ></view>
+                <view class="item-radio">
+                  <u-radio-group v-model="scoringMethod">
+                    <u-radio
+                      activeColor="red"
+                      label="距离"
+                      name="3"
+                      shape="circle"
+                    ></u-radio> </u-radio-group
+                ></view>
+                <view class="item-radio">
+                  <u-radio-group v-model="scoringMethod">
+                    <u-radio
+                      activeColor="red"
+                      label="分数"
+                      name="4"
+                      shape="circle"
+                    ></u-radio> </u-radio-group
+                ></view>
+                <view class="item-radio">
+                  <u-radio-group v-model="scoringMethod">
+                    <u-radio
+                      activeColor="red"
+                      label="重量"
+                      name="5"
+                      shape="circle"
+                    ></u-radio> </u-radio-group
+                ></view>
+                <view class="item-radio">
+                  <u-radio-group v-model="scoringMethod">
+                    <u-radio
+                      activeColor="red"
+                      label="胜负"
+                      name="6"
+                      shape="circle"
+                    ></u-radio> </u-radio-group
+                ></view>
               </view>
             </view>
           </view>
@@ -1143,7 +1191,9 @@
             </textarea>
             <view class="count">
               <view class="count-i"
-                >{{ textareaContent[op].length || 0 }}/<text>500</text></view
+                >{{
+                  (textareaContent[op] && textareaContent[op].length) || 0
+                }}/<text>500</text></view
               >
             </view>
           </view>
@@ -1167,9 +1217,9 @@
                   文字
                 </view>
                 <view class="right">
-                  <view class="up">上移</view>
-                  <view class="down">下移</view>
-                  <view class="delete">删除</view>
+                  <view class="down" @click="moveUp(index)">上移</view>
+                  <view class="down" @click="moveDown(index)">下移</view>
+                  <view class="delete" @click="deleteItem(index)">删除</view>
                 </view>
               </view>
               <textarea
@@ -1191,9 +1241,9 @@
                   图片
                 </view>
                 <view class="right">
-                  <view class="down">上移</view>
-                  <view class="up">下移</view>
-                  <view class="delete">删除</view>
+                  <view class="down" @click="moveUp(index)">上移</view>
+                  <view class="down" @click="moveDown(index)">下移</view>
+                  <view class="delete" @click="deleteItem(index)">删除</view>
                 </view>
               </view>
 
@@ -1236,7 +1286,7 @@
               预览
             </view>
 
-            <view class="save" style="margin: 0" @click="save5">保存</view>
+            <view class="save" style="margin: 0" @click="save5">发布赛事</view>
           </view>
         </view>
       </view>
@@ -1476,6 +1526,38 @@ export default {
         "#229A5C",
         "#9D825F",
       ],
+      color: [
+        "#991515",
+        "#992F15",
+        "#994A15",
+        "#996415",
+        "#997F15",
+        "#999915",
+        "#7F9915",
+        "#649915",
+        "#4A9915",
+        "#2F9915",
+        "#159915",
+        "#15992F",
+        "#15994A",
+        "#159964",
+        "#15997F",
+        "#159999",
+        "#157F99",
+        "#156499",
+        "#154A99",
+        "#152F99",
+        "#151599",
+        "#2F1599",
+        "#4A1599",
+        "#641599",
+        "#7F1599",
+        "#991599",
+        "#99157F",
+        "#991564",
+        "#99154A",
+        "#991517",
+      ],
       selectColor: uni.getStorageSync("theme") || "#1B4CA7",
       custom: false,
       sliderValue: 0,
@@ -1547,14 +1629,9 @@ export default {
       registrationEndTime: uni.getStorageSync("registrationEndTime") ?? 0,
       publicationTime: uni.getStorageSync("publicationTime") ?? null,
       show10: false,
-      rewardType: uni.getStorageSync("rewardType") ?? "",
-      rewardTypeName: uni.getStorageSync("rewardTypeName") ?? "",
       columns10: [["冠军", "亚军", "季军", "第四名", "第五名", "第六名"]],
-      rewardAmount: uni.getStorageSync("rewardAmount") ?? "",
-      sponsorType: "实物赞助",
+      sponsorType: "实物",
       receiveMethod: "到店领取",
-      pickupAddress: uni.getStorageSync("pickupAddress") ?? "",
-      contactInfo: uni.getStorageSync("contactInfo") ?? "",
       scoringMethod: "积分",
       scoringMethod: "1",
       groupUmpireType: "1",
@@ -1567,19 +1644,16 @@ export default {
       ],
       matchingMannerName: uni.getStorageSync("matchingMannerName") ?? null,
       matchingManner: uni.getStorageSync("matchingManner") ?? null,
-      rewardName: uni.getStorageSync("rewardName") ?? "",
-      rewardNum: uni.getStorageSync("rewardNum") ?? "",
-      rewardUnit: uni.getStorageSync("rewardUnit") ?? "",
       op: 0,
       stageExplains: uni.getStorageSync("stageExplains") || "32人/队",
       gameList: uni.getStorageSync("gameList") || [],
       scheTypeName: uni.getStorageSync("stageExplains") ?? "",
       items: [],
       currentIndex: "",
-      counter: 1,
+      counter: "",
       textareaContent: uni.getStorageSync("textareaContent") || [],
       contentList: uni.getStorageSync("contentList") || [],
-      mainFile: "",
+      mainFile: uni.getStorageSync("mainFile") || "",
       count: 0,
       show14: false,
       show15: false,
@@ -1601,9 +1675,29 @@ export default {
       insuranceName: "",
       ageLimitMaxName: uni.getStorageSync("ageLimitMaxName") || "",
       ageLimitMinName: uni.getStorageSync("ageLimitMinName") || "",
+      name_copy: uni.getStorageSync("name") || "",
+      fuTitle_copy: uni.getStorageSync("fuTitle") || "",
+      rewards: uni.getStorageSync("rewards") || [
+        {
+          rewardType: "",
+          rewardTypeName: "",
+          rewardAmount: "",
+          prizes: [
+            {
+              sponsorType: "实物",
+              receiveMethod: "到店领取",
+              rewardName: "",
+              rewardNum: "",
+              rewardUnit: "",
+              pickupAddress: "",
+              contactInfo: "",
+            },
+          ],
+        },
+      ],
     };
   },
-  async mounted() {
+  async onLoad() {
     if (!this.serialNum) {
       const result = await uni.$u.http.get("/match/getSerialNum");
       if (result.status == 200) {
@@ -1618,6 +1712,9 @@ export default {
     }
     this.getGroupNum();
     this.getGroupPerNum();
+    if (this.templateId) {
+      this.addItem();
+    }
   },
   methods: {
     setActiveTab(index) {
@@ -1625,6 +1722,9 @@ export default {
       uni.setStorageSync("activeTab", index);
       if (index == 3) {
         this.getMatchTemplateHit();
+      }
+      if (index == 1 && this.templateId) {
+        this.addItem();
       }
     },
     skin() {
@@ -1676,10 +1776,8 @@ export default {
           this.sliderValue = Math.round(position);
 
           // 根据滑块值更新选中颜色
-          const index = Math.floor(
-            (position / 100) * (this.colorList.length - 1)
-          );
-          this.selectColor = this.colorList[index];
+          const index = Math.floor((position / 100) * (this.color.length - 1));
+          this.selectColor = this.color[index];
         })
         .exec();
     },
@@ -1828,58 +1926,58 @@ export default {
                 type: "success",
                 message: res.message,
               });
-              uni.removeStorageSync("joinPointsRace");
-              uni.removeStorageSync("joinList");
-              uni.removeStorageSync("labelId");
-              uni.removeStorageSync("typeName");
-              uni.removeStorageSync("templateName");
-              uni.removeStorageSync("startTime");
-              uni.removeStorageSync("endTime");
-              uni.removeStorageSync("genderLimitName");
-              uni.removeStorageSync("ageLimitMin");
-              uni.removeStorageSync("ageLimitMax");
-              uni.removeStorageSync("entryFee");
-              uni.removeStorageSync("way");
-              uni.removeStorageSync("number");
-              uni.removeStorageSync("badgeLevelMin");
-              uni.removeStorageSync("badgeLevelMinName");
-              uni.removeStorageSync("badgeLevelMax");
-              uni.removeStorageSync("badgeLevelMaxName");
-              uni.removeStorageSync("name");
-              uni.removeStorageSync("fuTitle");
-              uni.removeStorageSync("fuTitleName");
-              uni.removeStorageSync("type");
-              uni.removeStorageSync("form");
-              uni.removeStorageSync("fullAddress");
-              uni.removeStorageSync("umpireId");
-              uni.removeStorageSync("sponsor");
-              uni.removeStorageSync("genderLimit");
-              uni.removeStorageSync("labelCode");
+              // uni.removeStorageSync("joinPointsRace");
+              // uni.removeStorageSync("joinList");
+              // uni.removeStorageSync("labelId");
+              // uni.removeStorageSync("typeName");
+              // uni.removeStorageSync("templateName");
+              // uni.removeStorageSync("startTime");
+              // uni.removeStorageSync("endTime");
+              // uni.removeStorageSync("genderLimitName");
+              // uni.removeStorageSync("ageLimitMin");
+              // uni.removeStorageSync("ageLimitMax");
+              // uni.removeStorageSync("entryFee");
+              // uni.removeStorageSync("way");
+              // uni.removeStorageSync("number");
+              // uni.removeStorageSync("badgeLevelMin");
+              // uni.removeStorageSync("badgeLevelMinName");
+              // uni.removeStorageSync("badgeLevelMax");
+              // uni.removeStorageSync("badgeLevelMaxName");
+              // uni.removeStorageSync("name");
+              // uni.removeStorageSync("fuTitle");
+              // uni.removeStorageSync("fuTitleName");
+              // uni.removeStorageSync("type");
+              // uni.removeStorageSync("form");
+              // uni.removeStorageSync("fullAddress");
+              // uni.removeStorageSync("umpireId");
+              // uni.removeStorageSync("sponsor");
+              // uni.removeStorageSync("genderLimit");
+              // uni.removeStorageSync("labelCode");
 
-              this.joinList = ["1"];
-              this.joinPointsRace = 1;
-              this.typeName = "";
-              this.templateName = "";
-              this.name = "";
-              this.fuTitle = "";
-              this.type = "1";
-              this.form = "1";
-              this.fullAddress = "";
-              this.startTime = "";
-              this.endTime = "";
-              this.sponsor = "1";
-              this.way = "1";
-              this.number = "";
-              this.genderLimitName = "无限制";
-              this.genderLimit = 0;
-              this.ageLimitMin = 0;
-              this.ageLimitMax = 99;
-              this.badgeLevelMin = "";
-              this.badgeLevelMax = "";
-              this.badgeLevelMinName = "无限制";
-              this.badgeLevelMaxName = "无限制";
-              this.entryFee = "";
-              this.labelCode = "";
+              // this.joinList = ["1"];
+              // this.joinPointsRace = 1;
+              // this.typeName = "";
+              // this.templateName = "";
+              // this.name = "";
+              // this.fuTitle = "";
+              // this.type = "1";
+              // this.form = "1";
+              // this.fullAddress = "";
+              // this.startTime = "";
+              // this.endTime = "";
+              // this.sponsor = "1";
+              // this.way = "1";
+              // this.number = "";
+              // this.genderLimitName = "无限制";
+              // this.genderLimit = 0;
+              // this.ageLimitMin = 0;
+              // this.ageLimitMax = 99;
+              // this.badgeLevelMin = "";
+              // this.badgeLevelMax = "";
+              // this.badgeLevelMinName = "无限制";
+              // this.badgeLevelMaxName = "无限制";
+              // this.entryFee = "";
+              // this.labelCode = "";
 
               this.activeTab++;
             }
@@ -1910,10 +2008,12 @@ export default {
       }
     },
     blur1(n) {
-      uni.setStorageSync("name", n);
+      uni.setStorageSync("name", n.detail.value);
+      this.name_copy = n.detail.value;
     },
     blur2(n) {
-      uni.setStorageSync("fuTitle", n);
+      this.fuTitle_copy = n.detail.value;
+      uni.setStorageSync("fuTitle", n.detail.value);
     },
     blur3(n) {
       uni.setStorageSync("number", n);
@@ -1989,26 +2089,29 @@ export default {
     },
     confirm10(n) {
       this.show10 = false;
-      this.rewardType = n.indexs[0] + 1;
-      this.rewardTypeName = n.value[0];
-      uni.setStorageSync("rewardType", this.rewardType);
-      uni.setStorageSync("rewardTypeName", this.rewardTypeName);
+      const selectedIndex = n.indexs[0];
+      const selectedName = n.value[0];
+      this.rewards[this.counter].rewardType = selectedIndex + 1;
+      this.rewards[this.counter].rewardTypeName = selectedName;
+      uni.setStorageSync("rewards", this.rewards);
     },
-    blur5(n) {
-      uni.setStorageSync("rewardAmount", n);
+    blur5(n, index) {
+      this.rewards[index].rewardAmount = n;
+      uni.setStorageSync("rewards", this.rewards);
     },
-    chooseAddress() {
+    chooseAddress(a, b) {
       uni.chooseLocation({
         success: (res) => {
-          this.pickupAddress = res.address;
-          uni.setStorageSync("pickupAddress", res.address);
+          this.rewards[a].prizes[b].pickupAddress = res.address;
+          uni.setStorageSync("rewards", this.rewards);
         },
         fail: function () {},
         complete: function () {},
       });
     },
-    blur6(n) {
-      uni.setStorageSync("contactInfo", n);
+    blur6(n, index) {
+      this.rewards[index].contactInfo = n;
+      uni.setStorageSync("rewards", this.rewards);
     },
     confirm11(n) {
       this.show11 = false;
@@ -2031,8 +2134,6 @@ export default {
         const hours = String(date.getHours()).padStart(2, "0");
         const minutes = String(date.getMinutes()).padStart(2, "0");
 
-        // 格式化为 "YYYY-MM-DD HH:mm"
-        this.publicationTime = `${year}-${month}-${day} ${hours}:${minutes}`;
         var result = await uni.$u.http.post("/match/saveMatchScheInfo", {
           matchId: this.matchId,
           serialNum: this.serialNum,
@@ -2047,11 +2148,11 @@ export default {
             message: result.message,
           });
           // 删除本地存储
-          uni.removeStorageSync("registrationEndTime");
-          uni.removeStorageSync("publicationTime");
-          this.registrationEndTime = "";
-          this.publicationTime = "";
-          this.items = [];
+          // uni.removeStorageSync("registrationEndTime");
+          // uni.removeStorageSync("publicationTime");
+          // this.registrationEndTime = "";
+          // this.publicationTime = "";
+          // this.items = [];
           this.activeTab++;
           this.getGame();
         }
@@ -2065,50 +2166,47 @@ export default {
     },
     async save3() {
       try {
+        const data = this.rewards.map((reward) => ({
+          rewardType: reward.rewardType,
+          rewardAmount: reward.rewardAmount,
+          sponsorType: reward.prizes[0].sponsorType,
+          receiveMethod: reward.prizes[0].receiveMethod,
+          pickupAddress: reward.prizes[0].pickupAddress,
+          contactInfo: reward.prizes[0].contactInfo,
+          prizes: reward.prizes.map((prize) => ({
+            rewardName: prize.rewardName,
+            rewardNum: prize.rewardNum,
+            rewardUnit: prize.rewardUnit,
+            rewardSort: prize.rewardSort,
+          })),
+        }));
         const result = await uni.$u.http.post("/match/saveMatchRewardInfo", {
           matchId: this.matchId,
           serialNum: this.serialNum,
-          rewards: [
-            {
-              rewardType: this.rewardType,
-              rewardAmount: this.rewardAmount,
-              sponsorType: this.sponsorType,
-              receiveMethod: this.receiveMethod,
-              pickupAddress: this.pickupAddress,
-              contactInfo: this.contactInfo,
-              prizes: [
-                {
-                  rewardName: this.rewardName,
-                  rewardNum: this.rewardNum,
-                  rewardUnit: this.rewardUnit,
-                  rewardSort: this.rewardSort,
-                },
-              ],
-            },
-          ],
+          rewards: data,
         });
         if (result.status === 200) {
           this.$refs.notice.show({
             type: "success",
             message: result.message,
           });
-          uni.removeStorageSync("rewardType");
-          uni.removeStorageSync("rewardTypeName");
-          uni.removeStorageSync("rewardAmount");
-          uni.removeStorageSync("rewardName");
-          uni.removeStorageSync("rewardNum");
-          uni.removeStorageSync("rewardUnit");
-          uni.removeStorageSync("pickupAddress");
-          uni.removeStorageSync("contactInfo");
+          // uni.removeStorageSync("rewardType");
+          // uni.removeStorageSync("rewardTypeName");
+          // uni.removeStorageSync("rewardAmount");
+          // uni.removeStorageSync("rewardName");
+          // uni.removeStorageSync("rewardNum");
+          // uni.removeStorageSync("rewardUnit");
+          // uni.removeStorageSync("pickupAddress");
+          // uni.removeStorageSync("contactInfo");
 
-          this.rewardType = "";
-          this.rewardTypeName = "";
-          this.rewardAmount = "";
-          this.rewardName = "";
-          this.rewardNum = "";
-          this.rewardUnit = "";
-          this.pickupAddress = "";
-          this.contactInfo = "";
+          // this.rewardType = "";
+          // this.rewardTypeName = "";
+          // this.rewardAmount = "";
+          // this.rewardName = "";
+          // this.rewardNum = "";
+          // this.rewardUnit = "";
+          // this.pickupAddress = "";
+          // this.contactInfo = "";
 
           this.activeTab++;
         }
@@ -2119,14 +2217,17 @@ export default {
         });
       }
     },
-    blur7(n) {
-      uni.setStorageSync("rewardName", n);
+    blur7(n, index) {
+      this.rewards[index].rewardName = n;
+      uni.setStorageSync("rewards", this.rewards);
     },
-    blur8(n) {
-      uni.setStorageSync("rewardNum", n);
+    blur8(n, index) {
+      this.rewards[index].rewardNum = n;
+      uni.setStorageSync("rewards", this.rewards);
     },
-    blur9(n) {
-      uni.setStorageSync("rewardUnit", n);
+    blur9(n, index) {
+      this.rewards[index].rewardUnit = n;
+      uni.setStorageSync("rewards", this.rewards);
     },
     blur10(n) {
       uni.setStorageSync("stageExplains", n);
@@ -2190,20 +2291,20 @@ export default {
     change(n) {
       uni.setStorageSync("scheTypeName", n);
     },
+    addNext() {
+      const newItem = {
+        scheTypeName: "",
+        scheTime: "",
+      };
+      this.items.push(newItem);
+    },
     async addItem() {
       try {
         var result = await uni.$u.http.get("/match/getMatchTemplateSche", {
           params: { templateId: this.templateId },
         });
         if (result.status == 200) {
-          this.items.push({
-            scheTypeCode: result.data[this.count]?.scheTypeCode || this.counter,
-            scheTypeName: result.data[this.count]?.scheTypeName || "",
-            scheTypeSort: result.data[this.count]?.scheTypeSort || this.counter,
-            scheTime: result.data[this.count]?.scheTypeSort || "",
-          });
-          this.counter++;
-          this.count++;
+          this.items = result.data;
         }
       } catch (err) {
         this.$refs.notice.show({
@@ -2261,6 +2362,12 @@ export default {
             list: arr,
             saveState: "1",
           });
+          if (result.status == 200) {
+            this.$refs.notice.show({
+              type: "success",
+              message: result.message,
+            });
+          }
         }
       } catch (err) {
         this.$refs.notice.show({
@@ -2278,14 +2385,14 @@ export default {
         });
 
         // 删除本地缓存
-        uni.removeStorageSync("gameList");
-        uni.removeStorageSync("textareaContent");
-        uni.removeStorageSync("contentList");
+        // uni.removeStorageSync("gameList");
+        // uni.removeStorageSync("textareaContent");
+        // uni.removeStorageSync("contentList");
 
-        // 重置状态
-        this.gameList = [];
-        this.textareaContent = [];
-        this.contentList = [];
+        // // 重置状态
+        // this.gameList = [];
+        // this.textareaContent = [];
+        // this.contentList = [];
         if (res.status == 200) {
           this.$refs.notice.show({
             type: "success",
@@ -2314,13 +2421,6 @@ export default {
     },
     addImage() {
       const token = uni.getStorageSync("token");
-      if (!token) {
-        this.$refs.notice.show({
-          type: "success",
-          message: "请登录",
-        });
-        return;
-      }
       // 选择图片
       uni.chooseImage({
         count: 1, // 最多选择1张图片
@@ -2347,7 +2447,7 @@ export default {
 
           // 上传图片
           uni.uploadFile({
-            url: `${config.url}/file/upload`, // 替换为你的上传接口地址
+            url: `https://testfeifanpaopao.jireplayer.com/wjapi/file/upload`, // 替换为你的上传接口地址
             filePath: tempFilePath,
             name: "file", // 文件对应的 key
             formData: params,
@@ -2388,14 +2488,6 @@ export default {
       });
     },
     uploadMainFile() {
-      const token = uni.getStorageSync("token");
-      if (!token) {
-        this.$refs.notice.show({
-          type: "success",
-          message: "请登录",
-        });
-        return;
-      }
       // 选择图片
       uni.chooseImage({
         count: 1, // 最多选择1张图片
@@ -2435,6 +2527,7 @@ export default {
               const data = JSON.parse(uploadResult.data); // 解析返回结果
               if (data.status === 200) {
                 this.mainFile = data.data;
+                uni.setStorageSync("mainFile", this.mainFile);
               } else {
                 // 上传失败的提示
                 this.$refs.notice.show({
@@ -2592,6 +2685,67 @@ export default {
         this.insuranceName = "无保障";
       }
     },
+    addReward(a) {
+      this.rewards[a].prizes.push({
+        sponsorType: "实物",
+        receiveMethod: "到店领取",
+        rewardName: "",
+        rewardNum: "",
+        rewardUnit: "",
+        pickupAddress: "",
+        contactInfo: "",
+      });
+
+      uni.setStorageSync("rewards", this.rewards);
+    },
+    delReward(a) {
+      this.rewards.splice(a, 1);
+      uni.setStorageSync("rewards", this.rewards);
+    },
+    addRewardMember() {
+      this.rewards.push({
+        rewardType: "",
+        rewardTypeName: "",
+        rewardAmount: "",
+        prizes: [
+          {
+            sponsorType: "实物",
+            receiveMethod: "到店领取",
+            rewardName: "",
+            rewardNum: "",
+            rewardUnit: "",
+            pickupAddress: "",
+            contactInfo: "",
+          },
+        ],
+      });
+      uni.setStorageSync("rewards", this.rewards);
+    },
+    showPicker10(index) {
+      this.show10 = true;
+      this.counter = index;
+    },
+    delPrize(a, b) {
+      this.rewards[a].prizes.splice(b, 1);
+      uni.setStorageSync("rewards", this.rewards);
+    },
+    moveUp(index) {
+      if (index > 0) {
+        const temp = this.contentList[index];
+        this.contentList.splice(index, 1);
+        this.contentList.splice(index - 1, 0, temp);
+      }
+    },
+    moveDown(index) {
+      const temp = this.contentList[index];
+      this.contentList.splice(index, 1);
+      this.contentList.splice(index + 1, 1, temp);
+    },
+    deleteItem(index) {
+      if (this.contentList.length > 1) {
+        this.contentList.splice(index, 1);
+      }
+    },
   },
   computed: {
     sliderPosition() {
@@ -2637,12 +2791,36 @@ export default {
       height: 10px; // 滑动条高度
       background: linear-gradient(
         to right,
-        #1b4ca7 0%,
-        #b23642 20%,
-        #0170a8 40%,
-        #3d47a8 60%,
-        #229a5c 80%,
-        #9d825f 100%
+        #991515 0%,
+        #992f15 3%,
+        #994a15 6%,
+        #997f15 12%,
+        #996415 9%,
+        #999915 15%,
+        #7f9915 18%,
+        #649915 21%,
+        #4a9915 24%,
+        #2f9915 27%,
+        #159915 30%,
+        #15992f 33%,
+        #15994a 36%,
+        #159964 39%,
+        #15997f 42%,
+        #159999 45%,
+        #157f99 48%,
+        #156499 51%,
+        #154a99 54%,
+        #152f99 57%,
+        #151599 60%,
+        #2f1599 63%,
+        #4a1599 66%,
+        #641599 69%,
+        #7f1599 72%,
+        #991599 75%,
+        #99157f 78%,
+        #991564 81%,
+        #99154a 84%,
+        #991517 100%
       ); // 渐变背景
       border-radius: 5px; // 圆角效果
       cursor: pointer;
@@ -2735,7 +2913,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 75%;
+      height: 80%;
       width: 100%;
       background-color: #cccccc;
 
@@ -2759,6 +2937,12 @@ export default {
             border: 1px solid #ffffff;
             border-radius: 20px;
             padding: 5px 10px;
+          }
+          .notice {
+            font-weight: 400;
+            font-size: 10px;
+            color: #ffffff;
+            margin-top: 8px;
           }
         }
       }
@@ -2798,7 +2982,7 @@ export default {
       .top {
         display: flex;
         justify-content: space-between;
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(20px);
         background-color: rgba(255, 255, 255, 0.2);
         height: 65%;
         &::after {
@@ -2836,7 +3020,7 @@ export default {
         justify-content: space-between;
         height: 35%;
         padding: 0 15px;
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(20px);
         width: 92%;
         background-color: rgba(255, 255, 255, 0.3);
         z-index: 12;
@@ -2861,29 +3045,37 @@ export default {
     justify-content: space-between;
     padding: 0px 10px;
     z-index: 10;
+    height: 52px;
 
     .item {
       display: flex;
       flex-direction: column;
       gap: 4px;
-      padding: 10px;
+      height: 52px;
+      box-sizing: border-box;
+      justify-content: center;
 
       .value {
         font-weight: 400;
         font-size: 12px;
         color: rgba(255, 255, 255, 0.7);
+        white-space: nowrap;
       }
     }
     .item-active {
       display: flex;
       flex-direction: column;
       gap: 4px;
-      padding: 15px;
+      padding: 10px 15px;
       // background-color: #1e54ba;
       position: relative;
       z-index: 11;
       box-shadow: 5px 0px 10px 0px rgba(0, 0, 0, 0.2),
         -5px 0px 10px rgba(0, 0, 0, 0.2);
+      height: 52px;
+      box-sizing: border-box;
+      align-items: center;
+      justify-content: center;
 
       &::after {
         content: "";
@@ -3160,6 +3352,26 @@ export default {
             }
           }
 
+          .bt-radio {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            font-weight: 400;
+            font-size: 14px;
+            color: #1d2326;
+            justify-content: flex-start;
+            .item-radio {
+              width: 25%;
+              border: none;
+              padding-bottom: 10px;
+            }
+            .right {
+              display: flex;
+              justify-content: flex-end;
+            }
+          }
+
           .left {
             font-weight: 600;
             font-size: 14px;
@@ -3302,6 +3514,7 @@ export default {
       .end {
         display: flex;
         align-items: center;
+        justify-content: center;
         margin-top: 38px;
 
         .end-i {
@@ -3324,7 +3537,6 @@ export default {
           font-size: 16px;
           color: #ffffff;
           margin: 0;
-          margin-left: 30px;
         }
       }
 
@@ -3463,6 +3675,8 @@ export default {
           width: 318px;
           height: 160px;
           margin-top: 10px;
+          padding: 12px;
+          box-sizing: border-box;
         }
         .add {
           display: flex;
@@ -3535,6 +3749,11 @@ export default {
   color: rgba(255, 255, 255, 0.3);
 }
 
+.pl-class1 {
+  font-weight: 400;
+  font-size: 14px;
+  color: rgba(29, 35, 38, 0.3);
+}
 .refund {
   height: 380px;
   .title {
@@ -3751,6 +3970,20 @@ export default {
     color: #ffffff;
     background-color: black;
     margin: 12px auto;
+  }
+}
+
+.reward-item {
+  .del {
+    height: 40px;
+    width: 90%;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1d2326;
   }
 }
 </style>

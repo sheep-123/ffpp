@@ -7,31 +7,56 @@
       >
       </image>
       <view class="rank">
-        <view class="item">
-          <view class="rank-num">2st</view>
-          <u-avatar :src="src"></u-avatar>
-          <view class="name">健身小趴菜</view>
-          <view class="score">
-            <div class="item">黄金1</div>
-            <div class="item">445</div>
+        <view class="top">
+          <view class="title">运动积分等级排行</view>
+          <view class="more" @click="toMore"
+            >更多
+            <view class="icon">
+              <u-icon name="arrow-right" color="#fff" size="8"></u-icon>
+            </view>
           </view>
         </view>
-        <view class="item" style="margin-top: -10px">
-          <view class="rank-num">1st</view>
-          <u-avatar :src="src"></u-avatar>
-          <view class="name">健身小趴菜</view>
-          <view class="score">
-            <div class="item">黄金1</div>
-            <div class="item">445</div>
+        <view class="bt">
+          <view class="item">
+            <view class="rank-num">2ST</view>
+            <view class="b1">
+              <view class="b2">
+                <u-avatar :src="src"></u-avatar>
+              </view>
+            </view>
+
+            <view class="name">健身小趴菜</view>
+            <view class="score">
+              <div class="item">黄金1</div>
+              <div class="item">445</div>
+            </view>
           </view>
-        </view>
-        <view class="item">
-          <view class="rank-num">3st</view>
-          <u-avatar :src="src"></u-avatar>
-          <view class="name">健身小趴菜</view>
-          <view class="score">
-            <div class="item">黄金1</div>
-            <div class="item">445</div>
+          <view class="item" style="margin-top: -10px">
+            <view class="rank-num">1ST</view>
+            <view class="b3">
+              <view class="b4">
+                <u-avatar :src="src" size="50"></u-avatar>
+              </view>
+            </view>
+
+            <view class="name">健身小趴菜</view>
+            <view class="score">
+              <div class="item">黄金1</div>
+              <div class="item">445</div>
+            </view>
+          </view>
+          <view class="item">
+            <view class="rank-num">3ST</view>
+            <view class="b1">
+              <view class="b2">
+                <u-avatar :src="src"></u-avatar>
+              </view>
+            </view>
+            <view class="name">健身小趴菜</view>
+            <view class="score">
+              <div class="item">黄金1</div>
+              <div class="item">445</div>
+            </view>
           </view>
         </view>
       </view>
@@ -524,6 +549,11 @@ export default {
         url: "/competition/apply/appear",
       });
     },
+    toMore() {
+      uni.navigateTo({
+        url: "/else/play/more",
+      });
+    },
   },
 
   computed: {
@@ -546,43 +576,119 @@ export default {
     }
     .rank {
       position: absolute;
-      top: 48%;
+      top: 33%;
       left: 0;
       right: 0;
       margin: auto;
-      width: 80%;
-      height: 120px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .item {
+      width: 90%;
+      height: 200px;
+
+      .top {
         display: flex;
-        flex-direction: column;
         align-items: center;
-        gap: 5px;
-        .rank-num {
+        justify-content: space-between;
+        box-sizing: border-box;
+        padding: 0 12px;
+        height: 50px;
+        .title {
+          font-weight: 400;
+          font-size: 18px;
+          color: #ffffff;
+          font-family: youshe;
+        }
+        .more {
+          display: flex;
+          align-items: center;
+          gap: 5px;
           font-weight: 400;
           font-size: 12px;
-          color: #1d2326;
+          color: #ffffff;
+
+          .icon {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background-color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
         }
-        .name {
-          font-weight: 400;
-          font-size: 14px;
-          color: #242424;
-        }
-        .score {
+      }
+      .bt {
+        display: flex;
+        justify-content: space-evenly;
+        padding-top: 10px;
+        height: 150px;
+        box-sizing: border-box;
+        .item {
           display: flex;
-          border: 1px solid #f0f0f0;
-          width: 100%;
-          height: 20px;
+          flex-direction: column;
           align-items: center;
-          justify-content: space-evenly;
-          .item {
-            font-weight: 600;
-            font-size: 10px;
-            color: rgba(29, 35, 38, 0.5);
-            &:first-child {
-              border-right: 1px solid #f0f0f0;
+          gap: 5px;
+          .rank-num {
+            font-weight: 400;
+            font-size: 12px;
+            color: #1d2326;
+            font-family: youshe;
+          }
+          .name {
+            font-weight: 400;
+            font-size: 14px;
+            color: #242424;
+          }
+          .score {
+            display: flex;
+            border: 1px solid #f0f0f0;
+            width: 100%;
+            height: 20px;
+            align-items: center;
+            justify-content: space-evenly;
+            .item {
+              font-weight: 600;
+              font-size: 10px;
+              color: rgba(29, 35, 38, 0.5);
+              &:first-child {
+                border-right: 1px solid #f0f0f0;
+              }
+            }
+          }
+
+          .b1 {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .b2 {
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              border: 2px solid #dedede;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+          }
+
+          .b3 {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            border: 2px solid #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .b4 {
+              width: 50px;
+              height: 50px;
+              border-radius: 50%;
+              border: 2px solid #dedede;
+              display: flex;
+              align-items: center;
+              justify-content: center;
             }
           }
         }
@@ -594,6 +700,7 @@ export default {
     width: 90%;
     margin: auto;
     background-color: #fcfcfc;
+    border-radius: 20px;
   }
 
   .type.sticky {

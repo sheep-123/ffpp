@@ -446,7 +446,7 @@
             </view>
 
             <view class="right">
-              {{ registerNumber.registerNum }}/{{ registerNumber.number }}
+              {{ registerNumber.number }}/{{ registerNumber.registerNum }}
             </view>
           </view>
           <view class="progress">
@@ -778,14 +778,9 @@
       class="content"
       v-if="activeTab == 3"
       :style="{ background: selectColor }"
+      style="padding-bottom: 100px"
     >
       <view class="main">
-        <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/赛事直击设置.png"
-          mode="scaleToFill"
-          style="width: 100%; height: 22px; margin-top: 15px"
-        />
-
         <u-scroll-list :indicator="false" v-if="gameList.length > 0">
           <view class="tick">
             <view
@@ -799,152 +794,230 @@
           </view>
         </u-scroll-list>
 
-        <view class="jdsz">阶段设置</view>
-
-        <view class="o-text">
-          <view class="item">
-            <view class="left">本阶段 <view class="icon">*</view></view>
-            <view class="right">
-              <u-input
-                v-model="stageExplains"
-                placeholder="32人/队"
-                border="none"
-                @change="blur10"
-                type="number"
-                input-align="right"
-              ></u-input>
-            </view>
-          </view>
-          <view class="item-o">
-            <view class="top">
-              <view class="left">
-                玩家分组设置 <view class="icon">*</view>
-              </view>
-            </view>
-            <view class="bt">
-              <view class="left">
-                <view class="l1">组数</view>
-                <view class="l2" @click="show11 = true"
-                  >{{ groupNum ? groupNum : "请选择" }}
-                  <image
-                    src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                    mode="scaleToFill"
-                    style="width: 12px; height: 12px"
-                  />
-                </view>
+        <view class="group">
+          <view class="top"> 小组淘汰赛A组 </view>
+          <view class="bottom">
+            <view class="place">
+              <view class="item">
+                <u-icon name="map"></u-icon>天河体育中心羽毛球馆
               </view>
 
-              <view class="right">
-                <view class="r1">匹配方式</view>
-                <view class="r2" @click="show12 = true"
-                  >{{ matchingMannerName ? matchingMannerName : "请选择" }}
-                  <image
-                    src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                    mode="scaleToFill"
-                    style="width: 12px; height: 12px"
-                  />
+              <view class="judge">
+                <u-avatar :src="src" size="60"></u-avatar>
+                <view class="name">裁判员</view>
+              </view>
+            </view>
+            <view class="time">
+              <u-icon name="clock"></u-icon>
+              11月19日 14:00
+            </view>
+
+            <view class="link">
+              直播地址
+              <view class="lj">https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
+              ><text>复制</text>
+            </view>
+
+            <view class="member">
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A01</view>
                 </view>
+                <view class="grade">积分 0</view>
               </view>
-            </view>
-          </view>
-          <view class="item-o">
-            <view class="top">
-              <view class="left">
-                分组场地设置 <view class="icon">*</view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A02</view>
+                </view>
+                <view class="grade">积分 0</view>
               </view>
-            </view>
-            <view class="bt">
-              <u-radio-group v-model="groupVenueType" placement="row">
-                <u-radio
-                  activeColor="red"
-                  label="系统订单匹配"
-                  name="1"
-                  shape="circle"
-                ></u-radio>
-                <u-radio
-                  activeColor="red"
-                  label="人工添加"
-                  name="2"
-                  shape="circle"
-                  customStyle="margin-left: 100px"
-                ></u-radio>
-              </u-radio-group>
-            </view>
-          </view>
-          <view class="item-o">
-            <view class="top">
-              <view class="left">
-                分组裁判设置 <view class="icon">*</view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A03</view>
+                </view>
+                <view class="grade">积分 0</view>
               </view>
-            </view>
-            <view class="bt">
-              <u-radio-group v-model="groupUmpireType" placement="row">
-                <u-radio
-                  activeColor="red"
-                  label="系统随机匹配"
-                  name="1"
-                  shape="circle"
-                ></u-radio>
-                <u-radio
-                  activeColor="red"
-                  label="根据场地1对1匹配"
-                  shape="circle"
-                  name="2"
-                  customStyle="margin-left: 40px"
-                ></u-radio>
-              </u-radio-group>
-            </view>
-          </view>
-          <view class="item-o">
-            <view class="top">
-              <view class="left">
-                选择计分方式 <view class="icon">*</view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A04</view>
+                </view>
+                <view class="grade">积分 0</view>
               </view>
-            </view>
-            <view class="bt">
-              <u-radio-group v-model="scoringMethod">
-                <u-radio
-                  activeColor="red"
-                  label="积分"
-                  name="1"
-                  shape="circle"
-                ></u-radio>
-                <u-radio
-                  activeColor="red"
-                  label="时间"
-                  name="2"
-                  shape="circle"
-                ></u-radio>
-                <u-radio
-                  activeColor="red"
-                  label="距离"
-                  name="3"
-                  shape="circle"
-                ></u-radio>
-                <u-radio
-                  activeColor="red"
-                  label="分数"
-                  name="4"
-                  shape="circle"
-                ></u-radio>
-                <u-radio
-                  activeColor="red"
-                  label="重量"
-                  name="5"
-                  shape="circle"
-                ></u-radio>
-                <u-radio
-                  activeColor="red"
-                  label="胜负"
-                  name="6"
-                  shape="circle"
-                ></u-radio>
-              </u-radio-group>
             </view>
           </view>
         </view>
+        <view class="group">
+          <view class="top"> 小组淘汰赛A组 </view>
+          <view class="bottom">
+            <view class="place">
+              <view class="item">
+                <u-icon name="map"></u-icon>天河体育中心羽毛球馆
+              </view>
 
-        <view class="pp" @click="save4">赛事报名完成后可进行匹配</view>
+              <view class="judge">
+                <u-avatar :src="src" size="60"></u-avatar>
+                <view class="name">裁判员</view>
+              </view>
+            </view>
+            <view class="time">
+              <u-icon name="clock"></u-icon>
+              11月19日 14:00
+            </view>
+
+            <view class="link">
+              直播地址
+              <view class="lj">https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
+              ><text>复制</text>
+            </view>
+
+            <view class="member">
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A01</view>
+                </view>
+                <view class="grade">积分 0</view>
+              </view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A02</view>
+                </view>
+                <view class="grade">积分 0</view>
+              </view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A03</view>
+                </view>
+                <view class="grade">积分 0</view>
+              </view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A04</view>
+                </view>
+                <view class="grade">积分 0</view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="group">
+          <view class="top"> 小组淘汰赛A组 </view>
+          <view class="bottom">
+            <view class="place">
+              <view class="item">
+                <u-icon name="map"></u-icon>天河体育中心羽毛球馆
+              </view>
+
+              <view class="judge">
+                <u-avatar :src="src" size="60"></u-avatar>
+                <view class="name">裁判员</view>
+              </view>
+            </view>
+            <view class="time">
+              <u-icon name="clock"></u-icon>
+              11月19日 14:00
+            </view>
+
+            <view class="link">
+              直播地址
+              <view class="lj">https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
+              ><text>复制</text>
+            </view>
+
+            <view class="member">
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A01</view>
+                </view>
+                <view class="grade">积分 0</view>
+              </view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A02</view>
+                </view>
+                <view class="grade">积分 0</view>
+              </view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A03</view>
+                </view>
+                <view class="grade">积分 0</view>
+              </view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A04</view>
+                </view>
+                <view class="grade">积分 0</view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="group">
+          <view class="top"> 小组淘汰赛A组 </view>
+          <view class="bottom">
+            <view class="place">
+              <view class="item">
+                <u-icon name="map"></u-icon>天河体育中心羽毛球馆
+              </view>
+
+              <view class="judge">
+                <u-avatar :src="src" size="60"></u-avatar>
+                <view class="name">裁判员</view>
+              </view>
+            </view>
+            <view class="time">
+              <u-icon name="clock"></u-icon>
+              11月19日 14:00
+            </view>
+
+            <view class="link">
+              直播地址
+              <view class="lj">https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
+              ><text>复制</text>
+            </view>
+
+            <view class="member">
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A01</view>
+                </view>
+                <view class="grade">积分 0</view>
+              </view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A02</view>
+                </view>
+                <view class="grade">积分 0</view>
+              </view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A03</view>
+                </view>
+                <view class="grade">积分 0</view>
+              </view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A04</view>
+                </view>
+                <view class="grade">积分 0</view>
+              </view>
+            </view>
+          </view>
+        </view>
       </view>
     </view>
 
@@ -1283,8 +1356,8 @@ export default {
         arr[13].value = this.disease;
         arr[14].value = this.insurance;
         var result = await uni.$u.http.post("/match/saveMatchRegister", {
-          matchId: 11,
-          serialNum: 202503000001,
+          matchId: 12390,
+          serialNum: 202504000045,
           templateId: 15,
           way: 1,
           userId: uni.getStorageSync("user").id,
@@ -1297,23 +1370,29 @@ export default {
             type: "success",
             message: result.message,
           });
-          // 清空缓存
-          uni.removeStorageSync("mobile");
-          uni.removeStorageSync("gender");
-          uni.removeStorageSync("age");
-          uni.removeStorageSync("contact");
-          uni.removeStorageSync("blood_type");
-          uni.removeStorageSync("disease");
-          uni.removeStorageSync("insurance");
-          this.mobile = "";
-          this.gender = "1";
-          this.age = "";
-          this.contact = "";
-          this.blood_type = "";
-          this.disease = "";
-          this.insurance = "";
+          // // 清空缓存
+          // uni.removeStorageSync("mobile");
+          // uni.removeStorageSync("gender");
+          // uni.removeStorageSync("age");
+          // uni.removeStorageSync("contact");
+          // uni.removeStorageSync("blood_type");
+          // uni.removeStorageSync("disease");
+          // uni.removeStorageSync("insurance");
+          // this.mobile = "";
+          // this.gender = "1";
+          // this.age = "";
+          // this.contact = "";
+          // this.blood_type = "";
+          // this.disease = "";
+          // this.insurance = "";
           uni.navigateTo({
             url: "/competition/apply/pay",
+          });
+        }
+        if (result.status == 400) {
+          this.$refs.notice.show({
+            type: "error",
+            message: result.message,
           });
         }
       } catch (err) {
@@ -1332,7 +1411,7 @@ export default {
         });
         if (result.status == 200) {
           this.applyData = result.data;
-          this.age = uni.getStorageSync("age") || this.applyData[2].applyValue;
+          this.age = this.applyData[2].applyValue;
           const blood = this.applyData[12].applyValue;
           this.columns1 = [blood.split(",")];
           const disease = this.applyData[13].applyValue;
@@ -1565,7 +1644,7 @@ export default {
     },
     scale() {
       return (
-        (this.registerNumber.registerNum / this.registerNumber.number) * 100
+        (this.registerNumber.number / this.registerNumber.registerNum) * 100
       );
     },
   },
@@ -2752,6 +2831,134 @@ export default {
               }
               .time {
                 width: 60%;
+              }
+            }
+          }
+        }
+      }
+
+      .group {
+        border-radius: 12px;
+        height: 220px;
+        box-sizing: border-box;
+        overflow: hidden;
+        margin-top: 22px;
+        background-color: rgba(255, 255, 255, 0.2);
+        .top {
+          height: 15%;
+          font-weight: 600;
+          font-size: 14px;
+          color: #ffffff;
+          line-height: 36px;
+          padding-left: 12px;
+        }
+        .bottom {
+          height: 85%;
+          background-color: #fff;
+          border-radius: 12px;
+          padding: 12px;
+          box-sizing: border-box;
+          position: relative;
+          .place {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .item {
+              font-weight: 400;
+              font-size: 12px;
+              color: rgba(29, 35, 38, 0.6);
+              display: flex;
+              align-items: center;
+              gap: 5px;
+            }
+
+            .judge {
+              margin-top: -40px;
+              position: relative;
+              .name {
+                position: absolute;
+                font-weight: 400;
+                font-size: 12px;
+                color: #ffffff;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: black;
+                white-space: nowrap;
+                padding: 3px 5px;
+                clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+                bottom: -10px;
+              }
+            }
+          }
+          .time {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 400;
+            font-size: 12px;
+            color: rgba(29, 35, 38, 0.6);
+            margin-top: 11px;
+          }
+
+          .link {
+            display: flex;
+            align-items: center;
+            font-weight: 400;
+            font-size: 10px;
+            color: rgba(29, 35, 38, 0.6);
+            gap: 10px;
+            margin-top: 14px;
+            .lj {
+              font-weight: 400;
+              font-size: 10px;
+              color: #1d2326;
+            }
+            text {
+              font-weight: 400;
+              font-size: 12px;
+              color: #2a8aba;
+            }
+          }
+
+          .member {
+            display: flex;
+            align-items: center;
+            height: 83px;
+            background-color: #f7f7f7;
+            margin-top: 5px;
+            justify-content: space-around;
+            .item:nth-child(4) {
+              border: none;
+            }
+            .item {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              border-right: 1px solid #e6e6e6;
+              flex: 1;
+              .avatar {
+                position: relative;
+                .rank {
+                  position: absolute;
+                  bottom: 0;
+                  left: 50%;
+                  transform: translateX(-50%);
+                  background-color: white;
+                  width: 40px;
+                  height: 16px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-weight: 400;
+                  font-size: 12px;
+                  color: #ec384a;
+                }
+              }
+              .grade {
+                font-weight: 400;
+                font-size: 10px;
+                color: rgba(29, 35, 38, 0.5);
+                margin-top: 5px;
               }
             }
           }

@@ -66,21 +66,30 @@ export default {
       this.templateName = item.templateName;
     },
     async enter() {
-      var result = await uni.$u.http.get(
-        "/match/getMatchTemplateRegisterInfo",
-        {
-          params: { templateId: this.templateId },
+      try {
+        var result = await uni.$u.http.get(
+          "/match/getMatchTemplateRegisterInfo",
+          {
+            params: { templateId: this.templateId },
+          }
+        );
+        if (result.status == 200) {
+          uni.setStorageSync("entryFee", result.data.entryFee);
+          uni.setStorageSync("genderLimit", result.data.genderLimit);
+          uni.setStorageSync("number", result.data.registerNum);
+          uni.setStorageSync("way", result.data.way);
+          uni.setStorageSync("templateId", this.templateId);
+          uni.setStorageSync("templateName", this.templateName);
+          uni.navigateTo({
+            url: `/competition/publish/saishi`,
+          });
         }
-      );
-      uni.setStorageSync("entryFee", result.data.entryFee);
-      uni.setStorageSync("genderLimit", result.data.genderLimit);
-      uni.setStorageSync("number", result.data.registerNum);
-      uni.setStorageSync("way", result.data.way);
-      uni.setStorageSync("templateId", this.templateId);
-      uni.setStorageSync("templateName", this.templateName);
-      uni.navigateTo({
-        url: `/competition/publish/saishi`,
-      });
+      } catch (err) {
+        this.$refs.notice.show({
+          type: "error",
+          message: err.data.message,
+        });
+      }
     },
     back() {
       uni.navigateBack({
@@ -144,7 +153,7 @@ export default {
 .bt {
   position: fixed;
   bottom: 0;
-  height: 102px;
+  height: 88px;
   box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
   .enter {

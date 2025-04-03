@@ -468,8 +468,7 @@ export default {
   onLoad() {
     // uni.reLaunch({
     //   // url: "/competition/apply/appear",
-    //   url: "/competition/apply/pay",
-    //   // url: "/competition/publish/saishi",
+    //   url: "/competition/publish/saishi",
     // });
     this.Location();
     this.Location().then(() => {

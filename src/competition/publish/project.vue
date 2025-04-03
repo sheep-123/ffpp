@@ -169,7 +169,7 @@ export default {
   .bt {
     position: fixed;
     bottom: 0;
-    height: 102px;
+    height: 88px;
     box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.1);
     width: 100%;
     .enter {

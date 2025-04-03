@@ -582,6 +582,7 @@ export default {
   },
   onShow() {
     this.queryAdCode();
+    this.getQueryMatchList();
   },
   methods: {
     initIntersectionObserver() {
@@ -612,6 +613,12 @@ export default {
           adcode4: "",
         },
       });
+    },
+    async getQueryMatchList() {
+      var result = await uni.$u.http.post("/match/queryMatchList");
+      if (result.status == 200) {
+        this.matchList = result.data;
+      }
     },
   },
 

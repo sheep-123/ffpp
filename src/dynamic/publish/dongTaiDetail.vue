@@ -90,11 +90,15 @@
                     <text class="text1">月诗风呤</text>
                   </view>
                   <view class="right" @tap="smallfrieActive(index)">
-                    <image class="comment-svg-small" src="@/static/images/comment.svg" mode="scaleToFill" />
-                    <image v-show="!smallfrieisActive[index]" class="frie-svg-small" src="@/static/images/frie.svg"
+                    <image class="comment-svg-small"
+                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/comment.svg"
+                      mode="scaleToFill" />
+                    <image v-show="!smallfrieisActive[index]" class="frie-svg-small"
+                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/frie.svg"
                       mode="scaleToFill" />
                     <image v-show="smallfrieisActive[index]" class="frie-svg-small"
-                      src="@/static/images/frie-active.svg" mode="scaleToFill" />
+                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/frie-active.svg"
+                      mode="scaleToFill" />
                     <text>{{ samllfrieCount[index] }}</text>
                   </view>
                 </view>
@@ -128,11 +132,15 @@
 
                       </view>
                       <view class="right" @tap="smallfrieActive(index)">
-                        <image class="comment-svg-small" src="@/static/images/comment.svg" mode="scaleToFill" />
-                        <image v-show="!smallfrieisActive[index]" class="frie-svg-small" src="@/static/images/frie.svg"
+                        <image class="comment-svg-small"
+                          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/comment.svg"
+                          mode="scaleToFill" />
+                        <image v-show="!smallfrieisActive[index]" class="frie-svg-small"
+                          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/frie.svg"
                           mode="scaleToFill" />
                         <image v-show="smallfrieisActive[index]" class="frie-svg-small"
-                          src="@/static/images/frie-active.svg" mode="scaleToFill" />
+                          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/frie-active.svg"
+                          mode="scaleToFill" />
                         <text>{{ samllfrieCount[index] }}</text>
                       </view>
                     </view>
@@ -154,37 +162,66 @@
             </view>
 
           </view>
-
         </view>
       </scroll-view>
     </view>
-    <view class="bottomBox">
-      <view class="functionBox">
-        <view>
-          <u-input placeholder="聊聊你的想法..."></u-input>
+    <view v-show="!isCut" class="bottomBox">
+      <view class="functionBox1">
+        <view @tap="onFocus">
+          123
+          <!-- <u-input placeholder="聊聊你的想法..." @focus="focusEvent"></u-input> -->
         </view>
         <view class="rightPart">
           <view>
-            <image v-show="!frieisActive" @click="frieActive" class="frie-svg" src="@/static/images/frie.svg"
+            <image v-show="!frieisActive" @click="frieActive" class="frie-svg"
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/frie.svg"
               mode="scaleToFill" />
-            <image v-show="frieisActive" @click="frieActive" class="frie-svg" src="@/static/images/frie-active.svg"
+            <image v-show="frieisActive" @click="frieActive" class="frie-svg"
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/frie-active.svg"
               mode="scaleToFill" />
             <text>{{ frieCount }}</text>
           </view>
           <view>
 
-            <image v-show="!collectisActive" @click="collectActive" class="star-svg" src="@/static/images/collect.svg"
+            <image v-show="!collectisActive" @click="collectActive" class="star-svg"
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/collect.svg"
               mode="scaleToFill" />
             <image v-show="collectisActive" @click="collectActive" class="star-svg"
-              src="@/static/images/collect-active.svg" mode="scaleToFill" />
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/collect-active.svg"
+              mode="scaleToFill" />
             <text>{{ collectCount }}</text>
           </view>
           <view>
-            <image class="comment-svg" src="@/static/images/comment.svg" mode="scaleToFill" />
+            <image class="comment-svg"
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/comment.svg"
+              mode="scaleToFill" />
             <text>{{ commentCount }}</text>
           </view>
         </view>
       </view>
+
+    </view>
+    <view v-show="isCut" class="bottomBox" style="padding-bottom: 12px;" :style="{ bottom: marginBottom - 250 + 'px' }">
+      <view>
+        <textarea class="textareaStyle" v-model="commentContent" placeholder="聊聊你的想法..."
+          placeholder-class="textarea-placeholder" @input="" :focus="isfocus" />
+      </view>
+      <view class="functionBox2">
+        <image class="emojiIcon" src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/emoji.svg"
+          mode="scaleToFill" @click="onFocus" />
+        <view class="rightPart">
+          <view>
+            <text>{{ frieCount }}</text>
+            <u-button shape="circle" color="#EC384A" @click="sendComment">发送</u-button>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view>
+
+    </view>
+    <view>
+
     </view>
   </view>
 </template>
@@ -215,10 +252,17 @@ export default {
       commentCount: 0,
       smallfrieisActive: [false, false, false, false, false, false, false, false, false],
       samllfrieCount: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      commentContent: '',
+      isCut: false,
+      marginBottom: 0,
+      isfocus: false
     }
   },
   methods: {
-
+    onFocus() {
+      this.isfocus = true
+      this.isCut = true
+    },
     //图片读取后的处理函数
     afterRead(e) {
       console.log(e);
@@ -260,7 +304,7 @@ export default {
       this.title = ''
     },
     toPreview() {
-      uni.navigateTo({ url: '/competition/publish/dongTaiPreview' })
+      uni.navigateTo({ url: '/dynamic/publish/dongTaiPreview' })
 
     },
     monitorCurrent: function (e) {
@@ -274,22 +318,64 @@ export default {
         this.samllfrieCount[index]--
       }
     },
-    frieActive() {
+    async frieActive() {
       this.frieisActive = !this.frieisActive
       if (this.frieisActive) {
         this.frieCount++
+        //点赞动态
+        await uni.$u.http.get("/saveNewsSupport", {
+          params: {
+            newsId: 1,
+          },
+        }
+        )
       } else {
+        //取消点赞动态
+        await uni.$u.http.delete("/delNewsSupport", {
+          params: {
+            supportId: 1,
+          },
+        }
+        )
         this.frieCount--
       }
     },
-    collectActive() {
+    async collectActive() {
       this.collectisActive = !this.collectisActive
       if (this.collectisActive) {
         this.collectCount++
+        //取消动态点赞
+        await uni.$u.http.get("/saveNewsCollection", {
+          params: {
+            newsId: 1,
+          },
+        }
+        )
       } else {
         this.collectCount--
+        //取消动态收藏
+        await uni.$u.http.get("/delNewsCollection", {
+          params: {
+            commentId: 1,
+          },
+        }
+        )
       }
-    }
+    },
+    sendComment() {
+      wx.hideKeyboard(
+        {
+          complete: res => {
+            console.log('hideKeyboard res', res)
+          }
+        }
+      )
+    },
+    // focusEvent(e) {
+    //   this.isCut = true
+    //   console.log(e);
+
+    // }
 
   },
   onLoad() {
@@ -300,12 +386,77 @@ export default {
         console.log(this.windowHeight);
       }).exec()
     })
+    wx.onKeyboardHeightChange(res => { //监听键盘高度变化
+      console.log(res);
+      if (res.height) {
+        this.marginBottom = res.height
+        this.isCut = true
+      } else {
+        this.isCut = false
+      }
+
+      // this.setChatListHeight();
+      // this.scroll2Bottom();
+    });
+    wx.hideKeyboard({
+      complete: res => {
+        // this.marginBottom = 0
+        this.isCut = false
+        // this.isfocus = false
+      }
+    })
   },
+  async mounted() {
+    //查询动态详情
+    let res1 = await uni.$u.http.get("/getNewsDetail", {
+      params: {
+        newsId: 2,
+      },
+    });
+    console.log(res1);
+    //查询动态评论
+    let res2 = await uni.$u.http.get("/getNewsComment", {
+      params: {
+        newsId: 2,
+        page: 1,
+        pageSize: 10
+      },
+    });
+    console.log(res2);
+    //查询动态评论回复
+    let res3 = await uni.$u.http.get("/getNewsCommentReply", {
+      params: {
+        newsCommentId: 2,
+        page: 1,
+        pageSize: 10
+      },
+    });
+    console.log(res3);
+
+  }
 }
 </script>
 
 
 <style scoped lang='scss'>
+// ::v-deep .u-button--normal.data-v-3bf2dba7 {
+//   height: 60px;
+//   width: 28px;
+// }
+::v-deep .data-v-7abf6a7b .u-button.data-v-3bf2dba7 {
+  width: 60px;
+  height: 28px;
+}
+
+.textareaStyle {
+  background-color: #F0F0F0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  height: 86px;
+  width: calc(100% - 24px);
+  margin: 12px 0px;
+}
+
 .parent {
   position: relative;
 
@@ -783,16 +934,18 @@ export default {
 
 
   .bottomBox {
+    box-shadow: 0px -4px 10px 0px rgba(203, 212, 226, 0.28);
     width: calc(100% - 32px);
     background-color: #fff;
     position: absolute;
     bottom: 0;
-    margin: 0 16px;
+    padding: 0 16px;
     padding-bottom: 46px;
-    padding-top: 12px;
+    // padding-top: 12px;
 
-    .functionBox {
-      margin-top: 20px;
+    .functionBox1 {
+      // margin-bottom: 34px;
+      margin-top: 12px;
       display: flex;
       justify-content: space-between;
 
@@ -825,6 +978,59 @@ export default {
 
           text {
             margin-left: 6px;
+
+          }
+        }
+      }
+    }
+
+    .functionBox2 {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+
+      .emojiIcon {
+        width: 20px;
+        height: 20px;
+      }
+
+      .rightPart {
+        display: flex;
+
+        view {
+          display: flex;
+          align-items: center;
+
+          .frie-svg {
+            width: 30px;
+            height: 30px;
+            margin-left: 14px;
+
+          }
+
+          .star-svg {
+            width: 30px;
+            height: 30px;
+            margin-left: 14px;
+
+          }
+
+          .comment-svg {
+            width: 30px;
+            height: 30px;
+            margin-left: 14px;
+          }
+
+          text {
+            font-family: PingFang SC, PingFang SC;
+            font-weight: 400;
+            font-size: 12px;
+            color: rgba(29, 35, 38, 0.3);
+            line-height: 16px;
+            text-align: right;
+            font-style: normal;
+            text-transform: none;
+            margin-right: 12px;
 
           }
         }

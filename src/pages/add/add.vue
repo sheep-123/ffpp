@@ -48,7 +48,7 @@ export default {
     },
     toDongTai() {
       uni.navigateTo({
-        url: "/competition/publish/dongtai",
+        url: "/dynamic/publish/dongtai",
       });
     }
   },

@@ -20,7 +20,8 @@
           style="display: flex;align-items: center;background-color: #F5F5F5;width: 100%;border-radius: 20px;padding: 7px 16px;">
           <view style="display: flex;align-items: center;">
             <text style="font-size: 12px;">广州</text>
-            <image src="@/static/images/bottomArrow.svg" mode="scaleToFill" style="width: 12px;height: 12px;" />
+            <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/bottomArrow.svg"
+              mode="scaleToFill" style="width: 12px;height: 12px;" />
           </view>
           <view style="width: 1px;height: 14px;background-color: #DBDBDB;margin-left: 6px;"></view>
           <u-input v-model="addressDetail" placeholder="输入地点关键词" placeholder-class="input-placeholder"
@@ -76,50 +77,50 @@ export default {
   },
   onLoad() {
     // 引入SDK核心类
-    var QQMapWX = require('../../assets/qqmap-wx-jssdk1.2/qqmap-wx-jssdk');
+    // var QQMapWX = require('../../assets/qqmap-wx-jssdk1.2/qqmap-wx-jssdk');
 
-    // 实例化API核心类
-    this.qqmapsdk = new QQMapWX({
-      key: 'OVPBZ-6ABC5-XWDIP-IVGK4-UJMIS-ALBZT' // 必填
-    });
+    // // 实例化API核心类
+    // this.qqmapsdk = new QQMapWX({
+    //   key: 'OVPBZ-6ABC5-XWDIP-IVGK4-UJMIS-ALBZT' // 必填
+    // });
 
 
   },
   methods: {
     // 正确初始化插件
     // 事件触发，调用接口
-    nearby_search: function () {
-      var _this = this
-      // 调用接口
-      this.qqmapsdk.search({
-        keyword: 'kfc',  //搜索关键词
-        location: '39.980014,116.313972',  //设置周边搜索中心点
-        success: function (res) { //搜索成功后的回调
-          console.log(res);
+    // nearby_search: function () {
+    //   var _this = this
+    //   // 调用接口
+    //   this.qqmapsdk.search({
+    //     keyword: 'kfc',  //搜索关键词
+    //     location: '39.980014,116.313972',  //设置周边搜索中心点
+    //     success: function (res) { //搜索成功后的回调
+    //       console.log(res);
 
-          var mks = []
-          for (var i = 0; i < res.data.length; i++) {
-            mks.push({ // 获取返回结果，放到mks数组中
-              title: res.data[i].title,
-              id: res.data[i].id,
-              latitude: res.data[i].location.lat,
-              longitude: res.data[i].location.lng,
-              iconPath: "/resources/my_marker.png", //图标路径
-              width: 20,
-              height: 20,
-            })
-          }
-          _this.markers = mks
+    //       var mks = []
+    //       for (var i = 0; i < res.data.length; i++) {
+    //         mks.push({ // 获取返回结果，放到mks数组中
+    //           title: res.data[i].title,
+    //           id: res.data[i].id,
+    //           latitude: res.data[i].location.lat,
+    //           longitude: res.data[i].location.lng,
+    //           iconPath: "/resources/my_marker.png", //图标路径
+    //           width: 20,
+    //           height: 20,
+    //         })
+    //       }
+    //       _this.markers = mks
 
-        },
-        fail: function (res) {
-          console.log(res);
-        },
-        complete: function (res) {
-          console.log(res);
-        }
-      })
-    }
+    //     },
+    //     fail: function (res) {
+    //       console.log(res);
+    //     },
+    //     complete: function (res) {
+    //       console.log(res);
+    //     }
+    //   })
+    // }
     // // 搜索地点
     // onSearchInput(e) {
     //   this.keyword = e.detail.value.trim()

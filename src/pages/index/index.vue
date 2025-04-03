@@ -332,7 +332,7 @@ export default {
 
     edit() {
       uni.navigateTo({
-        url: "/pages/index/editSport",
+        url: "/else/index/editSport",
       });
     },
 
@@ -346,11 +346,11 @@ export default {
     },
     toDongTaiDetail() {
 
-      uni.navigateTo({ url: '../../competition/publish/dongTaiDetail' });
+      uni.navigateTo({ url: '/dynamic/publish/dongTaiDetail' });
 
     },
     toMarkSite() {
-      uni.navigateTo({ url: '/pages/index/markSite' });
+      uni.navigateTo({ url: '/else/index/markSite' });
     }
   },
 

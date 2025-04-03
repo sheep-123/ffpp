@@ -1,19 +1,17 @@
 {
   "easycom": {
-    "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+   
+    // "autoscan": true,
+		"custom": {
+			// uni-ui 规则如下配置
+	 "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+		}
   },
   "pages": [
     {
       "path": "pages/index/index",
       "style": {
         "navigationBarTitleText": "首页",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/index/markSite",
-      "style": {
-        "navigationBarTitleText": "标记地点",
         "navigationStyle": "custom"
       }
     },
@@ -39,23 +37,9 @@
       }
     },
     {
-      "path": "pages/index/editSport",
-      "style": {
-        "navigationBarTitleText": "编辑运动",
-        "navigationStyle": "custom"
-      }
-    },
-    {
       "path": "pages/add/add",
       "style": {
         "navigationBarTitleText": "添加",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/index/info",
-      "style": {
-        "navigationBarTitleText": "动态详情",
         "navigationStyle": "custom"
       }
     },
@@ -153,34 +137,6 @@
           }
         },
         {
-          "path": "publish/addLocation",
-          "style": {
-            "navigationBarTitleText": "添加位置",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "publish/dongtai",
-          "style": {
-            "navigationBarTitleText": "发布动态",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "publish/dongTaiPreview",
-          "style": {
-            "navigationBarTitleText": "动态预览",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "publish/dongTaiDetail",
-          "style": {
-            "navigationBarTitleText": "动态详情",
-            "navigationStyle": "custom"
-          }
-        },
-        {
           "path": "apply/appear",
           "style": {
             "navigationBarTitleText": "报名比赛",
@@ -223,24 +179,57 @@
           }
         }
       ]
-    }
-  ],
-  "plugins": {
-    // "chooseLocation": {
-    //   "version": "1.0.2",  // ✅ 必须为x.x.x格式
-    //   "provider": "wx57d7ae552cbb3084" // 腾讯官方插件ID
-    // }
-    // "qqmap-wx-jssdk": {
-    //   "version": "1.0.0",          // 插件版本号（需与插件文档一致）
-    //   "provider": "wx5bc2ac602a747594"  // 腾讯地图插件的官方 AppID
-    // }
+    },
+    {
+      "root": "else",
+      "pages": [
+        {
+          "path": "index/markSite",
+          "style": {
+            "navigationBarTitleText": "发赛事",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "index/editSport",
+          "style": {
+            "navigationBarTitleText": "编辑运动",
+            "navigationStyle": "custom"
+          }
+        }
 
-  },
-  "permission": {
-    "scope.userLocation": {
-      "desc": "需要获取您的位置以展示周边地点" // 匹配图像中的定位需求
+      ]
+    },
+    {
+      "root": "dynamic",
+      "pages": [
+        {
+          "path": "publish/addLocation",
+          "style": {
+            "navigationBarTitleText": "添加标记",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "publish/dongtai",
+          "style": {
+            "navigationBarTitleText": "发布动态",
+            "navigationStyle": "custom"
+          }
+        },   {
+          "path": "publish/dongTaiDetail",
+          "style": {
+            "navigationBarTitleText": "动态详情",
+            "navigationStyle": "custom"
+          }
+        },   {
+          "path": "publish/dongTaiPreview",
+          "style": {
+            "navigationBarTitleText": "动态预览",
+            "navigationStyle": "custom"
+          }
+        }
+      ]
     }
-  }
- 
-
+  ]
 }

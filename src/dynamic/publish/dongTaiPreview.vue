@@ -159,7 +159,7 @@ export default {
       this.title = ''
     },
     toPreview() {
-      uni.navigateTo({ url: '/competition/publish/dongTaiPreview' })
+      uni.navigateTo({ url: '/dynamic/publish/dongTaiPreview' })
 
     },
     monitorCurrent: function (e) {

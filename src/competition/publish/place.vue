@@ -61,6 +61,7 @@ export default {
         uni.chooseLocation({
           success: function (res) {
             // console.log(res);
+            // return;
             uni.setStorageSync("fullAddress", res.address);
             uni.navigateTo({
               url: `/competition/publish/saishi`,

@@ -29,7 +29,8 @@
           </swiper>
           <view class="numDots">
             <view>
-              <image src="@/static/photo.png" mode="scaleToFill" />
+              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/photo.png"
+                mode="scaleToFill" />
               <text>
                 {{ current + 1 }}/3
               </text>

@@ -92,7 +92,7 @@
       :style="{ top: isSticky ? stickyTop : '' }"
     >
       <view class="left">
-        <view class="item">
+        <view class="item" @click="selectTab(0)">
           <text>商圈</text>
           <u-image
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/down.png"
@@ -124,7 +124,7 @@
         <image
           src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png"
         />
-        <view class="value">广州市</view>
+        <view class="value">{{ city }}</view>
       </view>
     </view>
 
@@ -508,6 +508,51 @@
         </view>
       </view>
     </view>
+
+    <u-popup :show="show" mode="bottom" @close="show = false">
+      <view class="local">
+        <view class="top">
+          <view class="left">
+            <view class="item">荔湾区</view>
+            <view class="item">荔湾区</view>
+            <view class="item">荔湾区</view>
+            <view class="item">荔湾区</view>
+          </view>
+          <view class="right">
+            <u-radio-group v-model="value">
+              <u-radio
+                activeColor="red"
+                label="思悠悠，恨悠悠，恨到归时方始休"
+              ></u-radio>
+            </u-radio-group>
+            <u-radio-group v-model="value">
+              <u-radio
+                activeColor="red"
+                label="思悠悠，恨悠悠，恨到归时方始休"
+              ></u-radio>
+            </u-radio-group>
+            <u-radio-group v-model="value">
+              <u-radio
+                activeColor="red"
+                label="思悠悠，恨悠悠，恨到归时方始休"
+              ></u-radio>
+            </u-radio-group>
+            <u-radio-group v-model="value">
+              <u-radio
+                activeColor="red"
+                label="思悠悠，恨悠悠，恨到归时方始休"
+              ></u-radio>
+            </u-radio-group>
+            <u-radio-group v-model="value">
+              <u-radio
+                activeColor="red"
+                label="思悠悠，恨悠悠，恨到归时方始休"
+              ></u-radio>
+            </u-radio-group>
+          </view>
+        </view>
+      </view>
+    </u-popup>
   </view>
 </template>
 
@@ -519,23 +564,26 @@ export default {
       keyword: "",
       statusBarHeight: 0,
       navbarHeight: 44,
+      activeTab: 0,
       urls: [
         "https://uviewui.com/album/1.jpg",
         "https://uviewui.com/album/2.jpg",
         "https://uviewui.com/album/3.jpg",
         "https://uviewui.com/album/4.jpg",
       ],
+      city: uni.getStorageSync("city") || "暂无",
+      show: false,
     };
   },
-  onShow() {
+  onload() {
     const systemInfo = uni.getSystemInfoSync();
     this.initIntersectionObserver();
     this.statusBarHeight = systemInfo.statusBarHeight;
   },
+  onShow() {
+    this.queryAdCode();
+  },
   methods: {
-    clear() {
-      this.keyword = "";
-    },
     initIntersectionObserver() {
       this.$nextTick(() => {
         this.observer = uni.createIntersectionObserver(this);
@@ -552,6 +600,17 @@ export default {
     toMore() {
       uni.navigateTo({
         url: "/else/play/more",
+      });
+    },
+    selectTab(index) {
+      this.activeTab = index;
+      this.show = true;
+    },
+    async queryAdCode() {
+      var result = await uni.$u.http.get("/match/queryAdCode", {
+        params: {
+          adcode4: "",
+        },
       });
     },
   },
@@ -896,5 +955,20 @@ export default {
   color: #ffffff;
   padding: 6px 15px;
   border-radius: 20px;
+}
+
+.local {
+  height: 332px;
+  .top {
+    display: flex;
+    align-items: center;
+    .left {
+      display: flex;
+      width: 30%;
+      background-color: #f5f5f5;
+      flex-direction: column;
+      gap: 24px;
+    }
+  }
 }
 </style>

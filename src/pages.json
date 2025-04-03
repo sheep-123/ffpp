@@ -4,19 +4,20 @@
   },
   "pages": [
     {
-      "path": "pages/index/index",
-      "style": {
-        "navigationBarTitleText": "首页",
-        "navigationStyle": "custom"
-      }
-    },
-    {
       "path": "pages/play/play",
       "style": {
         "navigationBarTitleText": "去玩",
         "navigationStyle": "custom"
       }
     },
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "首页",
+        "navigationStyle": "custom"
+      }
+    },
+
     {
       "path": "pages/user/user",
       "style": {

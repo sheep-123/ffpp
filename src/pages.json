@@ -184,6 +184,53 @@
             "navigationBarTitleText": "发赛事",
             "navigationStyle": "custom"
           }
+        },
+        {
+          "path": "index/markSite",
+          "style": {
+            "navigationBarTitleText": "标记",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "index/editSport",
+          "style": {
+            "navigationBarTitleText": "编辑运动",
+            "navigationStyle": "custom"
+          }
+        }
+      ]
+    },
+    {
+      "root": "dynamic",
+      "pages": [
+        {
+          "path": "publish/addLocation",
+          "style": {
+            "navigationBarTitleText": "添加标记",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "publish/dongtai",
+          "style": {
+            "navigationBarTitleText": "发布动态",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "publish/dongTaiDetail",
+          "style": {
+            "navigationBarTitleText": "动态详情",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "publish/dongTaiPreview",
+          "style": {
+            "navigationBarTitleText": "动态预览",
+            "navigationStyle": "custom"
+          }
         }
       ]
     }

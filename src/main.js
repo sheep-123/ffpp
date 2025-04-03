@@ -1,7 +1,7 @@
 import Vue from 'vue'
-import App from './App'
+import App from './App.vue'
 import './uni.promisify.adaptor'
-
+// import '@/assets/styles/fonts.css'
 import uView from "uview-ui";
 Vue.use(uView);
 

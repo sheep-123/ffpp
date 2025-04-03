@@ -60,6 +60,12 @@
       :scale="18"
       v-if="!isSticky || isMapExpanded"
     >
+      <view class="mapBox">
+        <view class="button" @tap="toMarkSite">
+          <view><text>标记</text></view>
+          <view><text>场地</text></view>
+        </view>
+      </view>
     </map>
 
     <view
@@ -544,7 +550,7 @@ export default {
 
     edit() {
       uni.navigateTo({
-        url: "/pages/index/editSport",
+        url: "/else/index/editSport",
       });
     },
 
@@ -553,6 +559,13 @@ export default {
       this.observer.relativeToViewport().observe("#title", (res) => {
         this.isSticky = res.intersectionRatio <= 0;
       });
+    },
+
+    toDongTaiDetail() {
+      uni.navigateTo({ url: "/dynamic/publish/dongTaiDetail" });
+    },
+    toMarkSite() {
+      uni.navigateTo({ url: "/else/index/markSite" });
     },
   },
 
@@ -597,19 +610,23 @@ export default {
     align-items: center;
     justify-content: space-evenly;
     background-color: #f8f9f9;
+
     .first {
       display: flex;
       align-items: center;
       gap: 3px;
+
       image:nth-child(1) {
         width: 18px;
         height: 18px;
       }
+
       image:nth-child(2) {
         width: 36px;
         height: 15px;
       }
     }
+
     .item {
       font-size: 14px;
       color: rgba(29, 35, 38, 0.5);
@@ -626,43 +643,53 @@ export default {
 
     .item {
       width: 100%;
-      break-inside: avoid; /* 防止元素被分割到不同列 */
+      break-inside: avoid;
+      /* 防止元素被分割到不同列 */
       margin-bottom: 10px;
+
       image {
         width: 100%;
         border-radius: 10px;
       }
+
       .value {
         font-size: 14px;
         color: #353738;
         font-weight: 600;
       }
+
       .buttom {
         display: flex;
         justify-content: space-between;
         margin-top: 7px;
+
         .left {
           display: flex;
           align-items: center;
           gap: 5px;
+
           image {
             width: 18px;
             height: 18px !important;
           }
+
           .value {
             font-size: 12px;
             font-weight: 400;
             color: #474747;
           }
         }
+
         .right {
           display: flex;
           align-items: center;
           gap: 2px;
+
           image {
             width: 20px;
             height: 20px;
           }
+
           .value {
             font-weight: 400;
             font-size: 12px;
@@ -691,6 +718,7 @@ export default {
   border-radius: 20px;
   display: flex;
   align-items: center;
+
   image {
     width: 20px;
     height: 20px;
@@ -716,6 +744,7 @@ export default {
     font-size: 10px;
     color: rgba(29, 35, 38, 0.5);
   }
+
   image {
     width: 16px;
     height: 8px;
@@ -736,6 +765,7 @@ map {
 
   &.search-y {
     background: #ffffff;
+
     .back-btn {
       width: 20px;
       height: 20px;
@@ -758,23 +788,58 @@ map {
     justify-content: space-evenly;
     background-color: #fff;
     z-index: 999999999;
+
     .first {
       display: flex;
       align-items: center;
       gap: 3px;
+
       image:nth-child(1) {
         width: 18px;
         height: 18px;
       }
+
       image:nth-child(2) {
         width: 36px;
         height: 15px;
       }
     }
+
     .item {
       font-size: 14px;
       color: rgba(29, 35, 38, 0.5);
       font-family: "PING FANG SHAO HUA";
+    }
+  }
+
+  .mapBox {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+
+    .button {
+      width: 24px;
+      height: 30px;
+      padding: 6px 9px;
+      margin-right: 30px;
+      margin-bottom: 200px;
+      background-color: #15181a;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      text {
+        font-family: PingFang SC, PingFang SC;
+        font-weight: 600;
+        font-size: 12px;
+        color: #ffffff;
+        font-style: normal;
+        text-transform: none;
+      }
     }
   }
 }

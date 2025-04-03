@@ -1,4 +1,5 @@
-
+const path = require('path')
 module.exports = {
-  transpileDependencies: ["uview-ui"],
+  transpileDependencies: ["uview-ui"]
 };
+

@@ -7,12 +7,18 @@
     ></u-navbar>
 
     <view class="upload">
-      <view class="top"> </view>
+      <view class="top">
+        <image
+          :src="mainFile"
+          mode="aspectFill"
+          style="width: 100%; height: 350px"
+        />
+      </view>
 
       <view
         class="next"
         :style="{
-          background: `linear-gradient(180deg,#cccccc 0%,${selectColor} 30%)`,
+          background: `linear-gradient(180deg,rgba(255,255,255,0.1) 0%,${selectColor} 30%)`,
         }"
       >
         <view class="message">
@@ -24,18 +30,19 @@
       <view class="cup">
         <view class="top">
           <view class="left">
-            <view class="first">这里是赛事名称</view>
-            <view class="second">这里是赛事副标题</view>
+            <view class="first">{{ fuTitle }}</view>
+            <view class="second">{{ fuName }}</view>
           </view>
         </view>
 
         <view class="next">
           <view class="plus">
-            <u-avatar :src="src" size="24"></u-avatar>
-            <u-avatar :src="src" size="24"></u-avatar>
-            <u-avatar :src="src" size="24"></u-avatar>
-            <u-avatar :src="src" size="24"></u-avatar>
-            <u-avatar :src="src" size="24"></u-avatar>
+            <u-avatar
+              :src="item.sponsorAvatarUrl"
+              size="24"
+              v-for="(item, index) in sponsorList"
+              :key="index"
+            ></u-avatar>
             <view class="more" @click="toMore">
               更多
               <u-icon name="play-right-fill" color="#fff" size="8"></u-icon>
@@ -99,7 +106,7 @@
             margin: 30px auto 0px;
             display: block;
           "
-          v-if="applyStatus != 1"
+          v-if="way != 1"
         />
         <image
           src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/基础信息.svg"
@@ -112,15 +119,11 @@
           "
           v-else
         />
-        <view class="o-text" v-if="applyStatus != 1">
+        <view class="o-text" v-if="way != 1">
           <view class="item">
             <view class="left">小队类型 <view class="icon">*</view></view>
             <view class="right">
-              <u-radio-group
-                v-model="type"
-                placement="row"
-                @change="groupChange"
-              >
+              <u-radio-group v-model="teamType" placement="row">
                 <u-radio
                   activeColor="red"
                   label="正式小队"
@@ -137,7 +140,7 @@
               </u-radio-group>
             </view>
           </view>
-          <view class="item">
+          <view class="item" v-if="teamType == 1">
             <view class="item-p">请选择参赛小队</view>
             <view class="right">
               <u-icon name="arrow-down" color="#BBBDBE" size="12"></u-icon>
@@ -145,10 +148,9 @@
           </view>
         </view>
         <view class="al">
-          <view class="al-top" v-if="applyStatus != 1">
+          <view class="al-top" v-if="way != 1">
             <view
-              class="item"
-              :class="{ 'item-active': activeIndex === 0 }"
+              :class="activeIndex === 0 ? 'item-active' : 'item'"
               @tap="switchTeam(0)"
             >
               <view class="avatar">
@@ -159,8 +161,7 @@
             </view>
 
             <view
-              class="item"
-              :class="{ 'item-active': activeIndex === 1 }"
+              :class="activeIndex === 1 ? 'item-active' : 'item'"
               @tap="switchTeam(1)"
             >
               <view class="avatar">
@@ -171,8 +172,7 @@
             </view>
 
             <view
-              class="item"
-              :class="{ 'item-active': activeIndex === 2 }"
+              :class="activeIndex === 2 ? 'item-active' : 'item'"
               @tap="switchTeam(2)"
             >
               <view class="avatar">
@@ -183,8 +183,7 @@
             </view>
 
             <view
-              class="item"
-              :class="{ 'item-active': activeIndex === 3 }"
+              :class="activeIndex === 3 ? 'item-active' : 'item'"
               @tap="switchTeam(3)"
             >
               <view class="avatar">
@@ -195,8 +194,7 @@
             </view>
 
             <view
-              class="item"
-              :class="{ 'item-active': activeIndex === 4 }"
+              :class="activeIndex === 4 ? 'item-active' : 'item'"
               @tap="switchTeam(4)"
             >
               <view class="avatar">
@@ -206,9 +204,16 @@
 
               <view class="arrow-indicator" v-if="activeIndex === 4"></view>
             </view>
+
+            <image
+              src="/static/images/加号.png"
+              mode="scaleToFill"
+              style="width: 38px; height: 38px"
+              v-if="teamType == 2"
+            />
           </view>
           <view class="o-text" style="margin: 0">
-            <view class="item" v-if="applyStatus != 1">
+            <view class="item" v-if="way != 1">
               <view class="left">真实姓名</view>
               <view class="right">
                 <view style="width: 110px">
@@ -223,7 +228,7 @@
                 </view>
               </view>
             </view>
-            <view class="item" v-if="applyStatus != 1">
+            <view class="item" v-if="way != 1">
               <view class="left">证件类型</view>
               <view class="right">
                 <view style="width: 110px">
@@ -238,7 +243,7 @@
                 </view>
               </view>
             </view>
-            <view class="item" style="border: none" v-if="applyStatus != 1">
+            <view class="item" style="border: none" v-if="way != 1">
               <view class="left">证件号码</view>
               <view class="right">
                 <view style="width: 110px">
@@ -253,7 +258,7 @@
                 </view>
               </view>
             </view>
-            <view class="autonym" v-if="applyStatus != 1"
+            <view class="autonym" v-if="way != 1" @click="autonym"
               >授权实名信息给主办方</view
             >
             <view class="rz" v-else>
@@ -263,115 +268,74 @@
               </view>
               <view class="right"> 立即认证 </view>
             </view>
-            <view class="item">
-              <view class="left">手机号 <view class="icon">*</view></view>
-              <view class="right">
-                <view style="width: 110px">
-                  <u-input
-                    v-model="mobile"
-                    placeholder="请填写手机号"
-                    border="none"
-                    @change="change1"
-                    placeholderClass="placeholderClass"
-                    input-align="right"
-                    type="number"
-                  ></u-input>
-                </view>
-              </view>
-            </view>
-            <view class="item">
-              <view class="left">性别 <view class="icon">*</view></view>
-              <view class="right">
-                <u-radio-group
-                  v-model="gender"
-                  placement="row"
-                  @change="genderChange"
+            <view class="form" v-for="(item, index) in applyData" :key="index">
+              <view :class="item.applyType == 'checkbox' ? 'item-o' : 'item'">
+                <view class="left"
+                  >{{ item.applyName }}
+                  <view class="icon" v-if="item.applyMust == 1">*</view></view
                 >
-                  <u-radio
-                    activeColor="red"
-                    label="男"
-                    shape="circle"
-                    name="1"
-                  ></u-radio>
-                  <u-radio
-                    activeColor="red"
-                    label="女"
-                    name="2"
-                    shape="circle"
-                    customStyle="margin-left: 20px"
-                  ></u-radio>
-                </u-radio-group>
-              </view>
-            </view>
-            <view class="item">
-              <view class="left">年龄 <view class="icon">*</view></view>
-              <view class="right">
-                <view style="width: 110px">
+                <view class="right">
                   <u-input
-                    v-model="age"
-                    placeholder="请填写年龄"
-                    placeholderClass="placeholderClass"
+                    v-if="
+                      item.applyType == 'input' || item.applyType == 'number'
+                    "
+                    v-model="item.value"
+                    :placeholder="'请填写' + item.applyName"
                     border="none"
-                    @change="change2"
+                    placeholderClass="placeholderClass"
                     input-align="right"
-                    type="number"
+                    :type="item.applyType == 'number' ? 'number' : ''"
                   ></u-input>
+                  <u-radio-group
+                    v-model="gender"
+                    placement="row"
+                    @change="genderChange"
+                    v-if="item.applyType == 'radio'"
+                  >
+                    <u-radio
+                      activeColor="red"
+                      :label="gender"
+                      shape="circle"
+                      :name="genderIndex + 1"
+                      v-for="(gender, genderIndex) in item.applyValue.split(
+                        ','
+                      )"
+                      :key="genderIndex"
+                      customStyle="margin-left: 20px"
+                    ></u-radio>
+                  </u-radio-group>
+                  <u-checkbox-group
+                    v-model="item.value"
+                    v-if="item.applyType == 'checkbox'"
+                  >
+                    <u-checkbox
+                      v-for="(option, optionIndex) in item.applyValue.split(
+                        ','
+                      )"
+                      :key="optionIndex"
+                      :label="option"
+                      :name="optionIndex + 1"
+                      customStyle="margin-right: 5px"
+                      activeColor="red"
+                      shape="circle"
+                    ></u-checkbox>
+                  </u-checkbox-group>
+
+                  <view
+                    v-if="item.applyType === 'select'"
+                    @click="openPicker(item)"
+                  >
+                    <text :style="{ color: item.value ? 'black' : '' }">
+                      {{ item.name || `请选择${item.applyName}` }}
+                    </text>
+                    <image
+                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
+                      mode="scaleToFill"
+                      style="width: 12px; height: 12px"
+                    />
+                  </view>
                 </view>
               </view>
-            </view>
-            <view class="item">
-              <view class="left" style="width: 35%"
-                >紧急联系人手机号 <view class="icon">*</view></view
-              >
-              <view class="right">
-                <view style="width: 170px">
-                  <u-input
-                    v-model="contact"
-                    placeholder="请填写紧急联系人手机号"
-                    border="none"
-                    @change="change3"
-                    input-align="right"
-                    placeholderClass="placeholderClass"
-                    type="number"
-                  ></u-input>
-                </view>
-              </view>
-            </view>
-            <view class="item">
-              <view class="left">血型<view class="icon">*</view></view>
-              <view class="right" @click="show1 = true"
-                ><text :style="{ color: blood_type ? 'black' : '' }">{{
-                  blood_type || "请选择血型"
-                }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
-            </view>
-            <view class="item">
-              <view class="left">基础疾病<view class="icon">*</view></view>
-              <view class="right" @click="show2 = true"
-                ><text :style="{ color: disease ? 'black' : '' }">{{
-                  disease || "请选择基础疾病"
-                }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
-            </view>
-            <view class="item">
-              <view class="left">保险保障<view class="icon">*</view></view>
-              <view class="right" @click="show3 = true"
-                ><text :style="{ color: insurance ? 'black' : '' }">{{
-                  insurance || "参与者意外保险"
-                }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
             </view>
           </view>
         </view>
@@ -404,7 +368,7 @@
           <view class="bt">
             <view class="total">
               <view class="zfy">总费用</view>
-              <view class="price">￥508</view>
+              <view class="price">￥{{ total }}</view>
             </view>
             <view class="dy">=</view>
             <view class="detail">
@@ -413,14 +377,14 @@
                   <u-icon name="account"></u-icon>
                   报名人数
                 </view>
-                <view class="right"> 4人 </view>
+                <view class="right"> {{ number }}人 </view>
               </view>
               <view class="item">
                 <view class="left">
                   <u-icon name="red-packet"></u-icon>
                   小队报名费
                 </view>
-                <view class="right-r"> ￥500 </view>
+                <view class="right-r"> ￥{{ entry_Fee }} </view>
               </view>
               <view class="item">
                 <view class="left">
@@ -431,7 +395,7 @@
                   />
                   保险费
                 </view>
-                <view class="right-r"> ￥2*4=8 </view>
+                <view class="right-r"> ￥2*{{ number }}={{ 2 * number }} </view>
               </view>
             </view>
           </view>
@@ -446,7 +410,7 @@
             </view>
 
             <view class="right">
-              {{ registerNumber.number }}/{{ registerNumber.registerNum }}
+              {{ registerNumber.registerNum }}/{{ registerNumber.number }}
             </view>
           </view>
           <view class="progress">
@@ -457,7 +421,7 @@
               :showText="false"
             ></u-line-progress>
           </view>
-          <view class="botton" @click="apply"> ￥504报名参赛 </view>
+          <view class="botton" @click="apply"> ￥{{ total }}报名参赛 </view>
         </view>
       </view>
     </view>
@@ -1224,6 +1188,13 @@
       @cancel="show3 = false"
       @confirm="confirm3"
     ></u-picker>
+
+    <u-picker
+      :show="pickerShow"
+      :columns="columns"
+      @cancel="pickerShow = false"
+      @confirm="confirmPicker"
+    ></u-picker>
   </view>
 </template>
 
@@ -1235,7 +1206,6 @@ export default {
       activeIndex: 0,
       selectColor: uni.getStorageSync("theme") || "#1B4CA7",
       tabs: ["报名比赛", "赛事环节", "赛事奖励", "赛事直击", "赛事规则"],
-      applyStatus: 1, //1——单人报名 2——团队报名
       isFinish: uni.getStorageSync("isFinish") || false,
       isOver: false,
       know: false,
@@ -1247,14 +1217,8 @@ export default {
       age: "",
       contact: "",
       disease: "",
-      show1: false,
-      columns1: [],
       blood_type: "",
-      show2: false,
-      columns2: [],
       insurance: "",
-      show3: false,
-      columns3: [],
       disclaimer: "",
       insuranceNotice: "",
       matchNotice: "",
@@ -1270,6 +1234,21 @@ export default {
       MatchSponsorPrize: [],
       MatchSponsorServe: [],
       registerNumber: {},
+      currentField: null, // 当前正在操作的字段
+      pickerShow: false, // 控制 picker 的显示状态
+      columns: [],
+      oldApplyData: [],
+      serialNum: null,
+      matchId: null,
+      way: null,
+      number: null,
+      entry_Fee: null,
+      templateId: null,
+      teamType: "1",
+      sponsorList: [],
+      fuTitle: "",
+      mainFile: "",
+      fuName: "",
     };
   },
   methods: {
@@ -1305,7 +1284,7 @@ export default {
     },
     toMore() {
       uni.navigateTo({
-        url: "/competition/apply/more",
+        url: `/competition/apply/more?matchId=${this.matchId}`,
       });
     },
     toSponsor() {
@@ -1347,22 +1326,16 @@ export default {
     },
     async apply() {
       try {
-        const arr = this.applyData;
-        arr[0].value = this.mobile;
-        arr[3].value = this.gender;
-        arr[2].value = this.age;
-        arr[7].value = this.contact;
-        arr[12].value = this.blood_type;
-        arr[13].value = this.disease;
-        arr[14].value = this.insurance;
+        // console.log(this.applyData);
+        // return;
         var result = await uni.$u.http.post("/match/saveMatchRegister", {
-          matchId: 12390,
-          serialNum: 202504000045,
-          templateId: 15,
-          way: 1,
+          matchId: this.matchId,
+          serialNum: this.serialNum,
+          templateId: this.templateId,
+          way: this.way,
           userId: uni.getStorageSync("user").id,
-          requestJson: this.applyData,
-          responseJson: arr,
+          requestJson: this.oldApplyData,
+          responseJson: this.applyData,
           amount: 500,
         });
         if (result.status == 200) {
@@ -1406,18 +1379,12 @@ export default {
       try {
         var result = await uni.$u.http.get("/match/getMatchTemplateRegister", {
           params: {
-            templateId: 15,
+            templateId: this.templateId,
           },
         });
         if (result.status == 200) {
           this.applyData = result.data;
-          this.age = this.applyData[2].applyValue;
-          const blood = this.applyData[12].applyValue;
-          this.columns1 = [blood.split(",")];
-          const disease = this.applyData[13].applyValue;
-          this.columns2 = [disease.split(",")];
-          const insurance = this.applyData[14].applyValue;
-          this.columns3 = [insurance.split(",")];
+          this.oldApplyData = result.data;
         }
       } catch (err) {
         this.$refs.notice.show({
@@ -1426,41 +1393,16 @@ export default {
         });
       }
     },
-    change1(n) {
-      uni.setStorageSync("mobile", n);
-    },
-    change2(n) {
-      uni.setStorageSync("age", n);
-    },
-    change3(n) {
-      uni.setStorageSync("contact", n);
-    },
-    confirm1(n) {
-      this.show1 = false;
-      this.blood_type = n.value[0];
-      uni.setStorageSync("blood_type", n.value[0]);
-    },
-    confirm2(n) {
-      this.show2 = false;
-      this.disease = n.value[0];
-      uni.setStorageSync("disease", n.value[0]);
-    },
-    confirm3(n) {
-      this.show3 = false;
-      this.insurance = n.value[0];
-      uni.setStorageSync("insurance", n.value[0]);
-    },
     genderChange(n) {
       console.log(n);
     },
     async getMatchTemplateNotice() {
       var result = await uni.$u.http.get("/match/getMatchTemplateNotice", {
         params: {
-          templateId: 15,
+          templateId: this.templateId,
         },
       });
       if (result.status == 200) {
-        console.log(result.data.disclaimer);
         uni.setStorageSync("disclaimer", result.data.disclaimer);
         this.insuranceNotice = result.data.insuranceNotice;
         this.matchNotice = result.data.matchNotice;
@@ -1475,7 +1417,7 @@ export default {
     async getMatchRegisterSuc() {
       var result = await uni.$u.http.get("/match/getMatchRegisterSuc", {
         params: {
-          matchId: 11,
+          matchId: this.matchId,
         },
       });
       this.publicationTime = result.data.publicationTime;
@@ -1484,7 +1426,7 @@ export default {
     async getMatchSche() {
       var result = await uni.$u.http.get("/match/getMatchSche", {
         params: {
-          matchId: 11,
+          matchId: this.matchId,
         },
       });
       this.scheTimeList = result.data;
@@ -1549,7 +1491,7 @@ export default {
     },
     async getMatchReward() {
       var result = await uni.$u.http.get("/match/getMatchReward", {
-        params: { matchId: 11 },
+        params: { matchId: this.matchId },
       });
       if (result.status == 200) {
         this.MatchReward = result.data;
@@ -1558,7 +1500,7 @@ export default {
     },
     async getMatchRewardInfo() {
       var result = await uni.$u.http.get("/match/getMatchRewardInfo", {
-        params: { matchId: 11 },
+        params: { matchId: this.matchId },
       });
       if (result.status == 200) {
         this.MatchRewardInfo = result.data;
@@ -1567,7 +1509,7 @@ export default {
     },
     async getMatchSponsorRequest() {
       var result = await uni.$u.http.get("/match/getMatchSponsorRequest", {
-        params: { matchId: 11 },
+        params: { matchId: this.matchId },
       });
       if (result.status == 200) {
         this.MatchSponsorRequest = result.data;
@@ -1576,7 +1518,7 @@ export default {
     },
     async getMatchSponsorPrize() {
       var result = await uni.$u.http.get("/match/getMatchSponsorPrize", {
-        params: { matchId: 11 },
+        params: { matchId: this.matchId },
       });
       if (result.status == 200) {
         this.MatchSponsorPrize = result.data;
@@ -1585,7 +1527,7 @@ export default {
     },
     async getMatchSponsorServe() {
       var result = await uni.$u.http.get("/match/getMatchSponsorServe", {
-        params: { matchId: 11 },
+        params: { matchId: this.matchId },
       });
       if (result.status == 200) {
         this.MatchSponsorServe = result.data;
@@ -1594,17 +1536,76 @@ export default {
     },
     async getMatchRegisterUserNum() {
       var result = await uni.$u.http.get("/match/getMatchRegisterUserNum", {
-        params: { matchId: 11 },
+        params: { matchId: this.matchId },
       });
       this.registerNumber = result.data;
-      console.log(this.registerNumber);
     },
     back() {
       uni.switchTab({ url: "/pages/play/play" });
     },
+    openPicker(item) {
+      this.currentField = item;
+      const b = this.applyData.find(
+        (a) => a.applyCode === item.applyCode
+      ).applyValue;
+      this.columns = [b.split(",")];
+      this.pickerShow = true;
+    },
+    confirmPicker(n) {
+      this.currentField.value = n.indexs[0] + 1;
+      this.currentField.name = n.value[0];
+      this.pickerShow = false;
+    },
+    async getMatchRegisterInfo() {
+      var result = await uni.$u.http.get("/match/getMatchRegisterInfo", {
+        params: {
+          matchId: this.matchId,
+        },
+      });
+      this.way = result.data.way;
+      this.templateId = result.data.templateId;
+      this.getMatchTemplateRegister();
+      if (this.way == 1) {
+        this.number = 1;
+        this.entry_Fee = result.data.entryFee;
+      }
+      if (this.way == 2) {
+        this.number = result.data.group_per_num;
+        this.entry_Fee = result.data.entryFee * result.data.group_per_num;
+      }
+    },
+    async getMatchSponsorUser() {
+      var result = await uni.$u.http.get("/match/getMatchSponsorUser", {
+        params: {
+          matchId: this.matchId,
+        },
+      });
+      if (result.status == 200) {
+        this.sponsorList = result.data.sponsors;
+      }
+    },
+    async autonym() {
+      var result = await uni.$u.http.post("/saveWjRealName");
+    },
+    async getMatchBasicInfo() {
+      var result = await uni.$u.http.get("/match/getMatchBasicInfo", {
+        params: {
+          matchId: this.matchId,
+        },
+      });
+      this.fuTitle = result.data.fuTitle;
+      this.mainFile = result.data.mainImageUrl;
+      this.fuName = result.data.name;
+      this.serialNum = result.data.serialNum;
+    },
   },
-  onLoad() {
-    this.getMatchTemplateRegister();
+  onLoad(options) {
+    if (options && options.matchId) {
+      this.matchId = options.matchId;
+    }
+    this.getMatchRegisterInfo();
+    this.getMatchSponsorUser();
+    this.getMatchBasicInfo();
   },
   onShow() {
     if (this.isFinish) {
@@ -1613,9 +1614,6 @@ export default {
       setInterval(() => {
         this.updateTimeDifference();
       }, 60000); // 每分钟更新一次
-    }
-    if (this.activeTab === 0) {
-      this.getMatchRegisterUserNum();
     }
     if (this.activeTab === 0) {
       this.getMatchRegisterUserNum();
@@ -1646,6 +1644,9 @@ export default {
       return (
         (this.registerNumber.number / this.registerNumber.registerNum) * 100
       );
+    },
+    total() {
+      return this.entry_Fee + 2 * this.number;
     },
   },
 };

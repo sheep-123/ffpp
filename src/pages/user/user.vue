@@ -313,10 +313,6 @@ export default {
       ],
     };
   },
-  onShow() {
-    uni.removeStorageSync("token");
-    uni.removeStorageSync("user");
-  },
 };
 </script>
 

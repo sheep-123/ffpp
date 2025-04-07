@@ -122,6 +122,9 @@
             z-index: 9;
           "
         />
+        <view class="change" @click="uploadMainFile" v-if="mainFile"
+          >更换图片</view
+        >
       </view>
 
       <view class="type" :style="{ background: selectColor }">
@@ -200,24 +203,13 @@
                 ><text :style="{ color: templateName ? 'black' : '' }">{{
                   templateName || "请选择赛事模版"
                 }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
             <view class="item">
               <view class="left">赛事名称 <view class="icon">*</view></view>
               <view class="right">
                 <view style="width: 110px">
-                  <!-- <u-input
-                    v-model="name"
-                    placeholder="请填写赛事名称"
-                    border="none"
-                    @change="blur1"
-                    input-align="right"
-                    placeholderClass="pl-class"
-                  ></u-input> -->
                   <textarea
                     style="width: 110px"
                     maxlength="500"
@@ -234,14 +226,6 @@
             <view class="item">
               <view class="left">赛事副标题<view class="icon">*</view></view>
               <view class="right">
-                <!-- <u-input
-                    v-model="fuTitle"
-                    placeholder="请填写赛事副标题"
-                    border="none"
-                    @change="blur2"
-                    input-align="right"
-                    placeholderClass="pl-class"
-                  ></u-input>  -->
                 <textarea
                   style="width: 115px"
                   maxlength="500"
@@ -695,7 +679,7 @@
                   src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/删减.png"
                   mode="scaleToFill"
                   style="width: 24px; height: 24px"
-                  @click.stop="deleteItem(index)"
+                  @click.stop="deleteA(index)"
                 />
               </view>
             </view>
@@ -1128,6 +1112,7 @@
         class="content"
         v-if="activeTab == 4"
         :style="{ background: selectColor }"
+        style="padding-bottom: 102px"
       >
         <view class="main">
           <image
@@ -2278,9 +2263,9 @@ export default {
       uni.setStorageSync("way", n);
     },
     async getGame() {
-      var result = await uni.$u.http.get("/match/getMatchTemplateSche", {
+      var result = await uni.$u.http.get("/match/getMatchSche", {
         params: {
-          templateId: this.templateId,
+          matchId: this.matchId,
         },
       });
       if (result.status == 200) {
@@ -2331,7 +2316,8 @@ export default {
         this.currentIndex
       ].scheTime = `${year}-${month}-${day} ${hours}:${minutes}`;
     },
-    deleteItem(index) {
+
+    deleteA(index) {
       this.items.splice(index, 1);
     },
     checkThis(index) {
@@ -3035,6 +3021,18 @@ export default {
         }
       }
     }
+    .change {
+      position: absolute;
+      right: 0;
+      top: 30%;
+      font-weight: 400;
+      font-size: 12px;
+      color: #fffcf6;
+      background-color: #333b4b;
+      padding: 3px 10px;
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
+    }
   }
 
   .type {
@@ -3157,7 +3155,7 @@ export default {
           -5px -5px 10px rgba(0, 0, 0, 0.1);
 
         .item {
-          width: 90%;
+          width: 95%;
           display: flex;
           justify-content: space-between;
           align-items: center;

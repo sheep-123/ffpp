@@ -1,6 +1,6 @@
 <template>
   <view class="box">
-    <u-navbar autoBack leftText="支付订单" :fixed="false"> </u-navbar>
+    <u-navbar @leftClick="back" leftText="支付订单" :fixed="false"> </u-navbar>
     <view class="main">
       <view class="first">
         <image
@@ -79,10 +79,23 @@ export default {
       outTradeNo: "",
       payInfo: {},
       refundPolicies: [],
+      way: null,
+      matchId: null,
+      serialNum: null,
+      templateId: null,
+      teamType: null,
+      requestJson: [],
+      responseJson: [],
+      amount: null,
     };
   },
-  onLoad() {
-    this.getMatchRegisterInfo();
+  onLoad(options) {
+    this.matchId = options.matchId;
+    this.way = options.way;
+    this.serialNum = options.serialNum;
+    this.templateId = options.templateId;
+    this.teamType = options.teamType;
+    this.amount = options.amount;
     this.getMatchPayInfo();
   },
   methods: {
@@ -99,7 +112,7 @@ export default {
           wx.requestPayment({
             ...params,
             success: (res) => {
-              this.checkOrderPaymentStatus();
+              this.save();
             },
             fail(res) {},
           });
@@ -111,25 +124,56 @@ export default {
         });
       }
     },
-    async getMatchRegisterInfo() {
-      var result = await uni.$u.http.get("/match/getMatchRegisterInfo", {
-        params: {
-          matchId: 11,
-        },
+
+    async getMatchPayInfo() {
+      var result = await uni.$u.http.post("/wechat/getMatchPayInfo", {
+        matchId: Number(this.matchId),
+        wjUserId: uni.getStorageSync("user").id,
       });
+      this.payInfo = result.data;
+      this.refundPolicies = result.data.refundPolicies;
     },
-    async checkOrderPaymentStatus() {
+
+    async save() {
       try {
-        var result = await uni.$u.http.get("/wechat/checkOrderPaymentStatus", {
-          params: {
-            outTradeNo: this.outTradeNo,
-          },
-        });
+        if (this.way == 1) {
+          var result = await uni.$u.http.post("/match/saveMatchRegister", {
+            matchId: this.matchId,
+            serialNum: this.serialNum,
+            templateId: this.templateId,
+            way: this.teamType,
+            userId: uni.getStorageSync("user").id,
+            requestJson: uni.getStorageSync("requestJson"),
+            responseJson: uni.getStorageSync("responseJson"),
+            amount: this.amount,
+          });
+        } else if (this.way == 2) {
+          var result = await uni.$u.http.post("/match/saveMatchRegisterTeam", {
+            matchId: this.matchId,
+            serialNum: this.serialNum,
+            templateId: this.templateId,
+            way: this.teamType,
+            amount: this.amount,
+            users: [
+              {
+                userId: uni.getStorageSync("user").id,
+                requestJson: uni.getStorageSync("requestJson"),
+                responseJson: uni.getStorageSync("responseJson"),
+              },
+            ],
+          });
+        }
+
+        if (result.status == 400) {
+          this.$refs.notice.show({
+            type: "error",
+            message: result.message,
+          });
+        }
         if (result.status == 200) {
           uni.navigateTo({
-            url: "/competition/apply/appear",
+            url: `/competition/apply/appear?isFinish=true&&matchId=${this.matchId}`,
           });
-          uni.setStorageSync("isFinish", true);
         }
       } catch (err) {
         this.$refs.notice.show({
@@ -138,13 +182,10 @@ export default {
         });
       }
     },
-    async getMatchPayInfo() {
-      var result = await uni.$u.http.post("/wechat/getMatchPayInfo", {
-        matchId: 11,
-        wjUserId: uni.getStorageSync("user").id,
-      });
-      this.payInfo = result.data;
-      this.refundPolicies = result.data.refundPolicies;
+    back() {
+      uni.navigateBack();
+      uni.removeStorageSync("requestJson");
+      uni.removeStorageSync("responseJson");
     },
   },
 };

@@ -291,7 +291,7 @@
               <view
                 class="right"
                 @click="toPlace"
-                :style="fullAddress ? 'width:60%' : ''"
+                :style="fullAddress ? 'width:45%' : ''"
                 ><text :style="{ color: fullAddress ? 'black' : '' }">{{
                   fullAddress || "请选择赛事地点"
                 }}</text
@@ -741,6 +741,7 @@
                     @change="(n) => blur5(n, rIndex)"
                     type="number"
                     placeholderClass="pl-class"
+                    input-align="right"
                   ></u-input>
                 </view>
               </view>
@@ -1213,7 +1214,6 @@
                 placeholder="请编辑赛事说明"
                 v-if="item.descriType == 1"
                 v-model="item.content"
-                @input="saveThis"
               >
               </textarea>
               <view class="gn" v-if="item.descriType == 2">
@@ -1633,7 +1633,7 @@ export default {
       stageExplains: uni.getStorageSync("stageExplains") || "32人/队",
       gameList: uni.getStorageSync("gameList") || [],
       scheTypeName: uni.getStorageSync("stageExplains") ?? "",
-      items: [],
+      items: uni.getStorageSync("items") || [],
       currentIndex: "",
       counter: "",
       textareaContent: uni.getStorageSync("textareaContent") || [],
@@ -1646,7 +1646,6 @@ export default {
       labelCode: uni.getStorageSync("labelCode") || "",
       show19: false,
       show20: false,
-      groupNum: uni.getStorageSync("groupNum") ?? "",
       groupNumName: uni.getStorageSync("groupNumName") ?? "",
       groupPerNum: uni.getStorageSync("groupPerNum") ?? "",
       groupPerNumName: uni.getStorageSync("groupPerNumName") ?? "",
@@ -1697,7 +1696,7 @@ export default {
     }
     this.getGroupNum();
     this.getGroupPerNum();
-    if (this.templateId) {
+    if (this.templateId && !this.items) {
       this.addItem();
     }
   },
@@ -1708,7 +1707,7 @@ export default {
       if (index == 3) {
         this.getMatchTemplateHit();
       }
-      if (index == 1 && this.templateId) {
+      if (index == 1 && this.templateId && !this.items) {
         this.addItem();
       }
     },
@@ -1832,11 +1831,6 @@ export default {
       this.endTime = `${year}-${month}-${day} ${hours}:${minutes}`;
       uni.setStorageSync("endTime", this.endTime);
     },
-    toJudge() {
-      uni.navigateTo({
-        url: "/competition/publish/judge",
-      });
-    },
     confirm3(n) {
       this.show3 = false;
       this.genderLimit = n.indexs[0];
@@ -1876,6 +1870,10 @@ export default {
           endTime: this.endTime,
           umpireId: this.umpireId,
           sponsor: this.sponsor,
+          matchState: "1",
+          color: this.selectColor,
+          locationLat: uni.getStorageSync("bmLocal").latitude,
+          locationLng: uni.getStorageSync("bmLocal").longitude,
         });
         if (result.status == 200) {
           this.matchId = result.data.matchId;
@@ -1897,7 +1895,7 @@ export default {
             insuranceId: this.insuranceId,
           };
 
-          if (this.way === "2") {
+          if (this.way == "2") {
             params.groupNum = this.groupNum;
             params.groupPerNum = this.groupPerNum;
           }
@@ -2112,6 +2110,10 @@ export default {
     },
     async save2() {
       try {
+        this.items.forEach((item, index) => {
+          item.scheTypeSort = index;
+          item.scheTypeCode = index;
+        });
         const date = new Date(new Date());
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, "0"); // 月份从0开始，需要+1
@@ -2132,12 +2134,7 @@ export default {
             type: "success",
             message: result.message,
           });
-          // 删除本地存储
-          // uni.removeStorageSync("registrationEndTime");
-          // uni.removeStorageSync("publicationTime");
-          // this.registrationEndTime = "";
-          // this.publicationTime = "";
-          // this.items = [];
+
           this.activeTab++;
           this.getGame();
         }
@@ -2175,24 +2172,6 @@ export default {
             type: "success",
             message: result.message,
           });
-          // uni.removeStorageSync("rewardType");
-          // uni.removeStorageSync("rewardTypeName");
-          // uni.removeStorageSync("rewardAmount");
-          // uni.removeStorageSync("rewardName");
-          // uni.removeStorageSync("rewardNum");
-          // uni.removeStorageSync("rewardUnit");
-          // uni.removeStorageSync("pickupAddress");
-          // uni.removeStorageSync("contactInfo");
-
-          // this.rewardType = "";
-          // this.rewardTypeName = "";
-          // this.rewardAmount = "";
-          // this.rewardName = "";
-          // this.rewardNum = "";
-          // this.rewardUnit = "";
-          // this.pickupAddress = "";
-          // this.contactInfo = "";
-
           this.activeTab++;
         }
       } catch (error) {
@@ -2219,13 +2198,15 @@ export default {
     },
     async save4() {
       try {
+        // console.log(this.gameList[this.op].scheTypeCode);
+        // return;
         var result = await uni.$u.http.post("/match/saveMatchHitConfig", {
           matchId: this.matchId,
           serialNum: this.serialNum,
           hitConfigList: [
             {
-              hitTypeCode: 1,
-              hitTypeName: "淘汰赛制",
+              hitTypeCode: this.gameList[this.op].scheTypeCode,
+              hitTypeName: this.gameList[this.op].scheTypeName,
               stageExplains: this.stageExplains,
               groupNum: this.groupNum,
               matchingManner: this.matchingManner,
@@ -2270,11 +2251,13 @@ export default {
       });
       if (result.status == 200) {
         this.gameList = result.data;
+        this.gameList = this.gameList.filter(
+          (item, index) =>
+            item.scheTypeCode !== "registrationTime" &&
+            item.scheTypeCode !== "publicationTime"
+        );
         uni.setStorageSync("gameList", this.gameList);
       }
-    },
-    change(n) {
-      uni.setStorageSync("scheTypeName", n);
     },
     addNext() {
       const newItem = {
@@ -2315,6 +2298,7 @@ export default {
       this.items[
         this.currentIndex
       ].scheTime = `${year}-${month}-${day} ${hours}:${minutes}`;
+      uni.setStorageSync("items", this.items);
     },
 
     deleteA(index) {
@@ -2322,13 +2306,6 @@ export default {
     },
     checkThis(index) {
       this.op = index;
-      // // 如果当前环节没有内容，则初始化为空字符串
-      if (!this.textareaContent[index]) {
-        this.$set(this.textareaContent, index, "");
-      }
-    },
-    saveThis() {
-      uni.setStorageSync("contentList", this.contentList);
     },
     async save5() {
       try {
@@ -2539,6 +2516,53 @@ export default {
     },
     back() {
       uni.switchTab({ url: "/pages/add/add" });
+      uni.removeStorageSync("joinPointsRace");
+      uni.removeStorageSync("joinList");
+      uni.removeStorageSync("labelId");
+      uni.removeStorageSync("typeName");
+      uni.removeStorageSync("templateName");
+      uni.removeStorageSync("startTime");
+      uni.removeStorageSync("endTime");
+      uni.removeStorageSync("genderLimitName");
+      uni.removeStorageSync("ageLimitMin");
+      uni.removeStorageSync("ageLimitMax");
+      uni.removeStorageSync("entryFee");
+      uni.removeStorageSync("way");
+      uni.removeStorageSync("number");
+      uni.removeStorageSync("badgeLevelMin");
+      uni.removeStorageSync("badgeLevelMinName");
+      uni.removeStorageSync("badgeLevelMax");
+      uni.removeStorageSync("badgeLevelMaxName");
+      uni.removeStorageSync("name");
+      uni.removeStorageSync("fuTitle");
+      uni.removeStorageSync("fuTitleName");
+      uni.removeStorageSync("type");
+      uni.removeStorageSync("form");
+      uni.removeStorageSync("fullAddress");
+      uni.removeStorageSync("umpireId");
+      uni.removeStorageSync("sponsor");
+      uni.removeStorageSync("genderLimit");
+      uni.removeStorageSync("labelCode");
+      uni.removeStorageSync("registrationEndTime");
+      uni.removeStorageSync("publicationTime");
+      uni.removeStorageSync("items");
+      uni.removeStorageSync("rewards");
+      uni.removeStorageSync("stageExplains");
+      uni.removeStorageSync("contentList");
+      uni.removeStorageSync("textareaContent");
+      uni.removeStorageSync("gameList");
+      uni.removeStorageSync("mainFile");
+      uni.removeStorageSync("serialNum");
+      uni.removeStorageSync("templateId");
+      uni.removeStorageSync("groupNum");
+      uni.removeStorageSync("matchingManner");
+      uni.removeStorageSync("matchingMannerName");
+      uni.removeStorageSync("theme");
+      uni.removeStorageSync("activeTab");
+      uni.removeStorageSync("groupNumName");
+      uni.removeStorageSync("groupPerNum");
+      uni.removeStorageSync("groupPerNumName");
+      uni.removeStorageSync("matchId");
     },
     async getMatchTemplateHit() {
       const hitTypeCode = uni.getStorageSync("gameList")[this.op].scheTypeCode;
@@ -2968,7 +2992,7 @@ export default {
       .top {
         display: flex;
         justify-content: space-between;
-        backdrop-filter: blur(20px);
+        backdrop-filter: blur(30px);
         background-color: rgba(255, 255, 255, 0.2);
         height: 65%;
         &::after {
@@ -2990,12 +3014,15 @@ export default {
             font-weight: 400;
             font-size: 20px;
             color: #ffffff;
+            font-family: youshe;
+            font-style: normal;
           }
           .second {
             margin-top: 10px;
             font-weight: 400;
             font-size: 16px;
             color: rgba(255, 255, 255, 0.7);
+            font-family: youshe;
           }
         }
       }
@@ -3120,24 +3147,26 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 84px;
-        height: 32px;
+        padding: 8px 12px;
         border-radius: 20px;
         font-weight: 600;
         font-size: 12px;
         color: #ffffff;
+        white-space: nowrap;
+        box-sizing: border-box;
       }
       .item {
+        white-space: nowrap;
         background-color: white;
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 84px;
-        height: 32px;
+        padding: 8px 12px;
         border-radius: 20px;
         font-weight: 400;
         font-size: 12px;
         color: rgba(29, 35, 38, 0.5);
+        box-sizing: border-box;
       }
     }
     .main {

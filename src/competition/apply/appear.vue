@@ -64,9 +64,8 @@
         "
       />
       <view class="know" @click="openModal">赛事须知</view>
-      <view class="share">
-        <u-icon name="share-square" color="#fff" @click="toShare"></u-icon
-        >分享</view
+      <view class="share" @click="toShare">
+        <u-icon name="share-square" color="#fff"></u-icon>分享</view
       >
     </view>
 
@@ -128,19 +127,19 @@
                   activeColor="red"
                   label="正式小队"
                   shape="circle"
-                  name="1"
+                  name="2"
                 ></u-radio>
                 <u-radio
                   activeColor="red"
                   label="临时组队"
-                  name="2"
+                  name="3"
                   shape="circle"
                   customStyle="margin-left: 20px"
                 ></u-radio>
               </u-radio-group>
             </view>
           </view>
-          <view class="item" v-if="teamType == 1">
+          <view class="item" v-if="teamType == 2">
             <view class="item-p">请选择参赛小队</view>
             <view class="right">
               <u-icon name="arrow-down" color="#BBBDBE" size="12"></u-icon>
@@ -209,7 +208,7 @@
               src="/static/images/加号.png"
               mode="scaleToFill"
               style="width: 38px; height: 38px"
-              v-if="teamType == 2"
+              v-if="teamType == 3"
             />
           </view>
           <view class="o-text" style="margin: 0">
@@ -218,7 +217,7 @@
               <view class="right">
                 <view style="width: 110px">
                   <u-input
-                    v-model="name"
+                    v-model="realName"
                     placeholder="请填写真实姓名"
                     border="none"
                     @change="blur1"
@@ -231,16 +230,18 @@
             <view class="item" v-if="way != 1">
               <view class="left">证件类型</view>
               <view class="right">
-                <view style="width: 110px">
+                身份证
+                <!-- <view style="width: 110px">
+                  
                   <u-input
-                    v-model="name"
+                    v-model="identificationType"
                     placeholder="身份证"
                     border="none"
                     @change="blur1"
                     input-align="right"
                     placeholderClass="placeholderClass"
                   ></u-input>
-                </view>
+                </view> -->
               </view>
             </view>
             <view class="item" style="border: none" v-if="way != 1">
@@ -248,7 +249,7 @@
               <view class="right">
                 <view style="width: 110px">
                   <u-input
-                    v-model="name"
+                    v-model="identification"
                     placeholder="请填写证件号码"
                     border="none"
                     @change="blur1"
@@ -1032,7 +1033,7 @@
               v-for="(item, index) in gameList"
               :key="index"
               :class="op == index ? 'item-a' : 'item'"
-              @click="checkThis(index)"
+              @click="op = index"
             >
               {{ item.scheTypeName }}
             </view>
@@ -1204,9 +1205,9 @@ export default {
     return {
       activeTab: uni.getStorageSync("activeTab") || 0,
       activeIndex: 0,
-      selectColor: uni.getStorageSync("theme") || "#1B4CA7",
+      selectColor: "",
       tabs: ["报名比赛", "赛事环节", "赛事奖励", "赛事直击", "赛事规则"],
-      isFinish: uni.getStorageSync("isFinish") || false,
+      isFinish: false,
       isOver: false,
       know: false,
       countdown: 25,
@@ -1244,11 +1245,16 @@ export default {
       number: null,
       entry_Fee: null,
       templateId: null,
-      teamType: "1",
+      teamType: "3",
       sponsorList: [],
       fuTitle: "",
       mainFile: "",
       fuName: "",
+      gameList: [],
+      op: 0,
+      realName: "",
+      identificationType: "1",
+      identification: "",
     };
   },
   methods: {
@@ -1271,9 +1277,28 @@ export default {
         this.getMatchSponsorPrize();
         this.getMatchSponsorServe();
       }
+      if (index == 3) {
+        this.getGame();
+      }
     },
     switchTeam(index) {
       this.activeIndex = index;
+    },
+    async getGame() {
+      var result = await uni.$u.http.get("/match/getMatchSche", {
+        params: {
+          matchId: this.matchId,
+        },
+      });
+      if (result.status == 200) {
+        this.gameList = result.data;
+        this.gameList = this.gameList.filter(
+          (item, index) =>
+            item.scheTypeCode !== "registrationTime" &&
+            item.scheTypeCode !== "publicationTime"
+        );
+        uni.setStorageSync("gameList", this.gameList);
+      }
     },
     hexToRgb(hex) {
       const bigint = parseInt(hex.slice(1), 16);
@@ -1295,7 +1320,7 @@ export default {
     openModal() {
       this.startCountdown();
       this.countdown = 25;
-      this.getMatchTemplateNotice();
+      this.know = true;
     },
     startCountdown() {
       this.interval = setInterval(() => {
@@ -1325,55 +1350,21 @@ export default {
       }
     },
     async apply() {
-      try {
-        // console.log(this.applyData);
-        // return;
-        var result = await uni.$u.http.post("/match/saveMatchRegister", {
-          matchId: this.matchId,
-          serialNum: this.serialNum,
-          templateId: this.templateId,
-          way: this.way,
-          userId: uni.getStorageSync("user").id,
-          requestJson: this.oldApplyData,
-          responseJson: this.applyData,
-          amount: 500,
-        });
-        if (result.status == 200) {
-          this.$refs.notice.show({
-            type: "success",
-            message: result.message,
-          });
-          // // 清空缓存
-          // uni.removeStorageSync("mobile");
-          // uni.removeStorageSync("gender");
-          // uni.removeStorageSync("age");
-          // uni.removeStorageSync("contact");
-          // uni.removeStorageSync("blood_type");
-          // uni.removeStorageSync("disease");
-          // uni.removeStorageSync("insurance");
-          // this.mobile = "";
-          // this.gender = "1";
-          // this.age = "";
-          // this.contact = "";
-          // this.blood_type = "";
-          // this.disease = "";
-          // this.insurance = "";
-          uni.navigateTo({
-            url: "/competition/apply/pay",
-          });
-        }
-        if (result.status == 400) {
-          this.$refs.notice.show({
-            type: "error",
-            message: result.message,
-          });
-        }
-      } catch (err) {
+      const validate = this.applyData.some((item) => {
+        return item.applyMust === "1" && !item.value;
+      });
+      if (validate) {
         this.$refs.notice.show({
           type: "error",
-          message: err.data.message,
+          message: "请填写必填项",
         });
+        return;
       }
+      uni.setStorageSync("requestJson", this.oldApplyData);
+      uni.setStorageSync("responseJson", this.applyData);
+      uni.navigateTo({
+        url: `/competition/apply/pay?matchId=${this.matchId}&&way=${this.way}&&serialNum=${this.serialNum}&&templateId=${this.templateId}&&teamType=${this.teamType}&&amount=${this.total}`,
+      });
     },
     async getMatchTemplateRegister() {
       try {
@@ -1406,7 +1397,6 @@ export default {
         uni.setStorageSync("disclaimer", result.data.disclaimer);
         this.insuranceNotice = result.data.insuranceNotice;
         this.matchNotice = result.data.matchNotice;
-        this.know = true;
       }
     },
     toShare() {
@@ -1565,13 +1555,14 @@ export default {
       this.way = result.data.way;
       this.templateId = result.data.templateId;
       this.getMatchTemplateRegister();
+      this.getMatchTemplateNotice();
       if (this.way == 1) {
         this.number = 1;
         this.entry_Fee = result.data.entryFee;
       }
       if (this.way == 2) {
-        this.number = result.data.group_per_num;
-        this.entry_Fee = result.data.entryFee * result.data.group_per_num;
+        this.number = result.data.groupPerNum;
+        this.entry_Fee = result.data.entryFee * result.data.groupPerNum;
       }
     },
     async getMatchSponsorUser() {
@@ -1585,7 +1576,30 @@ export default {
       }
     },
     async autonym() {
-      var result = await uni.$u.http.post("/saveWjRealName");
+      try {
+        var result = await uni.$u.http.post("/saveWjRealName", {
+          realName: this.realName,
+          identificationType: this.identificationType,
+          identification: this.identification,
+        });
+        if (result.status == 200) {
+          this.$refs.notice.show({
+            type: "success",
+            message: result.message,
+          });
+        }
+        if (result.status == 400) {
+          this.$refs.notice.show({
+            type: "error",
+            message: result.message,
+          });
+        }
+      } catch (err) {
+        this.$refs.notice.show({
+          type: "error",
+          message: err.data.message,
+        });
+      }
     },
     async getMatchBasicInfo() {
       var result = await uni.$u.http.get("/match/getMatchBasicInfo", {
@@ -1597,15 +1611,21 @@ export default {
       this.mainFile = result.data.mainImageUrl;
       this.fuName = result.data.name;
       this.serialNum = result.data.serialNum;
+      this.selectColor = result.data.color || "#1B4CA7";
     },
   },
   onLoad(options) {
     if (options && options.matchId) {
       this.matchId = options.matchId;
     }
+
+    if (options && options.isFinish) {
+      this.isFinish = options.isFinish;
+    }
     this.getMatchRegisterInfo();
     this.getMatchSponsorUser();
     this.getMatchBasicInfo();
+    this.getGame();
   },
   onShow() {
     if (this.isFinish) {
@@ -1642,7 +1662,7 @@ export default {
     },
     scale() {
       return (
-        (this.registerNumber.number / this.registerNumber.registerNum) * 100
+        (this.registerNumber.registerNum / this.registerNumber.number) * 100
       );
     },
     total() {
@@ -1792,12 +1812,14 @@ export default {
             font-weight: 400;
             font-size: 20px;
             color: #ffffff;
+            font-family: youshe;
           }
           .second {
             margin-top: 10px;
             font-weight: 400;
             font-size: 16px;
             color: rgba(255, 255, 255, 0.7);
+            font-family: youshe;
           }
         }
       }
@@ -1882,6 +1904,7 @@ export default {
       flex-direction: column;
       gap: 4px;
       padding: 10px;
+      font-family: youshe;
 
       .value {
         font-weight: 400;
@@ -1890,6 +1913,7 @@ export default {
       }
     }
     .item-active {
+      font-family: youshe;
       display: flex;
       flex-direction: column;
       gap: 4px;
@@ -1925,7 +1949,7 @@ export default {
 
       .value {
         font-weight: 400;
-        font-size: 12px;
+        font-size: 14px;
         color: rgba(255, 255, 255, 0.7);
       }
     }

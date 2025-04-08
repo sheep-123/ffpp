@@ -168,6 +168,7 @@
           </view>
         </view>
       </view>
+      <u-loadmore :status="status" @loadmore="getQueryMatchList" />
     </view>
 
     <u-popup
@@ -211,12 +212,16 @@
           </view>
         </view>
         <view class="type" v-if="activeTab == 1">
-          <view class="item" v-for="(item, index) in matchLabel" :key="index">{{
-            item.label_name
-          }}</view>
+          <view
+            :class="active === index ? 'item-active' : 'item'"
+            v-for="(item, index) in matchLabel"
+            :key="index"
+            @click="checkThis(item, index)"
+            >{{ item.label_name }}</view
+          >
         </view>
         <view class="sort">
-          <u-radio-group v-model="value" placement="column">
+          <u-radio-group v-model="sortType" placement="column">
             <u-radio
               shape="circle"
               :label="item.label"
@@ -233,7 +238,7 @@
             <u-icon name="reload" size="24"></u-icon>
             重置
           </view>
-          <view class="right"> 确定 </view>
+          <view class="right" @click="enter"> 确定 </view>
         </view>
       </view>
     </u-popup>
@@ -244,6 +249,7 @@
 export default {
   data() {
     return {
+      status: "loadmore",
       isSticky: false,
       keyword: "",
       statusBarHeight: 0,
@@ -260,6 +266,11 @@ export default {
       matchList: [],
       matchLabel: [],
       sortList: [],
+      pageNum: 1,
+      pageSize: 10,
+      sortType: "0",
+      labelCode: "",
+      active: "",
     };
   },
   onload() {},
@@ -296,9 +307,28 @@ export default {
     },
 
     async getQueryMatchList() {
-      var result = await uni.$u.http.post("/match/queryMatchList");
-      if (result.status == 200) {
-        this.matchList = result.data;
+      this.status = "loading";
+      try {
+        const result = await uni.$u.http.post("/match/queryMatchList", {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          sortType: this.sortType,
+          keywords: this.keyword,
+        });
+
+        if (result.status === 200) {
+          const newData = result.data.list; // 获取新数据
+          if (newData.length > 0) {
+            this.matchList = this.matchList.concat(newData); // 将新数据追加到现有列表
+            this.pageNum++; // 更新页码
+            this.status = "loadmore"; // 恢复加载状态
+          } else {
+            this.status = "nomore"; // 没有更多数据
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        this.status = "loadmore"; // 恢复加载状态
       }
     },
     async queryMatchLabel() {
@@ -318,6 +348,15 @@ export default {
         },
       });
       this.sortList = result.data;
+    },
+    checkThis(item, index) {
+      this.active = index;
+      this.labelCode = item.label_code;
+    },
+    enter() {
+      this.show = false;
+      this.matchList = [];
+      this.getQueryMatchList();
     },
   },
 
@@ -598,6 +637,7 @@ export default {
           font-size: 12px;
           color: rgba(29, 35, 38, 0.5);
           margin-top: 6px;
+          white-space: nowrap;
         }
         .time {
           display: flex;
@@ -713,18 +753,30 @@ export default {
     background-color: white;
     overflow-y: scroll;
     height: 252px;
-  }
-  .item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 80px;
-    height: 32px;
-    background-color: #f7f7f7;
-    font-weight: 400;
-    font-size: 12px;
-    color: #1d2326;
-    white-space: nowrap;
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 32px;
+      background-color: #f7f7f7;
+      font-weight: 400;
+      font-size: 12px;
+      color: #1d2326;
+      white-space: nowrap;
+    }
+    .item-active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 32px;
+      background-color: #f7f7f7;
+      font-weight: 400;
+      font-size: 12px;
+      color: red;
+      white-space: nowrap;
+    }
   }
 }
 .next {

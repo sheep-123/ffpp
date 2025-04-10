@@ -205,7 +205,7 @@
             </view>
 
             <image
-              src="/static/images/加号.png"
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/加号.png"
               mode="scaleToFill"
               style="width: 38px; height: 38px"
               v-if="teamType == 3"
@@ -1203,7 +1203,7 @@
 export default {
   data() {
     return {
-      activeTab: uni.getStorageSync("activeTab") || 0,
+      activeTab: 0,
       activeIndex: 0,
       selectColor: "",
       tabs: ["报名比赛", "赛事环节", "赛事奖励", "赛事直击", "赛事规则"],
@@ -1260,7 +1260,6 @@ export default {
   methods: {
     setActiveTab(index) {
       this.activeTab = index;
-      uni.setStorageSync("activeTab", index);
       if (index == 0 && this.isFinish) {
         this.getMatchRegisterSuc();
       }
@@ -1355,7 +1354,7 @@ export default {
       });
       if (validate) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: "请填写必填项",
         });
         return;
@@ -1379,7 +1378,7 @@ export default {
         }
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: err.data.message,
         });
       }
@@ -1584,19 +1583,19 @@ export default {
         });
         if (result.status == 200) {
           this.$refs.notice.show({
-            type: "success",
+            type: "default",
             message: result.message,
           });
         }
         if (result.status == 400) {
           this.$refs.notice.show({
-            type: "error",
+            type: "default",
             message: result.message,
           });
         }
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: err.data.message,
         });
       }

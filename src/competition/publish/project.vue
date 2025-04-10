@@ -70,7 +70,10 @@ export default {
       this.labelCode = item.labelCode;
     },
     back() {
-      uni.navigateBack();
+      const serialNum = uni.getStorageSync("serialNum");
+      uni.navigateTo({
+        url: `/competition/publish/saishi?serialNum=${serialNum}`,
+      });
     },
     async matchLabelTypes() {
       const res = await uni.$u.http.get("/match/matchLabelType", {
@@ -89,8 +92,9 @@ export default {
       uni.setStorageSync("labelId", this.labelId);
       uni.setStorageSync("typeName", this.typeName);
       uni.setStorageSync("labelCode", this.labelCode);
+      const serialNum = uni.getStorageSync("serialNum");
       uni.navigateTo({
-        url: `/competition/publish/saishi`,
+        url: `/competition/publish/saishi?serialNum=${serialNum}`,
       });
     },
   },

@@ -66,8 +66,9 @@ export default {
               latitude: res.latitude,
               longitude: res.longitude,
             });
+            const serialNum = uni.getStorageSync("serialNum");
             uni.navigateTo({
-              url: `/competition/publish/saishi`,
+              url: `/competition/publish/saishi?serialNum=${serialNum}`,
             });
           },
           fail: function () {},

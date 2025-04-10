@@ -54,7 +54,7 @@ export default {
     login() {
       if (!this.checked.length) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: "请先阅读并同意用户协议和隐私政策",
         });
         return false;
@@ -65,7 +65,7 @@ export default {
           let code = res.code ?? "";
           if (!code) {
             this.$refs.notice.show({
-              type: "error",
+              type: "default",
               message: "临时凭证获取失败",
             });
             return false;
@@ -76,7 +76,7 @@ export default {
               uni.setStorageSync("token", result.data.token);
               uni.setStorageSync("user", result.data.user);
               this.$refs.notice.show({
-                type: "success",
+                type: "default",
                 message: result.message,
                 complete() {
                   const loginPage = uni.getStorageSync("loginPage");
@@ -95,7 +95,7 @@ export default {
             }
           } catch (err) {
             this.$refs.notice.show({
-              type: "error",
+              type: "default",
               message: err.data.message,
             });
           }

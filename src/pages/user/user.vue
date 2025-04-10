@@ -134,7 +134,7 @@
               style="width: 40px; height: 40px"
             />
           </view>
-          <view class="item">
+          <view class="item" @click="toMyCompetition">
             <view class="left">
               <view class="v1">我的赛事</view>
               <view class="v2">新增课程2个</view>
@@ -312,6 +312,13 @@ export default {
         },
       ],
     };
+  },
+  methods: {
+    toMyCompetition() {
+      uni.navigateTo({
+        url: "/user/competition",
+      });
+    },
   },
 };
 </script>

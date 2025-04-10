@@ -4,16 +4,16 @@
   },
   "pages": [
     {
-      "path": "pages/play/play",
+      "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "去玩",
+        "navigationBarTitleText": "首页",
         "navigationStyle": "custom"
       }
     },
     {
-      "path": "pages/index/index",
+      "path": "pages/play/play",
       "style": {
-        "navigationBarTitleText": "首页",
+        "navigationBarTitleText": "去玩",
         "navigationStyle": "custom"
       }
     },
@@ -229,6 +229,25 @@
           "path": "publish/dongTaiPreview",
           "style": {
             "navigationBarTitleText": "动态预览",
+            "navigationStyle": "custom"
+          }
+        }
+      ]
+    },
+    {
+      "root": "user",
+      "pages": [
+        {
+          "path": "competition",
+          "style": {
+            "navigationBarTitleText": "我的赛事",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "execute",
+          "style": {
+            "navigationBarTitleText": "执行赛事",
             "navigationStyle": "custom"
           }
         }

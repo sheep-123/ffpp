@@ -1,26 +1,45 @@
 <template>
   <view class="box">
-    <u-navbar :bg-color="navbarBgColor">
+    <u-navbar :bgColor="navbarBgColor">
       <view slot="left">
         <view
-          :class="['search-container', isMapExpanded ? 'search-y' : 'search']"
+          :class="['search-container', isMapExpanded ? 'search-y' : '']"
+          :style="{ backgroundColor: searchBgColor }"
         >
-          <!-- 返回按钮 -->
           <image
             v-if="isMapExpanded"
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/left.png"
             @click="back"
             class="back-btn"
           />
-
-          <!-- 搜索框 -->
-          <u-search
+          <u-input
             placeholder="搜搜你感兴趣的~"
+            border="none"
             v-model="keyword"
-            :show-action="false"
-            :bg-color="searchBgColor"
-            @clear="keyword = ''"
-          ></u-search>
+            shape="circle"
+            placeholderClass="pl-class"
+          >
+            <image
+              :src="
+                isMapExpanded
+                  ? 'https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/小搜索.png'
+                  : 'https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/搜索.png'
+              "
+              mode="scaleToFill"
+              :style="
+                isMapExpanded
+                  ? 'width: 16px; height: 16px; margin-left: 10px'
+                  : 'width: 24px; height: 24px; margin-left: 10px'
+              "
+              slot="prefix"
+            />
+            <image
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/扫描.png"
+              mode="scaleToFill"
+              style="width: 24px; height: 24px; margin-right: 10px"
+              slot="suffix"
+            />
+          </u-input>
         </view>
       </view>
     </u-navbar>
@@ -78,6 +97,7 @@
     >
       <image
         src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/pull.png"
+        style="width: 16px; height: 8px"
       />
       <view class="value">下拉试试</view>
     </view>
@@ -92,7 +112,7 @@
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png"
           />
           <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/near.png"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/附近.png"
           />
         </view>
         <view class="item">关注</view>
@@ -110,7 +130,7 @@
       <view class="main">
         <view class="item">
           <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/01.jpg"
             mode="widthFix"
           />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
@@ -473,8 +493,9 @@ export default {
   },
   onLoad() {
     // uni.reLaunch({
-    //   url: "/competition/apply/appear",
-    //   // url: "/competition/publish/saishi",
+    //   // url: "/competition/apply/appear",
+    //   url: "/competition/publish/saishi",
+    //   // url: "/user/competition",
     // });
     this.Location();
     this.Location().then(() => {
@@ -574,11 +595,13 @@ export default {
       return this.isSticky && !this.isMapExpanded ? "#fff" : "rgba(0,0,0,0)";
     },
     searchBgColor() {
-      return this.isMapExpanded
-        ? "#FFFFFF"
-        : this.isSticky
-        ? "#F7F7F7"
-        : "#F5F7F5";
+      if (this.isMapExpanded) {
+        return "#FFFFFF"; // 地图展开时背景颜色为白色
+      } else if (this.isSticky) {
+        return "#F7F7F7"; // 吸顶时背景颜色为 #F7F7F7
+      } else {
+        return "rgba(255, 255, 255, 0.5)"; // 正常时背景颜色为半透明白色
+      }
     },
     stickyTop() {
       return `${this.statusBarHeight + this.navbarHeight}px`;
@@ -760,11 +783,13 @@ map {
 .search-container {
   display: flex;
   align-items: center;
-  background: #f7f7f7;
   border-radius: 20px;
-
+  border: 1px solid #ffffff;
+  height: 36px;
+  background-color: rgba(255, 255, 255, 0.5);
   &.search-y {
     background: #ffffff;
+    width: 85%;
 
     .back-btn {
       width: 20px;
@@ -842,5 +867,15 @@ map {
       }
     }
   }
+}
+.pl-class {
+  font-weight: 400;
+  font-size: 14px;
+  color: rgba(29, 35, 38, 0.3);
+}
+.pl-class1 {
+  font-weight: 400;
+  font-size: 14px;
+  color: #646464;
 }
 </style>

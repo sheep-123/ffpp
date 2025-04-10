@@ -165,7 +165,7 @@ export default {
           margin-top: 10px;
           gap: 12px;
           .lock {
-            width: 104px;
+            width: 30%;
             height: 30px;
             background-color: #e6e6e6;
             border-radius: 5px;
@@ -180,7 +180,7 @@ export default {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 104px;
+            width: 30%;
             height: 30px;
             border-radius: 5px;
             border: 1px solid #e6e6e6;

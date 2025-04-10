@@ -42,8 +42,8 @@ export default {
       labelId: 0,
       list: [],
       selectIndex: null,
-      templateId: uni.getStorageSync("templateId") || "",
-      templateName: uni.getStorageSync("templateName") || "",
+      templateId: "",
+      templateName: "",
     };
   },
   methods: {
@@ -55,7 +55,7 @@ export default {
         this.list = res.data;
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: err.data.message,
         });
       }
@@ -80,20 +80,22 @@ export default {
           uni.setStorageSync("way", result.data.way);
           uni.setStorageSync("templateId", this.templateId);
           uni.setStorageSync("templateName", this.templateName);
+          const serialNum = uni.getStorageSync("serialNum");
           uni.navigateTo({
-            url: `/competition/publish/saishi`,
+            url: `/competition/publish/saishi?serialNum=${serialNum}`,
           });
         }
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: err.data.message,
         });
       }
     },
     back() {
-      uni.navigateBack({
-        delta: 1,
+      const serialNum = uni.getStorageSync("serialNum");
+      uni.navigateTo({
+        url: `/competition/publish/saishi?serialNum=${serialNum}`,
       });
     },
   },

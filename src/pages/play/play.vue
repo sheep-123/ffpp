@@ -261,7 +261,7 @@ export default {
         "https://uviewui.com/album/3.jpg",
         "https://uviewui.com/album/4.jpg",
       ],
-      city: uni.getStorageSync("city") || "暂无",
+      city: "暂无",
       show: false,
       matchList: [],
       matchLabel: [],
@@ -281,6 +281,7 @@ export default {
     this.queryMatchLabel();
     this.getSort();
     this.getQueryMatchList();
+    this.city = uni.getStorageSync("city") || "暂无";
   },
   methods: {
     initIntersectionObserver() {

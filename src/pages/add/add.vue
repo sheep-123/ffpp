@@ -45,11 +45,13 @@
         </view>
       </view>
 
-      <image
-        src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/delete.png"
-        class="delete"
-        @click="back"
-      />
+      <view class="delete" @click="back">
+        <image
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/delete.png"
+          mode="scaleToFill"
+          style="width: 24px; height: 24px"
+        />
+      </view>
     </view>
   </view>
 </template>
@@ -156,6 +158,11 @@ export default {
       left: 50%;
       transform: translateX(-50%);
       margin-top: 36px;
+      background-color: #f5f5f5;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 }

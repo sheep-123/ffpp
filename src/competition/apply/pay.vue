@@ -25,7 +25,7 @@
         </view>
         <view class="item">
           <view class="left">支付金额</view>
-          <view class="right">￥{{ payInfo.paymentAmount }}</view>
+          <view class="right">￥{{ amount }}</view>
         </view>
         <view class="item">
           <view class="left">支付方式</view>
@@ -103,6 +103,7 @@ export default {
       try {
         var result = await uni.$u.http.post("/wechat/createOrder", {
           total: String(0.01),
+          // total: String(this.amount),
           desc: "非常好",
         });
         if (result.status == 200) {
@@ -119,19 +120,26 @@ export default {
         }
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: err.data.message,
         });
       }
     },
 
     async getMatchPayInfo() {
-      var result = await uni.$u.http.post("/wechat/getMatchPayInfo", {
-        matchId: Number(this.matchId),
-        wjUserId: uni.getStorageSync("user").id,
-      });
-      this.payInfo = result.data;
-      this.refundPolicies = result.data.refundPolicies;
+      try {
+        var result = await uni.$u.http.post("/wechat/getMatchPayInfo", {
+          matchId: Number(this.matchId),
+          wjUserId: uni.getStorageSync("user").id,
+        });
+        this.payInfo = result.data;
+        this.refundPolicies = result.data.refundPolicies;
+      } catch (err) {
+        this.$refs.notice.show({
+          type: "default",
+          message: err.data.message,
+        });
+      }
     },
 
     async save() {
@@ -166,7 +174,7 @@ export default {
 
         if (result.status == 400) {
           this.$refs.notice.show({
-            type: "error",
+            type: "default",
             message: result.message,
           });
         }
@@ -177,7 +185,7 @@ export default {
         }
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: err.data.message,
         });
       }

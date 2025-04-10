@@ -156,7 +156,7 @@
               <view class="SitePositonBox">
                 <view>
                   <image
-                    src="@/static/images/whileLocation.svg"
+                    src="@https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/whileLocation.svg"
                     mode="scaleToFill"
                   />
                   <view>
@@ -644,7 +644,7 @@
                   "
                 >
                   <image
-                    src="@/static/images/redAdd.svg"
+                    src="@https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/redAdd.svg"
                     mode="scaleToFill"
                     style="width: 24px; height: 24px"
                   />

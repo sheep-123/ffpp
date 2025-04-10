@@ -950,7 +950,10 @@
             </view>
           </u-scroll-list>
 
-          <view class="jdsz">阶段设置</view>
+          <view class="jdsz"
+            >阶段设置
+            <u-icon name="arrow-up-fill" color="#fff" size="10"></u-icon
+          ></view>
 
           <view class="o-text">
             <view class="item">
@@ -969,7 +972,7 @@
                 <view class="left">
                   <view class="l1">组数</view>
                   <view class="l2" @click="show11 = true"
-                    >{{ groupNum ? groupNum : "请选择" }}
+                    >{{ group_num_name ? group_num_name : "请选择" }}
                     <image
                       src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
                       mode="scaleToFill"
@@ -1105,7 +1108,186 @@
             </view>
           </view>
 
-          <view class="pp" @click="save4">赛事报名完成后可进行匹配</view>
+          <view class="pp" @click="pp">开始匹配</view>
+
+          <view class="pp-content">
+            <view class="first">
+              <view class="left">
+                组名
+                <view class="h">1组</view>
+              </view>
+              <view class="judge">
+                <u-avatar :src="src" size="60"></u-avatar>
+                <view class="name">裁判员</view>
+              </view>
+            </view>
+            <view class="second">
+              <view class="left">比赛场地 <view class="icon">*</view></view>
+              <view class="right"
+                >天河体育中心羽毛球馆<u-icon
+                  name="arrow-right"
+                  color="#CCCCCC"
+                  size="12"
+                ></u-icon
+              ></view>
+            </view>
+            <view class="second">
+              <view class="left">比赛时间 <view class="icon">*</view></view>
+              <view class="right"
+                >10月12日 14:00<u-icon
+                  name="arrow-right"
+                  color="#CCCCCC"
+                  size="12"
+                ></u-icon
+              ></view>
+            </view>
+            <view class="third">
+              <view class="left">直播地址 </view>
+              <view class="right"
+                >https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
+              >
+            </view>
+            <view class="member">
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A01</view>
+                </view>
+                <view class="select" v-if="scoringMethod == 1">
+                  1
+                  <u-icon
+                    name="arrow-down-fill"
+                    color="black"
+                    size="8"
+                  ></u-icon>
+                </view>
+                <view class="time" v-if="scoringMethod == 2">
+                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 3">
+                  12 <text>米</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 4">
+                  89 <text>分</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 5">
+                  3 <text>千克</text>
+                </view>
+                <view class="select" v-if="scoringMethod == 6">
+                  设置
+                  <u-icon
+                    name="arrow-down-fill"
+                    color="black"
+                    size="8"
+                  ></u-icon>
+                </view>
+              </view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A02</view>
+                </view>
+                <view class="select" v-if="scoringMethod == 1">
+                  1
+                  <u-icon
+                    name="arrow-down-fill"
+                    color="black"
+                    size="8"
+                  ></u-icon>
+                </view>
+                <view class="time" v-if="scoringMethod == 2">
+                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 3">
+                  12 <text>米</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 4">
+                  89 <text>分</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 5">
+                  3 <text>千克</text>
+                </view>
+                <view class="select" v-if="scoringMethod == 6">
+                  设置
+                  <u-icon
+                    name="arrow-down-fill"
+                    color="black"
+                    size="8"
+                  ></u-icon>
+                </view>
+              </view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A03</view>
+                </view>
+                <view class="select" v-if="scoringMethod == 1">
+                  1
+                  <u-icon
+                    name="arrow-down-fill"
+                    color="black"
+                    size="8"
+                  ></u-icon>
+                </view>
+                <view class="time" v-if="scoringMethod == 2">
+                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 3">
+                  12 <text>米</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 4">
+                  89 <text>分</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 5">
+                  3 <text>千克</text>
+                </view>
+                <view class="select" v-if="scoringMethod == 6">
+                  设置
+                  <u-icon
+                    name="arrow-down-fill"
+                    color="black"
+                    size="8"
+                  ></u-icon>
+                </view>
+              </view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A04</view>
+                </view>
+                <view class="select" v-if="scoringMethod == 1">
+                  1
+                  <u-icon
+                    name="arrow-down-fill"
+                    color="black"
+                    size="8"
+                  ></u-icon>
+                </view>
+                <view class="time" v-if="scoringMethod == 2">
+                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 3">
+                  12 <text>米</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 4">
+                  89 <text>分</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 5">
+                  3 <text>千克</text>
+                </view>
+                <view class="select" v-if="scoringMethod == 6">
+                  设置
+                  <u-icon
+                    name="arrow-down-fill"
+                    color="black"
+                    size="8"
+                  ></u-icon>
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <view class="pp" @click="save4">保存</view>
         </view>
       </view>
 
@@ -1499,7 +1681,7 @@ export default {
       show7: false,
       show9: false,
       show13: false,
-      activeTab: uni.getStorageSync("activeTab") || 0,
+      activeTab: 3,
       checked: true,
       show: false,
       changeSkin: false,
@@ -1570,15 +1752,15 @@ export default {
         },
       ],
       bmType: [],
-      serialNum: uni.getStorageSync("serialNum") ?? "",
+      serialNum: uni.setStorageSync("serialNum") || null,
       fileList: [],
       joinList: uni.getStorageSync("joinList") || ["1"],
       joinPointsRace: uni.getStorageSync("joinPointsRace") || 1,
       type: uni.getStorageSync("type") || "1",
       form: uni.getStorageSync("form") || "1",
       sponsor: uni.getStorageSync("sponsor") || "0",
-      name: uni.getStorageSync("name") ?? "",
-      fuTitle: uni.getStorageSync("fuTitle") ?? "",
+      name: uni.getStorageSync("name") || "",
+      fuTitle: uni.getStorageSync("fuTitle") || "",
       labelId: uni.getStorageSync("labelId") ?? 0,
       typeName: uni.getStorageSync("typeName") ?? "",
       startTime: uni.getStorageSync("startTime") ?? 0,
@@ -1594,7 +1776,7 @@ export default {
       show4: false,
       badge: [],
       entryFee: uni.getStorageSync("entryFee") ?? "",
-      templateId: uni.getStorageSync("templateId") ?? "",
+      templateId: uni.getStorageSync("templateId") || "",
       templateName: uni.getStorageSync("templateName") ?? "",
       umpireId: 101112,
       ageLimitMin: uni.getStorageSync("ageLimitMin") || 0,
@@ -1611,7 +1793,7 @@ export default {
       matchLevelMaxName: uni.getStorageSync("matchLevelMaxName") ?? "",
       matchId: uni.getStorageSync("matchId") ?? "",
       show8: false,
-      registrationEndTime: uni.getStorageSync("registrationEndTime") ?? 0,
+      registrationEndTime: uni.getStorageSync("registrationEndTime") || "",
       publicationTime: uni.getStorageSync("publicationTime") ?? null,
       show10: false,
       columns10: [["冠军", "亚军", "季军", "第四名", "第五名", "第六名"]],
@@ -1623,15 +1805,15 @@ export default {
       groupVenueType: "1",
       show11: false,
       groupNum: uni.getStorageSync("groupNum") ?? null,
+      group_num: uni.getStorageSync("group_num") ?? null,
+      group_num_name: uni.getStorageSync("group_num_name") ?? null,
       show12: false,
-      columns12: [
-        ["淘汰赛制", "循环赛制", "1V1赛制", "主客场赛制", "双败赛制"],
-      ],
+      columns12: [],
       matchingMannerName: uni.getStorageSync("matchingMannerName") ?? null,
       matchingManner: uni.getStorageSync("matchingManner") ?? null,
       op: 0,
       stageExplains: uni.getStorageSync("stageExplains") || "32人/队",
-      gameList: uni.getStorageSync("gameList") || [],
+      gameList: [],
       scheTypeName: uni.getStorageSync("stageExplains") ?? "",
       items: uni.getStorageSync("items") || [],
       currentIndex: "",
@@ -1679,16 +1861,16 @@ export default {
           ],
         },
       ],
+      se: 0,
     };
   },
-  async onLoad() {
+  onLoad(options) {
+    this.serialNum = options.serialNum;
+    uni.setStorageSync("serialNum", options.serialNum);
     if (!this.serialNum) {
-      const result = await uni.$u.http.get("/match/getSerialNum");
-      if (result.status == 200) {
-        this.serialNum = result.data.serialNum;
-        uni.setStorageSync("serialNum", result.data.serialNum);
-      }
+      this.getSerialNum();
     }
+
     this.getMatchRank();
     this.getAge();
     if (this.labelCode) {
@@ -1696,6 +1878,7 @@ export default {
     }
     this.getGroupNum();
     this.getGroupPerNum();
+    this.getPP();
     if (this.templateId && !this.items) {
       this.addItem();
     }
@@ -1703,7 +1886,6 @@ export default {
   methods: {
     setActiveTab(index) {
       this.activeTab = index;
-      uni.setStorageSync("activeTab", index);
       if (index == 3) {
         this.getMatchTemplateHit();
       }
@@ -1716,6 +1898,13 @@ export default {
         this.changeSkin = false;
       } else {
         this.changeSkin = true;
+      }
+    },
+    async getSerialNum() {
+      const result = await uni.$u.http.get("/match/getSerialNum");
+      if (result.status == 200) {
+        this.serialNum = result.data.serialNum;
+        uni.setStorageSync("serialNum", this.serialNum);
       }
     },
     changeColor(color) {
@@ -1855,6 +2044,13 @@ export default {
       }
     },
     async save1() {
+      if (!this.mainFile) {
+        this.$refs.notice.show({
+          type: "default",
+          message: "请上传比赛主图",
+        });
+        return;
+      }
       try {
         var result = await uni.$u.http.post("/match/saveMatchBaseInfo", {
           serialNum: this.serialNum,
@@ -1906,93 +2102,29 @@ export default {
             );
             if (res.status == 200) {
               this.$refs.notice.show({
-                type: "success",
+                type: "default",
                 message: res.message,
               });
-              // uni.removeStorageSync("joinPointsRace");
-              // uni.removeStorageSync("joinList");
-              // uni.removeStorageSync("labelId");
-              // uni.removeStorageSync("typeName");
-              // uni.removeStorageSync("templateName");
-              // uni.removeStorageSync("startTime");
-              // uni.removeStorageSync("endTime");
-              // uni.removeStorageSync("genderLimitName");
-              // uni.removeStorageSync("ageLimitMin");
-              // uni.removeStorageSync("ageLimitMax");
-              // uni.removeStorageSync("entryFee");
-              // uni.removeStorageSync("way");
-              // uni.removeStorageSync("number");
-              // uni.removeStorageSync("badgeLevelMin");
-              // uni.removeStorageSync("badgeLevelMinName");
-              // uni.removeStorageSync("badgeLevelMax");
-              // uni.removeStorageSync("badgeLevelMaxName");
-              // uni.removeStorageSync("name");
-              // uni.removeStorageSync("fuTitle");
-              // uni.removeStorageSync("fuTitleName");
-              // uni.removeStorageSync("type");
-              // uni.removeStorageSync("form");
-              // uni.removeStorageSync("fullAddress");
-              // uni.removeStorageSync("umpireId");
-              // uni.removeStorageSync("sponsor");
-              // uni.removeStorageSync("genderLimit");
-              // uni.removeStorageSync("labelCode");
-
-              // this.joinList = ["1"];
-              // this.joinPointsRace = 1;
-              // this.typeName = "";
-              // this.templateName = "";
-              // this.name = "";
-              // this.fuTitle = "";
-              // this.type = "1";
-              // this.form = "1";
-              // this.fullAddress = "";
-              // this.startTime = "";
-              // this.endTime = "";
-              // this.sponsor = "1";
-              // this.way = "1";
-              // this.number = "";
-              // this.genderLimitName = "无限制";
-              // this.genderLimit = 0;
-              // this.ageLimitMin = 0;
-              // this.ageLimitMax = 99;
-              // this.badgeLevelMin = "";
-              // this.badgeLevelMax = "";
-              // this.badgeLevelMinName = "无限制";
-              // this.badgeLevelMaxName = "无限制";
-              // this.entryFee = "";
-              // this.labelCode = "";
 
               this.activeTab++;
             }
           } catch (err) {
             this.$refs.notice.show({
-              type: "error",
+              type: "default",
               message: err.data.message,
             });
-            uni.removeStorageSync("serialNum");
-            const result = await uni.$u.http.get("/match/getSerialNum");
-            if (result.status == 200) {
-              this.serialNum = result.data.serialNum;
-              uni.setStorageSync("serialNum", result.data.serialNum);
-            }
           }
         }
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: err.data.message,
         });
-        uni.removeStorageSync("serialNum");
-        const result = await uni.$u.http.get("/match/getSerialNum");
-        if (result.status == 200) {
-          this.serialNum = result.data.serialNum;
-          uni.setStorageSync("serialNum", result.data.serialNum);
-        }
       }
     },
     blur1(n) {
-      uni.setStorageSync("name", n.detail.value);
       this.name_copy = n.detail.value;
+      uni.setStorageSync("name", n.detail.value);
     },
     blur2(n) {
       this.fuTitle_copy = n.detail.value;
@@ -2098,8 +2230,10 @@ export default {
     },
     confirm11(n) {
       this.show11 = false;
-      this.groupNum = n.indexs[0];
-      uni.setStorageSync("groupNum", this.groupNum);
+      this.group_num = n.indexs[0];
+      this.group_num_name = n.value[0];
+      uni.setStorageSync("group_num", this.group_num);
+      uni.setStorageSync("group_num_name", this.group_num_name);
     },
     confirm12(n) {
       this.show12 = false;
@@ -2131,7 +2265,7 @@ export default {
         });
         if (result.status == 200) {
           this.$refs.notice.show({
-            type: "success",
+            type: "default",
             message: result.message,
           });
 
@@ -2140,7 +2274,7 @@ export default {
         }
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: err.data.message,
         });
         return;
@@ -2169,14 +2303,14 @@ export default {
         });
         if (result.status === 200) {
           this.$refs.notice.show({
-            type: "success",
+            type: "default",
             message: result.message,
           });
           this.activeTab++;
         }
       } catch (error) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: error.data.message,
         });
       }
@@ -2198,8 +2332,6 @@ export default {
     },
     async save4() {
       try {
-        // console.log(this.gameList[this.op].scheTypeCode);
-        // return;
         var result = await uni.$u.http.post("/match/saveMatchHitConfig", {
           matchId: this.matchId,
           serialNum: this.serialNum,
@@ -2218,7 +2350,7 @@ export default {
         });
         if (result.code == 200) {
           this.$refs.notice.show({
-            type: "success",
+            type: "default",
             message: result.message,
           });
 
@@ -2226,7 +2358,7 @@ export default {
         }
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: err.data.message,
         });
       }
@@ -2256,7 +2388,6 @@ export default {
             item.scheTypeCode !== "registrationTime" &&
             item.scheTypeCode !== "publicationTime"
         );
-        uni.setStorageSync("gameList", this.gameList);
       }
     },
     addNext() {
@@ -2276,7 +2407,7 @@ export default {
         }
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: err.data.message,
         });
       }
@@ -2327,14 +2458,14 @@ export default {
           });
           if (result.status == 200) {
             this.$refs.notice.show({
-              type: "success",
+              type: "default",
               message: result.message,
             });
           }
         }
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: err.data.message,
         });
       }
@@ -2347,24 +2478,15 @@ export default {
           list: this.contentList,
         });
 
-        // 删除本地缓存
-        // uni.removeStorageSync("gameList");
-        // uni.removeStorageSync("textareaContent");
-        // uni.removeStorageSync("contentList");
-
-        // // 重置状态
-        // this.gameList = [];
-        // this.textareaContent = [];
-        // this.contentList = [];
         if (res.status == 200) {
           this.$refs.notice.show({
-            type: "success",
+            type: "default",
             message: "保存成功",
           });
         }
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: err.data.message,
         });
       }
@@ -2396,7 +2518,7 @@ export default {
           const maxSize = 20 * 1024 * 1024; // 2MB
           if (fileSize > maxSize) {
             this.$refs.notice.show({
-              type: "error",
+              type: "default",
               message: "文件大小不能超过20MB，请重新选择。",
             });
             return;
@@ -2430,7 +2552,7 @@ export default {
               } else {
                 // 上传失败的提示
                 this.$refs.notice.show({
-                  type: "error",
+                  type: "default",
                   message: "图片上传失败：" + data.message,
                 });
               }
@@ -2438,7 +2560,7 @@ export default {
             fail: (err) => {
               // 上传失败的提示
               this.$refs.notice.show({
-                type: "error",
+                type: "default",
                 message: "图片上传失败，请检查网络或稍后重试",
               });
               console.error("图片上传失败", err);
@@ -2464,7 +2586,7 @@ export default {
           const maxSize = 20 * 1024 * 1024; // 2MB
           if (fileSize > maxSize) {
             this.$refs.notice.show({
-              type: "error",
+              type: "default",
               message: "文件大小不能超过20MB，请重新选择。",
             });
             return;
@@ -2494,7 +2616,7 @@ export default {
               } else {
                 // 上传失败的提示
                 this.$refs.notice.show({
-                  type: "error",
+                  type: "default",
                   message: "图片上传失败：" + data.message,
                 });
               }
@@ -2502,7 +2624,7 @@ export default {
             fail: (err) => {
               // 上传失败的提示
               this.$refs.notice.show({
-                type: "error",
+                type: "default",
                 message: "图片上传失败，请检查网络或稍后重试",
               });
               console.error("图片上传失败", err);
@@ -2520,52 +2642,59 @@ export default {
       uni.removeStorageSync("joinList");
       uni.removeStorageSync("labelId");
       uni.removeStorageSync("typeName");
+      uni.removeStorageSync("labelCode");
       uni.removeStorageSync("templateName");
-      uni.removeStorageSync("startTime");
-      uni.removeStorageSync("endTime");
-      uni.removeStorageSync("genderLimitName");
-      uni.removeStorageSync("ageLimitMin");
-      uni.removeStorageSync("ageLimitMax");
-      uni.removeStorageSync("entryFee");
+      uni.removeStorageSync("templateId");
       uni.removeStorageSync("way");
       uni.removeStorageSync("number");
+      uni.removeStorageSync("genderLimitName");
+      uni.removeStorageSync("genderLimit");
+      uni.removeStorageSync("entryFee");
+      uni.removeStorageSync("fullAddress");
+      uni.removeStorageSync("bmLocal");
+      uni.removeStorageSync("startTime");
+      uni.removeStorageSync("endTime");
+      uni.removeStorageSync("sponsor");
+      uni.removeStorageSync("ageLimitMin");
+      uni.removeStorageSync("ageLimitMax");
+      uni.removeStorageSync("ageLimitMinName");
+      uni.removeStorageSync("ageLimitMaxName");
       uni.removeStorageSync("badgeLevelMin");
       uni.removeStorageSync("badgeLevelMinName");
       uni.removeStorageSync("badgeLevelMax");
       uni.removeStorageSync("badgeLevelMaxName");
-      uni.removeStorageSync("name");
-      uni.removeStorageSync("fuTitle");
-      uni.removeStorageSync("fuTitleName");
+      uni.removeStorageSync("matchLevelMin");
+      uni.removeStorageSync("matchLevelMinName");
+      uni.removeStorageSync("matchLevelMax");
+      uni.removeStorageSync("matchLevelMaxName");
       uni.removeStorageSync("type");
       uni.removeStorageSync("form");
-      uni.removeStorageSync("fullAddress");
       uni.removeStorageSync("umpireId");
-      uni.removeStorageSync("sponsor");
-      uni.removeStorageSync("genderLimit");
-      uni.removeStorageSync("labelCode");
       uni.removeStorageSync("registrationEndTime");
       uni.removeStorageSync("publicationTime");
       uni.removeStorageSync("items");
       uni.removeStorageSync("rewards");
       uni.removeStorageSync("stageExplains");
-      uni.removeStorageSync("contentList");
-      uni.removeStorageSync("textareaContent");
-      uni.removeStorageSync("gameList");
-      uni.removeStorageSync("mainFile");
-      uni.removeStorageSync("serialNum");
-      uni.removeStorageSync("templateId");
       uni.removeStorageSync("groupNum");
       uni.removeStorageSync("matchingManner");
       uni.removeStorageSync("matchingMannerName");
+      uni.removeStorageSync("contentList");
+      uni.removeStorageSync("textareaContent");
+      uni.removeStorageSync("mainFile");
+      uni.removeStorageSync("serialNum");
+      uni.removeStorageSync("templateId");
       uni.removeStorageSync("theme");
-      uni.removeStorageSync("activeTab");
       uni.removeStorageSync("groupNumName");
       uni.removeStorageSync("groupPerNum");
       uni.removeStorageSync("groupPerNumName");
       uni.removeStorageSync("matchId");
+      uni.removeStorageSync("name");
+      uni.removeStorageSync("fuTitle");
+      uni.removeStorageSync("group_num");
+      uni.removeStorageSync("group_num_name");
     },
     async getMatchTemplateHit() {
-      const hitTypeCode = uni.getStorageSync("gameList")[this.op].scheTypeCode;
+      const hitTypeCode = this.gameList[this.op].scheTypeCode;
       var result = await uni.$u.http.get("/match/getMatchTemplateHit", {
         params: {
           templateId: this.templateId,
@@ -2675,7 +2804,7 @@ export default {
     confirmRefundPolicy() {
       if (!this.refundDays) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: "请选择退款政策",
         });
         return;
@@ -2755,6 +2884,18 @@ export default {
       if (this.contentList.length > 1) {
         this.contentList.splice(index, 1);
       }
+    },
+    async getPP() {
+      var result = await uni.$u.http.get("/match/getSysDictByName", {
+        params: {
+          sysDicName: "matching_manner",
+        },
+      });
+      var arr = [];
+      result.data.map((item) => {
+        arr.push(item.label);
+      });
+      this.columns12 = [arr];
     },
   },
   computed: {
@@ -3233,17 +3374,9 @@ export default {
         font-weight: 600;
         font-size: 14px;
         color: #ffffff;
-        position: relative;
-        &::after {
-          content: "";
-          position: absolute;
-          left: 20%;
-          border-left: 5px solid transparent;
-          border-right: 5px solid transparent;
-          border-bottom: 5px solid #ffffff;
-          top: 50%;
-          transform: translateY(-50%);
-        }
+        display: flex;
+        align-items: center;
+        gap: 5px;
       }
 
       .o-text {
@@ -3584,7 +3717,7 @@ export default {
       .pp {
         width: 262px;
         height: 44px;
-        background-color: #cccccc;
+        background-color: black;
         margin: auto;
         margin-top: 30px;
         border-radius: 20px;
@@ -3594,6 +3727,177 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+      }
+
+      .pp-content {
+        background-color: #fff;
+        padding: 12px;
+        box-sizing: border-box;
+        border-radius: 10px;
+        margin-top: 28px;
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1),
+          -5px -5px 10px rgba(0, 0, 0, 0.1);
+        .first {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          .left {
+            display: flex;
+            align-items: center;
+            width: 50%;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 14px;
+            color: #1d2326;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 11px;
+            .h {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background-color: #f5f5f5;
+              width: 50%;
+              height: 32px;
+              font-weight: 400;
+              font-size: 14px;
+              color: #1d2326;
+            }
+          }
+          .judge {
+            margin-top: -40px;
+            position: relative;
+            .name {
+              position: absolute;
+              font-weight: 400;
+              font-size: 12px;
+              color: #ffffff;
+              left: 50%;
+              transform: translateX(-50%);
+              background-color: black;
+              white-space: nowrap;
+              padding: 3px 5px;
+              clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+              bottom: -10px;
+            }
+          }
+        }
+        .second {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px 0;
+          box-sizing: border-box;
+          border-bottom: 1px solid #f0f0f0;
+          .left {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #1d2326;
+            .icon {
+              color: red;
+            }
+          }
+          .right {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 400;
+            font-size: 14px;
+            color: #1d2326;
+          }
+        }
+        .third {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px 0;
+          box-sizing: border-box;
+          .left {
+            white-space: nowrap;
+            font-weight: 600;
+            font-size: 14px;
+            color: #1d2326;
+          }
+          .right {
+            font-weight: 400;
+            font-size: 10px;
+            color: #1d2326;
+          }
+        }
+        .member {
+          display: flex;
+          align-items: center;
+          height: 83px;
+          background-color: #f7f7f7;
+          margin-top: 5px;
+          justify-content: space-around;
+          .item:nth-child(4) {
+            border: none;
+          }
+          .item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-right: 1px solid #e6e6e6;
+            flex: 1;
+            .select {
+              display: flex;
+              align-items: center;
+              gap: 5px;
+              background-color: #fff;
+              padding: 4px 8px;
+              box-sizing: border-box;
+              font-weight: 600;
+              font-size: 12px;
+              color: #000000;
+              margin-top: 8px;
+            }
+            .avatar {
+              position: relative;
+              .rank {
+                position: absolute;
+                bottom: -5px;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: white;
+                width: 40px;
+                height: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 400;
+                font-size: 12px;
+                color: #ec384a;
+              }
+            }
+            .time {
+              display: flex;
+              align-items: center;
+              font-weight: 600;
+              font-size: 12px;
+              color: #1d2326;
+              background-color: white;
+              margin-top: 10px;
+              gap: 3px;
+              padding: 4px 8px;
+              box-sizing: border-box;
+              text {
+                font-weight: 600;
+                font-size: 12px;
+                color: rgba(29, 35, 38, 0.3);
+              }
+            }
+            .grade {
+              font-weight: 400;
+              font-size: 10px;
+              color: rgba(29, 35, 38, 0.5);
+              margin-top: 5px;
+            }
+          }
+        }
       }
 
       .rules {

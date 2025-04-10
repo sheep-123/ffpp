@@ -310,7 +310,7 @@ export default {
         );
         if (result.status == 200) {
           this.$refs.notice.show({
-            type: "success",
+            type: "default",
             message: result.message,
           });
           uni.navigateBack({
@@ -319,7 +319,7 @@ export default {
         }
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: err.data.message,
         });
       }

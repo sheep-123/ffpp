@@ -79,12 +79,6 @@
       :scale="18"
       v-if="!isSticky || isMapExpanded"
     >
-      <view class="mapBox">
-        <view class="button" @tap="toMarkSite">
-          <view><text>标记</text></view>
-          <view><text>场地</text></view>
-        </view>
-      </view>
     </map>
 
     <view
@@ -494,8 +488,8 @@ export default {
   onLoad() {
     // uni.reLaunch({
     //   // url: "/competition/apply/appear",
-    //   url: "/competition/publish/saishi",
-    //   // url: "/user/competition",
+    //   // url: "/competition/publish/saishi",
+    //   url: "/user/execute",
     // });
     this.Location();
     this.Location().then(() => {
@@ -787,6 +781,8 @@ map {
   border: 1px solid #ffffff;
   height: 36px;
   background-color: rgba(255, 255, 255, 0.5);
+  width: 80%;
+  backdrop-filter: blur(30px);
   &.search-y {
     background: #ffffff;
     width: 85%;
@@ -871,11 +867,11 @@ map {
 .pl-class {
   font-weight: 400;
   font-size: 14px;
-  color: rgba(29, 35, 38, 0.3);
+  color: black;
 }
 .pl-class1 {
   font-weight: 400;
   font-size: 14px;
-  color: #646464;
+  color: black;
 }
 </style>

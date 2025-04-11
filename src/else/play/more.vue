@@ -3,7 +3,7 @@
     <u-navbar
       leftText="运动积分等级排行"
       leftIconColor="black"
-      bgColor="rgba(0,0,0,0)"
+      :bgColor="navBgColor"
       autoBack
     >
     </u-navbar>
@@ -279,7 +279,21 @@ export default {
           name: "手工",
         },
       ],
+      navBgColor: "rgba(255, 255, 255, 0)",
     };
+  },
+  onPageScroll(e) {
+    const scrollTop = e.scrollTop; // 获取滚动距离
+    let opacity = 0;
+
+    if (scrollTop > 0 && scrollTop <= 100) {
+      opacity = scrollTop / 100; // 计算透明度（0 到 1）
+    } else if (scrollTop > 100) {
+      opacity = 1; //
+    }
+
+    // 动态更新导航栏背景颜色
+    this.navBgColor = `rgba(255, 255, 255, ${opacity})`;
   },
   methods: {
     selectTab(index) {

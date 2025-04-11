@@ -60,9 +60,9 @@
     </view>
     <view :class="['box', changeSkin ? 'scaled' : '']">
       <u-navbar
-        bgColor="rgba(0,0,0,0)"
+        :bgColor="navBgColor"
         @leftClick="back"
-        leftIconColor="#ffffff"
+        :leftIconColor="topBack ? 'black' : '#fff'"
       ></u-navbar>
       <view class="upload">
         <view class="top">
@@ -175,7 +175,7 @@
               <view class="right">
                 <u-checkbox-group v-model="joinList" @change="checkboxChange">
                   <u-checkbox
-                    activeColor="red"
+                    activeColor="#EC384A"
                     name="1"
                     shape="square"
                   ></u-checkbox>
@@ -188,11 +188,8 @@
                 ><text :style="{ color: typeName ? 'black' : '' }">{{
                   typeName || "请选择赛事项目"
                 }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
             <view class="item">
               <view class="left">赛事模版<view class="icon">*</view></view>
@@ -247,13 +244,13 @@
                   @change="groupChange"
                 >
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="公开赛"
                     shape="circle"
                     name="1"
                   ></u-radio>
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="邀请赛"
                     name="2"
                     shape="circle"
@@ -271,13 +268,13 @@
                   @change="groupChange1"
                 >
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="线上赛"
                     shape="circle"
                     name="1"
                   ></u-radio>
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="线下赛"
                     shape="circle"
                     name="2"
@@ -295,11 +292,8 @@
                 ><text :style="{ color: fullAddress ? 'black' : '' }">{{
                   fullAddress || "请选择赛事地点"
                 }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
             <!-- <view class="item">
               <view class="left">详细地址<view class="icon">*</view></view>
@@ -336,11 +330,8 @@
               <view class="left">赛事裁判 <view class="icon">*</view></view>
               <view class="right">
                 <u-avatar></u-avatar>
-                <image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
             <view class="item">
               <view class="left">赛事赞助 <view class="icon">*</view></view>
@@ -351,13 +342,13 @@
                   @change="groupChange2"
                 >
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="接受"
                     shape="circle"
                     name="0"
                   ></u-radio>
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="不接受"
                     shape="circle"
                     customStyle="margin-left: 20px"
@@ -392,13 +383,13 @@
                   @change="groupChange3"
                 >
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="单人"
                     shape="circle"
                     name="1"
                   ></u-radio>
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="小队"
                     shape="circle"
                     customStyle="margin-left: 20px"
@@ -429,11 +420,8 @@
                 ><text :style="{ color: groupNumName ? 'black' : '' }">{{
                   groupNumName || "请选择参赛组数限制"
                 }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
             <view class="item" v-if="way == 2">
               <view class="left">单组人数限制 <view class="icon">*</view></view>
@@ -441,11 +429,8 @@
                 ><text :style="{ color: groupPerNumName ? 'black' : '' }">{{
                   groupPerNumName || "请选择单组人数限制"
                 }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
             <view class="item">
               <view class="left">性别限制 <view class="icon">*</view></view>
@@ -453,11 +438,8 @@
                 ><text style="color: black">{{
                   genderLimitName || "无限制"
                 }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
             <view class="item-o">
               <view class="top">
@@ -502,7 +484,7 @@
                     iconPlacement="right"
                   >
                     <u-checkbox
-                      activeColor="red"
+                      activeColor="#EC384A"
                       shape="circle"
                       label="需要认证徽章"
                       customStyle="gap:10px"
@@ -592,11 +574,8 @@
                 ><text :style="{ color: refundDaysName ? 'black' : '' }">{{
                   refundDaysName || "请选择退款政策"
                 }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
             <view class="item">
               <view class="left">保险保障 <view class="icon">*</view></view>
@@ -604,11 +583,8 @@
                 ><text :style="{ color: insuranceName ? 'black' : '' }">{{
                   insuranceName || "无保障"
                 }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
           </view>
           <view class="save" @click="save1">
@@ -639,11 +615,8 @@
                 ><text :style="{ color: registrationEndTime ? 'black' : '' }">{{
                   registrationEndTime || "请选择报名截止时间"
                 }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
             <view class="item">
               <view class="left">赛事名单公布 <view class="icon">*</view></view>
@@ -651,11 +624,8 @@
                 ><text :style="{ color: publicationTime ? 'black' : '' }">{{
                   publicationTime || "请选择名单公布日期"
                 }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
             <view v-for="(item, index) in items" :key="index" class="item">
               <view class="left" style="width: 40%">
@@ -686,11 +656,7 @@
           </view>
 
           <view class="add" @click="addNext">
-            <image
-              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/add-red.png"
-              mode="scaleToFill"
-              style="width: 24px; height: 24px"
-            />
+            <u-icon name="plus-circle" size="24" color="#EC384A"></u-icon>
             添加环节
           </view>
 
@@ -768,13 +734,13 @@
                 <view class="right">
                   <u-radio-group v-model="item.sponsorType" placement="row">
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="实物"
                       shape="circle"
                       name="实物"
                     ></u-radio>
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="服务"
                       name="服务"
                       shape="circle"
@@ -788,20 +754,20 @@
                 <view class="right">
                   <u-radio-group v-model="item.receiveMethod" placement="row">
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="比赛现场发放"
                       name="比赛现场发放"
                       shape="circle"
                     ></u-radio>
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="到店领取"
                       name="到店领取"
                       shape="circle"
                       customStyle="margin-left: 5px"
                     ></u-radio>
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="两者都支持"
                       name="两者都支持"
                       shape="circle"
@@ -911,11 +877,7 @@
           </view>
 
           <view class="add" @click="addRewardMember">
-            <image
-              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/add-red.png"
-              mode="scaleToFill"
-              style="width: 24px; height: 24px"
-            />
+            <u-icon name="plus-circle" size="24" color="#EC384A"></u-icon>
             添加奖励者
           </view>
 
@@ -958,8 +920,22 @@
           <view class="o-text">
             <view class="item">
               <view class="left">本阶段 <view class="icon">*</view></view>
+              <view class="right" @click="show21 = true"
+                ><text :style="{ color: zzName ? 'black' : '' }">
+                  {{ zzName || "请选择赛事直击项目" }} </text
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
               <view class="right">
-                {{ stageExplains }}
+                <view style="width: 70px">
+                  <u-input
+                    v-model="stageExplains"
+                    placeholder="请输入人数"
+                    input-align="right"
+                    border="none"
+                    type="number"
+                    placeholderClass="pl-class"
+                  ></u-input> </view
+                >人
               </view>
             </view>
             <view class="item-o">
@@ -971,7 +947,10 @@
               <view class="bt">
                 <view class="left">
                   <view class="l1">组数</view>
-                  <view class="l2" @click="show11 = true"
+                  <view
+                    class="l2"
+                    @click="show11 = true"
+                    style="margin-left: 20px"
                     >{{ group_num_name ? group_num_name : "请选择" }}
                     <image
                       src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
@@ -983,8 +962,16 @@
 
                 <view class="right">
                   <view class="r1">匹配方式</view>
-                  <view class="r2" @click="show12 = true"
+                  <!-- <view class="r2" @click="show12 = true"
                     >{{ matchingMannerName ? matchingMannerName : "请选择" }}
+                    <image
+                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
+                      mode="scaleToFill"
+                      style="width: 12px; height: 12px"
+                    />
+                  </view> -->
+                  <view class="r2" style="margin-left: 20px"
+                    >随机
                     <image
                       src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
                       mode="scaleToFill"
@@ -1003,13 +990,13 @@
               <view class="bt">
                 <u-radio-group v-model="groupVenueType" placement="row">
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="系统订单匹配"
                     name="1"
                     shape="circle"
                   ></u-radio>
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="人工添加"
                     name="2"
                     shape="circle"
@@ -1027,13 +1014,13 @@
               <view class="bt">
                 <u-radio-group v-model="groupUmpireType" placement="row">
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="系统随机匹配"
                     name="1"
                     shape="circle"
                   ></u-radio>
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="根据场地1对1匹配"
                     shape="circle"
                     name="2"
@@ -1052,7 +1039,7 @@
                 <view class="item-radio">
                   <u-radio-group v-model="scoringMethod">
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="积分"
                       name="1"
                       shape="circle"
@@ -1062,7 +1049,7 @@
                 <view class="item-radio">
                   <u-radio-group v-model="scoringMethod">
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="时间"
                       name="2"
                       shape="circle"
@@ -1071,7 +1058,7 @@
                 <view class="item-radio">
                   <u-radio-group v-model="scoringMethod">
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="距离"
                       name="3"
                       shape="circle"
@@ -1080,7 +1067,7 @@
                 <view class="item-radio">
                   <u-radio-group v-model="scoringMethod">
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="分数"
                       name="4"
                       shape="circle"
@@ -1089,7 +1076,7 @@
                 <view class="item-radio">
                   <u-radio-group v-model="scoringMethod">
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="重量"
                       name="5"
                       shape="circle"
@@ -1098,7 +1085,7 @@
                 <view class="item-radio">
                   <u-radio-group v-model="scoringMethod">
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="胜负"
                       name="6"
                       shape="circle"
@@ -1108,9 +1095,416 @@
             </view>
           </view>
 
-          <view class="pp" @click="pp">开始匹配</view>
+          <view class="pp" @click="preview = zz">生成直击预览</view>
 
-          <view class="pp-content">
+          <view class="pp-content" v-show="preview == 1">
+            <view class="first">
+              <view class="left">
+                组名
+                <view class="h">A组</view>
+              </view>
+              <view class="judge">
+                <u-avatar :src="src" size="60"></u-avatar>
+                <view class="name">裁判员</view>
+              </view>
+            </view>
+            <view class="second">
+              <view class="left">比赛场地 <view class="icon">*</view></view>
+              <view class="right"
+                >请选择比赛场地<u-icon
+                  name="arrow-right"
+                  color="#CCCCCC"
+                  size="12"
+                ></u-icon
+              ></view>
+            </view>
+            <view class="second">
+              <view class="left">比赛时间 <view class="icon">*</view></view>
+              <view class="right"
+                >10月12日 14:00<u-icon
+                  name="arrow-right"
+                  color="#CCCCCC"
+                  size="12"
+                ></u-icon
+              ></view>
+            </view>
+            <view class="third">
+              <view class="left">直播地址 </view>
+              <view class="right"
+                >https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
+              >
+            </view>
+            <view class="member">
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A01</view>
+                </view>
+                <view class="time" v-if="scoringMethod == 1">
+                  积分 <text>0</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 2">
+                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 3">
+                  12 <text>米</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 4">
+                  89 <text>分</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 5">
+                  3 <text>千克</text>
+                </view>
+                <view class="select" v-if="scoringMethod == 6">
+                  设置
+                  <u-icon
+                    name="arrow-down-fill"
+                    color="black"
+                    size="8"
+                  ></u-icon>
+                </view>
+              </view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A02</view>
+                </view>
+                <view class="time" v-if="scoringMethod == 1">
+                  积分 <text>0</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 2">
+                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 3">
+                  12 <text>米</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 4">
+                  89 <text>分</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 5">
+                  3 <text>千克</text>
+                </view>
+                <view class="select" v-if="scoringMethod == 6">
+                  设置
+                  <u-icon
+                    name="arrow-down-fill"
+                    color="black"
+                    size="8"
+                  ></u-icon>
+                </view>
+              </view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A03</view>
+                </view>
+                <view class="time" v-if="scoringMethod == 1">
+                  积分 <text>0</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 2">
+                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 3">
+                  12 <text>米</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 4">
+                  89 <text>分</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 5">
+                  3 <text>千克</text>
+                </view>
+                <view class="select" v-if="scoringMethod == 6">
+                  设置
+                  <u-icon
+                    name="arrow-down-fill"
+                    color="black"
+                    size="8"
+                  ></u-icon>
+                </view>
+              </view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">A04</view>
+                </view>
+                <view class="time" v-if="scoringMethod == 1">
+                  积分 <text>0</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 2">
+                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 3">
+                  12 <text>米</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 4">
+                  89 <text>分</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 5">
+                  3 <text>千克</text>
+                </view>
+                <view class="select" v-if="scoringMethod == 6">
+                  设置
+                  <u-icon
+                    name="arrow-down-fill"
+                    color="black"
+                    size="8"
+                  ></u-icon>
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <view class="pp-content" v-show="preview == 1">
+            <view class="first">
+              <view class="left">
+                组名
+                <view class="h">B组</view>
+              </view>
+              <view class="judge">
+                <u-avatar :src="src" size="60"></u-avatar>
+                <view class="name">裁判员</view>
+              </view>
+            </view>
+            <view class="second">
+              <view class="left">比赛场地 <view class="icon">*</view></view>
+              <view class="right"
+                >请选择比赛场地<u-icon
+                  name="arrow-right"
+                  color="#CCCCCC"
+                  size="12"
+                ></u-icon
+              ></view>
+            </view>
+            <view class="second">
+              <view class="left">比赛时间 <view class="icon">*</view></view>
+              <view class="right"
+                >10月12日 14:00<u-icon
+                  name="arrow-right"
+                  color="#CCCCCC"
+                  size="12"
+                ></u-icon
+              ></view>
+            </view>
+            <view class="third">
+              <view class="left">直播地址 </view>
+              <view class="right"
+                >https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
+              >
+            </view>
+            <view class="member">
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">B01</view>
+                </view>
+                <view class="time" v-if="scoringMethod == 1">
+                  积分 <text>0</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 2">
+                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 3">
+                  12 <text>米</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 4">
+                  89 <text>分</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 5">
+                  3 <text>千克</text>
+                </view>
+                <view class="select" v-if="scoringMethod == 6">
+                  设置
+                  <u-icon
+                    name="arrow-down-fill"
+                    color="black"
+                    size="8"
+                  ></u-icon>
+                </view>
+              </view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">B02</view>
+                </view>
+                <view class="time" v-if="scoringMethod == 1">
+                  积分 <text>0</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 2">
+                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 3">
+                  12 <text>米</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 4">
+                  89 <text>分</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 5">
+                  3 <text>千克</text>
+                </view>
+                <view class="select" v-if="scoringMethod == 6">
+                  设置
+                  <u-icon
+                    name="arrow-down-fill"
+                    color="black"
+                    size="8"
+                  ></u-icon>
+                </view>
+              </view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">B03</view>
+                </view>
+                <view class="time" v-if="scoringMethod == 1">
+                  积分 <text>0</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 2">
+                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 3">
+                  12 <text>米</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 4">
+                  89 <text>分</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 5">
+                  3 <text>千克</text>
+                </view>
+                <view class="select" v-if="scoringMethod == 6">
+                  设置
+                  <u-icon
+                    name="arrow-down-fill"
+                    color="black"
+                    size="8"
+                  ></u-icon>
+                </view>
+              </view>
+              <view class="item">
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">B04</view>
+                </view>
+                <view class="time" v-if="scoringMethod == 1">
+                  积分 <text>0</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 2">
+                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 3">
+                  12 <text>米</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 4">
+                  89 <text>分</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 5">
+                  3 <text>千克</text>
+                </view>
+                <view class="select" v-if="scoringMethod == 6">
+                  设置
+                  <u-icon
+                    name="arrow-down-fill"
+                    color="black"
+                    size="8"
+                  ></u-icon>
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <view class="pp-content" v-show="preview == 2">
+            <view class="first">
+              <view class="left">
+                组名
+                <view class="h">B组</view>
+              </view>
+              <view class="judge">
+                <u-avatar :src="src" size="60"></u-avatar>
+                <view class="name">裁判员</view>
+              </view>
+            </view>
+            <view class="second">
+              <view class="left">比赛场地 <view class="icon">*</view></view>
+              <view class="right"
+                >请选择比赛场地<u-icon
+                  name="arrow-right"
+                  color="#CCCCCC"
+                  size="12"
+                ></u-icon
+              ></view>
+            </view>
+            <view class="second">
+              <view class="left">比赛时间 <view class="icon">*</view></view>
+              <view class="right"
+                >10月12日 14:00<u-icon
+                  name="arrow-right"
+                  color="#CCCCCC"
+                  size="12"
+                ></u-icon
+              ></view>
+            </view>
+            <view class="third">
+              <view class="left">直播地址 </view>
+              <view class="right"
+                >https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
+              >
+            </view>
+
+            <view class="fourth">
+              <view class="item">参赛号</view>
+              <view class="item">参赛选手</view>
+              <view class="item">成绩（环）</view>
+              <view class="item">排名</view>
+            </view>
+
+            <view class="fifth">
+              <view class="item">
+                <view class="num">A01</view>
+                <view class="avatar">
+                  <u-avatar :src="src"></u-avatar>
+                </view>
+                <view class="grade"></view>
+                <view class="rank">_</view>
+              </view>
+              <view class="item">
+                <view class="num">A02</view>
+                <view class="avatar">
+                  <u-avatar :src="src"></u-avatar>
+                </view>
+                <view class="grade"></view>
+                <view class="rank">_</view>
+              </view>
+              <view class="item">
+                <view class="num">A03</view>
+                <view class="avatar">
+                  <u-avatar :src="src"></u-avatar>
+                </view>
+                <view class="grade"></view>
+                <view class="rank">_</view>
+              </view>
+              <view class="item">
+                <view class="num">A04</view>
+                <view class="avatar">
+                  <u-avatar :src="src"></u-avatar>
+                </view>
+                <view class="grade"></view>
+                <view class="rank">_</view>
+              </view>
+              <view class="item">
+                <view class="num">A05</view>
+                <view class="avatar">
+                  <u-avatar :src="src"></u-avatar>
+                </view>
+                <view class="grade"></view>
+                <view class="rank">_</view>
+              </view>
+            </view>
+          </view>
+
+          <view
+            class="pp-content"
+            v-show="preview == 3"
+            style="padding-bottom: 0"
+          >
             <view class="first">
               <view class="left">
                 组名
@@ -1151,15 +1545,10 @@
               <view class="item">
                 <view class="avatar">
                   <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A01</view>
+                  <view class="rank">B01</view>
                 </view>
-                <view class="select" v-if="scoringMethod == 1">
-                  1
-                  <u-icon
-                    name="arrow-down-fill"
-                    color="black"
-                    size="8"
-                  ></u-icon>
+                <view class="time" v-if="scoringMethod == 1">
+                  积分 <text>0</text>
                 </view>
                 <view class="time" v-if="scoringMethod == 2">
                   3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
@@ -1185,15 +1574,10 @@
               <view class="item">
                 <view class="avatar">
                   <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A02</view>
+                  <view class="rank">B02</view>
                 </view>
-                <view class="select" v-if="scoringMethod == 1">
-                  1
-                  <u-icon
-                    name="arrow-down-fill"
-                    color="black"
-                    size="8"
-                  ></u-icon>
+                <view class="time" v-if="scoringMethod == 1">
+                  积分 <text>0</text>
                 </view>
                 <view class="time" v-if="scoringMethod == 2">
                   3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
@@ -1219,15 +1603,10 @@
               <view class="item">
                 <view class="avatar">
                   <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A03</view>
+                  <view class="rank">B03</view>
                 </view>
-                <view class="select" v-if="scoringMethod == 1">
-                  1
-                  <u-icon
-                    name="arrow-down-fill"
-                    color="black"
-                    size="8"
-                  ></u-icon>
+                <view class="time" v-if="scoringMethod == 1">
+                  积分 <text>0</text>
                 </view>
                 <view class="time" v-if="scoringMethod == 2">
                   3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
@@ -1253,15 +1632,10 @@
               <view class="item">
                 <view class="avatar">
                   <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A04</view>
+                  <view class="rank">B04</view>
                 </view>
-                <view class="select" v-if="scoringMethod == 1">
-                  1
-                  <u-icon
-                    name="arrow-down-fill"
-                    color="black"
-                    size="8"
-                  ></u-icon>
+                <view class="time" v-if="scoringMethod == 1">
+                  积分 <text>0</text>
                 </view>
                 <view class="time" v-if="scoringMethod == 2">
                   3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
@@ -1282,6 +1656,431 @@
                     color="black"
                     size="8"
                   ></u-icon>
+                </view>
+              </view>
+            </view>
+
+            <u-divider text="对战详情"></u-divider>
+            <view class="item-list" v-show="expand">
+              <view class="detail">
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                VS
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                <view class="chang">第1场</view>
+              </view>
+              <view class="next">
+                <view class="left">比赛时间 <view class="icon">*</view></view>
+                <view class="right"
+                  >10月12日 14:00-17:00
+                  <u-icon name="arrow-right" size="10"></u-icon
+                ></view>
+              </view>
+            </view>
+            <view class="item-list" v-show="expand">
+              <view class="detail">
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                VS
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                <view class="chang">第1场</view>
+              </view>
+              <view class="next">
+                <view class="left">比赛时间 <view class="icon">*</view></view>
+                <view class="right"
+                  >10月12日 14:00-17:00
+                  <u-icon name="arrow-right" size="10"></u-icon
+                ></view>
+              </view>
+            </view>
+            <view class="item-list" v-show="expand">
+              <view class="detail">
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                VS
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                <view class="chang">第1场</view>
+              </view>
+              <view class="next">
+                <view class="left">比赛时间 <view class="icon">*</view></view>
+                <view class="right"
+                  >10月12日 14:00-17:00
+                  <u-icon name="arrow-right" size="10"></u-icon
+                ></view>
+              </view>
+            </view>
+            <view class="item-list" v-show="expand">
+              <view class="detail">
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                VS
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                <view class="chang">第1场</view>
+              </view>
+              <view class="next">
+                <view class="left">比赛时间 <view class="icon">*</view></view>
+                <view class="right"
+                  >10月12日 14:00-17:00
+                  <u-icon name="arrow-right" size="10"></u-icon
+                ></view>
+              </view>
+            </view>
+            <view class="item-list" v-show="expand">
+              <view class="detail">
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                VS
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                <view class="chang">第1场</view>
+              </view>
+              <view class="next">
+                <view class="left">比赛时间 <view class="icon">*</view></view>
+                <view class="right"
+                  >10月12日 14:00-17:00
+                  <u-icon name="arrow-right" size="10"></u-icon
+                ></view>
+              </view>
+            </view>
+            <view class="item-list" v-show="expand">
+              <view class="detail">
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                VS
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                <view class="chang">第1场</view>
+              </view>
+              <view class="next">
+                <view class="left">比赛时间 <view class="icon">*</view></view>
+                <view class="right"
+                  >10月12日 14:00-17:00
+                  <u-icon name="arrow-right" size="10"></u-icon
+                ></view>
+              </view>
+            </view>
+
+            <image
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/卡片展开.png"
+              mode="scaleToFill"
+              style="width: 80px; height: 16px; margin: auto; display: block"
+              @click="expand = true"
+              v-if="!expand"
+            />
+            <image
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/卡片收起.png"
+              mode="scaleToFill"
+              style="width: 80px; height: 16px; margin: auto; display: block"
+              @click="expand = false"
+              v-else
+            />
+          </view>
+
+          <view class="pp-content" v-show="preview == 4">
+            <view class="first">
+              <view class="left">
+                组名
+                <view class="h">1组</view>
+              </view>
+              <view class="judge">
+                <u-avatar :src="src" size="60"></u-avatar>
+                <view class="name">裁判员</view>
+              </view>
+            </view>
+            <view class="second">
+              <view class="left">比赛场地 <view class="icon">*</view></view>
+              <view class="right"
+                >天河体育中心羽毛球馆<u-icon
+                  name="arrow-right"
+                  color="#CCCCCC"
+                  size="12"
+                ></u-icon
+              ></view>
+            </view>
+            <view class="second">
+              <view class="left">比赛时间 <view class="icon">*</view></view>
+              <view class="right"
+                >10月12日 14:00<u-icon
+                  name="arrow-right"
+                  color="#CCCCCC"
+                  size="12"
+                ></u-icon
+              ></view>
+            </view>
+            <view class="third">
+              <view class="left">直播地址 </view>
+              <view class="right"
+                >https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
+              >
+            </view>
+            <view class="item-list">
+              <view class="detail">
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                VS
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <view class="pp-content" v-show="preview == 5">
+            <view class="first">
+              <view class="left">
+                组名
+                <view class="h">1组</view>
+              </view>
+              <view class="judge">
+                <u-avatar :src="src" size="60"></u-avatar>
+                <view class="name">裁判员</view>
+              </view>
+            </view>
+            <view class="item-list">
+              <view class="detail">
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                VS
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                <view class="chang">第1场</view>
+              </view>
+              <view class="next">
+                <view class="left">比赛时间 <view class="icon">*</view></view>
+                <view class="right"
+                  >10月12日 14:00-17:00
+                  <u-icon name="arrow-right" size="10"></u-icon
+                ></view>
+              </view>
+            </view>
+            <view class="second">
+              <view class="left">比赛场地 <view class="icon">*</view></view>
+              <view class="right"
+                >天河体育中心羽毛球馆<u-icon
+                  name="arrow-right"
+                  color="#CCCCCC"
+                  size="12"
+                ></u-icon
+              ></view>
+            </view>
+            <view class="second">
+              <view class="left">比赛时间 <view class="icon">*</view></view>
+              <view class="right"
+                >10月12日 14:00<u-icon
+                  name="arrow-right"
+                  color="#CCCCCC"
+                  size="12"
+                ></u-icon
+              ></view>
+            </view>
+            <view class="third">
+              <view class="left">直播地址 </view>
+              <view class="right"
+                >https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
+              >
+            </view>
+
+            <view class="first" style="margin-top: 30px">
+              <view class="left">
+                组名
+                <view class="h">1组</view>
+              </view>
+              <view class="judge">
+                <u-avatar :src="src" size="60"></u-avatar>
+                <view class="name">裁判员</view>
+              </view>
+            </view>
+            <view class="item-list">
+              <view class="detail">
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                VS
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                <view class="chang">第1场</view>
+              </view>
+              <view class="next">
+                <view class="left">比赛时间 <view class="icon">*</view></view>
+                <view class="right"
+                  >10月12日 14:00-17:00
+                  <u-icon name="arrow-right" size="10"></u-icon
+                ></view>
+              </view>
+            </view>
+            <view class="second">
+              <view class="left">比赛场地 <view class="icon">*</view></view>
+              <view class="right"
+                >天河体育中心羽毛球馆<u-icon
+                  name="arrow-right"
+                  color="#CCCCCC"
+                  size="12"
+                ></u-icon
+              ></view>
+            </view>
+            <view class="second">
+              <view class="left">比赛时间 <view class="icon">*</view></view>
+              <view class="right"
+                >10月12日 14:00<u-icon
+                  name="arrow-right"
+                  color="#CCCCCC"
+                  size="12"
+                ></u-icon
+              ></view>
+            </view>
+            <view class="third">
+              <view class="left">直播地址 </view>
+              <view class="right"
+                >https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
+              >
+            </view>
+          </view>
+
+          <view class="pp-content" v-show="preview == 6">
+            <view class="first">
+              <view class="left">
+                组名
+                <view class="h">1组</view>
+              </view>
+              <view class="judge">
+                <u-avatar :src="src" size="60"></u-avatar>
+                <view class="name">裁判员</view>
+              </view>
+            </view>
+            <view class="second">
+              <view class="left">比赛场地 <view class="icon">*</view></view>
+              <view class="right"
+                >天河体育中心羽毛球馆<u-icon
+                  name="arrow-right"
+                  color="#CCCCCC"
+                  size="12"
+                ></u-icon
+              ></view>
+            </view>
+            <view class="second">
+              <view class="left">比赛时间 <view class="icon">*</view></view>
+              <view class="right"
+                >10月12日 14:00<u-icon
+                  name="arrow-right"
+                  color="#CCCCCC"
+                  size="12"
+                ></u-icon
+              ></view>
+            </view>
+            <view class="third">
+              <view class="left">直播地址 </view>
+              <view class="right"
+                >https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
+              >
+            </view>
+            <view class="item-list">
+              <view class="detail">
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                VS
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">A01</view>
+                  </view>
+                  <view class="grade">积分0</view>
                 </view>
               </view>
             </view>
@@ -1579,7 +2378,11 @@
                 >赛前随时申请，全额退款 比赛开始不支持退款</view
               >
               <u-radio-group v-model="refundDays">
-                <u-radio shape="circle" name="1" activeColor="red"></u-radio>
+                <u-radio
+                  shape="circle"
+                  name="1"
+                  activeColor="#EC384A"
+                ></u-radio>
               </u-radio-group>
             </view>
             <view
@@ -1608,7 +2411,11 @@
                 <view>比赛开始后不支持退款</view></view
               >
               <u-radio-group v-model="refundDays">
-                <u-radio shape="circle" name="2" activeColor="red"></u-radio>
+                <u-radio
+                  shape="circle"
+                  name="2"
+                  activeColor="#EC384A"
+                ></u-radio>
               </u-radio-group>
             </view>
           </view>
@@ -1636,7 +2443,11 @@
               </view>
               <view style="margin-left: 12px">
                 <u-radio-group v-model="insuranceId">
-                  <u-radio shape="circle" name="0" activeColor="red"></u-radio>
+                  <u-radio
+                    shape="circle"
+                    name="0"
+                    activeColor="#EC384A"
+                  ></u-radio>
                 </u-radio-group>
               </view>
             </view>
@@ -1650,7 +2461,11 @@
               </view>
               <view class="tk">
                 <u-radio-group v-model="insuranceId">
-                  <u-radio shape="circle" name="1" activeColor="red"></u-radio>
+                  <u-radio
+                    shape="circle"
+                    name="1"
+                    activeColor="#EC384A"
+                  ></u-radio>
                 </u-radio-group>
                 保险条款
               </view>
@@ -1658,13 +2473,19 @@
           </view>
 
           <view class="notice">
-            <u-icon name="checkmark-circle-fill" color="red"></u-icon>
+            <u-icon name="checkmark-circle-fill" color="#EC384A"></u-icon>
             选择即同意广州极热玩家运动科技有限公司作为投保人进行投保
           </view>
 
           <view class="enter" @click="insuranceEnter">确认选择</view>
         </view>
       </u-popup>
+      <u-picker
+        :show="show21"
+        :columns="columns21"
+        @cancel="show21 = false"
+        @confirm="confirm21"
+      ></u-picker>
       <u-toast ref="notice"></u-toast>
     </view>
   </view>
@@ -1799,7 +2620,6 @@ export default {
       columns10: [["冠军", "亚军", "季军", "第四名", "第五名", "第六名"]],
       sponsorType: "实物",
       receiveMethod: "到店领取",
-      scoringMethod: "积分",
       scoringMethod: "1",
       groupUmpireType: "1",
       groupVenueType: "1",
@@ -1812,7 +2632,7 @@ export default {
       matchingMannerName: uni.getStorageSync("matchingMannerName") ?? null,
       matchingManner: uni.getStorageSync("matchingManner") ?? null,
       op: 0,
-      stageExplains: uni.getStorageSync("stageExplains") || "32人/队",
+      stageExplains: uni.getStorageSync("stageExplains") || "",
       gameList: [],
       scheTypeName: uni.getStorageSync("stageExplains") ?? "",
       items: uni.getStorageSync("items") || [],
@@ -1861,8 +2681,38 @@ export default {
           ],
         },
       ],
-      se: 0,
+      show21: false,
+      columns21: [
+        [
+          "非对战淘汰赛",
+          "非对战排行赛",
+          "对战单循环赛",
+          "对战1V1赛",
+          "对战主客场赛",
+          "对战双败赛",
+        ],
+      ],
+      zz: uni.getStorageSync("zz") || "",
+      zzName: uni.getStorageSync("zzName") || "",
+      expand: false,
+      preview: false,
+      navBgColor: "rgba(255, 255, 255, 0)",
+      topBack: false,
     };
+  },
+  onPageScroll(e) {
+    const scrollTop = e.scrollTop; // 获取滚动距离
+    let opacity = 0;
+
+    if (scrollTop > 0 && scrollTop <= 100) {
+      opacity = scrollTop / 100; // 计算透明度（0 到 1）
+      this.topBack = true;
+    } else if (scrollTop > 100) {
+      opacity = 1; //
+    }
+
+    // 动态更新导航栏背景颜色
+    this.navBgColor = `rgba(255, 255, 255, ${opacity})`;
   },
   onLoad(options) {
     this.serialNum = options.serialNum;
@@ -2897,6 +3747,13 @@ export default {
       });
       this.columns12 = [arr];
     },
+    confirm21(n) {
+      this.show21 = false;
+      this.zz = n.indexs[0] + 1;
+      this.zzName = n.value[0];
+      uni.setStorageSync("zz", this.zz);
+      uni.setStorageSync("zzName", this.zzName);
+    },
   },
   computed: {
     sliderPosition() {
@@ -3341,7 +4198,7 @@ export default {
             gap: 5px;
 
             .icon {
-              color: red;
+              color: #ec384a;
             }
           }
 
@@ -3418,7 +4275,7 @@ export default {
             }
 
             .icon {
-              color: red;
+              color: #ec384a;
             }
           }
 
@@ -3493,7 +4350,7 @@ export default {
             }
 
             .icon {
-              color: red;
+              color: #ec384a;
             }
           }
 
@@ -3556,7 +4413,7 @@ export default {
             }
 
             .icon {
-              color: red;
+              color: #ec384a;
             }
           }
 
@@ -3586,7 +4443,7 @@ export default {
             }
 
             .icon {
-              color: red;
+              color: #ec384a;
             }
           }
 
@@ -3797,7 +4654,7 @@ export default {
             font-size: 14px;
             color: #1d2326;
             .icon {
-              color: red;
+              color: #ec384a;
             }
           }
           .right {
@@ -3895,6 +4752,128 @@ export default {
               font-size: 10px;
               color: rgba(29, 35, 38, 0.5);
               margin-top: 5px;
+            }
+          }
+        }
+        .fourth {
+          display: flex;
+          align-items: center;
+          margin-bottom: 12px;
+          .item {
+            font-weight: 600;
+            font-size: 14px;
+            color: #1d2326;
+            flex: 1;
+            text-align: center;
+          }
+        }
+        .fifth {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          .item {
+            display: flex;
+            align-items: center;
+            height: 60px;
+            background-color: #f5f5f5;
+            .num {
+              flex: 1;
+              text-align: center;
+            }
+            .avatar {
+              flex: 1;
+              display: flex;
+              justify-content: center;
+            }
+            .grade {
+              flex: 1;
+              text-align: center;
+            }
+            .rank {
+              flex: 1;
+              text-align: center;
+            }
+            // padding: 0px 20px 0px 10px;
+            // justify-content: space-between;
+          }
+        }
+        .item-list {
+          border-bottom: 1px solid #f0f0f0;
+          margin-bottom: 18px;
+          .detail {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            background-color: #f7f7f7;
+            height: 90px;
+            position: relative;
+            padding: 0px 20px;
+            box-sizing: border-box;
+            .item {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              flex: 1;
+              position: relative;
+              .avatar {
+                position: relative;
+                .rank {
+                  position: absolute;
+                  bottom: -5px;
+                  left: 50%;
+                  transform: translateX(-50%);
+                  background-color: white;
+                  width: 40px;
+                  height: 16px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-weight: 400;
+                  font-size: 12px;
+                  color: #ec384a;
+                }
+              }
+              .grade {
+                font-weight: 400;
+                font-size: 10px;
+                color: rgba(29, 35, 38, 0.5);
+                margin-top: 10px;
+              }
+            }
+            .chang {
+              position: absolute;
+              top: 0;
+              left: 0;
+              background-color: red;
+              font-weight: 600;
+              font-size: 12px;
+              color: #ffffff;
+              padding: 2px 6px;
+            }
+          }
+          .next {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            .left {
+              display: flex;
+              align-items: center;
+              gap: 5px;
+              font-weight: 600;
+              font-size: 14px;
+              color: #1d2326;
+              .icon {
+                color: #ec384a;
+              }
+            }
+            .right {
+              display: flex;
+              align-items: center;
+              gap: 5px;
+              font-weight: 400;
+              font-size: 14px;
+              color: #1d2326;
             }
           }
         }

@@ -728,6 +728,7 @@ export default {
         font-weight: 400;
         font-size: 14px;
         color: #1d2326;
+        text-indent: 30px;
       }
     }
     .right {

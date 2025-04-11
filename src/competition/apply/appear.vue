@@ -124,13 +124,13 @@
             <view class="right">
               <u-radio-group v-model="teamType" placement="row">
                 <u-radio
-                  activeColor="red"
+                  activeColor="#EC384A"
                   label="正式小队"
                   shape="circle"
                   name="2"
                 ></u-radio>
                 <u-radio
-                  activeColor="red"
+                  activeColor="#EC384A"
                   label="临时组队"
                   name="3"
                   shape="circle"
@@ -294,7 +294,7 @@
                     v-if="item.applyType == 'radio'"
                   >
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       :label="gender"
                       shape="circle"
                       :name="genderIndex + 1"
@@ -317,7 +317,7 @@
                       :label="option"
                       :name="optionIndex + 1"
                       customStyle="margin-right: 5px"
-                      activeColor="red"
+                      activeColor="#EC384A"
                       shape="circle"
                     ></u-checkbox>
                   </u-checkbox-group>

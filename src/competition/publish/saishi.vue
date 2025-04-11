@@ -62,7 +62,7 @@
       <u-navbar
         :bgColor="navBgColor"
         @leftClick="back"
-        :leftIconColor="topBack ? 'black' : '#fff'"
+        leftIconColor="black"
       ></u-navbar>
       <view class="upload">
         <view class="top">
@@ -187,9 +187,9 @@
               <view class="right" @click="toSaiShiProject"
                 ><text :style="{ color: typeName ? 'black' : '' }">{{
                   typeName || "请选择赛事项目"
-                }}</text
-                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
-              ></view>
+                }}</text>
+                <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
+              </view>
             </view>
             <view class="item">
               <view class="left">赛事模版<view class="icon">*</view></view>
@@ -451,11 +451,11 @@
                   <view class="l1">最低</view>
                   <view class="l2" @click="show4 = true"
                     >{{ ageLimitMinName || 0 }}
-                    <image
-                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                      mode="scaleToFill"
-                      style="width: 12px; height: 12px"
-                    />
+                    <u-icon
+                      name="arrow-right"
+                      size="12"
+                      color="#CCCCCC"
+                    ></u-icon>
                   </view>
                 </view>
 
@@ -463,11 +463,11 @@
                   <view class="r1">最高</view>
                   <view class="r2" @click="show5 = true"
                     >{{ ageLimitMaxName || 99 }}
-                    <image
-                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                      mode="scaleToFill"
-                      style="width: 12px; height: 12px"
-                    />
+                    <u-icon
+                      name="arrow-right"
+                      size="12"
+                      color="#CCCCCC"
+                    ></u-icon>
                   </view>
                 </view>
               </view>
@@ -498,11 +498,11 @@
                   <view class="l1">最低</view>
                   <view class="l2" @click="show6 = true"
                     >{{ badgeLevelMinName ? badgeLevelMinName : "无限制" }}
-                    <image
-                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                      mode="scaleToFill"
-                      style="width: 12px; height: 12px"
-                    />
+                    <u-icon
+                      name="arrow-right"
+                      size="12"
+                      color="#CCCCCC"
+                    ></u-icon>
                   </view>
                 </view>
 
@@ -510,11 +510,11 @@
                   <view class="r1">最高</view>
                   <view class="r2" @click="show7 = true"
                     >{{ badgeLevelMaxName ? badgeLevelMaxName : "无限制" }}
-                    <image
-                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                      mode="scaleToFill"
-                      style="width: 12px; height: 12px"
-                    />
+                    <u-icon
+                      name="arrow-right"
+                      size="12"
+                      color="#CCCCCC"
+                    ></u-icon>
                   </view>
                 </view>
               </view>
@@ -530,11 +530,11 @@
                   <view class="l1">最低</view>
                   <view class="l2" @click="show14 = true"
                     >{{ matchLevelMinName || "无限制" }}
-                    <image
-                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                      mode="scaleToFill"
-                      style="width: 12px; height: 12px"
-                    />
+                    <u-icon
+                      name="arrow-right"
+                      size="12"
+                      color="#CCCCCC"
+                    ></u-icon>
                   </view>
                 </view>
 
@@ -542,11 +542,11 @@
                   <view class="r1">最高</view>
                   <view class="r2" @click="show15 = true"
                     >{{ matchLevelMaxName || "无限制" }}
-                    <image
-                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                      mode="scaleToFill"
-                      style="width: 12px; height: 12px"
-                    />
+                    <u-icon
+                      name="arrow-right"
+                      size="12"
+                      color="#CCCCCC"
+                    ></u-icon>
                   </view>
                 </view>
               </view>
@@ -640,11 +640,7 @@
                 <text :style="{ color: item.scheTime ? 'black' : '' }">{{
                   item.scheTime || "请选择开赛时间"
                 }}</text>
-                <image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-                />
+                <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
                 <image
                   src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/删减.png"
                   mode="scaleToFill"
@@ -689,11 +685,8 @@
                 ><text
                   :style="{ color: reward.rewardTypeName ? 'black' : '' }"
                   >{{ reward.rewardTypeName || "请选择奖励者名称" }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-                />
+                >
+                <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
               </view>
             </view>
             <view class="item">
@@ -720,12 +713,11 @@
               <view style="background-color: #f7f7f7">
                 <view class="del">
                   奖品
-                  <image
-                    src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/删减.png"
-                    mode="scaleToFill"
-                    style="width: 24px; height: 24px"
+                  <u-icon
+                    name="minus-circle"
+                    size="24"
                     @click="delPrize(rIndex, index)"
-                  />
+                  ></u-icon>
                 </view>
               </view>
 
@@ -952,11 +944,11 @@
                     @click="show11 = true"
                     style="margin-left: 20px"
                     >{{ group_num_name ? group_num_name : "请选择" }}
-                    <image
-                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                      mode="scaleToFill"
-                      style="width: 12px; height: 12px"
-                    />
+                    <u-icon
+                      name="arrow-right"
+                      size="12"
+                      color="#CCCCCC"
+                    ></u-icon>
                   </view>
                 </view>
 
@@ -964,19 +956,15 @@
                   <view class="r1">匹配方式</view>
                   <!-- <view class="r2" @click="show12 = true"
                     >{{ matchingMannerName ? matchingMannerName : "请选择" }}
-                    <image
-                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                      mode="scaleToFill"
-                      style="width: 12px; height: 12px"
-                    />
+  <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
                   </view> -->
                   <view class="r2" style="margin-left: 20px"
                     >随机
-                    <image
-                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                      mode="scaleToFill"
-                      style="width: 12px; height: 12px"
-                    />
+                    <u-icon
+                      name="arrow-right"
+                      size="12"
+                      color="#CCCCCC"
+                    ></u-icon>
                   </view>
                 </view>
               </view>
@@ -2697,7 +2685,6 @@ export default {
       expand: false,
       preview: false,
       navBgColor: "rgba(255, 255, 255, 0)",
-      topBack: false,
     };
   },
   onPageScroll(e) {
@@ -2706,7 +2693,6 @@ export default {
 
     if (scrollTop > 0 && scrollTop <= 100) {
       opacity = scrollTop / 100; // 计算透明度（0 到 1）
-      this.topBack = true;
     } else if (scrollTop > 100) {
       opacity = 1; //
     }
@@ -4363,9 +4349,22 @@ export default {
             font-weight: 400;
             font-size: 14px;
             color: #1d2326;
+            .left {
+              .l2 {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+              }
+            }
             .right {
               display: flex;
               justify-content: flex-end;
+              align-items: center;
+              .r2 {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+              }
             }
           }
 
@@ -4428,6 +4427,11 @@ export default {
             white-space: nowrap;
             width: 40%;
             justify-content: space-between;
+            .l2 {
+              display: flex;
+              align-items: center;
+              gap: 5px;
+            }
 
             .wh {
               width: 16px;
@@ -4482,6 +4486,11 @@ export default {
 
             .r1 {
               white-space: nowrap;
+            }
+            .r2 {
+              display: flex;
+              align-items: center;
+              gap: 5px;
             }
 
             .time {

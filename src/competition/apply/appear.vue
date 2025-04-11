@@ -1,9 +1,9 @@
 <template>
   <view class="box">
     <u-navbar
-      bgColor="rgba(0,0,0,0)"
+      :bgColor="navBgColor"
       @leftClick="back"
-      leftIconColor="#ffffff"
+      leftIconColor="black"
     ></u-navbar>
 
     <view class="upload">
@@ -325,15 +325,16 @@
                   <view
                     v-if="item.applyType === 'select'"
                     @click="openPicker(item)"
+                    class="select"
                   >
                     <text :style="{ color: item.value ? 'black' : '' }">
                       {{ item.name || `请选择${item.applyName}` }}
                     </text>
-                    <image
-                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                      mode="scaleToFill"
-                      style="width: 12px; height: 12px"
-                    />
+                    <u-icon
+                      name="arrow-right"
+                      size="12"
+                      color="#CCCCCC"
+                    ></u-icon>
                   </view>
                 </view>
               </view>
@@ -1255,7 +1256,21 @@ export default {
       realName: "",
       identificationType: "1",
       identification: "",
+      navBgColor: "rgba(255, 255, 255, 0)",
     };
+  },
+  onPageScroll(e) {
+    const scrollTop = e.scrollTop; // 获取滚动距离
+    let opacity = 0;
+
+    if (scrollTop > 0 && scrollTop <= 100) {
+      opacity = scrollTop / 100; // 计算透明度（0 到 1）
+    } else if (scrollTop > 100) {
+      opacity = 1; //
+    }
+
+    // 动态更新导航栏背景颜色
+    this.navBgColor = `rgba(255, 255, 255, ${opacity})`;
   },
   methods: {
     setActiveTab(index) {
@@ -2121,6 +2136,15 @@ export default {
             }
           }
         }
+        .o-text {
+          .item {
+            .right {
+              display: flex;
+              align-items: center;
+              gap: 5px;
+            }
+          }
+        }
       }
 
       .jdsz {
@@ -2388,6 +2412,17 @@ export default {
             font-size: 14px;
             color: #1d2326;
             border-radius: 5px;
+          }
+        }
+        .form {
+          .item {
+            .right {
+              .select {
+                display: flex;
+                align-items: center;
+                gap: 2px;
+              }
+            }
           }
         }
       }
@@ -3417,5 +3452,14 @@ export default {
   align-items: center;
   justify-content: center;
   border-radius: 10px;
+}
+.form {
+  .item {
+    .right {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+  }
 }
 </style>

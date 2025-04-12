@@ -860,7 +860,7 @@
               </view>
               <view class="right" @click="delReward(rIndex)">
                 <image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/删除.png"
+                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/删除.png"
                   mode="scaleToFill"
                   style="width: 24px; height: 24px"
                 />

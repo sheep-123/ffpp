@@ -1,6 +1,6 @@
 <template>
   <view class="box">
-    <u-navbar>
+    <u-navbar :fixed="false">
       <view class="m-top" slot="left">
         <view class="left">
           <view class="item-active">聊天</view>
@@ -14,8 +14,8 @@
       </view>
     </u-navbar>
 
-    <view class="main" :style="{ marginTop: stickyTop }">
-      <view class="search">
+    <view class="main">
+      <view class="search" @click="toSearch">
         <u-search
           placeholder="搜索好友、群聊、等聊天记录"
           v-model="keyword"
@@ -31,7 +31,7 @@
       </view>
 
       <view class="list">
-        <view class="item">
+        <view class="item" @click="toChat">
           <u-avatar :src="src" size="48"></u-avatar>
           <view class="right">
             <view class="top-value">
@@ -188,6 +188,18 @@ export default {
   onShow() {
     const systemInfo = uni.getSystemInfoSync();
     this.statusBarHeight = systemInfo.statusBarHeight;
+  },
+  methods: {
+    toChat() {
+      uni.navigateTo({
+        url: "/else/message/chat",
+      });
+    },
+    toSearch() {
+      uni.navigateTo({
+        url: "/else/message/search",
+      });
+    },
   },
   computed: {
     stickyTop() {

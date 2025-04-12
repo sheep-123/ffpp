@@ -198,6 +198,34 @@
             "navigationBarTitleText": "编辑运动",
             "navigationStyle": "custom"
           }
+        },
+        {
+          "path": "message/chat",
+          "style": {
+            "navigationBarTitleText": "聊天",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "message/team",
+          "style": {
+            "navigationBarTitleText": "组队",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "message/huodong",
+          "style": {
+            "navigationBarTitleText": "活动列表",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "message/search",
+          "style": {
+            "navigationBarTitleText": "搜索",
+            "navigationStyle": "custom"
+          }
         }
       ]
     },

@@ -18,6 +18,7 @@
             v-model="keyword"
             shape="circle"
             placeholderClass="pl-class"
+            placeholderStyle="color:rgba(29,35,38,0.3)"
           >
             <image
               :src="
@@ -108,6 +109,8 @@
           <image
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/附近.png"
           />
+          <view class="next"></view>
+          <view class="dian"></view>
         </view>
         <view class="item">关注</view>
         <view class="item">美式橄榄球</view>
@@ -489,7 +492,8 @@ export default {
     // uni.reLaunch({
     //   // url: "/competition/apply/appear",
     //   // url: "/competition/publish/saishi",
-    //   url: "/user/execute",
+    //   // url: "/user/execute",
+    //   url: "/else/message/chat",
     // });
     this.Location();
     this.Location().then(() => {
@@ -632,6 +636,7 @@ export default {
       display: flex;
       align-items: center;
       gap: 3px;
+      position: relative;
 
       image:nth-child(1) {
         width: 18px;
@@ -641,6 +646,25 @@ export default {
       image:nth-child(2) {
         width: 36px;
         height: 15px;
+      }
+      .next {
+        position: absolute;
+        bottom: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 10px solid #fff;
+      }
+      .dian {
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background-color: black;
       }
     }
 
@@ -657,6 +681,7 @@ export default {
     background: #ffffff;
     border-radius: 20px;
     padding: 10px 10px 50px 10px; // 新增内边距
+    box-shadow: 0px -2px 8px 0px rgba(168, 186, 197, 0.2);
 
     .item {
       width: 100%;

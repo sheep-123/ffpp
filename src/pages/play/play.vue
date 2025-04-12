@@ -234,7 +234,7 @@
           </u-radio-group>
         </view>
         <view class="next">
-          <view class="left">
+          <view class="left" @click="reset">
             <u-icon name="reload" size="24"></u-icon>
             重置
           </view>
@@ -370,9 +370,11 @@ export default {
 </script>
 
 <style lang="scss">
+body {
+  background: #f7f7f7;
+}
 .box {
   width: 100vw;
-  background: #f7f7f7;
   .first {
     position: relative;
     .bg {
@@ -444,18 +446,18 @@ export default {
           }
           .score {
             display: flex;
-            border: 1px solid #f0f0f0;
             width: 100%;
             height: 20px;
-            align-items: center;
-            justify-content: space-evenly;
             .item {
+              flex: 1;
               font-weight: 600;
               font-size: 10px;
               color: rgba(29, 35, 38, 0.5);
-              &:first-child {
-                border-right: 1px solid #f0f0f0;
-              }
+              box-sizing: border-box;
+              border: 1px solid #f0f0f0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
             }
           }
 

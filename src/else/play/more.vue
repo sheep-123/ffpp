@@ -296,7 +296,7 @@ export default {
     let opacity = 0;
 
     if (scrollTop > 0 && scrollTop <= 100) {
-      opacity = scrollTop / 100; // 计算透明度（0 到 1）
+      opacity = scrollTop / 250; // 计算透明度（0 到 1）
     } else if (scrollTop > 100) {
       opacity = 1; //
     }

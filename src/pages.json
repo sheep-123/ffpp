@@ -226,6 +226,13 @@
             "navigationBarTitleText": "搜索",
             "navigationStyle": "custom"
           }
+        },
+        {
+          "path": "message/challenge",
+          "style": {
+            "navigationBarTitleText": "发起挑战",
+            "navigationStyle": "custom"
+          }
         }
       ]
     },
@@ -276,6 +283,27 @@
           "path": "execute",
           "style": {
             "navigationBarTitleText": "执行赛事",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "sponsorIndex",
+          "style": {
+            "navigationBarTitleText": "我的赞助",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "sponsorCheck",
+          "style": {
+            "navigationBarTitleText": "赞助审核",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "sponsorAlter",
+          "style": {
+            "navigationBarTitleText": "修改赞助",
             "navigationStyle": "custom"
           }
         }

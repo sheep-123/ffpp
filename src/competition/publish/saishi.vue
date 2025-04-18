@@ -912,22 +912,21 @@
           <view class="o-text">
             <view class="item">
               <view class="left">本阶段 <view class="icon">*</view></view>
-              <view class="right" @click="show21 = true"
-                ><text :style="{ color: zzName ? 'black' : '' }">
-                  {{ zzName || "请选择赛事直击项目" }} </text
-                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
-              ></view>
+
               <view class="right">
-                <view style="width: 70px">
-                  <u-input
-                    v-model="stageExplains"
-                    placeholder="请输入人数"
-                    input-align="right"
-                    border="none"
-                    type="number"
-                    placeholderClass="pl-class"
-                  ></u-input> </view
-                >人
+                <view class="select" @click="show21 = true"
+                  ><text :style="{ color: zzName ? 'black' : '' }">
+                    {{ zzName || "请选择赛制" }} </text
+                  ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+                ></view>
+                <input
+                  type="text"
+                  v-model="stageUserNum"
+                  class="stageExplains"
+                  placeholder="请输入"
+                  placeholder-class="pl-class"
+                  @input="blur10"
+                />人
               </view>
             </view>
             <view class="item-o">
@@ -943,7 +942,8 @@
                     class="l2"
                     @click="show11 = true"
                     style="margin-left: 20px"
-                    >{{ group_num_name ? group_num_name : "请选择" }}
+                    :style="group_num ? 'color: black;' : ''"
+                    >{{ group_num || "请选择" }}
                     <u-icon
                       name="arrow-right"
                       size="12"
@@ -1083,13 +1083,18 @@
             </view>
           </view>
 
-          <view class="pp" @click="preview = zz">生成直击预览</view>
+          <view class="pp-yl" @click="yl">生成直击预览</view>
 
-          <view class="pp-content" v-show="preview == 1">
+          <view
+            class="pp-content"
+            v-show="preview == 1"
+            v-for="(item, index) in groups"
+            :key="index"
+          >
             <view class="first">
               <view class="left">
                 组名
-                <view class="h">A组</view>
+                <view class="h">{{ item.groupName }}</view>
               </view>
               <view class="judge">
                 <u-avatar :src="src" size="60"></u-avatar>
@@ -1098,38 +1103,48 @@
             </view>
             <view class="second">
               <view class="left">比赛场地 <view class="icon">*</view></view>
-              <view class="right"
-                >请选择比赛场地<u-icon
-                  name="arrow-right"
-                  color="#CCCCCC"
-                  size="12"
-                ></u-icon
+              <view class="right" @click="chooseAddress1(item)">
+                {{ item.address
+                }}<u-icon name="arrow-right" color="#CCCCCC" size="12"></u-icon
               ></view>
             </view>
-            <view class="second">
-              <view class="left">比赛时间 <view class="icon">*</view></view>
-              <view class="right"
-                >10月12日 14:00<u-icon
-                  name="arrow-right"
-                  color="#CCCCCC"
-                  size="12"
-                ></u-icon
-              ></view>
+            <view class="sixth">
+              <view class="top">比赛时间 <view class="icon">*</view></view>
+              <view class="next">
+                <view class="time" @click="chooseTime1(item)">{{
+                  item.startTime
+                }}</view
+                >至
+                <view class="time" @click="chooseTime2(item)">{{
+                  item.endTime
+                }}</view>
+              </view>
             </view>
             <view class="third">
               <view class="left">直播地址 </view>
-              <view class="right"
-                >https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
-              >
+              <input
+                type="text"
+                placeholder="请输入直播地址"
+                placeholder-class="pl-class2"
+                class="input"
+                v-model="item.liveUrl"
+              />
             </view>
             <view class="member">
-              <view class="item">
+              <view
+                class="item"
+                v-for="(user, UIndex) in item.list"
+                :key="UIndex"
+              >
                 <view class="avatar">
                   <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A01</view>
+                  <view class="rank">参赛号</view>
                 </view>
-                <view class="time" v-if="scoringMethod == 1">
-                  积分 <text>0</text>
+
+                <view class="name">选手名称</view>
+                <view class="select" v-if="scoringMethod == 1">
+                  积分
+                  <view class="icon"></view>
                 </view>
                 <view class="time" v-if="scoringMethod == 2">
                   3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
@@ -1145,108 +1160,22 @@
                 </view>
                 <view class="select" v-if="scoringMethod == 6">
                   设置
-                  <u-icon
-                    name="arrow-down-fill"
-                    color="black"
-                    size="8"
-                  ></u-icon>
-                </view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A02</view>
-                </view>
-                <view class="time" v-if="scoringMethod == 1">
-                  积分 <text>0</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 2">
-                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 3">
-                  12 <text>米</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 4">
-                  89 <text>分</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 5">
-                  3 <text>千克</text>
-                </view>
-                <view class="select" v-if="scoringMethod == 6">
-                  设置
-                  <u-icon
-                    name="arrow-down-fill"
-                    color="black"
-                    size="8"
-                  ></u-icon>
-                </view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A03</view>
-                </view>
-                <view class="time" v-if="scoringMethod == 1">
-                  积分 <text>0</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 2">
-                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 3">
-                  12 <text>米</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 4">
-                  89 <text>分</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 5">
-                  3 <text>千克</text>
-                </view>
-                <view class="select" v-if="scoringMethod == 6">
-                  设置
-                  <u-icon
-                    name="arrow-down-fill"
-                    color="black"
-                    size="8"
-                  ></u-icon>
-                </view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A04</view>
-                </view>
-                <view class="time" v-if="scoringMethod == 1">
-                  积分 <text>0</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 2">
-                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 3">
-                  12 <text>米</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 4">
-                  89 <text>分</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 5">
-                  3 <text>千克</text>
-                </view>
-                <view class="select" v-if="scoringMethod == 6">
-                  设置
-                  <u-icon
-                    name="arrow-down-fill"
-                    color="black"
-                    size="8"
-                  ></u-icon>
+                  <view class="icon"></view>
                 </view>
               </view>
             </view>
           </view>
 
-          <view class="pp-content" v-show="preview == 1">
+          <view
+            class="pp-content"
+            v-show="preview == 2"
+            v-for="(item, index) in groups"
+            :key="index"
+          >
             <view class="first">
               <view class="left">
                 组名
-                <view class="h">B组</view>
+                <view class="h">{{ item.groupName }}</view>
               </view>
               <view class="judge">
                 <u-avatar :src="src" size="60"></u-avatar>
@@ -1255,186 +1184,32 @@
             </view>
             <view class="second">
               <view class="left">比赛场地 <view class="icon">*</view></view>
-              <view class="right"
-                >请选择比赛场地<u-icon
-                  name="arrow-right"
-                  color="#CCCCCC"
-                  size="12"
-                ></u-icon
+              <view class="right" @click="chooseAddress1(item)"
+                >{{ item.address
+                }}<u-icon name="arrow-right" color="#CCCCCC" size="12"></u-icon
               ></view>
             </view>
-            <view class="second">
-              <view class="left">比赛时间 <view class="icon">*</view></view>
-              <view class="right"
-                >10月12日 14:00<u-icon
-                  name="arrow-right"
-                  color="#CCCCCC"
-                  size="12"
-                ></u-icon
-              ></view>
+            <view class="sixth">
+              <view class="top">比赛时间 <view class="icon">*</view></view>
+              <view class="next">
+                <view class="time" @click="chooseTime1(item)">{{
+                  item.startTime
+                }}</view
+                >至
+                <view class="time" @click="chooseTime2(item)">{{
+                  item.endTime
+                }}</view>
+              </view>
             </view>
             <view class="third">
               <view class="left">直播地址 </view>
-              <view class="right"
-                >https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
-              >
-            </view>
-            <view class="member">
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">B01</view>
-                </view>
-                <view class="time" v-if="scoringMethod == 1">
-                  积分 <text>0</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 2">
-                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 3">
-                  12 <text>米</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 4">
-                  89 <text>分</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 5">
-                  3 <text>千克</text>
-                </view>
-                <view class="select" v-if="scoringMethod == 6">
-                  设置
-                  <u-icon
-                    name="arrow-down-fill"
-                    color="black"
-                    size="8"
-                  ></u-icon>
-                </view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">B02</view>
-                </view>
-                <view class="time" v-if="scoringMethod == 1">
-                  积分 <text>0</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 2">
-                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 3">
-                  12 <text>米</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 4">
-                  89 <text>分</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 5">
-                  3 <text>千克</text>
-                </view>
-                <view class="select" v-if="scoringMethod == 6">
-                  设置
-                  <u-icon
-                    name="arrow-down-fill"
-                    color="black"
-                    size="8"
-                  ></u-icon>
-                </view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">B03</view>
-                </view>
-                <view class="time" v-if="scoringMethod == 1">
-                  积分 <text>0</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 2">
-                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 3">
-                  12 <text>米</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 4">
-                  89 <text>分</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 5">
-                  3 <text>千克</text>
-                </view>
-                <view class="select" v-if="scoringMethod == 6">
-                  设置
-                  <u-icon
-                    name="arrow-down-fill"
-                    color="black"
-                    size="8"
-                  ></u-icon>
-                </view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">B04</view>
-                </view>
-                <view class="time" v-if="scoringMethod == 1">
-                  积分 <text>0</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 2">
-                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 3">
-                  12 <text>米</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 4">
-                  89 <text>分</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 5">
-                  3 <text>千克</text>
-                </view>
-                <view class="select" v-if="scoringMethod == 6">
-                  设置
-                  <u-icon
-                    name="arrow-down-fill"
-                    color="black"
-                    size="8"
-                  ></u-icon>
-                </view>
-              </view>
-            </view>
-          </view>
-
-          <view class="pp-content" v-show="preview == 2">
-            <view class="first">
-              <view class="left">
-                组名
-                <view class="h">B组</view>
-              </view>
-              <view class="judge">
-                <u-avatar :src="src" size="60"></u-avatar>
-                <view class="name">裁判员</view>
-              </view>
-            </view>
-            <view class="second">
-              <view class="left">比赛场地 <view class="icon">*</view></view>
-              <view class="right"
-                >请选择比赛场地<u-icon
-                  name="arrow-right"
-                  color="#CCCCCC"
-                  size="12"
-                ></u-icon
-              ></view>
-            </view>
-            <view class="second">
-              <view class="left">比赛时间 <view class="icon">*</view></view>
-              <view class="right"
-                >10月12日 14:00<u-icon
-                  name="arrow-right"
-                  color="#CCCCCC"
-                  size="12"
-                ></u-icon
-              ></view>
-            </view>
-            <view class="third">
-              <view class="left">直播地址 </view>
-              <view class="right"
-                >https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
-              >
+              <input
+                type="text"
+                placeholder="请输入直播地址"
+                placeholder-class="pl-class2"
+                class="input"
+                v-model="item.liveUrl"
+              />
             </view>
 
             <view class="fourth">
@@ -1445,40 +1220,12 @@
             </view>
 
             <view class="fifth">
-              <view class="item">
-                <view class="num">A01</view>
-                <view class="avatar">
-                  <u-avatar :src="src"></u-avatar>
-                </view>
-                <view class="grade"></view>
-                <view class="rank">_</view>
-              </view>
-              <view class="item">
-                <view class="num">A02</view>
-                <view class="avatar">
-                  <u-avatar :src="src"></u-avatar>
-                </view>
-                <view class="grade"></view>
-                <view class="rank">_</view>
-              </view>
-              <view class="item">
-                <view class="num">A03</view>
-                <view class="avatar">
-                  <u-avatar :src="src"></u-avatar>
-                </view>
-                <view class="grade"></view>
-                <view class="rank">_</view>
-              </view>
-              <view class="item">
-                <view class="num">A04</view>
-                <view class="avatar">
-                  <u-avatar :src="src"></u-avatar>
-                </view>
-                <view class="grade"></view>
-                <view class="rank">_</view>
-              </view>
-              <view class="item">
-                <view class="num">A05</view>
+              <view
+                class="item"
+                v-for="(user, UIndex) in item.list"
+                :key="UIndex"
+              >
+                <view class="num">参赛号</view>
                 <view class="avatar">
                   <u-avatar :src="src"></u-avatar>
                 </view>
@@ -1492,11 +1239,13 @@
             class="pp-content"
             v-show="preview == 3"
             style="padding-bottom: 0"
+            v-for="(item, index) in groups"
+            :key="index"
           >
             <view class="first">
               <view class="left">
                 组名
-                <view class="h">1组</view>
+                <view class="h">{{ item.groupName }}</view>
               </view>
               <view class="judge">
                 <u-avatar :src="src" size="60"></u-avatar>
@@ -1505,125 +1254,48 @@
             </view>
             <view class="second">
               <view class="left">比赛场地 <view class="icon">*</view></view>
-              <view class="right"
-                >天河体育中心羽毛球馆<u-icon
-                  name="arrow-right"
-                  color="#CCCCCC"
-                  size="12"
-                ></u-icon
+              <view class="right" @click="chooseAddress1(item)"
+                >{{ item.address
+                }}<u-icon name="arrow-right" color="#CCCCCC" size="12"></u-icon
               ></view>
             </view>
-            <view class="second">
-              <view class="left">比赛时间 <view class="icon">*</view></view>
-              <view class="right"
-                >10月12日 14:00<u-icon
-                  name="arrow-right"
-                  color="#CCCCCC"
-                  size="12"
-                ></u-icon
-              ></view>
+            <view class="sixth">
+              <view class="top">比赛时间 <view class="icon">*</view></view>
+              <view class="next">
+                <view class="time" @click="chooseTime1(item)">{{
+                  item.startTime
+                }}</view
+                >至
+                <view class="time" @click="chooseTime2(item)">{{
+                  item.endTime
+                }}</view>
+              </view>
             </view>
             <view class="third">
               <view class="left">直播地址 </view>
-              <view class="right"
-                >https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
-              >
+              <input
+                type="text"
+                placeholder="请输入直播地址"
+                placeholder-class="pl-class2"
+                class="input"
+                v-model="item.liveUrl"
+              />
             </view>
             <view class="member">
-              <view class="item">
+              <view
+                class="item"
+                v-for="(user, UIndex) in item.list"
+                :key="UIndex"
+              >
                 <view class="avatar">
                   <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">B01</view>
+                  <view class="rank">参赛号</view>
                 </view>
-                <view class="time" v-if="scoringMethod == 1">
-                  积分 <text>0</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 2">
-                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 3">
-                  12 <text>米</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 4">
-                  89 <text>分</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 5">
-                  3 <text>千克</text>
-                </view>
-                <view class="select" v-if="scoringMethod == 6">
-                  设置
-                  <u-icon
-                    name="arrow-down-fill"
-                    color="black"
-                    size="8"
-                  ></u-icon>
-                </view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">B02</view>
-                </view>
-                <view class="time" v-if="scoringMethod == 1">
-                  积分 <text>0</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 2">
-                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 3">
-                  12 <text>米</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 4">
-                  89 <text>分</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 5">
-                  3 <text>千克</text>
-                </view>
-                <view class="select" v-if="scoringMethod == 6">
-                  设置
-                  <u-icon
-                    name="arrow-down-fill"
-                    color="black"
-                    size="8"
-                  ></u-icon>
-                </view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">B03</view>
-                </view>
-                <view class="time" v-if="scoringMethod == 1">
-                  积分 <text>0</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 2">
-                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 3">
-                  12 <text>米</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 4">
-                  89 <text>分</text>
-                </view>
-                <view class="time" v-if="scoringMethod == 5">
-                  3 <text>千克</text>
-                </view>
-                <view class="select" v-if="scoringMethod == 6">
-                  设置
-                  <u-icon
-                    name="arrow-down-fill"
-                    color="black"
-                    size="8"
-                  ></u-icon>
-                </view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">B04</view>
-                </view>
-                <view class="time" v-if="scoringMethod == 1">
-                  积分 <text>0</text>
+                <view class="name">选手名称</view>
+
+                <view class="select" v-if="scoringMethod == 1">
+                  积分
+                  <view class="icon"></view>
                 </view>
                 <view class="time" v-if="scoringMethod == 2">
                   3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
@@ -1649,12 +1321,16 @@
             </view>
 
             <u-divider text="对战详情"></u-divider>
-            <view class="item-list" v-show="expand">
+            <view
+              class="item-list"
+              v-for="(war, WIndex) in item.warList"
+              :key="index"
+            >
               <view class="detail">
                 <view class="item">
                   <view class="avatar">
                     <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
+                    <view class="rank">参赛号</view>
                   </view>
                   <view class="grade">积分0</view>
                 </view>
@@ -1662,153 +1338,23 @@
                 <view class="item">
                   <view class="avatar">
                     <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
+                    <view class="rank">参赛号</view>
                   </view>
                   <view class="grade">积分0</view>
                 </view>
-                <view class="chang">第1场</view>
+                <view class="chang">第{{ WIndex + 1 }}场</view>
               </view>
-              <view class="next">
-                <view class="left">比赛时间 <view class="icon">*</view></view>
-                <view class="right"
-                  >10月12日 14:00-17:00
-                  <u-icon name="arrow-right" size="10"></u-icon
-                ></view>
-              </view>
-            </view>
-            <view class="item-list" v-show="expand">
-              <view class="detail">
-                <view class="item">
-                  <view class="avatar">
-                    <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
-                  </view>
-                  <view class="grade">积分0</view>
+              <view class="sixth">
+                <view class="top">比赛时间 <view class="icon">*</view></view>
+                <view class="next">
+                  <view class="time" @click="chooseTime1(item)">{{
+                    item.startTime
+                  }}</view
+                  >至
+                  <view class="time" @click="chooseTime2(item)">{{
+                    item.endTime
+                  }}</view>
                 </view>
-                VS
-                <view class="item">
-                  <view class="avatar">
-                    <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
-                  </view>
-                  <view class="grade">积分0</view>
-                </view>
-                <view class="chang">第1场</view>
-              </view>
-              <view class="next">
-                <view class="left">比赛时间 <view class="icon">*</view></view>
-                <view class="right"
-                  >10月12日 14:00-17:00
-                  <u-icon name="arrow-right" size="10"></u-icon
-                ></view>
-              </view>
-            </view>
-            <view class="item-list" v-show="expand">
-              <view class="detail">
-                <view class="item">
-                  <view class="avatar">
-                    <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
-                  </view>
-                  <view class="grade">积分0</view>
-                </view>
-                VS
-                <view class="item">
-                  <view class="avatar">
-                    <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
-                  </view>
-                  <view class="grade">积分0</view>
-                </view>
-                <view class="chang">第1场</view>
-              </view>
-              <view class="next">
-                <view class="left">比赛时间 <view class="icon">*</view></view>
-                <view class="right"
-                  >10月12日 14:00-17:00
-                  <u-icon name="arrow-right" size="10"></u-icon
-                ></view>
-              </view>
-            </view>
-            <view class="item-list" v-show="expand">
-              <view class="detail">
-                <view class="item">
-                  <view class="avatar">
-                    <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
-                  </view>
-                  <view class="grade">积分0</view>
-                </view>
-                VS
-                <view class="item">
-                  <view class="avatar">
-                    <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
-                  </view>
-                  <view class="grade">积分0</view>
-                </view>
-                <view class="chang">第1场</view>
-              </view>
-              <view class="next">
-                <view class="left">比赛时间 <view class="icon">*</view></view>
-                <view class="right"
-                  >10月12日 14:00-17:00
-                  <u-icon name="arrow-right" size="10"></u-icon
-                ></view>
-              </view>
-            </view>
-            <view class="item-list" v-show="expand">
-              <view class="detail">
-                <view class="item">
-                  <view class="avatar">
-                    <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
-                  </view>
-                  <view class="grade">积分0</view>
-                </view>
-                VS
-                <view class="item">
-                  <view class="avatar">
-                    <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
-                  </view>
-                  <view class="grade">积分0</view>
-                </view>
-                <view class="chang">第1场</view>
-              </view>
-              <view class="next">
-                <view class="left">比赛时间 <view class="icon">*</view></view>
-                <view class="right"
-                  >10月12日 14:00-17:00
-                  <u-icon name="arrow-right" size="10"></u-icon
-                ></view>
-              </view>
-            </view>
-            <view class="item-list" v-show="expand">
-              <view class="detail">
-                <view class="item">
-                  <view class="avatar">
-                    <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
-                  </view>
-                  <view class="grade">积分0</view>
-                </view>
-                VS
-                <view class="item">
-                  <view class="avatar">
-                    <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
-                  </view>
-                  <view class="grade">积分0</view>
-                </view>
-                <view class="chang">第1场</view>
-              </view>
-              <view class="next">
-                <view class="left">比赛时间 <view class="icon">*</view></view>
-                <view class="right"
-                  >10月12日 14:00-17:00
-                  <u-icon name="arrow-right" size="10"></u-icon
-                ></view>
               </view>
             </view>
 
@@ -1816,23 +1362,28 @@
               src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/卡片展开.png"
               mode="scaleToFill"
               style="width: 80px; height: 16px; margin: auto; display: block"
-              @click="expand = true"
-              v-if="!expand"
+              @click="getMatchHitWar(item)"
+              v-if="!item.expand"
             />
             <image
               src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/卡片收起.png"
               mode="scaleToFill"
               style="width: 80px; height: 16px; margin: auto; display: block"
-              @click="expand = false"
+              @click="closeWar(item)"
               v-else
             />
           </view>
 
-          <view class="pp-content" v-show="preview == 4">
+          <view
+            class="pp-content"
+            v-show="preview == 4"
+            v-for="(item, index) in groups"
+            :key="index"
+          >
             <view class="first">
               <view class="left">
                 组名
-                <view class="h">1组</view>
+                <view class="h">{{ item.groupName }}</view>
               </view>
               <view class="judge">
                 <u-avatar :src="src" size="60"></u-avatar>
@@ -1841,56 +1392,66 @@
             </view>
             <view class="second">
               <view class="left">比赛场地 <view class="icon">*</view></view>
-              <view class="right"
-                >天河体育中心羽毛球馆<u-icon
-                  name="arrow-right"
-                  color="#CCCCCC"
-                  size="12"
-                ></u-icon
+              <view class="right" @click="chooseAddress1(item)"
+                >{{ item.address
+                }}<u-icon name="arrow-right" color="#CCCCCC" size="12"></u-icon
               ></view>
             </view>
-            <view class="second">
-              <view class="left">比赛时间 <view class="icon">*</view></view>
-              <view class="right"
-                >10月12日 14:00<u-icon
-                  name="arrow-right"
-                  color="#CCCCCC"
-                  size="12"
-                ></u-icon
-              ></view>
+            <view class="sixth">
+              <view class="top">比赛时间 <view class="icon">*</view></view>
+              <view class="next">
+                <view class="time" @click="chooseTime1(item)">{{
+                  item.startTime
+                }}</view
+                >至
+                <view class="time" @click="chooseTime2(item)">{{
+                  item.endTime
+                }}</view>
+              </view>
             </view>
             <view class="third">
               <view class="left">直播地址 </view>
-              <view class="right"
-                >https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
-              >
+              <input
+                type="text"
+                placeholder="请输入直播地址"
+                placeholder-class="pl-class2"
+                class="input"
+                v-model="item.liveUrl"
+              />
             </view>
             <view class="item-list">
               <view class="detail">
                 <view class="item">
                   <view class="avatar">
                     <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
+                    <view class="rank">参赛号</view>
                   </view>
+                  <view class="name">选手昵称</view>
                   <view class="grade">积分0</view>
                 </view>
                 VS
                 <view class="item">
                   <view class="avatar">
                     <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
+                    <view class="rank">参赛号</view>
                   </view>
+                  <view class="name">选手昵称</view>
                   <view class="grade">积分0</view>
                 </view>
               </view>
             </view>
           </view>
 
-          <view class="pp-content" v-show="preview == 5">
+          <view
+            class="pp-content"
+            v-show="preview == 5"
+            v-for="(item, index) in groups"
+            :key="index"
+          >
             <view class="first">
               <view class="left">
                 组名
-                <view class="h">1组</view>
+                <view class="h">{{ item.groupName }}</view>
               </view>
               <view class="judge">
                 <u-avatar :src="src" size="60"></u-avatar>
@@ -1900,61 +1461,61 @@
             <view class="item-list">
               <view class="detail">
                 <view class="item">
+                  <view class="zc">主场</view>
                   <view class="avatar">
                     <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
+                    <view class="rank">参赛号</view>
                   </view>
+                  <view class="name">选手昵称</view>
                   <view class="grade">积分0</view>
                 </view>
                 VS
                 <view class="item">
+                  <view class="kc">客场</view>
                   <view class="avatar">
                     <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
+                    <view class="rank">参赛号</view>
                   </view>
+                  <view class="name">选手昵称</view>
                   <view class="grade">积分0</view>
                 </view>
                 <view class="chang">第1场</view>
               </view>
-              <view class="next">
-                <view class="left">比赛时间 <view class="icon">*</view></view>
-                <view class="right"
-                  >10月12日 14:00-17:00
-                  <u-icon name="arrow-right" size="10"></u-icon
-                ></view>
-              </view>
             </view>
             <view class="second">
               <view class="left">比赛场地 <view class="icon">*</view></view>
-              <view class="right"
-                >天河体育中心羽毛球馆<u-icon
-                  name="arrow-right"
-                  color="#CCCCCC"
-                  size="12"
-                ></u-icon
+              <view class="right" @click="chooseAddress1(item)"
+                >{{ item.address
+                }}<u-icon name="arrow-right" color="#CCCCCC" size="12"></u-icon
               ></view>
             </view>
-            <view class="second">
-              <view class="left">比赛时间 <view class="icon">*</view></view>
-              <view class="right"
-                >10月12日 14:00<u-icon
-                  name="arrow-right"
-                  color="#CCCCCC"
-                  size="12"
-                ></u-icon
-              ></view>
+            <view class="sixth">
+              <view class="top">比赛时间 <view class="icon">*</view></view>
+              <view class="next">
+                <view class="time" @click="chooseTime1(item)">{{
+                  item.startTime
+                }}</view
+                >至
+                <view class="time" @click="chooseTime2(item)">{{
+                  item.endTime
+                }}</view>
+              </view>
             </view>
             <view class="third">
               <view class="left">直播地址 </view>
-              <view class="right"
-                >https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
-              >
+              <input
+                type="text"
+                placeholder="请输入直播地址"
+                placeholder-class="pl-class2"
+                class="input"
+                v-model="item.liveUrl"
+              />
             </view>
 
             <view class="first" style="margin-top: 30px">
               <view class="left">
                 组名
-                <view class="h">1组</view>
+                <view class="h">{{ item.groupName }}</view>
               </view>
               <view class="judge">
                 <u-avatar :src="src" size="60"></u-avatar>
@@ -1964,21 +1525,25 @@
             <view class="item-list">
               <view class="detail">
                 <view class="item">
+                  <view class="zc1">主场</view>
                   <view class="avatar">
                     <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
+                    <view class="rank">参赛号</view>
                   </view>
+                  <view class="name">选手昵称</view>
                   <view class="grade">积分0</view>
                 </view>
                 VS
                 <view class="item">
+                  <view class="kc1">客场</view>
                   <view class="avatar">
                     <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
+                    <view class="rank">参赛号</view>
                   </view>
+                  <view class="name">选手昵称</view>
                   <view class="grade">积分0</view>
                 </view>
-                <view class="chang">第1场</view>
+                <view class="chang">第2场</view>
               </view>
               <view class="next">
                 <view class="left">比赛时间 <view class="icon">*</view></view>
@@ -2016,11 +1581,16 @@
             </view>
           </view>
 
-          <view class="pp-content" v-show="preview == 6">
+          <view
+            class="pp-content"
+            v-show="preview == 6"
+            v-for="(item, index) in groups"
+            :key="index"
+          >
             <view class="first">
               <view class="left">
                 组名
-                <view class="h">1组</view>
+                <view class="h">{{ item.groupName }}</view>
               </view>
               <view class="judge">
                 <u-avatar :src="src" size="60"></u-avatar>
@@ -2029,45 +1599,50 @@
             </view>
             <view class="second">
               <view class="left">比赛场地 <view class="icon">*</view></view>
-              <view class="right"
-                >天河体育中心羽毛球馆<u-icon
-                  name="arrow-right"
-                  color="#CCCCCC"
-                  size="12"
-                ></u-icon
+              <view class="right" @click="chooseAddress1(item)"
+                >{{ item.address
+                }}<u-icon name="arrow-right" color="#CCCCCC" size="12"></u-icon
               ></view>
             </view>
-            <view class="second">
-              <view class="left">比赛时间 <view class="icon">*</view></view>
-              <view class="right"
-                >10月12日 14:00<u-icon
-                  name="arrow-right"
-                  color="#CCCCCC"
-                  size="12"
-                ></u-icon
-              ></view>
+            <view class="sixth">
+              <view class="top">比赛时间 <view class="icon">*</view></view>
+              <view class="next">
+                <view class="time" @click="chooseTime1(item)">{{
+                  item.startTime
+                }}</view
+                >至
+                <view class="time" @click="chooseTime2(item)">{{
+                  item.endTime
+                }}</view>
+              </view>
             </view>
             <view class="third">
               <view class="left">直播地址 </view>
-              <view class="right"
-                >https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
-              >
+              <input
+                type="text"
+                placeholder="请输入直播地址"
+                placeholder-class="pl-class2"
+                class="input"
+                v-model="item.liveUrl"
+              />
             </view>
             <view class="item-list">
               <view class="detail">
                 <view class="item">
                   <view class="avatar">
                     <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
+                    <view class="rank">参赛号</view>
                   </view>
+                  <view class="name">选手昵称</view>
                   <view class="grade">积分0</view>
                 </view>
                 VS
                 <view class="item">
                   <view class="avatar">
                     <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">A01</view>
+                    <view class="rank">参赛号</view>
                   </view>
+                  <view class="name">选手昵称</view>
                   <view class="grade">积分0</view>
                 </view>
               </view>
@@ -2311,7 +1886,7 @@
       ></u-picker>
       <u-picker
         :show="show11"
-        :columns="columns4"
+        :columns="columns11"
         @cancel="show11 = false"
         @confirm="confirm11"
       ></u-picker>
@@ -2474,6 +2049,20 @@
         @cancel="show21 = false"
         @confirm="confirm21"
       ></u-picker>
+      <u-datetime-picker
+        :show="timeShow"
+        v-model="date"
+        mode="datetime"
+        @cancel="timeShow = false"
+        @confirm="confirm25"
+      ></u-datetime-picker>
+      <u-datetime-picker
+        :show="timeShow1"
+        v-model="date"
+        mode="datetime"
+        @cancel="timeShow1 = false"
+        @confirm="confirm26"
+      ></u-datetime-picker>
       <u-toast ref="notice"></u-toast>
     </view>
   </view>
@@ -2490,7 +2079,7 @@ export default {
       show7: false,
       show9: false,
       show13: false,
-      activeTab: 3,
+      activeTab: uni.getStorageSync("activeTab") || 0,
       checked: true,
       show: false,
       changeSkin: false,
@@ -2561,7 +2150,7 @@ export default {
         },
       ],
       bmType: [],
-      serialNum: uni.setStorageSync("serialNum") || null,
+      serialNum: uni.setStorageSync("serialNum") || "202504000912",
       fileList: [],
       joinList: uni.getStorageSync("joinList") || ["1"],
       joinPointsRace: uni.getStorageSync("joinPointsRace") || 1,
@@ -2614,15 +2203,14 @@ export default {
       show11: false,
       groupNum: uni.getStorageSync("groupNum") ?? null,
       group_num: uni.getStorageSync("group_num") ?? null,
-      group_num_name: uni.getStorageSync("group_num_name") ?? null,
       show12: false,
       columns12: [],
+      columns11: [],
       matchingMannerName: uni.getStorageSync("matchingMannerName") ?? null,
       matchingManner: uni.getStorageSync("matchingManner") ?? null,
       op: 0,
-      stageExplains: uni.getStorageSync("stageExplains") || "",
-      gameList: [],
-      scheTypeName: uni.getStorageSync("stageExplains") ?? "",
+      stageUserNum: uni.getStorageSync("stageUserNum") || "",
+      gameList: uni.getStorageSync("gameList") || [],
       items: uni.getStorageSync("items") || [],
       currentIndex: "",
       counter: "",
@@ -2642,11 +2230,11 @@ export default {
       columns19: [],
       columns20: [],
       show16: false,
-      refundDays: "1",
-      refundDaysName: "",
+      refundDays: uni.getStorageSync("refundDays") || "1",
+      refundDaysName: uni.getStorageSync("refundDaysName") || "",
       show17: false,
-      insuranceId: "1",
-      insuranceName: "",
+      insuranceId: uni.getStorageSync("insuranceId") || "1",
+      insuranceName: uni.getStorageSync("insuranceName") || "",
       ageLimitMaxName: uni.getStorageSync("ageLimitMaxName") || "",
       ageLimitMinName: uni.getStorageSync("ageLimitMinName") || "",
       name_copy: uni.getStorageSync("name") || "",
@@ -2682,9 +2270,12 @@ export default {
       ],
       zz: uni.getStorageSync("zz") || "",
       zzName: uni.getStorageSync("zzName") || "",
-      expand: false,
       preview: false,
       navBgColor: "rgba(255, 255, 255, 0)",
+      groups: uni.getStorageSync("groups") || [],
+      timeShow: false,
+      currentTime: "",
+      timeShow1: false,
     };
   },
   onPageScroll(e) {
@@ -2692,7 +2283,7 @@ export default {
     let opacity = 0;
 
     if (scrollTop > 0 && scrollTop <= 100) {
-      opacity = scrollTop / 100; // 计算透明度（0 到 1）
+      opacity = scrollTop / 250; // 计算透明度（0 到 1）
     } else if (scrollTop > 100) {
       opacity = 1; //
     }
@@ -2701,10 +2292,11 @@ export default {
     this.navBgColor = `rgba(255, 255, 255, ${opacity})`;
   },
   onLoad(options) {
-    this.serialNum = options.serialNum;
-    uni.setStorageSync("serialNum", options.serialNum);
-    if (!this.serialNum) {
-      this.getSerialNum();
+    this.getSerialNum();
+    uni.setStorageSync("serialNum", "202504000912");
+    if (options.serialNum) {
+      this.serialNum = options.serialNum;
+      uni.setStorageSync("serialNum", options.serialNum);
     }
 
     this.getMatchRank();
@@ -2722,6 +2314,7 @@ export default {
   methods: {
     setActiveTab(index) {
       this.activeTab = index;
+      uni.setStorageSync("activeTab", index);
       if (index == 3) {
         this.getMatchTemplateHit();
       }
@@ -2737,6 +2330,7 @@ export default {
       }
     },
     async getSerialNum() {
+      if (this.serialNum) return;
       const result = await uni.$u.http.get("/match/getSerialNum");
       if (result.status == 200) {
         this.serialNum = result.data.serialNum;
@@ -2940,9 +2534,10 @@ export default {
               this.$refs.notice.show({
                 type: "default",
                 message: res.message,
+                complete: () => {
+                  this.activeTab++;
+                },
               });
-
-              this.activeTab++;
             }
           } catch (err) {
             this.$refs.notice.show({
@@ -3066,10 +2661,8 @@ export default {
     },
     confirm11(n) {
       this.show11 = false;
-      this.group_num = n.indexs[0];
-      this.group_num_name = n.value[0];
+      this.group_num = n.value[0];
       uni.setStorageSync("group_num", this.group_num);
-      uni.setStorageSync("group_num_name", this.group_num_name);
     },
     confirm12(n) {
       this.show12 = false;
@@ -3103,10 +2696,11 @@ export default {
           this.$refs.notice.show({
             type: "default",
             message: result.message,
+            complete: () => {
+              this.activeTab++;
+              this.getGame();
+            },
           });
-
-          this.activeTab++;
-          this.getGame();
         }
       } catch (err) {
         this.$refs.notice.show({
@@ -3141,8 +2735,10 @@ export default {
           this.$refs.notice.show({
             type: "default",
             message: result.message,
+            complete: () => {
+              this.activeTab++;
+            },
           });
-          this.activeTab++;
         }
       } catch (error) {
         this.$refs.notice.show({
@@ -3163,40 +2759,226 @@ export default {
       this.rewards[index].rewardUnit = n;
       uni.setStorageSync("rewards", this.rewards);
     },
-    blur10(n) {
-      uni.setStorageSync("stageExplains", n);
-    },
     async save4() {
       try {
-        var result = await uni.$u.http.post("/match/saveMatchHitConfig", {
+        if (this.zz != 3) {
+          // 构造数据的辅助函数
+          const buildGroupData = (group) => ({
+            id: group.id,
+            matchId: this.matchId,
+            serialNum: this.serialNum,
+            hitId: group.hitId,
+            groupNum: group.groupNum,
+            groupName: group.groupName,
+            warType: group.warType,
+            address: group.address,
+            startTime: group.startTime,
+            endTime: group.endTime,
+            liveUrl: group.liveUrl,
+            scoringMethod: this.scoringMethod,
+            umpireId: group.umpireId,
+            list: group.list,
+          });
+
+          // 使用 Promise.all 并发处理所有组的更新请求
+          const updatePromises = this.groups.map(async (group, index) => {
+            try {
+              const data = buildGroupData(group);
+              const result = await uni.$u.http.put(
+                "/match/updateMatchHitGroup",
+                data
+              );
+              if (result.status !== 200) {
+                throw new Error(
+                  `第 ${index + 1} 组更新失败: ${result.message}`
+                );
+              }
+              return { success: true, message: result.message };
+            } catch (error) {
+              return { success: false, message: error.message || "未知错误" };
+            }
+          });
+
+          // 等待所有请求完成
+          const results = await Promise.all(updatePromises);
+
+          // 统计成功和失败的数量
+          const successCount = results.filter((res) => res.success).length;
+          const failureMessages = results
+            .filter((res) => !res.success)
+            .map((res) => res.message);
+
+          // 显示提示信息
+          if (successCount === this.groups.length) {
+            this.$refs.notice.show({
+              type: "default",
+              message: "保存成功",
+            });
+          } else {
+            this.$refs.notice.show({
+              type: "default",
+              message: `部分组保存失败: ${failureMessages.join(", ")}`,
+            });
+          }
+        } else {
+          // 构造数据的辅助函数
+          const buildWarData = (group, war) => ({
+            id: war.id,
+            matchId: war.matchId,
+            serialNum: war.serialNum,
+            hitId: war.hitId,
+            hitGroupId: war.hitGroupId,
+            matchesNum: war.matchesNum,
+            matchesName: war.matchesName,
+            address: group.address,
+            startTime: group.startTime,
+            endTime: group.endTime,
+            liveUrl: group.liveUrl,
+            homeUserScore: war.homeUserScore,
+            homeUserId: war.homeUserId,
+            awayUserId: war.awayUserId,
+            awayUserScore: war.awayUserScore,
+            unit: war.unit,
+            umpireId: war.umpireId,
+          });
+
+          // 收集所有需要更新的 war 数据
+          const updatePromises = (this.groups || []).flatMap((group) => {
+            // 确保 group.warList 是一个数组
+            const warList = group.warList || [];
+            return warList.map(async (war, j) => {
+              try {
+                const data = buildWarData(group, war);
+                const result = await uni.$u.http.put(
+                  "/match/updateMatchHitWar",
+                  data
+                );
+                if (result.status !== 200) {
+                  throw new Error(
+                    `第 ${j + 1} 场对战更新失败: ${result.message}`
+                  );
+                }
+                return { success: true, message: result.message };
+              } catch (error) {
+                return { success: false, message: error.message || "未知错误" };
+              }
+            });
+          });
+
+          // 等待所有请求完成
+          const results = await Promise.all(updatePromises);
+
+          // 统计成功和失败的数量
+          const successCount = results.filter((res) => res.success).length;
+          const failureMessages = results
+            .filter((res) => !res.success)
+            .map((res) => res.message);
+
+          // 显示提示信息
+          if (successCount === updatePromises.length) {
+            this.$refs.notice.show({
+              type: "default",
+              message: "所有对战已成功保存",
+            });
+          } else {
+            this.$refs.notice.show({
+              type: "default",
+              message: `部分对战保存失败: ${failureMessages.join(", ")}`,
+            });
+          }
+        }
+      } catch (err) {
+        console.log(err);
+        // 全局错误处理
+        this.$refs.notice.show({
+          type: "default",
+          message: err.message || "保存失败，请稍后重试",
+        });
+      }
+    },
+    async yl() {
+      try {
+        const remainder = this.stageUserNum % this.group_num;
+        if (remainder) {
+          this.$refs.notice.show({
+            type: "default",
+            message: "每组人数必须满编",
+          });
+          return;
+        }
+        if (
+          (this.zz == 4 || this.zz == 6) &&
+          this.group_num != this.stageUserNum / 2
+        ) {
+          this.$refs.notice.show({
+            type: "default",
+            message: "对战1v1赛总人数必须是组数的两倍",
+          });
+          return;
+        }
+        const params = {
           matchId: this.matchId,
           serialNum: this.serialNum,
           hitConfigList: [
             {
-              hitTypeCode: this.gameList[this.op].scheTypeCode,
+              scheId: this.gameList[this.op].scheId,
+              hitId: "",
+              hitTypeCode: this.gameList[this.op].scheId,
               hitTypeName: this.gameList[this.op].scheTypeName,
-              stageExplains: this.stageExplains,
-              groupNum: this.groupNum,
-              matchingManner: this.matchingManner,
+              stageUserNum: this.stageUserNum,
+              stageExplains: "",
+              groupNum: this.group_num,
+              matchingManner: this.zz,
               groupVenueType: this.groupVenueType,
               groupUmpireType: this.groupUmpireType,
               scoringMethod: this.scoringMethod,
             },
           ],
-        });
-        if (result.code == 200) {
+        };
+        var result = await uni.$u.http.post(
+          "/match/saveMatchHitConfig",
+          params
+        );
+        if (result.status == 400) {
           this.$refs.notice.show({
             type: "default",
             message: result.message,
           });
+        }
+        if (result.status == 200) {
+          this.groups = [];
+          this.getMatchHitGroup();
 
-          this.activeTab++;
+          this.preview = this.zz;
         }
       } catch (err) {
         this.$refs.notice.show({
           type: "default",
           message: err.data.message,
         });
+      }
+    },
+    async getMatchHitGroup() {
+      var result = await uni.$u.http.post("/match/getMatchHitGroup", {
+        matchId: this.matchId,
+        hitTypeName: this.gameList[this.op].scheTypeName,
+      });
+      this.groups = result.data.map((item) => {
+        item.expand = false;
+        return item;
+      });
+
+      uni.setStorageSync("groups", this.groups);
+    },
+    async getMatchHitWar(item) {
+      var result = await uni.$u.http.get("/match/getMatchHitWar", {
+        params: {
+          hitGroupId: item.id,
+        },
+      });
+      if (result.status == 200) {
+        item.warList = result.data;
+        item.expand = true;
       }
     },
     groupChange(n) {
@@ -3212,18 +2994,19 @@ export default {
       uni.setStorageSync("way", n);
     },
     async getGame() {
-      var result = await uni.$u.http.get("/match/getMatchSche", {
+      var result = await uni.$u.http.get("/match/getMatchScheTypeInfo", {
         params: {
           matchId: this.matchId,
         },
       });
       if (result.status == 200) {
         this.gameList = result.data;
-        this.gameList = this.gameList.filter(
-          (item, index) =>
-            item.scheTypeCode !== "registrationTime" &&
-            item.scheTypeCode !== "publicationTime"
-        );
+        // this.gameList = this.gameList.filter(
+        //   (item, index) =>
+        //     item.scheTypeCode !== "registrationTime" &&
+        //     item.scheTypeCode !== "publicationTime"
+        // );
+        uni.setStorageSync("gameList", this.gameList);
       }
     },
     addNext() {
@@ -3510,7 +3293,6 @@ export default {
       uni.removeStorageSync("publicationTime");
       uni.removeStorageSync("items");
       uni.removeStorageSync("rewards");
-      uni.removeStorageSync("stageExplains");
       uni.removeStorageSync("groupNum");
       uni.removeStorageSync("matchingManner");
       uni.removeStorageSync("matchingMannerName");
@@ -3527,7 +3309,16 @@ export default {
       uni.removeStorageSync("name");
       uni.removeStorageSync("fuTitle");
       uni.removeStorageSync("group_num");
-      uni.removeStorageSync("group_num_name");
+      uni.removeStorageSync("activeTab");
+      uni.removeStorageSync("refundDays");
+      uni.removeStorageSync("refundDaysName");
+      uni.removeStorageSync("insuranceId");
+      uni.removeStorageSync("insuranceName");
+      uni.removeStorageSync("stageUserNum");
+      uni.removeStorageSync("zz");
+      uni.removeStorageSync("gameList");
+      uni.removeStorageSync("zzName");
+      uni.removeStorageSync("groups");
     },
     async getMatchTemplateHit() {
       const hitTypeCode = this.gameList[this.op].scheTypeCode;
@@ -3537,33 +3328,34 @@ export default {
           hitTypeCode,
         },
       });
+
       if (result.status == 200) {
         uni.setStorageSync("groupNum", result.data.groupNum);
         this.groupNum = result.data.groupNum;
-        uni.setStorageSync("stageExplains", result.data.stageExplains);
-        this.stageExplains = result.data.stageExplains;
+        uni.setStorageSync("stageUserNum", result.data.stageUserNum);
+        this.stageUserNum = result.data.stageUserNum;
         uni.setStorageSync("groupUmpireType", result.data.groupUmpireType);
         this.groupUmpireType = result.data.groupUmpireType;
         uni.setStorageSync("groupVenueType", result.data.groupVenueType);
         this.groupVenueType = result.data.groupVenueType;
         uni.setStorageSync("matchingManner", result.data.matchingManner);
         this.matchingManner = result.data.matchingManner;
-        if (result.data.matchingManner == 1) {
-          this.matchingMannerName = "淘汰赛制";
-        }
-        if (result.data.matchingManner == 2) {
-          this.matchingMannerName = "循环赛制";
-        }
-        if (result.data.matchingManner == 3) {
-          this.matchingMannerName = "1v1赛制";
-        }
-        if (result.data.matchingManner == 4) {
-          this.matchingMannerName = "主客场赛制";
-        }
-        if (result.data.matchingManner == 5) {
-          this.matchingMannerName = "双败赛制";
-        }
-        uni.setStorageSync("matchingMannerName", this.matchingMannerName);
+        // if (result.data.matchingManner == 1) {
+        //   this.matchingMannerName = "淘汰赛制";
+        // }
+        // if (result.data.matchingManner == 2) {
+        //   this.matchingMannerName = "循环赛制";
+        // }
+        // if (result.data.matchingManner == 3) {
+        //   this.matchingMannerName = "1v1赛制";
+        // }
+        // if (result.data.matchingManner == 4) {
+        //   this.matchingMannerName = "主客场赛制";
+        // }
+        // if (result.data.matchingManner == 5) {
+        //   this.matchingMannerName = "双败赛制";
+        // }
+        // uni.setStorageSync("matchingMannerName", this.matchingMannerName);
         uni.setStorageSync("scoringMethod", result.data.scoringMethod);
         this.scoringMethod = result.data.scoringMethod;
       }
@@ -3606,7 +3398,7 @@ export default {
       result.data.map((item, index) => {
         arr.push(item.label);
       });
-      this.columns19 = [arr];
+      this.columns11 = [arr];
     },
     confirm19(n) {
       this.show19 = false;
@@ -3650,6 +3442,8 @@ export default {
       } else {
         this.refundDaysName = "赛前7天退100%，赛前退50%";
       }
+      uni.setStorageSync("refundDays", this.refundDays);
+      uni.setStorageSync("refundDaysName", this.refundDaysName);
       this.show16 = false;
     },
     insuranceEnter() {
@@ -3659,6 +3453,8 @@ export default {
       } else {
         this.insuranceName = "无保障";
       }
+      uni.setStorageSync("insuranceId", this.insuranceId);
+      uni.setStorageSync("insuranceName", this.insuranceName);
     },
     addReward(a) {
       this.rewards[a].prizes.push({
@@ -3700,6 +3496,9 @@ export default {
       this.show10 = true;
       this.counter = index;
     },
+    blur10() {
+      uni.setStorageSync("stageUserNum", this.stageUserNum);
+    },
     delPrize(a, b) {
       this.rewards[a].prizes.splice(b, 1);
       uni.setStorageSync("rewards", this.rewards);
@@ -3739,6 +3538,47 @@ export default {
       this.zzName = n.value[0];
       uni.setStorageSync("zz", this.zz);
       uni.setStorageSync("zzName", this.zzName);
+    },
+    chooseAddress1(item) {
+      uni.chooseLocation({
+        success: function (res) {
+          item.address = res.address;
+        },
+        fail: function () {},
+        complete: function () {},
+      });
+    },
+    chooseTime1(item) {
+      this.timeShow = true;
+      this.currentTime = item;
+    },
+    chooseTime2(item) {
+      this.timeShow1 = true;
+      this.currentTime = item;
+    },
+    confirm25(n) {
+      const date = new Date(n.value);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+      this.currentTime.startTime = `${year}-${month}-${day} ${hours}:${minutes}`;
+      this.timeShow = false;
+    },
+    confirm26(n) {
+      const date = new Date(n.value);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+      this.currentTime.endTime = `${year}-${month}-${day} ${hours}:${minutes}`;
+      this.timeShow1 = false;
+    },
+    closeWar(item) {
+      item.warList = [];
+      item.expand = false;
     },
   },
   computed: {
@@ -4281,6 +4121,24 @@ export default {
               display: flex;
               align-items: center;
             }
+            .select {
+              display: flex;
+              align-items: center;
+              gap: 5px;
+              margin-right: 12px;
+              text {
+                font-weight: 400;
+                font-size: 14px;
+                color: rgba(29, 35, 38, 0.3);
+              }
+            }
+            .stageExplains {
+              background-color: #f7f7f7;
+              border-radius: 4px;
+              box-sizing: border-box;
+              width: 50px;
+              text-align: center;
+            }
           }
           .right-r {
             display: flex;
@@ -4350,10 +4208,18 @@ export default {
             font-size: 14px;
             color: #1d2326;
             .left {
+              .l1 {
+                font-weight: 400;
+                font-size: 14px;
+                color: #1d2326;
+              }
               .l2 {
                 display: flex;
                 align-items: center;
                 gap: 5px;
+                font-weight: 400;
+                font-size: 14px;
+                color: rgba(29, 35, 38, 0.3);
               }
             }
             .right {
@@ -4580,19 +4446,33 @@ export default {
         justify-content: center;
         align-items: center;
       }
+
       .pp {
-        width: 262px;
+        width: 80%;
         height: 44px;
         background-color: black;
-        margin: auto;
-        margin-top: 30px;
-        border-radius: 20px;
+        border-radius: 22px;
         font-weight: 600;
         font-size: 16px;
         color: #ffffff;
         display: flex;
         justify-content: center;
         align-items: center;
+        margin: 30px auto 0;
+      }
+
+      .pp-yl {
+        width: 80%;
+        height: 44px;
+        background-color: white;
+        border-radius: 22px;
+        font-weight: 400;
+        font-size: 16px;
+        color: #1d2326;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 30px auto 0;
       }
 
       .pp-content {
@@ -4623,11 +4503,13 @@ export default {
               align-items: center;
               justify-content: center;
               background-color: #f5f5f5;
-              width: 50%;
-              height: 32px;
+              white-space: nowrap;
+              border-radius: 2px;
+
               font-weight: 400;
               font-size: 14px;
               color: #1d2326;
+              padding: 5px 8px;
             }
           }
           .judge {
@@ -4673,6 +4555,8 @@ export default {
             font-weight: 400;
             font-size: 14px;
             color: #1d2326;
+            width: 60%;
+            justify-content: flex-end;
           }
         }
         .third {
@@ -4692,23 +4576,58 @@ export default {
             font-size: 10px;
             color: #1d2326;
           }
+          .input {
+            text-align: right;
+          }
+        }
+        .sixth {
+          display: flex;
+          flex-direction: column;
+          border-bottom: 1px solid #f5f5f5;
+          padding: 16px 0;
+          gap: 12px;
+          .top {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #000000;
+            .icon {
+              color: #f05b51;
+            }
+          }
+          .next {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 400;
+            font-size: 14px;
+            color: #959595;
+            .time {
+              font-weight: 400;
+              font-size: 14px;
+              color: #1d2326;
+            }
+          }
         }
         .member {
           display: flex;
           align-items: center;
-          height: 83px;
           background-color: #f7f7f7;
           margin-top: 5px;
-          justify-content: space-around;
-          .item:nth-child(4) {
-            border: none;
-          }
+          justify-content: flex-start;
+          flex-wrap: wrap;
+          border-radius: 4px;
+
           .item {
+            width: 25%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            border-right: 1px solid #e6e6e6;
-            flex: 1;
+            // border-right: 1px solid #e6e6e6;
+            padding: 10px 0;
+            box-sizing: border-box;
             .select {
               display: flex;
               align-items: center;
@@ -4720,6 +4639,11 @@ export default {
               font-size: 12px;
               color: #000000;
               margin-top: 8px;
+              .icon {
+                border-left: 4px solid transparent;
+                border-right: 4px solid transparent;
+                border-top: 4px solid black;
+              }
             }
             .avatar {
               position: relative;
@@ -4738,6 +4662,12 @@ export default {
                 font-size: 12px;
                 color: #ec384a;
               }
+            }
+            .name {
+              font-weight: 400;
+              font-size: 10px;
+              color: #1d2326;
+              margin-top: 15px;
             }
             .time {
               display: flex;
@@ -4814,7 +4744,6 @@ export default {
             align-items: center;
             justify-content: space-around;
             background-color: #f7f7f7;
-            height: 90px;
             position: relative;
             padding: 0px 20px;
             box-sizing: border-box;
@@ -4824,6 +4753,40 @@ export default {
               align-items: center;
               flex: 1;
               position: relative;
+              padding: 10px 0;
+
+              .zc {
+                position: absolute;
+                left: 0;
+                top: 25%;
+                font-weight: 400;
+                font-size: 14px;
+                color: #148aea;
+              }
+              .kc {
+                position: absolute;
+                right: 0;
+                top: 25%;
+                font-weight: 400;
+                font-size: 14px;
+                color: #f33b57;
+              }
+              .zc1 {
+                position: absolute;
+                left: 0;
+                top: 25%;
+                font-weight: 400;
+                font-size: 14px;
+                color: #f33b57;
+              }
+              .kc1 {
+                position: absolute;
+                right: 0;
+                top: 25%;
+                font-weight: 400;
+                font-size: 14px;
+                color: #148aea;
+              }
               .avatar {
                 position: relative;
                 .rank {
@@ -4842,11 +4805,17 @@ export default {
                   color: #ec384a;
                 }
               }
+              .name {
+                font-weight: 400;
+                font-size: 10px;
+                color: #1d2326;
+                margin-top: 10px;
+              }
               .grade {
                 font-weight: 400;
                 font-size: 10px;
                 color: rgba(29, 35, 38, 0.5);
-                margin-top: 10px;
+                margin-top: 5px;
               }
             }
             .chang {
@@ -5073,6 +5042,14 @@ export default {
   font-size: 14px;
   color: rgba(29, 35, 38, 0.3);
 }
+
+.pl-class2 {
+  font-weight: 400;
+  font-size: 14px;
+  color: rgba(29, 35, 38, 0.3);
+  text-align: right;
+}
+
 .refund {
   height: 380px;
   .title {

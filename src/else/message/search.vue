@@ -20,7 +20,7 @@
               slot="prefix"
             />
             <image
-              src="/static/images/circle-delete.png"
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/circle-delete.png"
               mode="scaleToFill"
               style="width: 24px; height: 24px; margin-right: 10px"
               slot="suffix"
@@ -30,23 +30,23 @@
         </view>
         取消
       </view>
-      <view
-        class="item"
-        v-for="(item, index) in items"
-        :key="index"
-        v-if="status"
-      >
-        <view class="top">
-          <view class="left">{{ item.title }}</view>
-          <view class="right"
-            >更多 <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
-          ></view>
-        </view>
-        <view class="next" v-for="(info, idx) in item.infos" :key="idx">
-          <u-avatar :src="info.avatar"></u-avatar>
-          <rich-text :nodes="info.htmlText"></rich-text>
+      <view v-if="status">
+        <view class="item" v-for="(item, index) in items" :key="index">
+          <view class="top">
+            <view class="left">{{ item.title }}</view>
+            <view class="right"
+              >更多
+              <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+            ></view>
+          </view>
+          <view class="next" v-for="(info, idx) in item.infos" :key="idx">
+            <u-avatar :src="info.avatar"></u-avatar>
+            <rich-text :nodes="info.htmlText"></rich-text>
+          </view>
         </view>
       </view>
+
+      <u-empty v-else> </u-empty>
     </view>
   </view>
 </template>
@@ -82,23 +82,22 @@ export default {
       });
     },
     enter() {
-      this.status = true;
+      if (!this.keyword) return;
+      let hasMatch = false; // 标记是否有匹配结果
       this.items.forEach((item) => {
         item.infos.forEach((info) => {
-          // 如果关键字为空，直接显示原始文本
-          if (!this.keyword.trim()) {
-            info.htmlText = info.text;
-            return;
-          }
-
           // 正则匹配关键字（忽略大小写）
           const regex = new RegExp(`(${this.keyword})`, "gi");
           info.htmlText = info.text.replace(
             regex,
             `<span style="color: red;">$1</span>`
           );
+          if (regex.test(info.text)) {
+            hasMatch = true;
+          }
         });
       });
+      this.status = hasMatch;
     },
   },
   onLoad() {},

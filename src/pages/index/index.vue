@@ -491,9 +491,7 @@ export default {
   onLoad() {
     // uni.reLaunch({
     //   // url: "/competition/apply/appear",
-    //   // url: "/competition/publish/saishi",
-    //   // url: "/user/execute",
-    //   url: "/else/message/chat",
+    //   url: "/competition/publish/saishi",
     // });
     this.Location();
     this.Location().then(() => {

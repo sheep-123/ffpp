@@ -146,7 +146,7 @@
               style="width: 40px; height: 40px"
             />
           </view>
-          <view class="item">
+          <view class="item" @click="toMySponsor">
             <view class="left">
               <view class="v1">我的赞助</view>
               <view class="v2">新增课程2个</view>
@@ -317,6 +317,11 @@ export default {
     toMyCompetition() {
       uni.navigateTo({
         url: "/user/competition",
+      });
+    },
+    toMySponsor() {
+      uni.navigateTo({
+        url: "/user/sponsorIndex",
       });
     },
   },

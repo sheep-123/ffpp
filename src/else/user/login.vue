@@ -78,7 +78,7 @@ export default {
               this.$refs.notice.show({
                 type: "default",
                 message: result.message,
-                complete() {
+                complete: () => {
                   const loginPage = uni.getStorageSync("loginPage");
                   if (loginPage) {
                     uni.removeStorageSync("loginPage"); // 清除记录

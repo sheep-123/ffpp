@@ -60,7 +60,6 @@ export default {
       if (item.index == 1) {
         uni.chooseLocation({
           success: function (res) {
-            console.log(res);
             uni.setStorageSync("fullAddress", res.address);
             uni.setStorageSync("bmLocal", {
               latitude: res.latitude,

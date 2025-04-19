@@ -25,7 +25,7 @@
             v-for="(item, index) in colorList"
             :key="index"
             :style="{ background: item }"
-            @click="changeColor(item)"
+            @click="selectColor = item"
           >
             <image
               src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/勾.png"
@@ -59,11 +59,7 @@
       </view>
     </view>
     <view :class="['box', changeSkin ? 'scaled' : '']">
-      <u-navbar
-        :bgColor="navBgColor"
-        @leftClick="back"
-        leftIconColor="black"
-      ></u-navbar>
+      <u-navbar :bgColor="navBgColor" autoBack leftIconColor="black"></u-navbar>
       <view class="upload">
         <view class="top">
           <image
@@ -924,7 +920,7 @@
                   v-model="stageUserNum"
                   class="stageExplains"
                   placeholder="请输入"
-                  placeholder-class="pl-class"
+                  placeholder-class="pl-class1"
                   @input="blur10"
                 />人
               </view>
@@ -1701,7 +1697,7 @@
                 v-for="(item, index) in gameList"
                 :key="index"
                 :class="op == index ? 'item-a' : 'item'"
-                @click="checkThis(index)"
+                @click="op = index"
               >
                 {{ item.scheTypeName }}
               </view>
@@ -1805,7 +1801,7 @@
           </view>
 
           <view class="end" style="justify-content: space-between">
-            <view class="end-i">
+            <view class="end-i" @click="back">
               <u-icon name="file-text" color="#ffffff" size="24"></u-icon>
               存草稿
             </view>
@@ -2150,7 +2146,7 @@ export default {
         },
       ],
       bmType: [],
-      serialNum: uni.setStorageSync("serialNum") || "202504000912",
+      serialNum: uni.getStorageSync("serialNum") || "",
       fileList: [],
       joinList: uni.getStorageSync("joinList") || ["1"],
       joinPointsRace: uni.getStorageSync("joinPointsRace") || 1,
@@ -2159,13 +2155,13 @@ export default {
       sponsor: uni.getStorageSync("sponsor") || "0",
       name: uni.getStorageSync("name") || "",
       fuTitle: uni.getStorageSync("fuTitle") || "",
-      labelId: uni.getStorageSync("labelId") ?? 0,
-      typeName: uni.getStorageSync("typeName") ?? "",
+      labelId: "",
+      typeName: "",
       startTime: uni.getStorageSync("startTime") ?? 0,
       date: Number(new Date()),
       endTime: uni.getStorageSync("endTime") ?? 0,
       way: uni.getStorageSync("way") || "1",
-      fullAddress: uni.getStorageSync("fullAddress") ?? "",
+      fullAddress: "",
       show3: false,
       columns3: [["无限制", "男", "女"]],
       columns4: [],
@@ -2174,9 +2170,9 @@ export default {
       show4: false,
       badge: [],
       entryFee: uni.getStorageSync("entryFee") ?? "",
-      templateId: uni.getStorageSync("templateId") || "",
+      templateId: "",
       templateName: uni.getStorageSync("templateName") ?? "",
-      umpireId: 101112,
+      umpireId: uni.getStorageSync("user").id || 0,
       ageLimitMin: uni.getStorageSync("ageLimitMin") || 0,
       ageLimitMax: uni.getStorageSync("ageLimitMax") || 99,
       genderLimitName: uni.getStorageSync("genderLimitName") ?? "",
@@ -2221,7 +2217,7 @@ export default {
       show14: false,
       show15: false,
       columns14: [],
-      labelCode: uni.getStorageSync("labelCode") || "",
+      labelCode: "",
       show19: false,
       show20: false,
       groupNumName: uni.getStorageSync("groupNumName") ?? "",
@@ -2276,6 +2272,7 @@ export default {
       timeShow: false,
       currentTime: "",
       timeShow1: false,
+      szList: [],
     };
   },
   onPageScroll(e) {
@@ -2291,19 +2288,11 @@ export default {
     // 动态更新导航栏背景颜色
     this.navBgColor = `rgba(255, 255, 255, ${opacity})`;
   },
-  onLoad(options) {
+  onLoad() {
     this.getSerialNum();
-    uni.setStorageSync("serialNum", "202504000912");
-    if (options.serialNum) {
-      this.serialNum = options.serialNum;
-      uni.setStorageSync("serialNum", options.serialNum);
-    }
 
     this.getMatchRank();
     this.getAge();
-    if (this.labelCode) {
-      this.getMatchLevel();
-    }
     this.getGroupNum();
     this.getGroupPerNum();
     this.getPP();
@@ -2311,23 +2300,31 @@ export default {
       this.addItem();
     }
   },
+  onShow() {
+    this.labelId = uni.getStorageSync("labelId") || "";
+    this.labelCode = uni.getStorageSync("labelCode") || "";
+    if (this.labelCode) {
+      this.getMatchLevel();
+    }
+    this.typeName = uni.getStorageSync("typeName") || "";
+    this.fullAddress = uni.getStorageSync("fullAddress") || "";
+    this.templateId = uni.getStorageSync("templateId") || "";
+    this.templateName = uni.getStorageSync("templateName") || "";
+  },
   methods: {
     setActiveTab(index) {
       this.activeTab = index;
       uni.setStorageSync("activeTab", index);
       if (index == 3) {
         this.getMatchTemplateHit();
+        this.getSzList();
       }
       if (index == 1 && this.templateId && !this.items) {
         this.addItem();
       }
     },
     skin() {
-      if (this.changeSkin) {
-        this.changeSkin = false;
-      } else {
-        this.changeSkin = true;
-      }
+      this.changeSkin = !this.changeSkin;
     },
     async getSerialNum() {
       if (this.serialNum) return;
@@ -2336,9 +2333,6 @@ export default {
         this.serialNum = result.data.serialNum;
         uni.setStorageSync("serialNum", this.serialNum);
       }
-    },
-    changeColor(color) {
-      this.selectColor = color;
     },
     onSliderChange(value) {
       const index = Math.floor((value / 100) * (this.colorList.length - 1)); // 计算对应的颜色索引
@@ -2525,24 +2519,18 @@ export default {
             params.groupNum = this.groupNum;
             params.groupPerNum = this.groupPerNum;
           }
-          try {
-            var res = await uni.$u.http.post(
-              "/match/saveMatchRegisterInfo",
-              params
-            );
-            if (res.status == 200) {
-              this.$refs.notice.show({
-                type: "default",
-                message: res.message,
-                complete: () => {
-                  this.activeTab++;
-                },
-              });
-            }
-          } catch (err) {
+
+          var res = await uni.$u.http.post(
+            "/match/saveMatchRegisterInfo",
+            params
+          );
+          if (res.status == 200) {
             this.$refs.notice.show({
               type: "default",
-              message: err.data.message,
+              message: res.message,
+              complete: () => {
+                this.activeTab++;
+              },
             });
           }
         }
@@ -2705,7 +2693,7 @@ export default {
       } catch (err) {
         this.$refs.notice.show({
           type: "default",
-          message: err.data.message,
+          message: err.message,
         });
         return;
       }
@@ -2761,6 +2749,34 @@ export default {
     },
     async save4() {
       try {
+        var data = {
+          matchId: this.matchId,
+          serialNum: this.serialNum,
+          hitConfigList: [
+            {
+              scheId: this.gameList[this.op].scheId,
+              lastHitId: "",
+              hitTypeCode: this.gameList[this.op].scheId,
+              hitTypeName: this.gameList[this.op].scheTypeName,
+              stageUserNum: this.stageUserNum,
+              stageExplains: "",
+              groupNum: this.group_num,
+              stageUserNum: this.stageUserNum,
+              matchingManner: this.zz,
+              groupVenueType: this.groupVenueType,
+              groupUmpireType: this.groupUmpireType,
+              scoringMethod: this.scoringMethod,
+            },
+          ],
+        };
+        var result = await uni.$u.http.post("/match/saveMatchHitConfig", data);
+        if (result.status == 400) {
+          this.$refs.notice.show({
+            type: "default",
+            message: result.message,
+          });
+          return;
+        }
         if (this.zz != 3) {
           // 构造数据的辅助函数
           const buildGroupData = (group) => ({
@@ -2923,7 +2939,7 @@ export default {
             {
               scheId: this.gameList[this.op].scheId,
               hitId: "",
-              hitTypeCode: this.gameList[this.op].scheId,
+              hitTypeCode: String(this.gameList[this.op].scheId),
               hitTypeName: this.gameList[this.op].scheTypeName,
               stageUserNum: this.stageUserNum,
               stageExplains: "",
@@ -2954,7 +2970,7 @@ export default {
       } catch (err) {
         this.$refs.notice.show({
           type: "default",
-          message: err.data.message,
+          message: err.message,
         });
       }
     },
@@ -3001,11 +3017,6 @@ export default {
       });
       if (result.status == 200) {
         this.gameList = result.data;
-        // this.gameList = this.gameList.filter(
-        //   (item, index) =>
-        //     item.scheTypeCode !== "registrationTime" &&
-        //     item.scheTypeCode !== "publicationTime"
-        // );
         uni.setStorageSync("gameList", this.gameList);
       }
     },
@@ -3027,7 +3038,7 @@ export default {
       } catch (err) {
         this.$refs.notice.show({
           type: "default",
-          message: err.data.message,
+          message: err.message,
         });
       }
     },
@@ -3056,6 +3067,44 @@ export default {
     },
     checkThis(index) {
       this.op = index;
+      this.queryMatchHitConfig();
+    },
+    async getSzList() {
+      var result = await uni.$u.http.get("/match/getSysDictByName", {
+        params: {
+          sysDicName: "matching_manner",
+        },
+      });
+      if (result.status == 200) {
+        this.szList = result.data.map((item) => {
+          return item.label;
+        });
+        console.log(this.szList);
+      }
+    },
+    async queryMatchHitConfig() {
+      this.zz = "";
+      this.stageUserNum = "";
+      this.zzName = "";
+      this.group_num = "";
+      this.groupVenueType = "1";
+      this.groupUmpireType = "1";
+      this.scoringMethod = "1";
+      var result = await uni.$u.http.get("/match/queryMatchHitConfig", {
+        params: {
+          matchId: this.matchId,
+          scheTypeId: this.gameList[this.op].scheId,
+        },
+      });
+      if (result.status == 200) {
+        this.zz = result.data[0].matchingManner;
+        this.stageUserNum = result.data[0].stageUserNum;
+        this.zzName = this.szList[this.zz - 1];
+        this.group_num = result.data[0].groupNum;
+        this.groupVenueType = result.data[0].groupVenueType;
+        this.groupUmpireType = result.data[0].groupUmpireType;
+        this.scoringMethod = result.data[0].scoringMethod;
+      }
     },
     async save5() {
       try {
@@ -3085,7 +3134,7 @@ export default {
       } catch (err) {
         this.$refs.notice.show({
           type: "default",
-          message: err.data.message,
+          message: err.message,
         });
       }
 
@@ -3102,11 +3151,12 @@ export default {
             type: "default",
             message: "保存成功",
           });
+          this.back();
         }
       } catch (err) {
         this.$refs.notice.show({
           type: "default",
-          message: err.data.message,
+          message: err.message,
         });
       }
     },
@@ -3399,6 +3449,7 @@ export default {
         arr.push(item.label);
       });
       this.columns11 = [arr];
+      this.columns19 = [arr];
     },
     confirm19(n) {
       this.show19 = false;

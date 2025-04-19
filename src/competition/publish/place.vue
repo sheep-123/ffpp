@@ -1,7 +1,7 @@
 <template>
   <view>
-    <u-navbar leftText="赛事地点" @leftClick="back"></u-navbar>
-    <view :style="{ marginTop: top }" class="type">
+    <u-navbar leftText="赛事地点" autoBack :fixed="false"></u-navbar>
+    <view class="type">
       <u-tabs
         :list="list1"
         @click="click"
@@ -47,14 +47,7 @@ export default {
       action: 0,
     };
   },
-  onShow() {
-    const systemInfo = uni.getSystemInfoSync();
-    this.statusBarHeight = systemInfo.statusBarHeight;
-  },
   methods: {
-    back() {
-      uni.navigateBack();
-    },
     click(item) {
       this.action = item.index;
       if (item.index == 1) {
@@ -65,10 +58,7 @@ export default {
               latitude: res.latitude,
               longitude: res.longitude,
             });
-            const serialNum = uni.getStorageSync("serialNum");
-            uni.navigateTo({
-              url: `/competition/publish/saishi?serialNum=${serialNum}`,
-            });
+            uni.navigateBack({ delta: 1 });
           },
           fail: function () {},
           complete: function () {},
@@ -76,11 +66,6 @@ export default {
       }
     },
     enter() {},
-  },
-  computed: {
-    top() {
-      return this.statusBarHeight + this.navbarHeight + "px";
-    },
   },
 };
 </script>

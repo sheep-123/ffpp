@@ -435,7 +435,9 @@
 </template>
 
 <script>
+// import Tabbar from "@/components/tabbar.vue";
 export default {
+  // components: { Tabbar },
   data() {
     return {
       latitude: 23,
@@ -489,10 +491,11 @@ export default {
     };
   },
   onLoad() {
-    // uni.reLaunch({
-    //   // url: "/competition/apply/appear",
-    //   url: "/competition/publish/saishi",
-    // });
+    uni.reLaunch({
+      // url: "/competition/apply/appear",
+      // url: "/competition/publish/saishi",
+      url: "/user/competition",
+    });
     this.Location();
     this.Location().then(() => {
       this.initIntersectionObserver();
@@ -513,27 +516,27 @@ export default {
         this.markers[1].latitude = res.latitude + 0.0005;
         this.markers[1].longitude = res.longitude + 0.0005;
         // 调用逆地理编码接口
-        const apiKey = "OVPBZ-6ABC5-XWDIP-IVGK4-UJMIS-ALBZT ";
-        const url = `https://apis.map.qq.com/ws/geocoder/v1/?location=${this.latitude},${this.longitude}&key=${apiKey}`;
+        // const apiKey = "OVPBZ-6ABC5-XWDIP-IVGK4-UJMIS-ALBZT ";
+        // const url = `https://apis.map.qq.com/ws/geocoder/v1/?location=${this.latitude},${this.longitude}&key=${apiKey}`;
 
-        const addressRes = await uni.request({ url });
-        if (addressRes.statusCode === 200 && addressRes.data.status === 0) {
-          this.address = addressRes.data.result.address;
-          uni.setStorageSync(
-            "city",
-            addressRes.data.result.address_component.city
-          );
-          // 获取完整地址
-          if (this.address) {
-            var result = await uni.$u.http.post("/saveWjLocation", {
-              address: this.address,
-              locationLat: this.latitude,
-              locationLng: this.longitude,
-            });
-          }
-        } else {
-          console.error("逆地理编码失败:", addressRes.data);
-        }
+        // const addressRes = await uni.request({ url });
+        // if (addressRes.statusCode === 200 && addressRes.data.status === 0) {
+        //   this.address = addressRes.data.result.address;
+        //   uni.setStorageSync(
+        //     "city",
+        //     addressRes.data.result.address_component.city
+        //   );
+        //   // 获取完整地址
+        //   if (this.address) {
+        //     var result = await uni.$u.http.post("/saveWjLocation", {
+        //       address: this.address,
+        //       locationLat: this.latitude,
+        //       locationLng: this.longitude,
+        //     });
+        //   }
+        // } else {
+        //   console.error("逆地理编码失败:", addressRes.data);
+        // }
       } catch (err) {
         console.error("定位失败:", err);
       }
@@ -583,6 +586,9 @@ export default {
     },
     toMarkSite() {
       uni.navigateTo({ url: "/else/index/markSite" });
+    },
+    toPlay() {
+      uni.navigateTo({ url: "/pages/play/play" });
     },
   },
 

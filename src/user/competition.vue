@@ -5,35 +5,28 @@
       <view class="main">
         <u-tabs
           :list="list"
-          :is-scroll="false"
-          v-model="current"
-          @change="change"
-          active-color="#1D2326"
-          fonst-size="16"
-          inactive-color="#1D2326"
-          :bar-style="barStyle"
           lineColor="red"
+          :current="current"
+          @click="click"
         ></u-tabs>
       </view>
     </view>
-    <view class="main">
-      <view class="item">
+    <view class="main1">
+      <view class="item" v-for="(item, index) in matchList" :key="index">
         <view class="top">
           <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            :src="item.mainImageUrl"
             mode="aspectFill"
             style="width: 62px; height: 62px; border-radius: 5px"
           />
           <view class="right">
-            <view class="title"
-              >非凡泡泡16人制羽毛球单打赛 <text>待发布</text></view
-            >
-            <view class="g">地点：奥体中心羽毛球2号场</view>
-            <view class="g">时间：2024-10-16 14:00</view>
+            <view class="title">{{ item.name }} <text>待发布</text></view>
+            <view class="g">地点：{{ item.address }}</view>
+            <view class="g">时间：{{ item.startTime }}</view>
           </view>
         </view>
         <view class="bottom">
-          <view class="item" @click="execute"> 执行比赛 </view>
+          <view class="item" @click="execute(item)"> 执行比赛 </view>
           <view class="item"> 托管奖金 </view>
           <view class="item"> 管理奖金 </view>
           <view class="item"> 管理报名 </view>
@@ -50,63 +43,72 @@ export default {
       list: [
         {
           name: "我的报名",
-          id: 0,
         },
         {
           name: "我的赞助",
-          id: 1,
         },
         {
           name: "我的发布",
-          id: 2,
         },
         {
           name: "我的收藏",
-          id: 3,
         },
       ],
       current: 0,
-      barStyle: {
-        width: "100%",
-        height: "100%",
-        backgroundColor: "#fff",
-      },
+      currentIndex: 1,
+      matchList: [],
     };
   },
+  onLoad() {
+    this.queryMyMatch();
+  },
   methods: {
-    change(index) {
-      this.current = index;
-    },
-    execute() {
+    execute(item) {
       uni.navigateTo({
-        url: "/user/execute",
+        url: `/user/execute?matchId=${item.id}&&serialNum=${item.serialNum}`,
       });
     },
-    checkThis(index) {
-      this.op = index;
+    click(n) {
+      this.currentIndex = n.index + 1;
+      this.queryMyMatch();
+    },
+    async queryMyMatch() {
+      this.matchList = [];
+      var result = await uni.$u.http.get("/wjmatch/queryMyMatch", {
+        params: {
+          queryFlag: this.currentIndex,
+        },
+      });
+      if (result.status == 200) {
+        this.matchList = result.data;
+      }
     },
   },
 };
 </script>
 
 <style lang="scss">
+page {
+  background-color: #f7f7f7;
+}
 .box {
   width: 100vw;
-  height: 100vh;
-  background-color: #f7f7f7;
+
   .tab {
     background-color: white;
     .main {
       margin-left: 3%;
     }
   }
-  .main {
+  .main1 {
     width: 90%;
     margin: auto;
+    padding-bottom: 100px;
     .item {
       padding: 12px;
       margin-top: 12px;
       background-color: white;
+      border-radius: 4px;
       .top {
         display: flex;
         align-items: center;

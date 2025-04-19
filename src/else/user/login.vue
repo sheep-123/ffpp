@@ -96,7 +96,7 @@ export default {
           } catch (err) {
             this.$refs.notice.show({
               type: "default",
-              message: err.data.message,
+              message: err.message,
             });
           }
         },

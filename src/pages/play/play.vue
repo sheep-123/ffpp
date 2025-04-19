@@ -247,6 +247,7 @@
 
 <script>
 export default {
+  // components: { Tabbar },
   data() {
     return {
       status: "loadmore",
@@ -375,6 +376,7 @@ body {
 }
 .box {
   width: 100vw;
+  position: relative;
   .first {
     position: relative;
     .bg {
@@ -821,5 +823,24 @@ body {
   font-weight: 400;
   font-size: 14px;
   color: rgba(29, 35, 38, 0.3);
+}
+.tabbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  height: 84px;
+  display: flex;
+  justify-content: space-around;
+  font-weight: 600;
+  font-size: 10px;
+  color: #1d2326;
+  .tabbar-item {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 </style>

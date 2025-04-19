@@ -1,6 +1,6 @@
 <template>
   <view class="box">
-    <u-navbar leftText="赛事项目" @leftClick="back" :fixed="false"></u-navbar>
+    <u-navbar leftText="赛事项目" autoBack :fixed="false"></u-navbar>
 
     <view class="main">
       <view class="type">
@@ -69,12 +69,6 @@ export default {
       this.typeName = item.labelName;
       this.labelCode = item.labelCode;
     },
-    back() {
-      const serialNum = uni.getStorageSync("serialNum");
-      uni.navigateTo({
-        url: `/competition/publish/saishi?serialNum=${serialNum}`,
-      });
-    },
     async matchLabelTypes() {
       const res = await uni.$u.http.get("/match/matchLabelType", {
         params: { typeId: this.typeId },
@@ -92,10 +86,7 @@ export default {
       uni.setStorageSync("labelId", this.labelId);
       uni.setStorageSync("typeName", this.typeName);
       uni.setStorageSync("labelCode", this.labelCode);
-      const serialNum = uni.getStorageSync("serialNum");
-      uni.navigateTo({
-        url: `/competition/publish/saishi?serialNum=${serialNum}`,
-      });
+      uni.navigateBack({ delta: 1 });
     },
   },
 };

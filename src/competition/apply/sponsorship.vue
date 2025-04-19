@@ -324,7 +324,7 @@ export default {
       } catch (err) {
         this.$refs.notice.show({
           type: "default",
-          message: err.data.message,
+          message: err.message,
         });
       }
     },
@@ -585,7 +585,7 @@ body {
     }
   }
 
-  .bt-n{
+  .bt-n {
     width: 100%;
     height: 102px;
     background-color: #fff;

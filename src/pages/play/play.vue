@@ -82,6 +82,7 @@
           v-model="keyword"
           bg-color="#F7F7F7"
           :show-action="false"
+          placeholderClass="placeholder-class"
         ></u-search>
       </view>
     </u-navbar>
@@ -93,46 +94,43 @@
     >
       <view class="left">
         <view class="item" @click="selectTab(0)">
-          <text>商圈</text>
-          <u-image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/down.png"
-            width="12px"
-            height="12px"
-          >
-          </u-image>
+          <text :style="{ color: activeTab === 0 ? '#EC384A' : '' }">商圈</text>
+          <u-icon
+            name="arrow-down-fill"
+            size="8"
+            :color="activeTab === 0 ? '#EC384A' : '#ccc'"
+          ></u-icon>
         </view>
-        <view class="item">
-          <text>类型</text>
-          <u-image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/down.png"
-            width="12px"
-            height="12px"
-          >
-          </u-image>
+        <view class="item" @click="selectTab(1)">
+          <text :style="{ color: activeTab === 1 ? '#EC384A' : '' }">类型</text>
+          <u-icon
+            name="arrow-down-fill"
+            size="8"
+            :color="activeTab === 1 ? '#EC384A' : '#ccc'"
+          ></u-icon>
         </view>
-        <view class="item">
-          <text>默认排序</text>
-          <u-image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/down.png"
-            width="12px"
-            height="12px"
+        <view class="item" style="margin-left: 13px" @click="selectTab(2)">
+          <text :style="{ color: activeTab === 2 ? '#EC384A' : '' }"
+            >默认排序</text
           >
-          </u-image>
+          <u-icon
+            name="arrow-down-fill"
+            size="8"
+            :color="activeTab === 2 ? '#EC384A' : '#ccc'"
+          ></u-icon>
         </view>
       </view>
       <view class="right">
-        <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png"
-        />
+        <u-icon name="map" size="16" color="#CCCCCC"></u-icon>
         <view class="value">{{ city }}</view>
       </view>
     </view>
 
     <view class="content">
-      <view class="item">
+      <view class="item" v-for="(item, index) in matchList" :key="index">
         <view class="left">
           <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            :src="item.mainImageUrl"
             style="width: 90px; height: 90px"
             mode="aspectFill"
           />
@@ -144,412 +142,103 @@
 
         <view class="right">
           <view class="top">
-            <view class="title">天健S1橄榄球联赛</view>
+            <view class="title">{{ item.name }}</view>
             <view class="hot">
               <image
                 src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
               />
-              <view class="value">900°</view>
+              <view class="value">{{ item.heat }}°</view>
             </view>
           </view>
-          <view class="second">海珠区第1名 | 30人 | ￥80/人 </view>
+          <view class="second"
+            >海珠区第1名 | {{ item.registerNum }}人 | ￥{{ item.entryFee }}/人
+          </view>
           <view class="time">
-            <image
-              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/time.png"
-              mode="scaleToFill"
-            />
-            <view class="value">2025 3.18 19:00-20:30</view>
+            <u-icon name="clock" size="16" color="#CCCCCC"></u-icon>
+            <view class="value">{{ item.startTime + "-" + item.endTime }}</view>
           </view>
 
           <view class="right-buttom">
             <view class="end">
               <view class="c"></view>
-              <view class="value">明日10:00结束报名</view>
+              <view class="value">{{ item.registrationEndTime }}结束报名</view>
             </view>
 
-            <view class="bt" @click="join">JOIN</view>
+            <view class="bt" @click="join(item)">JOIN</view>
           </view>
         </view>
       </view>
-      <view class="item">
-        <view class="left">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            style="width: 90px; height: 90px"
-            mode="aspectFill"
-          />
-          <view class="buttom">
-            <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
-            <view class="value">已报名</view>
-          </view>
-        </view>
-
-        <view class="right">
-          <view class="top">
-            <view class="title">天健S1橄榄球联赛</view>
-            <view class="hot">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
-              />
-              <view class="value">900°</view>
-            </view>
-          </view>
-          <view class="second">海珠区第1名 | 30人 | ￥80/人 </view>
-          <view class="time">
-            <image
-              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/time.png"
-              mode="scaleToFill"
-            />
-            <view class="value">2025 3.18 19:00-20:30</view>
-          </view>
-
-          <view class="right-buttom">
-            <view class="end">
-              <view class="c"></view>
-              <view class="value">明日10:00结束报名</view>
-            </view>
-
-            <view class="bt">JOIN</view>
-          </view>
-        </view>
-      </view>
-      <view class="item">
-        <view class="left">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            style="width: 90px; height: 90px"
-            mode="aspectFill"
-          />
-          <view class="buttom">
-            <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
-            <view class="value">已报名</view>
-          </view>
-        </view>
-
-        <view class="right">
-          <view class="top">
-            <view class="title">天健S1橄榄球联赛</view>
-            <view class="hot">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
-              />
-              <view class="value">900°</view>
-            </view>
-          </view>
-          <view class="second">海珠区第1名 | 30人 | ￥80/人 </view>
-          <view class="time">
-            <image
-              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/time.png"
-              mode="scaleToFill"
-            />
-            <view class="value">2025 3.18 19:00-20:30</view>
-          </view>
-
-          <view class="right-buttom">
-            <view class="end">
-              <view class="c"></view>
-              <view class="value">明日10:00结束报名</view>
-            </view>
-
-            <view class="bt">JOIN</view>
-          </view>
-        </view>
-      </view>
-      <view class="item">
-        <view class="left">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            style="width: 90px; height: 90px"
-            mode="aspectFill"
-          />
-          <view class="buttom">
-            <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
-            <view class="value">已报名</view>
-          </view>
-        </view>
-
-        <view class="right">
-          <view class="top">
-            <view class="title">天健S1橄榄球联赛</view>
-            <view class="hot">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
-              />
-              <view class="value">900°</view>
-            </view>
-          </view>
-          <view class="second">海珠区第1名 | 30人 | ￥80/人 </view>
-          <view class="time">
-            <image
-              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/time.png"
-              mode="scaleToFill"
-            />
-            <view class="value">2025 3.18 19:00-20:30</view>
-          </view>
-
-          <view class="right-buttom">
-            <view class="end">
-              <view class="c"></view>
-              <view class="value">明日10:00结束报名</view>
-            </view>
-
-            <view class="bt">JOIN</view>
-          </view>
-        </view>
-      </view>
-      <view class="item">
-        <view class="left">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            style="width: 90px; height: 90px"
-            mode="aspectFill"
-          />
-          <view class="buttom">
-            <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
-            <view class="value">已报名</view>
-          </view>
-        </view>
-
-        <view class="right">
-          <view class="top">
-            <view class="title">天健S1橄榄球联赛</view>
-            <view class="hot">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
-              />
-              <view class="value">900°</view>
-            </view>
-          </view>
-          <view class="second">海珠区第1名 | 30人 | ￥80/人 </view>
-          <view class="time">
-            <image
-              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/time.png"
-              mode="scaleToFill"
-            />
-            <view class="value">2025 3.18 19:00-20:30</view>
-          </view>
-
-          <view class="right-buttom">
-            <view class="end">
-              <view class="c"></view>
-              <view class="value">明日10:00结束报名</view>
-            </view>
-
-            <view class="bt">JOIN</view>
-          </view>
-        </view>
-      </view>
-      <view class="item">
-        <view class="left">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            style="width: 90px; height: 90px"
-            mode="aspectFill"
-          />
-          <view class="buttom">
-            <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
-            <view class="value">已报名</view>
-          </view>
-        </view>
-
-        <view class="right">
-          <view class="top">
-            <view class="title">天健S1橄榄球联赛</view>
-            <view class="hot">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
-              />
-              <view class="value">900°</view>
-            </view>
-          </view>
-          <view class="second">海珠区第1名 | 30人 | ￥80/人 </view>
-          <view class="time">
-            <image
-              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/time.png"
-              mode="scaleToFill"
-            />
-            <view class="value">2025 3.18 19:00-20:30</view>
-          </view>
-
-          <view class="right-buttom">
-            <view class="end">
-              <view class="c"></view>
-              <view class="value">明日10:00结束报名</view>
-            </view>
-
-            <view class="bt">JOIN</view>
-          </view>
-        </view>
-      </view>
-      <view class="item">
-        <view class="left">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            style="width: 90px; height: 90px"
-            mode="aspectFill"
-          />
-          <view class="buttom">
-            <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
-            <view class="value">已报名</view>
-          </view>
-        </view>
-
-        <view class="right">
-          <view class="top">
-            <view class="title">天健S1橄榄球联赛</view>
-            <view class="hot">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
-              />
-              <view class="value">900°</view>
-            </view>
-          </view>
-          <view class="second">海珠区第1名 | 30人 | ￥80/人 </view>
-          <view class="time">
-            <image
-              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/time.png"
-              mode="scaleToFill"
-            />
-            <view class="value">2025 3.18 19:00-20:30</view>
-          </view>
-
-          <view class="right-buttom">
-            <view class="end">
-              <view class="c"></view>
-              <view class="value">明日10:00结束报名</view>
-            </view>
-
-            <view class="bt">JOIN</view>
-          </view>
-        </view>
-      </view>
-      <view class="item">
-        <view class="left">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            style="width: 90px; height: 90px"
-            mode="aspectFill"
-          />
-          <view class="buttom">
-            <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
-            <view class="value">已报名</view>
-          </view>
-        </view>
-
-        <view class="right">
-          <view class="top">
-            <view class="title">天健S1橄榄球联赛</view>
-            <view class="hot">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
-              />
-              <view class="value">900°</view>
-            </view>
-          </view>
-          <view class="second">海珠区第1名 | 30人 | ￥80/人 </view>
-          <view class="time">
-            <image
-              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/time.png"
-              mode="scaleToFill"
-            />
-            <view class="value">2025 3.18 19:00-20:30</view>
-          </view>
-
-          <view class="right-buttom">
-            <view class="end">
-              <view class="c"></view>
-              <view class="value">明日10:00结束报名</view>
-            </view>
-
-            <view class="bt">JOIN</view>
-          </view>
-        </view>
-      </view>
-      <view class="item">
-        <view class="left">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            style="width: 90px; height: 90px"
-            mode="aspectFill"
-          />
-          <view class="buttom">
-            <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
-            <view class="value">已报名</view>
-          </view>
-        </view>
-
-        <view class="right">
-          <view class="top">
-            <view class="title">天健S1橄榄球联赛</view>
-            <view class="hot">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/like.png"
-              />
-              <view class="value">900°</view>
-            </view>
-          </view>
-          <view class="second">海珠区第1名 | 30人 | ￥80/人 </view>
-          <view class="time">
-            <image
-              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/time.png"
-              mode="scaleToFill"
-            />
-            <view class="value">2025 3.18 19:00-20:30</view>
-          </view>
-
-          <view class="right-buttom">
-            <view class="end">
-              <view class="c"></view>
-              <view class="value">明日10:00结束报名</view>
-            </view>
-
-            <view class="bt">JOIN</view>
-          </view>
-        </view>
-      </view>
+      <u-loadmore :status="status" @loadmore="getQueryMatchList" />
     </view>
 
-    <u-popup :show="show" mode="bottom" @close="show = false">
+    <u-popup
+      :show="show"
+      mode="bottom"
+      @close="closeModal"
+      :safeAreaInsetBottom="false"
+    >
       <view class="local">
-        <view class="top">
+        <view class="top" v-if="activeTab == 0">
           <view class="left">
+            <view class="item">荔湾区</view>
+            <view class="item">荔湾区</view>
+            <view class="item">荔湾区</view>
+            <view class="item">荔湾区</view>
+            <view class="item">荔湾区</view>
+            <view class="item">荔湾区</view>
             <view class="item">荔湾区</view>
             <view class="item">荔湾区</view>
             <view class="item">荔湾区</view>
             <view class="item">荔湾区</view>
           </view>
           <view class="right">
-            <u-radio-group v-model="value">
+            <u-radio-group v-model="value" placement="column">
               <u-radio
                 activeColor="red"
-                label="思悠悠，恨悠悠，恨到归时方始休"
+                label="不限"
+                customStyle="margin-bottom: 20px;margin-left: 20px"
               ></u-radio>
-            </u-radio-group>
-            <u-radio-group v-model="value">
               <u-radio
                 activeColor="red"
-                label="思悠悠，恨悠悠，恨到归时方始休"
+                label="车陂"
+                customStyle="margin-bottom: 20px;margin-left: 20px"
               ></u-radio>
-            </u-radio-group>
-            <u-radio-group v-model="value">
               <u-radio
                 activeColor="red"
-                label="思悠悠，恨悠悠，恨到归时方始休"
-              ></u-radio>
-            </u-radio-group>
-            <u-radio-group v-model="value">
-              <u-radio
-                activeColor="red"
-                label="思悠悠，恨悠悠，恨到归时方始休"
-              ></u-radio>
-            </u-radio-group>
-            <u-radio-group v-model="value">
-              <u-radio
-                activeColor="red"
-                label="思悠悠，恨悠悠，恨到归时方始休"
+                label="东圃"
+                customStyle="margin-bottom: 20px;margin-left: 20px"
               ></u-radio>
             </u-radio-group>
           </view>
+        </view>
+        <view class="type" v-if="activeTab == 1">
+          <view
+            :class="active === index ? 'item-active' : 'item'"
+            v-for="(item, index) in matchLabel"
+            :key="index"
+            @click="checkThis(item, index)"
+            >{{ item.label_name }}</view
+          >
+        </view>
+        <view class="sort">
+          <u-radio-group v-model="sortType" placement="column">
+            <u-radio
+              shape="circle"
+              :label="item.label"
+              :name="item.value"
+              activeColor="red"
+              v-for="(item, index) in sortList"
+              :key="index"
+              customStyle="margin-bottom: 20px"
+            ></u-radio>
+          </u-radio-group>
+        </view>
+        <view class="next">
+          <view class="left" @click="reset">
+            <u-icon name="reload" size="24"></u-icon>
+            重置
+          </view>
+          <view class="right" @click="enter"> 确定 </view>
         </view>
       </view>
     </u-popup>
@@ -558,32 +247,42 @@
 
 <script>
 export default {
+  // components: { Tabbar },
   data() {
     return {
+      status: "loadmore",
       isSticky: false,
       keyword: "",
       statusBarHeight: 0,
       navbarHeight: 44,
-      activeTab: 0,
+      activeTab: null,
       urls: [
         "https://uviewui.com/album/1.jpg",
         "https://uviewui.com/album/2.jpg",
         "https://uviewui.com/album/3.jpg",
         "https://uviewui.com/album/4.jpg",
       ],
-      city: uni.getStorageSync("city") || "暂无",
+      city: "暂无",
       show: false,
       matchList: [],
+      matchLabel: [],
+      sortList: [],
+      pageNum: 1,
+      pageSize: 10,
+      sortType: "0",
+      labelCode: "",
+      active: "",
     };
   },
-  onload() {
+  onload() {},
+  onShow() {
     const systemInfo = uni.getSystemInfoSync();
     this.initIntersectionObserver();
     this.statusBarHeight = systemInfo.statusBarHeight;
-  },
-  onShow() {
-    this.queryAdCode();
+    this.queryMatchLabel();
+    this.getSort();
     this.getQueryMatchList();
+    this.city = uni.getStorageSync("city") || "暂无";
   },
   methods: {
     initIntersectionObserver() {
@@ -594,9 +293,9 @@ export default {
         });
       });
     },
-    join() {
+    join(item) {
       uni.navigateTo({
-        url: "/competition/apply/appear",
+        url: `/competition/apply/appear?matchId=${item.id}`,
       });
     },
     toMore() {
@@ -608,18 +307,58 @@ export default {
       this.activeTab = index;
       this.show = true;
     },
-    async queryAdCode() {
-      var result = await uni.$u.http.get("/match/queryAdCode", {
+
+    async getQueryMatchList() {
+      this.status = "loading";
+      try {
+        const result = await uni.$u.http.post("/match/queryMatchList", {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          sortType: this.sortType,
+          keywords: this.keyword,
+        });
+
+        if (result.status === 200) {
+          const newData = result.data.list; // 获取新数据
+          if (newData.length > 0) {
+            this.matchList = this.matchList.concat(newData); // 将新数据追加到现有列表
+            this.pageNum++; // 更新页码
+            this.status = "loadmore"; // 恢复加载状态
+          } else {
+            this.status = "nomore"; // 没有更多数据
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        this.status = "loadmore"; // 恢复加载状态
+      }
+    },
+    async queryMatchLabel() {
+      var result = await uni.$u.http.get("/match/queryMatchLabel");
+      if (result.status == 200) {
+        this.matchLabel = result.data;
+      }
+    },
+    closeModal() {
+      this.show = false;
+      this.activeTab = null;
+    },
+    async getSort() {
+      var result = await uni.$u.http.get("/match/getSysDictByName", {
         params: {
-          adcode4: "",
+          sysDicName: "match_list_sort_type",
         },
       });
+      this.sortList = result.data;
     },
-    async getQueryMatchList() {
-      var result = await uni.$u.http.post("/match/queryMatchList");
-      if (result.status == 200) {
-        this.matchList = result.data;
-      }
+    checkThis(item, index) {
+      this.active = index;
+      this.labelCode = item.label_code;
+    },
+    enter() {
+      this.show = false;
+      this.matchList = [];
+      this.getQueryMatchList();
     },
   },
 
@@ -632,9 +371,12 @@ export default {
 </script>
 
 <style lang="scss">
+body {
+  background: #f7f7f7;
+}
 .box {
   width: 100vw;
-  background: #f7f7f7;
+  position: relative;
   .first {
     position: relative;
     .bg {
@@ -706,18 +448,18 @@ export default {
           }
           .score {
             display: flex;
-            border: 1px solid #f0f0f0;
             width: 100%;
             height: 20px;
-            align-items: center;
-            justify-content: space-evenly;
             .item {
+              flex: 1;
               font-weight: 600;
               font-size: 10px;
               color: rgba(29, 35, 38, 0.5);
-              &:first-child {
-                border-right: 1px solid #f0f0f0;
-              }
+              box-sizing: border-box;
+              border: 1px solid #f0f0f0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
             }
           }
 
@@ -900,12 +642,13 @@ export default {
           font-size: 12px;
           color: rgba(29, 35, 38, 0.5);
           margin-top: 6px;
+          white-space: nowrap;
         }
         .time {
           display: flex;
           align-items: center;
           margin-top: 12px;
-          gap: 3px;
+          gap: 10px;
 
           image {
             width: 16px;
@@ -920,7 +663,8 @@ export default {
         .right-buttom {
           display: flex;
           justify-content: space-between;
-          margin-top: 16px;
+          align-items: center;
+          gap: 5px;
           .end {
             display: flex;
             align-items: center;
@@ -937,6 +681,7 @@ export default {
               font-weight: 400;
               font-size: 10px;
               color: rgba(29, 35, 38, 0.5);
+              white-space: nowrap;
             }
           }
           .bt {
@@ -950,6 +695,7 @@ export default {
             font-weight: 400;
             font-size: 16px;
             color: #1d2326;
+            font-family: youshe;
           }
         }
       }
@@ -967,6 +713,7 @@ export default {
 
 .local {
   height: 332px;
+  position: relative;
   .top {
     display: flex;
     align-items: center;
@@ -975,8 +722,125 @@ export default {
       width: 30%;
       background-color: #f5f5f5;
       flex-direction: column;
-      gap: 24px;
+      overflow-y: scroll;
+      height: 264px;
+      .item {
+        width: 100%;
+        height: 46px;
+        padding: 12px 0;
+        box-sizing: border-box;
+        font-weight: 400;
+        font-size: 14px;
+        color: #1d2326;
+        text-indent: 30px;
+      }
     }
+    .right {
+      width: 70%;
+      height: 264px;
+      padding-top: 20px;
+      box-sizing: border-box;
+    }
+  }
+
+  .sort {
+    height: 264px;
+    overflow-y: scroll;
+    padding: 15px 16px;
+    box-sizing: border-box;
+  }
+
+  .type {
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: space-between;
+    background-color: white;
+    overflow-y: scroll;
+    height: 252px;
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 32px;
+      background-color: #f7f7f7;
+      font-weight: 400;
+      font-size: 12px;
+      color: #1d2326;
+      white-space: nowrap;
+    }
+    .item-active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 32px;
+      background-color: #f7f7f7;
+      font-weight: 400;
+      font-size: 12px;
+      color: red;
+      white-space: nowrap;
+    }
+  }
+}
+.next {
+  height: 68px;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.05);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  justify-content: space-around;
+  .left {
+    display: flex;
+    gap: 5px;
+    font-weight: 400;
+    font-size: 14px;
+    color: #1d2326;
+    flex-direction: column;
+    align-items: center;
+  }
+  .right {
+    width: 80%;
+    background-color: black;
+    height: 44px;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+    color: #ffffff;
+  }
+}
+.placeholder-class {
+  font-weight: 400;
+  font-size: 14px;
+  color: rgba(29, 35, 38, 0.3);
+}
+.tabbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  height: 84px;
+  display: flex;
+  justify-content: space-around;
+  font-weight: 600;
+  font-size: 10px;
+  color: #1d2326;
+  .tabbar-item {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 }
 </style>

@@ -17,6 +17,9 @@ module.exports = (vm) => {
     config.header = {
       "X-Requested-With": "XMLHttpRequest",
     };
+
+    // 设置超时时间
+    config.timeout = 5000;
     return config;
   });
 

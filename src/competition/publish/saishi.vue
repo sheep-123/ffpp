@@ -25,7 +25,7 @@
             v-for="(item, index) in colorList"
             :key="index"
             :style="{ background: item }"
-            @click="changeColor(item)"
+            @click="selectColor = item"
           >
             <image
               src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/勾.png"
@@ -59,11 +59,7 @@
       </view>
     </view>
     <view :class="['box', changeSkin ? 'scaled' : '']">
-      <u-navbar
-        bgColor="rgba(0,0,0,0)"
-        @leftClick="back"
-        leftIconColor="#ffffff"
-      ></u-navbar>
+      <u-navbar :bgColor="navBgColor" autoBack leftIconColor="black"></u-navbar>
       <view class="upload">
         <view class="top">
           <image
@@ -122,6 +118,9 @@
             z-index: 9;
           "
         />
+        <view class="change" @click="uploadMainFile" v-if="mainFile"
+          >更换图片</view
+        >
       </view>
 
       <view class="type" :style="{ background: selectColor }">
@@ -172,7 +171,7 @@
               <view class="right">
                 <u-checkbox-group v-model="joinList" @change="checkboxChange">
                   <u-checkbox
-                    activeColor="red"
+                    activeColor="#EC384A"
                     name="1"
                     shape="square"
                   ></u-checkbox>
@@ -184,12 +183,9 @@
               <view class="right" @click="toSaiShiProject"
                 ><text :style="{ color: typeName ? 'black' : '' }">{{
                   typeName || "请选择赛事项目"
-                }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                }}</text>
+                <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
+              </view>
             </view>
             <view class="item">
               <view class="left">赛事模版<view class="icon">*</view></view>
@@ -200,24 +196,13 @@
                 ><text :style="{ color: templateName ? 'black' : '' }">{{
                   templateName || "请选择赛事模版"
                 }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
             <view class="item">
               <view class="left">赛事名称 <view class="icon">*</view></view>
               <view class="right">
                 <view style="width: 110px">
-                  <!-- <u-input
-                    v-model="name"
-                    placeholder="请填写赛事名称"
-                    border="none"
-                    @change="blur1"
-                    input-align="right"
-                    placeholderClass="pl-class"
-                  ></u-input> -->
                   <textarea
                     style="width: 110px"
                     maxlength="500"
@@ -234,14 +219,6 @@
             <view class="item">
               <view class="left">赛事副标题<view class="icon">*</view></view>
               <view class="right">
-                <!-- <u-input
-                    v-model="fuTitle"
-                    placeholder="请填写赛事副标题"
-                    border="none"
-                    @change="blur2"
-                    input-align="right"
-                    placeholderClass="pl-class"
-                  ></u-input>  -->
                 <textarea
                   style="width: 115px"
                   maxlength="500"
@@ -263,13 +240,13 @@
                   @change="groupChange"
                 >
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="公开赛"
                     shape="circle"
                     name="1"
                   ></u-radio>
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="邀请赛"
                     name="2"
                     shape="circle"
@@ -287,13 +264,13 @@
                   @change="groupChange1"
                 >
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="线上赛"
                     shape="circle"
                     name="1"
                   ></u-radio>
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="线下赛"
                     shape="circle"
                     name="2"
@@ -307,15 +284,12 @@
               <view
                 class="right"
                 @click="toPlace"
-                :style="fullAddress ? 'width:60%' : ''"
+                :style="fullAddress ? 'width:45%' : ''"
                 ><text :style="{ color: fullAddress ? 'black' : '' }">{{
                   fullAddress || "请选择赛事地点"
                 }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
             <!-- <view class="item">
               <view class="left">详细地址<view class="icon">*</view></view>
@@ -352,11 +326,8 @@
               <view class="left">赛事裁判 <view class="icon">*</view></view>
               <view class="right">
                 <u-avatar></u-avatar>
-                <image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
             <view class="item">
               <view class="left">赛事赞助 <view class="icon">*</view></view>
@@ -367,13 +338,13 @@
                   @change="groupChange2"
                 >
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="接受"
                     shape="circle"
                     name="0"
                   ></u-radio>
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="不接受"
                     shape="circle"
                     customStyle="margin-left: 20px"
@@ -408,13 +379,13 @@
                   @change="groupChange3"
                 >
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="单人"
                     shape="circle"
                     name="1"
                   ></u-radio>
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="小队"
                     shape="circle"
                     customStyle="margin-left: 20px"
@@ -445,11 +416,8 @@
                 ><text :style="{ color: groupNumName ? 'black' : '' }">{{
                   groupNumName || "请选择参赛组数限制"
                 }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
             <view class="item" v-if="way == 2">
               <view class="left">单组人数限制 <view class="icon">*</view></view>
@@ -457,11 +425,8 @@
                 ><text :style="{ color: groupPerNumName ? 'black' : '' }">{{
                   groupPerNumName || "请选择单组人数限制"
                 }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
             <view class="item">
               <view class="left">性别限制 <view class="icon">*</view></view>
@@ -469,11 +434,8 @@
                 ><text style="color: black">{{
                   genderLimitName || "无限制"
                 }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
             <view class="item-o">
               <view class="top">
@@ -485,11 +447,11 @@
                   <view class="l1">最低</view>
                   <view class="l2" @click="show4 = true"
                     >{{ ageLimitMinName || 0 }}
-                    <image
-                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                      mode="scaleToFill"
-                      style="width: 12px; height: 12px"
-                    />
+                    <u-icon
+                      name="arrow-right"
+                      size="12"
+                      color="#CCCCCC"
+                    ></u-icon>
                   </view>
                 </view>
 
@@ -497,11 +459,11 @@
                   <view class="r1">最高</view>
                   <view class="r2" @click="show5 = true"
                     >{{ ageLimitMaxName || 99 }}
-                    <image
-                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                      mode="scaleToFill"
-                      style="width: 12px; height: 12px"
-                    />
+                    <u-icon
+                      name="arrow-right"
+                      size="12"
+                      color="#CCCCCC"
+                    ></u-icon>
                   </view>
                 </view>
               </view>
@@ -518,7 +480,7 @@
                     iconPlacement="right"
                   >
                     <u-checkbox
-                      activeColor="red"
+                      activeColor="#EC384A"
                       shape="circle"
                       label="需要认证徽章"
                       customStyle="gap:10px"
@@ -532,11 +494,11 @@
                   <view class="l1">最低</view>
                   <view class="l2" @click="show6 = true"
                     >{{ badgeLevelMinName ? badgeLevelMinName : "无限制" }}
-                    <image
-                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                      mode="scaleToFill"
-                      style="width: 12px; height: 12px"
-                    />
+                    <u-icon
+                      name="arrow-right"
+                      size="12"
+                      color="#CCCCCC"
+                    ></u-icon>
                   </view>
                 </view>
 
@@ -544,11 +506,11 @@
                   <view class="r1">最高</view>
                   <view class="r2" @click="show7 = true"
                     >{{ badgeLevelMaxName ? badgeLevelMaxName : "无限制" }}
-                    <image
-                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                      mode="scaleToFill"
-                      style="width: 12px; height: 12px"
-                    />
+                    <u-icon
+                      name="arrow-right"
+                      size="12"
+                      color="#CCCCCC"
+                    ></u-icon>
                   </view>
                 </view>
               </view>
@@ -564,11 +526,11 @@
                   <view class="l1">最低</view>
                   <view class="l2" @click="show14 = true"
                     >{{ matchLevelMinName || "无限制" }}
-                    <image
-                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                      mode="scaleToFill"
-                      style="width: 12px; height: 12px"
-                    />
+                    <u-icon
+                      name="arrow-right"
+                      size="12"
+                      color="#CCCCCC"
+                    ></u-icon>
                   </view>
                 </view>
 
@@ -576,11 +538,11 @@
                   <view class="r1">最高</view>
                   <view class="r2" @click="show15 = true"
                     >{{ matchLevelMaxName || "无限制" }}
-                    <image
-                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                      mode="scaleToFill"
-                      style="width: 12px; height: 12px"
-                    />
+                    <u-icon
+                      name="arrow-right"
+                      size="12"
+                      color="#CCCCCC"
+                    ></u-icon>
                   </view>
                 </view>
               </view>
@@ -608,11 +570,8 @@
                 ><text :style="{ color: refundDaysName ? 'black' : '' }">{{
                   refundDaysName || "请选择退款政策"
                 }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
             <view class="item">
               <view class="left">保险保障 <view class="icon">*</view></view>
@@ -620,11 +579,8 @@
                 ><text :style="{ color: insuranceName ? 'black' : '' }">{{
                   insuranceName || "无保障"
                 }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
           </view>
           <view class="save" @click="save1">
@@ -655,11 +611,8 @@
                 ><text :style="{ color: registrationEndTime ? 'black' : '' }">{{
                   registrationEndTime || "请选择报名截止时间"
                 }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
             <view class="item">
               <view class="left">赛事名单公布 <view class="icon">*</view></view>
@@ -667,11 +620,8 @@
                 ><text :style="{ color: publicationTime ? 'black' : '' }">{{
                   publicationTime || "请选择名单公布日期"
                 }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-              /></view>
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
             </view>
             <view v-for="(item, index) in items" :key="index" class="item">
               <view class="left" style="width: 40%">
@@ -686,27 +636,19 @@
                 <text :style="{ color: item.scheTime ? 'black' : '' }">{{
                   item.scheTime || "请选择开赛时间"
                 }}</text>
-                <image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-                />
+                <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
                 <image
                   src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/删减.png"
                   mode="scaleToFill"
                   style="width: 24px; height: 24px"
-                  @click.stop="deleteItem(index)"
+                  @click.stop="deleteA(index)"
                 />
               </view>
             </view>
           </view>
 
           <view class="add" @click="addNext">
-            <image
-              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/add-red.png"
-              mode="scaleToFill"
-              style="width: 24px; height: 24px"
-            />
+            <u-icon name="plus-circle" size="24" color="#EC384A"></u-icon>
             添加环节
           </view>
 
@@ -739,11 +681,8 @@
                 ><text
                   :style="{ color: reward.rewardTypeName ? 'black' : '' }"
                   >{{ reward.rewardTypeName || "请选择奖励者名称" }}</text
-                ><image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                  mode="scaleToFill"
-                  style="width: 12px; height: 12px"
-                />
+                >
+                <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
               </view>
             </view>
             <view class="item">
@@ -757,6 +696,7 @@
                     @change="(n) => blur5(n, rIndex)"
                     type="number"
                     placeholderClass="pl-class"
+                    input-align="right"
                   ></u-input>
                 </view>
               </view>
@@ -769,12 +709,11 @@
               <view style="background-color: #f7f7f7">
                 <view class="del">
                   奖品
-                  <image
-                    src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/删减.png"
-                    mode="scaleToFill"
-                    style="width: 24px; height: 24px"
+                  <u-icon
+                    name="minus-circle"
+                    size="24"
                     @click="delPrize(rIndex, index)"
-                  />
+                  ></u-icon>
                 </view>
               </view>
 
@@ -783,13 +722,13 @@
                 <view class="right">
                   <u-radio-group v-model="item.sponsorType" placement="row">
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="实物"
                       shape="circle"
                       name="实物"
                     ></u-radio>
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="服务"
                       name="服务"
                       shape="circle"
@@ -803,20 +742,20 @@
                 <view class="right">
                   <u-radio-group v-model="item.receiveMethod" placement="row">
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="比赛现场发放"
                       name="比赛现场发放"
                       shape="circle"
                     ></u-radio>
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="到店领取"
                       name="到店领取"
                       shape="circle"
                       customStyle="margin-left: 5px"
                     ></u-radio>
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="两者都支持"
                       name="两者都支持"
                       shape="circle"
@@ -917,7 +856,7 @@
               </view>
               <view class="right" @click="delReward(rIndex)">
                 <image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/删除.png"
+                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/删除.png"
                   mode="scaleToFill"
                   style="width: 24px; height: 24px"
                 />
@@ -926,11 +865,7 @@
           </view>
 
           <view class="add" @click="addRewardMember">
-            <image
-              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/add-red.png"
-              mode="scaleToFill"
-              style="width: 24px; height: 24px"
-            />
+            <u-icon name="plus-circle" size="24" color="#EC384A"></u-icon>
             添加奖励者
           </view>
 
@@ -965,13 +900,29 @@
             </view>
           </u-scroll-list>
 
-          <view class="jdsz">阶段设置</view>
+          <view class="jdsz"
+            >阶段设置
+            <u-icon name="arrow-up-fill" color="#fff" size="10"></u-icon
+          ></view>
 
           <view class="o-text">
             <view class="item">
               <view class="left">本阶段 <view class="icon">*</view></view>
+
               <view class="right">
-                {{ stageExplains }}
+                <view class="select" @click="show21 = true"
+                  ><text :style="{ color: zzName ? 'black' : '' }">
+                    {{ zzName || "请选择赛制" }} </text
+                  ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+                ></view>
+                <input
+                  type="text"
+                  v-model="stageUserNum"
+                  class="stageExplains"
+                  placeholder="请输入"
+                  placeholder-class="pl-class1"
+                  @input="blur10"
+                />人
               </view>
             </view>
             <view class="item-o">
@@ -983,25 +934,33 @@
               <view class="bt">
                 <view class="left">
                   <view class="l1">组数</view>
-                  <view class="l2" @click="show11 = true"
-                    >{{ groupNum ? groupNum : "请选择" }}
-                    <image
-                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                      mode="scaleToFill"
-                      style="width: 12px; height: 12px"
-                    />
+                  <view
+                    class="l2"
+                    @click="show11 = true"
+                    style="margin-left: 20px"
+                    :style="group_num ? 'color: black;' : ''"
+                    >{{ group_num || "请选择" }}
+                    <u-icon
+                      name="arrow-right"
+                      size="12"
+                      color="#CCCCCC"
+                    ></u-icon>
                   </view>
                 </view>
 
                 <view class="right">
                   <view class="r1">匹配方式</view>
-                  <view class="r2" @click="show12 = true"
+                  <!-- <view class="r2" @click="show12 = true"
                     >{{ matchingMannerName ? matchingMannerName : "请选择" }}
-                    <image
-                      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
-                      mode="scaleToFill"
-                      style="width: 12px; height: 12px"
-                    />
+  <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
+                  </view> -->
+                  <view class="r2" style="margin-left: 20px"
+                    >随机
+                    <u-icon
+                      name="arrow-right"
+                      size="12"
+                      color="#CCCCCC"
+                    ></u-icon>
                   </view>
                 </view>
               </view>
@@ -1015,13 +974,13 @@
               <view class="bt">
                 <u-radio-group v-model="groupVenueType" placement="row">
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="系统订单匹配"
                     name="1"
                     shape="circle"
                   ></u-radio>
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="人工添加"
                     name="2"
                     shape="circle"
@@ -1039,13 +998,13 @@
               <view class="bt">
                 <u-radio-group v-model="groupUmpireType" placement="row">
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="系统随机匹配"
                     name="1"
                     shape="circle"
                   ></u-radio>
                   <u-radio
-                    activeColor="red"
+                    activeColor="#EC384A"
                     label="根据场地1对1匹配"
                     shape="circle"
                     name="2"
@@ -1064,7 +1023,7 @@
                 <view class="item-radio">
                   <u-radio-group v-model="scoringMethod">
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="积分"
                       name="1"
                       shape="circle"
@@ -1074,7 +1033,7 @@
                 <view class="item-radio">
                   <u-radio-group v-model="scoringMethod">
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="时间"
                       name="2"
                       shape="circle"
@@ -1083,7 +1042,7 @@
                 <view class="item-radio">
                   <u-radio-group v-model="scoringMethod">
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="距离"
                       name="3"
                       shape="circle"
@@ -1092,7 +1051,7 @@
                 <view class="item-radio">
                   <u-radio-group v-model="scoringMethod">
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="分数"
                       name="4"
                       shape="circle"
@@ -1101,7 +1060,7 @@
                 <view class="item-radio">
                   <u-radio-group v-model="scoringMethod">
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="重量"
                       name="5"
                       shape="circle"
@@ -1110,7 +1069,7 @@
                 <view class="item-radio">
                   <u-radio-group v-model="scoringMethod">
                     <u-radio
-                      activeColor="red"
+                      activeColor="#EC384A"
                       label="胜负"
                       name="6"
                       shape="circle"
@@ -1120,7 +1079,573 @@
             </view>
           </view>
 
-          <view class="pp" @click="save4">赛事报名完成后可进行匹配</view>
+          <view class="pp-yl" @click="yl">生成直击预览</view>
+
+          <view
+            class="pp-content"
+            v-show="preview == 1"
+            v-for="(item, index) in groups"
+            :key="index"
+          >
+            <view class="first">
+              <view class="left">
+                组名
+                <view class="h">{{ item.groupName }}</view>
+              </view>
+              <view class="judge">
+                <u-avatar :src="src" size="60"></u-avatar>
+                <view class="name">裁判员</view>
+              </view>
+            </view>
+            <view class="second">
+              <view class="left">比赛场地 <view class="icon">*</view></view>
+              <view class="right" @click="chooseAddress1(item)">
+                {{ item.address
+                }}<u-icon name="arrow-right" color="#CCCCCC" size="12"></u-icon
+              ></view>
+            </view>
+            <view class="sixth">
+              <view class="top">比赛时间 <view class="icon">*</view></view>
+              <view class="next">
+                <view class="time" @click="chooseTime1(item)">{{
+                  item.startTime
+                }}</view
+                >至
+                <view class="time" @click="chooseTime2(item)">{{
+                  item.endTime
+                }}</view>
+              </view>
+            </view>
+            <view class="third">
+              <view class="left">直播地址 </view>
+              <input
+                type="text"
+                placeholder="请输入直播地址"
+                placeholder-class="pl-class2"
+                class="input"
+                v-model="item.liveUrl"
+              />
+            </view>
+            <view class="member">
+              <view
+                class="item"
+                v-for="(user, UIndex) in item.list"
+                :key="UIndex"
+              >
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">参赛号</view>
+                </view>
+
+                <view class="name">选手名称</view>
+                <view class="select" v-if="scoringMethod == 1">
+                  积分
+                  <view class="icon"></view>
+                </view>
+                <view class="time" v-if="scoringMethod == 2">
+                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 3">
+                  12 <text>米</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 4">
+                  89 <text>分</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 5">
+                  3 <text>千克</text>
+                </view>
+                <view class="select" v-if="scoringMethod == 6">
+                  设置
+                  <view class="icon"></view>
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <view
+            class="pp-content"
+            v-show="preview == 2"
+            v-for="(item, index) in groups"
+            :key="index"
+          >
+            <view class="first">
+              <view class="left">
+                组名
+                <view class="h">{{ item.groupName }}</view>
+              </view>
+              <view class="judge">
+                <u-avatar :src="src" size="60"></u-avatar>
+                <view class="name">裁判员</view>
+              </view>
+            </view>
+            <view class="second">
+              <view class="left">比赛场地 <view class="icon">*</view></view>
+              <view class="right" @click="chooseAddress1(item)"
+                >{{ item.address
+                }}<u-icon name="arrow-right" color="#CCCCCC" size="12"></u-icon
+              ></view>
+            </view>
+            <view class="sixth">
+              <view class="top">比赛时间 <view class="icon">*</view></view>
+              <view class="next">
+                <view class="time" @click="chooseTime1(item)">{{
+                  item.startTime
+                }}</view
+                >至
+                <view class="time" @click="chooseTime2(item)">{{
+                  item.endTime
+                }}</view>
+              </view>
+            </view>
+            <view class="third">
+              <view class="left">直播地址 </view>
+              <input
+                type="text"
+                placeholder="请输入直播地址"
+                placeholder-class="pl-class2"
+                class="input"
+                v-model="item.liveUrl"
+              />
+            </view>
+
+            <view class="fourth">
+              <view class="item">参赛号</view>
+              <view class="item">参赛选手</view>
+              <view class="item">成绩（环）</view>
+              <view class="item">排名</view>
+            </view>
+
+            <view class="fifth">
+              <view
+                class="item"
+                v-for="(user, UIndex) in item.list"
+                :key="UIndex"
+              >
+                <view class="num">参赛号</view>
+                <view class="avatar">
+                  <u-avatar :src="src"></u-avatar>
+                </view>
+                <view class="grade"></view>
+                <view class="rank">_</view>
+              </view>
+            </view>
+          </view>
+
+          <view
+            class="pp-content"
+            v-show="preview == 3"
+            style="padding-bottom: 0"
+            v-for="(item, index) in groups"
+            :key="index"
+          >
+            <view class="first">
+              <view class="left">
+                组名
+                <view class="h">{{ item.groupName }}</view>
+              </view>
+              <view class="judge">
+                <u-avatar :src="src" size="60"></u-avatar>
+                <view class="name">裁判员</view>
+              </view>
+            </view>
+            <view class="second">
+              <view class="left">比赛场地 <view class="icon">*</view></view>
+              <view class="right" @click="chooseAddress1(item)"
+                >{{ item.address
+                }}<u-icon name="arrow-right" color="#CCCCCC" size="12"></u-icon
+              ></view>
+            </view>
+            <view class="sixth">
+              <view class="top">比赛时间 <view class="icon">*</view></view>
+              <view class="next">
+                <view class="time" @click="chooseTime1(item)">{{
+                  item.startTime
+                }}</view
+                >至
+                <view class="time" @click="chooseTime2(item)">{{
+                  item.endTime
+                }}</view>
+              </view>
+            </view>
+            <view class="third">
+              <view class="left">直播地址 </view>
+              <input
+                type="text"
+                placeholder="请输入直播地址"
+                placeholder-class="pl-class2"
+                class="input"
+                v-model="item.liveUrl"
+              />
+            </view>
+            <view class="member">
+              <view
+                class="item"
+                v-for="(user, UIndex) in item.list"
+                :key="UIndex"
+              >
+                <view class="avatar">
+                  <u-avatar :src="src" size="40"></u-avatar>
+                  <view class="rank">参赛号</view>
+                </view>
+                <view class="name">选手名称</view>
+
+                <view class="select" v-if="scoringMethod == 1">
+                  积分
+                  <view class="icon"></view>
+                </view>
+                <view class="time" v-if="scoringMethod == 2">
+                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 3">
+                  12 <text>米</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 4">
+                  89 <text>分</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 5">
+                  3 <text>千克</text>
+                </view>
+                <view class="select" v-if="scoringMethod == 6">
+                  设置
+                  <u-icon
+                    name="arrow-down-fill"
+                    color="black"
+                    size="8"
+                  ></u-icon>
+                </view>
+              </view>
+            </view>
+
+            <u-divider text="对战详情"></u-divider>
+            <view
+              class="item-list"
+              v-for="(war, WIndex) in item.warList"
+              :key="index"
+            >
+              <view class="detail">
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">参赛号</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                VS
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">参赛号</view>
+                  </view>
+                  <view class="grade">积分0</view>
+                </view>
+                <view class="chang">第{{ WIndex + 1 }}场</view>
+              </view>
+              <view class="sixth">
+                <view class="top">比赛时间 <view class="icon">*</view></view>
+                <view class="next">
+                  <view class="time" @click="chooseTime1(item)">{{
+                    item.startTime
+                  }}</view
+                  >至
+                  <view class="time" @click="chooseTime2(item)">{{
+                    item.endTime
+                  }}</view>
+                </view>
+              </view>
+            </view>
+
+            <image
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/卡片展开.png"
+              mode="scaleToFill"
+              style="width: 80px; height: 16px; margin: auto; display: block"
+              @click="getMatchHitWar(item)"
+              v-if="!item.expand"
+            />
+            <image
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/卡片收起.png"
+              mode="scaleToFill"
+              style="width: 80px; height: 16px; margin: auto; display: block"
+              @click="closeWar(item)"
+              v-else
+            />
+          </view>
+
+          <view
+            class="pp-content"
+            v-show="preview == 4"
+            v-for="(item, index) in groups"
+            :key="index"
+          >
+            <view class="first">
+              <view class="left">
+                组名
+                <view class="h">{{ item.groupName }}</view>
+              </view>
+              <view class="judge">
+                <u-avatar :src="src" size="60"></u-avatar>
+                <view class="name">裁判员</view>
+              </view>
+            </view>
+            <view class="second">
+              <view class="left">比赛场地 <view class="icon">*</view></view>
+              <view class="right" @click="chooseAddress1(item)"
+                >{{ item.address
+                }}<u-icon name="arrow-right" color="#CCCCCC" size="12"></u-icon
+              ></view>
+            </view>
+            <view class="sixth">
+              <view class="top">比赛时间 <view class="icon">*</view></view>
+              <view class="next">
+                <view class="time" @click="chooseTime1(item)">{{
+                  item.startTime
+                }}</view
+                >至
+                <view class="time" @click="chooseTime2(item)">{{
+                  item.endTime
+                }}</view>
+              </view>
+            </view>
+            <view class="third">
+              <view class="left">直播地址 </view>
+              <input
+                type="text"
+                placeholder="请输入直播地址"
+                placeholder-class="pl-class2"
+                class="input"
+                v-model="item.liveUrl"
+              />
+            </view>
+            <view class="item-list">
+              <view class="detail">
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">参赛号</view>
+                  </view>
+                  <view class="name">选手昵称</view>
+                  <view class="grade">积分0</view>
+                </view>
+                VS
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">参赛号</view>
+                  </view>
+                  <view class="name">选手昵称</view>
+                  <view class="grade">积分0</view>
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <view
+            class="pp-content"
+            v-show="preview == 5"
+            v-for="(item, index) in groups"
+            :key="index"
+          >
+            <view class="first">
+              <view class="left">
+                组名
+                <view class="h">{{ item.groupName }}</view>
+              </view>
+              <view class="judge">
+                <u-avatar :src="src" size="60"></u-avatar>
+                <view class="name">裁判员</view>
+              </view>
+            </view>
+            <view class="item-list">
+              <view class="detail">
+                <view class="item">
+                  <view class="zc">主场</view>
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">参赛号</view>
+                  </view>
+                  <view class="name">选手昵称</view>
+                  <view class="grade">积分0</view>
+                </view>
+                VS
+                <view class="item">
+                  <view class="kc">客场</view>
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">参赛号</view>
+                  </view>
+                  <view class="name">选手昵称</view>
+                  <view class="grade">积分0</view>
+                </view>
+                <view class="chang">第1场</view>
+              </view>
+            </view>
+            <view class="second">
+              <view class="left">比赛场地 <view class="icon">*</view></view>
+              <view class="right" @click="chooseAddress1(item)"
+                >{{ item.address
+                }}<u-icon name="arrow-right" color="#CCCCCC" size="12"></u-icon
+              ></view>
+            </view>
+            <view class="sixth">
+              <view class="top">比赛时间 <view class="icon">*</view></view>
+              <view class="next">
+                <view class="time" @click="chooseTime1(item)">{{
+                  item.startTime
+                }}</view
+                >至
+                <view class="time" @click="chooseTime2(item)">{{
+                  item.endTime
+                }}</view>
+              </view>
+            </view>
+            <view class="third">
+              <view class="left">直播地址 </view>
+              <input
+                type="text"
+                placeholder="请输入直播地址"
+                placeholder-class="pl-class2"
+                class="input"
+                v-model="item.liveUrl"
+              />
+            </view>
+
+            <view class="first" style="margin-top: 30px">
+              <view class="left">
+                组名
+                <view class="h">{{ item.groupName }}</view>
+              </view>
+              <view class="judge">
+                <u-avatar :src="src" size="60"></u-avatar>
+                <view class="name">裁判员</view>
+              </view>
+            </view>
+            <view class="item-list">
+              <view class="detail">
+                <view class="item">
+                  <view class="zc1">主场</view>
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">参赛号</view>
+                  </view>
+                  <view class="name">选手昵称</view>
+                  <view class="grade">积分0</view>
+                </view>
+                VS
+                <view class="item">
+                  <view class="kc1">客场</view>
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">参赛号</view>
+                  </view>
+                  <view class="name">选手昵称</view>
+                  <view class="grade">积分0</view>
+                </view>
+                <view class="chang">第2场</view>
+              </view>
+              <view class="next">
+                <view class="left">比赛时间 <view class="icon">*</view></view>
+                <view class="right"
+                  >10月12日 14:00-17:00
+                  <u-icon name="arrow-right" size="10"></u-icon
+                ></view>
+              </view>
+            </view>
+            <view class="second">
+              <view class="left">比赛场地 <view class="icon">*</view></view>
+              <view class="right"
+                >天河体育中心羽毛球馆<u-icon
+                  name="arrow-right"
+                  color="#CCCCCC"
+                  size="12"
+                ></u-icon
+              ></view>
+            </view>
+            <view class="second">
+              <view class="left">比赛时间 <view class="icon">*</view></view>
+              <view class="right"
+                >10月12日 14:00<u-icon
+                  name="arrow-right"
+                  color="#CCCCCC"
+                  size="12"
+                ></u-icon
+              ></view>
+            </view>
+            <view class="third">
+              <view class="left">直播地址 </view>
+              <view class="right"
+                >https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
+              >
+            </view>
+          </view>
+
+          <view
+            class="pp-content"
+            v-show="preview == 6"
+            v-for="(item, index) in groups"
+            :key="index"
+          >
+            <view class="first">
+              <view class="left">
+                组名
+                <view class="h">{{ item.groupName }}</view>
+              </view>
+              <view class="judge">
+                <u-avatar :src="src" size="60"></u-avatar>
+                <view class="name">裁判员</view>
+              </view>
+            </view>
+            <view class="second">
+              <view class="left">比赛场地 <view class="icon">*</view></view>
+              <view class="right" @click="chooseAddress1(item)"
+                >{{ item.address
+                }}<u-icon name="arrow-right" color="#CCCCCC" size="12"></u-icon
+              ></view>
+            </view>
+            <view class="sixth">
+              <view class="top">比赛时间 <view class="icon">*</view></view>
+              <view class="next">
+                <view class="time" @click="chooseTime1(item)">{{
+                  item.startTime
+                }}</view
+                >至
+                <view class="time" @click="chooseTime2(item)">{{
+                  item.endTime
+                }}</view>
+              </view>
+            </view>
+            <view class="third">
+              <view class="left">直播地址 </view>
+              <input
+                type="text"
+                placeholder="请输入直播地址"
+                placeholder-class="pl-class2"
+                class="input"
+                v-model="item.liveUrl"
+              />
+            </view>
+            <view class="item-list">
+              <view class="detail">
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">参赛号</view>
+                  </view>
+                  <view class="name">选手昵称</view>
+                  <view class="grade">积分0</view>
+                </view>
+                VS
+                <view class="item">
+                  <view class="avatar">
+                    <u-avatar :src="src" size="40"></u-avatar>
+                    <view class="rank">参赛号</view>
+                  </view>
+                  <view class="name">选手昵称</view>
+                  <view class="grade">积分0</view>
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <view class="pp" @click="save4">保存</view>
         </view>
       </view>
 
@@ -1128,6 +1653,7 @@
         class="content"
         v-if="activeTab == 4"
         :style="{ background: selectColor }"
+        style="padding-bottom: 102px"
       >
         <view class="main">
           <image
@@ -1171,7 +1697,7 @@
                 v-for="(item, index) in gameList"
                 :key="index"
                 :class="op == index ? 'item-a' : 'item'"
-                @click="checkThis(index)"
+                @click="op = index"
               >
                 {{ item.scheTypeName }}
               </view>
@@ -1228,7 +1754,6 @@
                 placeholder="请编辑赛事说明"
                 v-if="item.descriType == 1"
                 v-model="item.content"
-                @input="saveThis"
               >
               </textarea>
               <view class="gn" v-if="item.descriType == 2">
@@ -1276,7 +1801,7 @@
           </view>
 
           <view class="end" style="justify-content: space-between">
-            <view class="end-i">
+            <view class="end-i" @click="back">
               <u-icon name="file-text" color="#ffffff" size="24"></u-icon>
               存草稿
             </view>
@@ -1357,7 +1882,7 @@
       ></u-picker>
       <u-picker
         :show="show11"
-        :columns="columns4"
+        :columns="columns11"
         @cancel="show11 = false"
         @confirm="confirm11"
       ></u-picker>
@@ -1412,7 +1937,11 @@
                 >赛前随时申请，全额退款 比赛开始不支持退款</view
               >
               <u-radio-group v-model="refundDays">
-                <u-radio shape="circle" name="1" activeColor="red"></u-radio>
+                <u-radio
+                  shape="circle"
+                  name="1"
+                  activeColor="#EC384A"
+                ></u-radio>
               </u-radio-group>
             </view>
             <view
@@ -1441,7 +1970,11 @@
                 <view>比赛开始后不支持退款</view></view
               >
               <u-radio-group v-model="refundDays">
-                <u-radio shape="circle" name="2" activeColor="red"></u-radio>
+                <u-radio
+                  shape="circle"
+                  name="2"
+                  activeColor="#EC384A"
+                ></u-radio>
               </u-radio-group>
             </view>
           </view>
@@ -1469,7 +2002,11 @@
               </view>
               <view style="margin-left: 12px">
                 <u-radio-group v-model="insuranceId">
-                  <u-radio shape="circle" name="0" activeColor="red"></u-radio>
+                  <u-radio
+                    shape="circle"
+                    name="0"
+                    activeColor="#EC384A"
+                  ></u-radio>
                 </u-radio-group>
               </view>
             </view>
@@ -1483,7 +2020,11 @@
               </view>
               <view class="tk">
                 <u-radio-group v-model="insuranceId">
-                  <u-radio shape="circle" name="1" activeColor="red"></u-radio>
+                  <u-radio
+                    shape="circle"
+                    name="1"
+                    activeColor="#EC384A"
+                  ></u-radio>
                 </u-radio-group>
                 保险条款
               </view>
@@ -1491,13 +2032,33 @@
           </view>
 
           <view class="notice">
-            <u-icon name="checkmark-circle-fill" color="red"></u-icon>
+            <u-icon name="checkmark-circle-fill" color="#EC384A"></u-icon>
             选择即同意广州极热玩家运动科技有限公司作为投保人进行投保
           </view>
 
           <view class="enter" @click="insuranceEnter">确认选择</view>
         </view>
       </u-popup>
+      <u-picker
+        :show="show21"
+        :columns="columns21"
+        @cancel="show21 = false"
+        @confirm="confirm21"
+      ></u-picker>
+      <u-datetime-picker
+        :show="timeShow"
+        v-model="date"
+        mode="datetime"
+        @cancel="timeShow = false"
+        @confirm="confirm25"
+      ></u-datetime-picker>
+      <u-datetime-picker
+        :show="timeShow1"
+        v-model="date"
+        mode="datetime"
+        @cancel="timeShow1 = false"
+        @confirm="confirm26"
+      ></u-datetime-picker>
       <u-toast ref="notice"></u-toast>
     </view>
   </view>
@@ -1585,22 +2146,22 @@ export default {
         },
       ],
       bmType: [],
-      serialNum: uni.getStorageSync("serialNum") ?? "",
+      serialNum: uni.getStorageSync("serialNum") || "",
       fileList: [],
       joinList: uni.getStorageSync("joinList") || ["1"],
       joinPointsRace: uni.getStorageSync("joinPointsRace") || 1,
       type: uni.getStorageSync("type") || "1",
       form: uni.getStorageSync("form") || "1",
       sponsor: uni.getStorageSync("sponsor") || "0",
-      name: uni.getStorageSync("name") ?? "",
-      fuTitle: uni.getStorageSync("fuTitle") ?? "",
-      labelId: uni.getStorageSync("labelId") ?? 0,
-      typeName: uni.getStorageSync("typeName") ?? "",
+      name: uni.getStorageSync("name") || "",
+      fuTitle: uni.getStorageSync("fuTitle") || "",
+      labelId: "",
+      typeName: "",
       startTime: uni.getStorageSync("startTime") ?? 0,
       date: Number(new Date()),
       endTime: uni.getStorageSync("endTime") ?? 0,
       way: uni.getStorageSync("way") || "1",
-      fullAddress: uni.getStorageSync("fullAddress") ?? "",
+      fullAddress: "",
       show3: false,
       columns3: [["无限制", "男", "女"]],
       columns4: [],
@@ -1609,9 +2170,9 @@ export default {
       show4: false,
       badge: [],
       entryFee: uni.getStorageSync("entryFee") ?? "",
-      templateId: uni.getStorageSync("templateId") ?? "",
+      templateId: "",
       templateName: uni.getStorageSync("templateName") ?? "",
-      umpireId: 101112,
+      umpireId: uni.getStorageSync("user").id || 0,
       ageLimitMin: uni.getStorageSync("ageLimitMin") || 0,
       ageLimitMax: uni.getStorageSync("ageLimitMax") || 99,
       genderLimitName: uni.getStorageSync("genderLimitName") ?? "",
@@ -1626,29 +2187,27 @@ export default {
       matchLevelMaxName: uni.getStorageSync("matchLevelMaxName") ?? "",
       matchId: uni.getStorageSync("matchId") ?? "",
       show8: false,
-      registrationEndTime: uni.getStorageSync("registrationEndTime") ?? 0,
+      registrationEndTime: uni.getStorageSync("registrationEndTime") || "",
       publicationTime: uni.getStorageSync("publicationTime") ?? null,
       show10: false,
       columns10: [["冠军", "亚军", "季军", "第四名", "第五名", "第六名"]],
       sponsorType: "实物",
       receiveMethod: "到店领取",
-      scoringMethod: "积分",
       scoringMethod: "1",
       groupUmpireType: "1",
       groupVenueType: "1",
       show11: false,
       groupNum: uni.getStorageSync("groupNum") ?? null,
+      group_num: uni.getStorageSync("group_num") ?? null,
       show12: false,
-      columns12: [
-        ["淘汰赛制", "循环赛制", "1V1赛制", "主客场赛制", "双败赛制"],
-      ],
+      columns12: [],
+      columns11: [],
       matchingMannerName: uni.getStorageSync("matchingMannerName") ?? null,
       matchingManner: uni.getStorageSync("matchingManner") ?? null,
       op: 0,
-      stageExplains: uni.getStorageSync("stageExplains") || "32人/队",
+      stageUserNum: uni.getStorageSync("stageUserNum") || "",
       gameList: uni.getStorageSync("gameList") || [],
-      scheTypeName: uni.getStorageSync("stageExplains") ?? "",
-      items: [],
+      items: uni.getStorageSync("items") || [],
       currentIndex: "",
       counter: "",
       textareaContent: uni.getStorageSync("textareaContent") || [],
@@ -1658,21 +2217,20 @@ export default {
       show14: false,
       show15: false,
       columns14: [],
-      labelCode: uni.getStorageSync("labelCode") || "",
+      labelCode: "",
       show19: false,
       show20: false,
-      groupNum: uni.getStorageSync("groupNum") ?? "",
       groupNumName: uni.getStorageSync("groupNumName") ?? "",
       groupPerNum: uni.getStorageSync("groupPerNum") ?? "",
       groupPerNumName: uni.getStorageSync("groupPerNumName") ?? "",
       columns19: [],
       columns20: [],
       show16: false,
-      refundDays: "1",
-      refundDaysName: "",
+      refundDays: uni.getStorageSync("refundDays") || "1",
+      refundDaysName: uni.getStorageSync("refundDaysName") || "",
       show17: false,
-      insuranceId: "1",
-      insuranceName: "",
+      insuranceId: uni.getStorageSync("insuranceId") || "1",
+      insuranceName: uni.getStorageSync("insuranceName") || "",
       ageLimitMaxName: uni.getStorageSync("ageLimitMaxName") || "",
       ageLimitMinName: uni.getStorageSync("ageLimitMinName") || "",
       name_copy: uni.getStorageSync("name") || "",
@@ -1695,26 +2253,63 @@ export default {
           ],
         },
       ],
+      show21: false,
+      columns21: [
+        [
+          "非对战淘汰赛",
+          "非对战排行赛",
+          "对战单循环赛",
+          "对战1V1赛",
+          "对战主客场赛",
+          "对战双败赛",
+        ],
+      ],
+      zz: uni.getStorageSync("zz") || "",
+      zzName: uni.getStorageSync("zzName") || "",
+      preview: false,
+      navBgColor: "rgba(255, 255, 255, 0)",
+      groups: uni.getStorageSync("groups") || [],
+      timeShow: false,
+      currentTime: "",
+      timeShow1: false,
+      szList: [],
     };
   },
-  async onLoad() {
-    if (!this.serialNum) {
-      const result = await uni.$u.http.get("/match/getSerialNum");
-      if (result.status == 200) {
-        this.serialNum = result.data.serialNum;
-        uni.setStorageSync("serialNum", result.data.serialNum);
-      }
+  onPageScroll(e) {
+    const scrollTop = e.scrollTop; // 获取滚动距离
+    let opacity = 0;
+
+    if (scrollTop > 0 && scrollTop <= 100) {
+      opacity = scrollTop / 250; // 计算透明度（0 到 1）
+    } else if (scrollTop > 100) {
+      opacity = 1; //
     }
+
+    // 动态更新导航栏背景颜色
+    this.navBgColor = `rgba(255, 255, 255, ${opacity})`;
+  },
+  onLoad() {
+    this.getSerialNum();
+
     this.getMatchRank();
     this.getAge();
+    this.getGroupNum();
+    this.getGroupPerNum();
+    this.getPP();
+    if (this.templateId && !this.items) {
+      this.addItem();
+    }
+  },
+  onShow() {
+    this.labelId = uni.getStorageSync("labelId") || "";
+    this.labelCode = uni.getStorageSync("labelCode") || "";
     if (this.labelCode) {
       this.getMatchLevel();
     }
-    this.getGroupNum();
-    this.getGroupPerNum();
-    if (this.templateId) {
-      this.addItem();
-    }
+    this.typeName = uni.getStorageSync("typeName") || "";
+    this.fullAddress = uni.getStorageSync("fullAddress") || "";
+    this.templateId = uni.getStorageSync("templateId") || "";
+    this.templateName = uni.getStorageSync("templateName") || "";
   },
   methods: {
     setActiveTab(index) {
@@ -1722,20 +2317,22 @@ export default {
       uni.setStorageSync("activeTab", index);
       if (index == 3) {
         this.getMatchTemplateHit();
+        this.getSzList();
       }
-      if (index == 1 && this.templateId) {
+      if (index == 1 && this.templateId && !this.items) {
         this.addItem();
       }
     },
     skin() {
-      if (this.changeSkin) {
-        this.changeSkin = false;
-      } else {
-        this.changeSkin = true;
-      }
+      this.changeSkin = !this.changeSkin;
     },
-    changeColor(color) {
-      this.selectColor = color;
+    async getSerialNum() {
+      if (this.serialNum) return;
+      const result = await uni.$u.http.get("/match/getSerialNum");
+      if (result.status == 200) {
+        this.serialNum = result.data.serialNum;
+        uni.setStorageSync("serialNum", this.serialNum);
+      }
     },
     onSliderChange(value) {
       const index = Math.floor((value / 100) * (this.colorList.length - 1)); // 计算对应的颜色索引
@@ -1847,11 +2444,6 @@ export default {
       this.endTime = `${year}-${month}-${day} ${hours}:${minutes}`;
       uni.setStorageSync("endTime", this.endTime);
     },
-    toJudge() {
-      uni.navigateTo({
-        url: "/competition/publish/judge",
-      });
-    },
     confirm3(n) {
       this.show3 = false;
       this.genderLimit = n.indexs[0];
@@ -1876,6 +2468,13 @@ export default {
       }
     },
     async save1() {
+      if (!this.mainFile) {
+        this.$refs.notice.show({
+          type: "default",
+          message: "请上传比赛主图",
+        });
+        return;
+      }
       try {
         var result = await uni.$u.http.post("/match/saveMatchBaseInfo", {
           serialNum: this.serialNum,
@@ -1891,6 +2490,10 @@ export default {
           endTime: this.endTime,
           umpireId: this.umpireId,
           sponsor: this.sponsor,
+          matchState: "1",
+          color: this.selectColor,
+          locationLat: uni.getStorageSync("bmLocal").latitude,
+          locationLng: uni.getStorageSync("bmLocal").longitude,
         });
         if (result.status == 200) {
           this.matchId = result.data.matchId;
@@ -1912,104 +2515,35 @@ export default {
             insuranceId: this.insuranceId,
           };
 
-          if (this.way === "2") {
+          if (this.way == "2") {
             params.groupNum = this.groupNum;
             params.groupPerNum = this.groupPerNum;
           }
-          try {
-            var res = await uni.$u.http.post(
-              "/match/saveMatchRegisterInfo",
-              params
-            );
-            if (res.status == 200) {
-              this.$refs.notice.show({
-                type: "success",
-                message: res.message,
-              });
-              // uni.removeStorageSync("joinPointsRace");
-              // uni.removeStorageSync("joinList");
-              // uni.removeStorageSync("labelId");
-              // uni.removeStorageSync("typeName");
-              // uni.removeStorageSync("templateName");
-              // uni.removeStorageSync("startTime");
-              // uni.removeStorageSync("endTime");
-              // uni.removeStorageSync("genderLimitName");
-              // uni.removeStorageSync("ageLimitMin");
-              // uni.removeStorageSync("ageLimitMax");
-              // uni.removeStorageSync("entryFee");
-              // uni.removeStorageSync("way");
-              // uni.removeStorageSync("number");
-              // uni.removeStorageSync("badgeLevelMin");
-              // uni.removeStorageSync("badgeLevelMinName");
-              // uni.removeStorageSync("badgeLevelMax");
-              // uni.removeStorageSync("badgeLevelMaxName");
-              // uni.removeStorageSync("name");
-              // uni.removeStorageSync("fuTitle");
-              // uni.removeStorageSync("fuTitleName");
-              // uni.removeStorageSync("type");
-              // uni.removeStorageSync("form");
-              // uni.removeStorageSync("fullAddress");
-              // uni.removeStorageSync("umpireId");
-              // uni.removeStorageSync("sponsor");
-              // uni.removeStorageSync("genderLimit");
-              // uni.removeStorageSync("labelCode");
 
-              // this.joinList = ["1"];
-              // this.joinPointsRace = 1;
-              // this.typeName = "";
-              // this.templateName = "";
-              // this.name = "";
-              // this.fuTitle = "";
-              // this.type = "1";
-              // this.form = "1";
-              // this.fullAddress = "";
-              // this.startTime = "";
-              // this.endTime = "";
-              // this.sponsor = "1";
-              // this.way = "1";
-              // this.number = "";
-              // this.genderLimitName = "无限制";
-              // this.genderLimit = 0;
-              // this.ageLimitMin = 0;
-              // this.ageLimitMax = 99;
-              // this.badgeLevelMin = "";
-              // this.badgeLevelMax = "";
-              // this.badgeLevelMinName = "无限制";
-              // this.badgeLevelMaxName = "无限制";
-              // this.entryFee = "";
-              // this.labelCode = "";
-
-              this.activeTab++;
-            }
-          } catch (err) {
+          var res = await uni.$u.http.post(
+            "/match/saveMatchRegisterInfo",
+            params
+          );
+          if (res.status == 200) {
             this.$refs.notice.show({
-              type: "error",
-              message: err.data.message,
+              type: "default",
+              message: res.message,
+              complete: () => {
+                this.activeTab++;
+              },
             });
-            uni.removeStorageSync("serialNum");
-            const result = await uni.$u.http.get("/match/getSerialNum");
-            if (result.status == 200) {
-              this.serialNum = result.data.serialNum;
-              uni.setStorageSync("serialNum", result.data.serialNum);
-            }
           }
         }
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: err.data.message,
         });
-        uni.removeStorageSync("serialNum");
-        const result = await uni.$u.http.get("/match/getSerialNum");
-        if (result.status == 200) {
-          this.serialNum = result.data.serialNum;
-          uni.setStorageSync("serialNum", result.data.serialNum);
-        }
       }
     },
     blur1(n) {
-      uni.setStorageSync("name", n.detail.value);
       this.name_copy = n.detail.value;
+      uni.setStorageSync("name", n.detail.value);
     },
     blur2(n) {
       this.fuTitle_copy = n.detail.value;
@@ -2115,8 +2649,8 @@ export default {
     },
     confirm11(n) {
       this.show11 = false;
-      this.groupNum = n.indexs[0];
-      uni.setStorageSync("groupNum", this.groupNum);
+      this.group_num = n.value[0];
+      uni.setStorageSync("group_num", this.group_num);
     },
     confirm12(n) {
       this.show12 = false;
@@ -2127,6 +2661,10 @@ export default {
     },
     async save2() {
       try {
+        this.items.forEach((item, index) => {
+          item.scheTypeSort = index;
+          item.scheTypeCode = index;
+        });
         const date = new Date(new Date());
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, "0"); // 月份从0开始，需要+1
@@ -2144,22 +2682,18 @@ export default {
         });
         if (result.status == 200) {
           this.$refs.notice.show({
-            type: "success",
+            type: "default",
             message: result.message,
+            complete: () => {
+              this.activeTab++;
+              this.getGame();
+            },
           });
-          // 删除本地存储
-          // uni.removeStorageSync("registrationEndTime");
-          // uni.removeStorageSync("publicationTime");
-          // this.registrationEndTime = "";
-          // this.publicationTime = "";
-          // this.items = [];
-          this.activeTab++;
-          this.getGame();
         }
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
-          message: err.data.message,
+          type: "default",
+          message: err.message,
         });
         return;
       }
@@ -2187,32 +2721,16 @@ export default {
         });
         if (result.status === 200) {
           this.$refs.notice.show({
-            type: "success",
+            type: "default",
             message: result.message,
+            complete: () => {
+              this.activeTab++;
+            },
           });
-          // uni.removeStorageSync("rewardType");
-          // uni.removeStorageSync("rewardTypeName");
-          // uni.removeStorageSync("rewardAmount");
-          // uni.removeStorageSync("rewardName");
-          // uni.removeStorageSync("rewardNum");
-          // uni.removeStorageSync("rewardUnit");
-          // uni.removeStorageSync("pickupAddress");
-          // uni.removeStorageSync("contactInfo");
-
-          // this.rewardType = "";
-          // this.rewardTypeName = "";
-          // this.rewardAmount = "";
-          // this.rewardName = "";
-          // this.rewardNum = "";
-          // this.rewardUnit = "";
-          // this.pickupAddress = "";
-          // this.contactInfo = "";
-
-          this.activeTab++;
         }
       } catch (error) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: error.data.message,
         });
       }
@@ -2229,40 +2747,254 @@ export default {
       this.rewards[index].rewardUnit = n;
       uni.setStorageSync("rewards", this.rewards);
     },
-    blur10(n) {
-      uni.setStorageSync("stageExplains", n);
-    },
     async save4() {
       try {
-        var result = await uni.$u.http.post("/match/saveMatchHitConfig", {
+        var data = {
           matchId: this.matchId,
           serialNum: this.serialNum,
           hitConfigList: [
             {
-              hitTypeCode: 1,
-              hitTypeName: "淘汰赛制",
-              stageExplains: this.stageExplains,
-              groupNum: this.groupNum,
-              matchingManner: this.matchingManner,
+              scheId: this.gameList[this.op].scheId,
+              lastHitId: "",
+              hitTypeCode: this.gameList[this.op].scheId,
+              hitTypeName: this.gameList[this.op].scheTypeName,
+              stageUserNum: this.stageUserNum,
+              stageExplains: "",
+              groupNum: this.group_num,
+              stageUserNum: this.stageUserNum,
+              matchingManner: this.zz,
               groupVenueType: this.groupVenueType,
               groupUmpireType: this.groupUmpireType,
               scoringMethod: this.scoringMethod,
             },
           ],
-        });
-        if (result.code == 200) {
+        };
+        var result = await uni.$u.http.post("/match/saveMatchHitConfig", data);
+        if (result.status == 400) {
           this.$refs.notice.show({
-            type: "success",
+            type: "default",
             message: result.message,
           });
+          return;
+        }
+        if (this.zz != 3) {
+          // 构造数据的辅助函数
+          const buildGroupData = (group) => ({
+            id: group.id,
+            matchId: this.matchId,
+            serialNum: this.serialNum,
+            hitId: group.hitId,
+            groupNum: group.groupNum,
+            groupName: group.groupName,
+            warType: group.warType,
+            address: group.address,
+            startTime: group.startTime,
+            endTime: group.endTime,
+            liveUrl: group.liveUrl,
+            scoringMethod: this.scoringMethod,
+            umpireId: group.umpireId,
+            list: group.list,
+          });
 
-          this.activeTab++;
+          // 使用 Promise.all 并发处理所有组的更新请求
+          const updatePromises = this.groups.map(async (group, index) => {
+            try {
+              const data = buildGroupData(group);
+              const result = await uni.$u.http.put(
+                "/match/updateMatchHitGroup",
+                data
+              );
+              if (result.status !== 200) {
+                throw new Error(
+                  `第 ${index + 1} 组更新失败: ${result.message}`
+                );
+              }
+              return { success: true, message: result.message };
+            } catch (error) {
+              return { success: false, message: error.message || "未知错误" };
+            }
+          });
+
+          // 等待所有请求完成
+          const results = await Promise.all(updatePromises);
+
+          // 统计成功和失败的数量
+          const successCount = results.filter((res) => res.success).length;
+          const failureMessages = results
+            .filter((res) => !res.success)
+            .map((res) => res.message);
+
+          // 显示提示信息
+          if (successCount === this.groups.length) {
+            this.$refs.notice.show({
+              type: "default",
+              message: "保存成功",
+            });
+          } else {
+            this.$refs.notice.show({
+              type: "default",
+              message: `部分组保存失败: ${failureMessages.join(", ")}`,
+            });
+          }
+        } else {
+          // 构造数据的辅助函数
+          const buildWarData = (group, war) => ({
+            id: war.id,
+            matchId: war.matchId,
+            serialNum: war.serialNum,
+            hitId: war.hitId,
+            hitGroupId: war.hitGroupId,
+            matchesNum: war.matchesNum,
+            matchesName: war.matchesName,
+            address: group.address,
+            startTime: group.startTime,
+            endTime: group.endTime,
+            liveUrl: group.liveUrl,
+            homeUserScore: war.homeUserScore,
+            homeUserId: war.homeUserId,
+            awayUserId: war.awayUserId,
+            awayUserScore: war.awayUserScore,
+            unit: war.unit,
+            umpireId: war.umpireId,
+          });
+
+          // 收集所有需要更新的 war 数据
+          const updatePromises = (this.groups || []).flatMap((group) => {
+            // 确保 group.warList 是一个数组
+            const warList = group.warList || [];
+            return warList.map(async (war, j) => {
+              try {
+                const data = buildWarData(group, war);
+                const result = await uni.$u.http.put(
+                  "/match/updateMatchHitWar",
+                  data
+                );
+                if (result.status !== 200) {
+                  throw new Error(
+                    `第 ${j + 1} 场对战更新失败: ${result.message}`
+                  );
+                }
+                return { success: true, message: result.message };
+              } catch (error) {
+                return { success: false, message: error.message || "未知错误" };
+              }
+            });
+          });
+
+          // 等待所有请求完成
+          const results = await Promise.all(updatePromises);
+
+          // 统计成功和失败的数量
+          const successCount = results.filter((res) => res.success).length;
+          const failureMessages = results
+            .filter((res) => !res.success)
+            .map((res) => res.message);
+
+          // 显示提示信息
+          if (successCount === updatePromises.length) {
+            this.$refs.notice.show({
+              type: "default",
+              message: "所有对战已成功保存",
+            });
+          } else {
+            this.$refs.notice.show({
+              type: "default",
+              message: `部分对战保存失败: ${failureMessages.join(", ")}`,
+            });
+          }
+        }
+      } catch (err) {
+        console.log(err);
+        // 全局错误处理
+        this.$refs.notice.show({
+          type: "default",
+          message: err.message || "保存失败，请稍后重试",
+        });
+      }
+    },
+    async yl() {
+      try {
+        const remainder = this.stageUserNum % this.group_num;
+        if (remainder) {
+          this.$refs.notice.show({
+            type: "default",
+            message: "每组人数必须满编",
+          });
+          return;
+        }
+        if (
+          (this.zz == 4 || this.zz == 6) &&
+          this.group_num != this.stageUserNum / 2
+        ) {
+          this.$refs.notice.show({
+            type: "default",
+            message: "对战1v1赛总人数必须是组数的两倍",
+          });
+          return;
+        }
+        const params = {
+          matchId: this.matchId,
+          serialNum: this.serialNum,
+          hitConfigList: [
+            {
+              scheId: this.gameList[this.op].scheId,
+              hitId: "",
+              hitTypeCode: String(this.gameList[this.op].scheId),
+              hitTypeName: this.gameList[this.op].scheTypeName,
+              stageUserNum: this.stageUserNum,
+              stageExplains: "",
+              groupNum: this.group_num,
+              matchingManner: this.zz,
+              groupVenueType: this.groupVenueType,
+              groupUmpireType: this.groupUmpireType,
+              scoringMethod: this.scoringMethod,
+            },
+          ],
+        };
+        var result = await uni.$u.http.post(
+          "/match/saveMatchHitConfig",
+          params
+        );
+        if (result.status == 400) {
+          this.$refs.notice.show({
+            type: "default",
+            message: result.message,
+          });
+        }
+        if (result.status == 200) {
+          this.groups = [];
+          this.getMatchHitGroup();
+
+          this.preview = this.zz;
         }
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
-          message: err.data.message,
+          type: "default",
+          message: err.message,
         });
+      }
+    },
+    async getMatchHitGroup() {
+      var result = await uni.$u.http.post("/match/getMatchHitGroup", {
+        matchId: this.matchId,
+        hitTypeName: this.gameList[this.op].scheTypeName,
+      });
+      this.groups = result.data.map((item) => {
+        item.expand = false;
+        return item;
+      });
+
+      uni.setStorageSync("groups", this.groups);
+    },
+    async getMatchHitWar(item) {
+      var result = await uni.$u.http.get("/match/getMatchHitWar", {
+        params: {
+          hitGroupId: item.id,
+        },
+      });
+      if (result.status == 200) {
+        item.warList = result.data;
+        item.expand = true;
       }
     },
     groupChange(n) {
@@ -2278,18 +3010,15 @@ export default {
       uni.setStorageSync("way", n);
     },
     async getGame() {
-      var result = await uni.$u.http.get("/match/getMatchTemplateSche", {
+      var result = await uni.$u.http.get("/match/getMatchScheTypeInfo", {
         params: {
-          templateId: this.templateId,
+          matchId: this.matchId,
         },
       });
       if (result.status == 200) {
         this.gameList = result.data;
         uni.setStorageSync("gameList", this.gameList);
       }
-    },
-    change(n) {
-      uni.setStorageSync("scheTypeName", n);
     },
     addNext() {
       const newItem = {
@@ -2308,8 +3037,8 @@ export default {
         }
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
-          message: err.data.message,
+          type: "default",
+          message: err.message,
         });
       }
     },
@@ -2330,19 +3059,52 @@ export default {
       this.items[
         this.currentIndex
       ].scheTime = `${year}-${month}-${day} ${hours}:${minutes}`;
+      uni.setStorageSync("items", this.items);
     },
-    deleteItem(index) {
+
+    deleteA(index) {
       this.items.splice(index, 1);
     },
     checkThis(index) {
       this.op = index;
-      // // 如果当前环节没有内容，则初始化为空字符串
-      if (!this.textareaContent[index]) {
-        this.$set(this.textareaContent, index, "");
+      this.queryMatchHitConfig();
+    },
+    async getSzList() {
+      var result = await uni.$u.http.get("/match/getSysDictByName", {
+        params: {
+          sysDicName: "matching_manner",
+        },
+      });
+      if (result.status == 200) {
+        this.szList = result.data.map((item) => {
+          return item.label;
+        });
+        console.log(this.szList);
       }
     },
-    saveThis() {
-      uni.setStorageSync("contentList", this.contentList);
+    async queryMatchHitConfig() {
+      this.zz = "";
+      this.stageUserNum = "";
+      this.zzName = "";
+      this.group_num = "";
+      this.groupVenueType = "1";
+      this.groupUmpireType = "1";
+      this.scoringMethod = "1";
+      var result = await uni.$u.http.get("/match/queryMatchHitConfig", {
+        params: {
+          matchId: this.matchId,
+          scheTypeId: this.gameList[this.op].scheId,
+        },
+      });
+      if (result.status == 200) {
+        this.zz = result.data[0].matchingManner;
+        this.stageUserNum = result.data[0].stageUserNum;
+        this.zzName = this.szList[this.zz - 1];
+        this.group_num = result.data[0].groupNum;
+        this.groupVenueType = result.data[0].groupVenueType;
+        this.groupUmpireType = result.data[0].groupUmpireType;
+        this.scoringMethod = result.data[0].scoringMethod;
+      }
     },
     async save5() {
       try {
@@ -2364,15 +3126,15 @@ export default {
           });
           if (result.status == 200) {
             this.$refs.notice.show({
-              type: "success",
+              type: "default",
               message: result.message,
             });
           }
         }
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
-          message: err.data.message,
+          type: "default",
+          message: err.message,
         });
       }
 
@@ -2384,25 +3146,17 @@ export default {
           list: this.contentList,
         });
 
-        // 删除本地缓存
-        // uni.removeStorageSync("gameList");
-        // uni.removeStorageSync("textareaContent");
-        // uni.removeStorageSync("contentList");
-
-        // // 重置状态
-        // this.gameList = [];
-        // this.textareaContent = [];
-        // this.contentList = [];
         if (res.status == 200) {
           this.$refs.notice.show({
-            type: "success",
+            type: "default",
             message: "保存成功",
           });
+          this.back();
         }
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
-          message: err.data.message,
+          type: "default",
+          message: err.message,
         });
       }
     },
@@ -2433,7 +3187,7 @@ export default {
           const maxSize = 20 * 1024 * 1024; // 2MB
           if (fileSize > maxSize) {
             this.$refs.notice.show({
-              type: "error",
+              type: "default",
               message: "文件大小不能超过20MB，请重新选择。",
             });
             return;
@@ -2467,7 +3221,7 @@ export default {
               } else {
                 // 上传失败的提示
                 this.$refs.notice.show({
-                  type: "error",
+                  type: "default",
                   message: "图片上传失败：" + data.message,
                 });
               }
@@ -2475,7 +3229,7 @@ export default {
             fail: (err) => {
               // 上传失败的提示
               this.$refs.notice.show({
-                type: "error",
+                type: "default",
                 message: "图片上传失败，请检查网络或稍后重试",
               });
               console.error("图片上传失败", err);
@@ -2501,7 +3255,7 @@ export default {
           const maxSize = 20 * 1024 * 1024; // 2MB
           if (fileSize > maxSize) {
             this.$refs.notice.show({
-              type: "error",
+              type: "default",
               message: "文件大小不能超过20MB，请重新选择。",
             });
             return;
@@ -2531,7 +3285,7 @@ export default {
               } else {
                 // 上传失败的提示
                 this.$refs.notice.show({
-                  type: "error",
+                  type: "default",
                   message: "图片上传失败：" + data.message,
                 });
               }
@@ -2539,7 +3293,7 @@ export default {
             fail: (err) => {
               // 上传失败的提示
               this.$refs.notice.show({
-                type: "error",
+                type: "default",
                 message: "图片上传失败，请检查网络或稍后重试",
               });
               console.error("图片上传失败", err);
@@ -2553,42 +3307,105 @@ export default {
     },
     back() {
       uni.switchTab({ url: "/pages/add/add" });
+      uni.removeStorageSync("joinPointsRace");
+      uni.removeStorageSync("joinList");
+      uni.removeStorageSync("labelId");
+      uni.removeStorageSync("typeName");
+      uni.removeStorageSync("labelCode");
+      uni.removeStorageSync("templateName");
+      uni.removeStorageSync("templateId");
+      uni.removeStorageSync("way");
+      uni.removeStorageSync("number");
+      uni.removeStorageSync("genderLimitName");
+      uni.removeStorageSync("genderLimit");
+      uni.removeStorageSync("entryFee");
+      uni.removeStorageSync("fullAddress");
+      uni.removeStorageSync("bmLocal");
+      uni.removeStorageSync("startTime");
+      uni.removeStorageSync("endTime");
+      uni.removeStorageSync("sponsor");
+      uni.removeStorageSync("ageLimitMin");
+      uni.removeStorageSync("ageLimitMax");
+      uni.removeStorageSync("ageLimitMinName");
+      uni.removeStorageSync("ageLimitMaxName");
+      uni.removeStorageSync("badgeLevelMin");
+      uni.removeStorageSync("badgeLevelMinName");
+      uni.removeStorageSync("badgeLevelMax");
+      uni.removeStorageSync("badgeLevelMaxName");
+      uni.removeStorageSync("matchLevelMin");
+      uni.removeStorageSync("matchLevelMinName");
+      uni.removeStorageSync("matchLevelMax");
+      uni.removeStorageSync("matchLevelMaxName");
+      uni.removeStorageSync("type");
+      uni.removeStorageSync("form");
+      uni.removeStorageSync("umpireId");
+      uni.removeStorageSync("registrationEndTime");
+      uni.removeStorageSync("publicationTime");
+      uni.removeStorageSync("items");
+      uni.removeStorageSync("rewards");
+      uni.removeStorageSync("groupNum");
+      uni.removeStorageSync("matchingManner");
+      uni.removeStorageSync("matchingMannerName");
+      uni.removeStorageSync("contentList");
+      uni.removeStorageSync("textareaContent");
+      uni.removeStorageSync("mainFile");
+      uni.removeStorageSync("serialNum");
+      uni.removeStorageSync("templateId");
+      uni.removeStorageSync("theme");
+      uni.removeStorageSync("groupNumName");
+      uni.removeStorageSync("groupPerNum");
+      uni.removeStorageSync("groupPerNumName");
+      uni.removeStorageSync("matchId");
+      uni.removeStorageSync("name");
+      uni.removeStorageSync("fuTitle");
+      uni.removeStorageSync("group_num");
+      uni.removeStorageSync("activeTab");
+      uni.removeStorageSync("refundDays");
+      uni.removeStorageSync("refundDaysName");
+      uni.removeStorageSync("insuranceId");
+      uni.removeStorageSync("insuranceName");
+      uni.removeStorageSync("stageUserNum");
+      uni.removeStorageSync("zz");
+      uni.removeStorageSync("gameList");
+      uni.removeStorageSync("zzName");
+      uni.removeStorageSync("groups");
     },
     async getMatchTemplateHit() {
-      const hitTypeCode = uni.getStorageSync("gameList")[this.op].scheTypeCode;
+      const hitTypeCode = this.gameList[this.op].scheTypeCode;
       var result = await uni.$u.http.get("/match/getMatchTemplateHit", {
         params: {
           templateId: this.templateId,
           hitTypeCode,
         },
       });
+
       if (result.status == 200) {
         uni.setStorageSync("groupNum", result.data.groupNum);
         this.groupNum = result.data.groupNum;
-        uni.setStorageSync("stageExplains", result.data.stageExplains);
-        this.stageExplains = result.data.stageExplains;
+        uni.setStorageSync("stageUserNum", result.data.stageUserNum);
+        this.stageUserNum = result.data.stageUserNum;
         uni.setStorageSync("groupUmpireType", result.data.groupUmpireType);
         this.groupUmpireType = result.data.groupUmpireType;
         uni.setStorageSync("groupVenueType", result.data.groupVenueType);
         this.groupVenueType = result.data.groupVenueType;
         uni.setStorageSync("matchingManner", result.data.matchingManner);
         this.matchingManner = result.data.matchingManner;
-        if (result.data.matchingManner == 1) {
-          this.matchingMannerName = "淘汰赛制";
-        }
-        if (result.data.matchingManner == 2) {
-          this.matchingMannerName = "循环赛制";
-        }
-        if (result.data.matchingManner == 3) {
-          this.matchingMannerName = "1v1赛制";
-        }
-        if (result.data.matchingManner == 4) {
-          this.matchingMannerName = "主客场赛制";
-        }
-        if (result.data.matchingManner == 5) {
-          this.matchingMannerName = "双败赛制";
-        }
-        uni.setStorageSync("matchingMannerName", this.matchingMannerName);
+        // if (result.data.matchingManner == 1) {
+        //   this.matchingMannerName = "淘汰赛制";
+        // }
+        // if (result.data.matchingManner == 2) {
+        //   this.matchingMannerName = "循环赛制";
+        // }
+        // if (result.data.matchingManner == 3) {
+        //   this.matchingMannerName = "1v1赛制";
+        // }
+        // if (result.data.matchingManner == 4) {
+        //   this.matchingMannerName = "主客场赛制";
+        // }
+        // if (result.data.matchingManner == 5) {
+        //   this.matchingMannerName = "双败赛制";
+        // }
+        // uni.setStorageSync("matchingMannerName", this.matchingMannerName);
         uni.setStorageSync("scoringMethod", result.data.scoringMethod);
         this.scoringMethod = result.data.scoringMethod;
       }
@@ -2631,6 +3448,7 @@ export default {
       result.data.map((item, index) => {
         arr.push(item.label);
       });
+      this.columns11 = [arr];
       this.columns19 = [arr];
     },
     confirm19(n) {
@@ -2665,7 +3483,7 @@ export default {
     confirmRefundPolicy() {
       if (!this.refundDays) {
         this.$refs.notice.show({
-          type: "error",
+          type: "default",
           message: "请选择退款政策",
         });
         return;
@@ -2675,6 +3493,8 @@ export default {
       } else {
         this.refundDaysName = "赛前7天退100%，赛前退50%";
       }
+      uni.setStorageSync("refundDays", this.refundDays);
+      uni.setStorageSync("refundDaysName", this.refundDaysName);
       this.show16 = false;
     },
     insuranceEnter() {
@@ -2684,6 +3504,8 @@ export default {
       } else {
         this.insuranceName = "无保障";
       }
+      uni.setStorageSync("insuranceId", this.insuranceId);
+      uni.setStorageSync("insuranceName", this.insuranceName);
     },
     addReward(a) {
       this.rewards[a].prizes.push({
@@ -2725,6 +3547,9 @@ export default {
       this.show10 = true;
       this.counter = index;
     },
+    blur10() {
+      uni.setStorageSync("stageUserNum", this.stageUserNum);
+    },
     delPrize(a, b) {
       this.rewards[a].prizes.splice(b, 1);
       uni.setStorageSync("rewards", this.rewards);
@@ -2745,6 +3570,66 @@ export default {
       if (this.contentList.length > 1) {
         this.contentList.splice(index, 1);
       }
+    },
+    async getPP() {
+      var result = await uni.$u.http.get("/match/getSysDictByName", {
+        params: {
+          sysDicName: "matching_manner",
+        },
+      });
+      var arr = [];
+      result.data.map((item) => {
+        arr.push(item.label);
+      });
+      this.columns12 = [arr];
+    },
+    confirm21(n) {
+      this.show21 = false;
+      this.zz = n.indexs[0] + 1;
+      this.zzName = n.value[0];
+      uni.setStorageSync("zz", this.zz);
+      uni.setStorageSync("zzName", this.zzName);
+    },
+    chooseAddress1(item) {
+      uni.chooseLocation({
+        success: function (res) {
+          item.address = res.address;
+        },
+        fail: function () {},
+        complete: function () {},
+      });
+    },
+    chooseTime1(item) {
+      this.timeShow = true;
+      this.currentTime = item;
+    },
+    chooseTime2(item) {
+      this.timeShow1 = true;
+      this.currentTime = item;
+    },
+    confirm25(n) {
+      const date = new Date(n.value);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+      this.currentTime.startTime = `${year}-${month}-${day} ${hours}:${minutes}`;
+      this.timeShow = false;
+    },
+    confirm26(n) {
+      const date = new Date(n.value);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+      this.currentTime.endTime = `${year}-${month}-${day} ${hours}:${minutes}`;
+      this.timeShow1 = false;
+    },
+    closeWar(item) {
+      item.warList = [];
+      item.expand = false;
     },
   },
   computed: {
@@ -2982,7 +3867,7 @@ export default {
       .top {
         display: flex;
         justify-content: space-between;
-        backdrop-filter: blur(20px);
+        backdrop-filter: blur(30px);
         background-color: rgba(255, 255, 255, 0.2);
         height: 65%;
         &::after {
@@ -3004,12 +3889,15 @@ export default {
             font-weight: 400;
             font-size: 20px;
             color: #ffffff;
+            font-family: youshe;
+            font-style: normal;
           }
           .second {
             margin-top: 10px;
             font-weight: 400;
             font-size: 16px;
             color: rgba(255, 255, 255, 0.7);
+            font-family: youshe;
           }
         }
       }
@@ -3034,6 +3922,18 @@ export default {
           border-radius: 15px;
         }
       }
+    }
+    .change {
+      position: absolute;
+      right: 0;
+      top: 30%;
+      font-weight: 400;
+      font-size: 12px;
+      color: #fffcf6;
+      background-color: #333b4b;
+      padding: 3px 10px;
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
     }
   }
 
@@ -3122,24 +4022,26 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 84px;
-        height: 32px;
+        padding: 8px 12px;
         border-radius: 20px;
         font-weight: 600;
         font-size: 12px;
         color: #ffffff;
+        white-space: nowrap;
+        box-sizing: border-box;
       }
       .item {
+        white-space: nowrap;
         background-color: white;
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 84px;
-        height: 32px;
+        padding: 8px 12px;
         border-radius: 20px;
         font-weight: 400;
         font-size: 12px;
         color: rgba(29, 35, 38, 0.5);
+        box-sizing: border-box;
       }
     }
     .main {
@@ -3157,7 +4059,7 @@ export default {
           -5px -5px 10px rgba(0, 0, 0, 0.1);
 
         .item {
-          width: 90%;
+          width: 95%;
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -3173,7 +4075,7 @@ export default {
             gap: 5px;
 
             .icon {
-              color: red;
+              color: #ec384a;
             }
           }
 
@@ -3206,17 +4108,9 @@ export default {
         font-weight: 600;
         font-size: 14px;
         color: #ffffff;
-        position: relative;
-        &::after {
-          content: "";
-          position: absolute;
-          left: 20%;
-          border-left: 5px solid transparent;
-          border-right: 5px solid transparent;
-          border-bottom: 5px solid #ffffff;
-          top: 50%;
-          transform: translateY(-50%);
-        }
+        display: flex;
+        align-items: center;
+        gap: 5px;
       }
 
       .o-text {
@@ -3258,7 +4152,7 @@ export default {
             }
 
             .icon {
-              color: red;
+              color: #ec384a;
             }
           }
 
@@ -3277,6 +4171,24 @@ export default {
               width: 120px;
               display: flex;
               align-items: center;
+            }
+            .select {
+              display: flex;
+              align-items: center;
+              gap: 5px;
+              margin-right: 12px;
+              text {
+                font-weight: 400;
+                font-size: 14px;
+                color: rgba(29, 35, 38, 0.3);
+              }
+            }
+            .stageExplains {
+              background-color: #f7f7f7;
+              border-radius: 4px;
+              box-sizing: border-box;
+              width: 50px;
+              text-align: center;
             }
           }
           .right-r {
@@ -3333,7 +4245,7 @@ export default {
             }
 
             .icon {
-              color: red;
+              color: #ec384a;
             }
           }
 
@@ -3346,9 +4258,30 @@ export default {
             font-weight: 400;
             font-size: 14px;
             color: #1d2326;
+            .left {
+              .l1 {
+                font-weight: 400;
+                font-size: 14px;
+                color: #1d2326;
+              }
+              .l2 {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                font-weight: 400;
+                font-size: 14px;
+                color: rgba(29, 35, 38, 0.3);
+              }
+            }
             .right {
               display: flex;
               justify-content: flex-end;
+              align-items: center;
+              .r2 {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+              }
             }
           }
 
@@ -3396,7 +4329,7 @@ export default {
             }
 
             .icon {
-              color: red;
+              color: #ec384a;
             }
           }
 
@@ -3411,6 +4344,11 @@ export default {
             white-space: nowrap;
             width: 40%;
             justify-content: space-between;
+            .l2 {
+              display: flex;
+              align-items: center;
+              gap: 5px;
+            }
 
             .wh {
               width: 16px;
@@ -3426,7 +4364,7 @@ export default {
             }
 
             .icon {
-              color: red;
+              color: #ec384a;
             }
           }
 
@@ -3465,6 +4403,11 @@ export default {
 
             .r1 {
               white-space: nowrap;
+            }
+            .r2 {
+              display: flex;
+              align-items: center;
+              gap: 5px;
             }
 
             .time {
@@ -3554,19 +4497,415 @@ export default {
         justify-content: center;
         align-items: center;
       }
+
       .pp {
-        width: 262px;
+        width: 80%;
         height: 44px;
-        background-color: #cccccc;
-        margin: auto;
-        margin-top: 30px;
-        border-radius: 20px;
+        background-color: black;
+        border-radius: 22px;
         font-weight: 600;
         font-size: 16px;
         color: #ffffff;
         display: flex;
         justify-content: center;
         align-items: center;
+        margin: 30px auto 0;
+      }
+
+      .pp-yl {
+        width: 80%;
+        height: 44px;
+        background-color: white;
+        border-radius: 22px;
+        font-weight: 400;
+        font-size: 16px;
+        color: #1d2326;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 30px auto 0;
+      }
+
+      .pp-content {
+        background-color: #fff;
+        padding: 12px;
+        box-sizing: border-box;
+        border-radius: 10px;
+        margin-top: 28px;
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1),
+          -5px -5px 10px rgba(0, 0, 0, 0.1);
+        .first {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          .left {
+            display: flex;
+            align-items: center;
+            width: 50%;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 14px;
+            color: #1d2326;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 11px;
+            .h {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background-color: #f5f5f5;
+              white-space: nowrap;
+              border-radius: 2px;
+
+              font-weight: 400;
+              font-size: 14px;
+              color: #1d2326;
+              padding: 5px 8px;
+            }
+          }
+          .judge {
+            margin-top: -40px;
+            position: relative;
+            .name {
+              position: absolute;
+              font-weight: 400;
+              font-size: 12px;
+              color: #ffffff;
+              left: 50%;
+              transform: translateX(-50%);
+              background-color: black;
+              white-space: nowrap;
+              padding: 3px 5px;
+              clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+              bottom: -10px;
+            }
+          }
+        }
+        .second {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px 0;
+          box-sizing: border-box;
+          border-bottom: 1px solid #f0f0f0;
+          .left {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #1d2326;
+            .icon {
+              color: #ec384a;
+            }
+          }
+          .right {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 400;
+            font-size: 14px;
+            color: #1d2326;
+            width: 60%;
+            justify-content: flex-end;
+          }
+        }
+        .third {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px 0;
+          box-sizing: border-box;
+          .left {
+            white-space: nowrap;
+            font-weight: 600;
+            font-size: 14px;
+            color: #1d2326;
+          }
+          .right {
+            font-weight: 400;
+            font-size: 10px;
+            color: #1d2326;
+          }
+          .input {
+            text-align: right;
+          }
+        }
+        .sixth {
+          display: flex;
+          flex-direction: column;
+          border-bottom: 1px solid #f5f5f5;
+          padding: 16px 0;
+          gap: 12px;
+          .top {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #000000;
+            .icon {
+              color: #f05b51;
+            }
+          }
+          .next {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 400;
+            font-size: 14px;
+            color: #959595;
+            .time {
+              font-weight: 400;
+              font-size: 14px;
+              color: #1d2326;
+            }
+          }
+        }
+        .member {
+          display: flex;
+          align-items: center;
+          background-color: #f7f7f7;
+          margin-top: 5px;
+          justify-content: flex-start;
+          flex-wrap: wrap;
+          border-radius: 4px;
+
+          .item {
+            width: 25%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            // border-right: 1px solid #e6e6e6;
+            padding: 10px 0;
+            box-sizing: border-box;
+            .select {
+              display: flex;
+              align-items: center;
+              gap: 5px;
+              background-color: #fff;
+              padding: 4px 8px;
+              box-sizing: border-box;
+              font-weight: 600;
+              font-size: 12px;
+              color: #000000;
+              margin-top: 8px;
+              .icon {
+                border-left: 4px solid transparent;
+                border-right: 4px solid transparent;
+                border-top: 4px solid black;
+              }
+            }
+            .avatar {
+              position: relative;
+              .rank {
+                position: absolute;
+                bottom: -5px;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: white;
+                width: 40px;
+                height: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 400;
+                font-size: 12px;
+                color: #ec384a;
+              }
+            }
+            .name {
+              font-weight: 400;
+              font-size: 10px;
+              color: #1d2326;
+              margin-top: 15px;
+            }
+            .time {
+              display: flex;
+              align-items: center;
+              font-weight: 600;
+              font-size: 12px;
+              color: #1d2326;
+              background-color: white;
+              margin-top: 10px;
+              gap: 3px;
+              padding: 4px 8px;
+              box-sizing: border-box;
+              text {
+                font-weight: 600;
+                font-size: 12px;
+                color: rgba(29, 35, 38, 0.3);
+              }
+            }
+            .grade {
+              font-weight: 400;
+              font-size: 10px;
+              color: rgba(29, 35, 38, 0.5);
+              margin-top: 5px;
+            }
+          }
+        }
+        .fourth {
+          display: flex;
+          align-items: center;
+          margin-bottom: 12px;
+          .item {
+            font-weight: 600;
+            font-size: 14px;
+            color: #1d2326;
+            flex: 1;
+            text-align: center;
+          }
+        }
+        .fifth {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          .item {
+            display: flex;
+            align-items: center;
+            height: 60px;
+            background-color: #f5f5f5;
+            .num {
+              flex: 1;
+              text-align: center;
+            }
+            .avatar {
+              flex: 1;
+              display: flex;
+              justify-content: center;
+            }
+            .grade {
+              flex: 1;
+              text-align: center;
+            }
+            .rank {
+              flex: 1;
+              text-align: center;
+            }
+            // padding: 0px 20px 0px 10px;
+            // justify-content: space-between;
+          }
+        }
+        .item-list {
+          border-bottom: 1px solid #f0f0f0;
+          margin-bottom: 18px;
+          .detail {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            background-color: #f7f7f7;
+            position: relative;
+            padding: 0px 20px;
+            box-sizing: border-box;
+            .item {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              flex: 1;
+              position: relative;
+              padding: 10px 0;
+
+              .zc {
+                position: absolute;
+                left: 0;
+                top: 25%;
+                font-weight: 400;
+                font-size: 14px;
+                color: #148aea;
+              }
+              .kc {
+                position: absolute;
+                right: 0;
+                top: 25%;
+                font-weight: 400;
+                font-size: 14px;
+                color: #f33b57;
+              }
+              .zc1 {
+                position: absolute;
+                left: 0;
+                top: 25%;
+                font-weight: 400;
+                font-size: 14px;
+                color: #f33b57;
+              }
+              .kc1 {
+                position: absolute;
+                right: 0;
+                top: 25%;
+                font-weight: 400;
+                font-size: 14px;
+                color: #148aea;
+              }
+              .avatar {
+                position: relative;
+                .rank {
+                  position: absolute;
+                  bottom: -5px;
+                  left: 50%;
+                  transform: translateX(-50%);
+                  background-color: white;
+                  width: 40px;
+                  height: 16px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-weight: 400;
+                  font-size: 12px;
+                  color: #ec384a;
+                }
+              }
+              .name {
+                font-weight: 400;
+                font-size: 10px;
+                color: #1d2326;
+                margin-top: 10px;
+              }
+              .grade {
+                font-weight: 400;
+                font-size: 10px;
+                color: rgba(29, 35, 38, 0.5);
+                margin-top: 5px;
+              }
+            }
+            .chang {
+              position: absolute;
+              top: 0;
+              left: 0;
+              background-color: red;
+              font-weight: 600;
+              font-size: 12px;
+              color: #ffffff;
+              padding: 2px 6px;
+            }
+          }
+          .next {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            .left {
+              display: flex;
+              align-items: center;
+              gap: 5px;
+              font-weight: 600;
+              font-size: 14px;
+              color: #1d2326;
+              .icon {
+                color: #ec384a;
+              }
+            }
+            .right {
+              display: flex;
+              align-items: center;
+              gap: 5px;
+              font-weight: 400;
+              font-size: 14px;
+              color: #1d2326;
+            }
+          }
+        }
       }
 
       .rules {
@@ -3754,6 +5093,14 @@ export default {
   font-size: 14px;
   color: rgba(29, 35, 38, 0.3);
 }
+
+.pl-class2 {
+  font-weight: 400;
+  font-size: 14px;
+  color: rgba(29, 35, 38, 0.3);
+  text-align: right;
+}
+
 .refund {
   height: 380px;
   .title {

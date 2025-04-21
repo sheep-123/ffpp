@@ -1,26 +1,46 @@
 <template>
   <view class="box">
-    <u-navbar :bg-color="navbarBgColor">
+    <u-navbar :bgColor="navbarBgColor">
       <view slot="left">
         <view
-          :class="['search-container', isMapExpanded ? 'search-y' : 'search']"
+          :class="['search-container', isMapExpanded ? 'search-y' : '']"
+          :style="{ backgroundColor: searchBgColor }"
         >
-          <!-- 返回按钮 -->
           <image
             v-if="isMapExpanded"
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/left.png"
             @click="back"
             class="back-btn"
           />
-
-          <!-- 搜索框 -->
-          <u-search
+          <u-input
             placeholder="搜搜你感兴趣的~"
+            border="none"
             v-model="keyword"
-            :show-action="false"
-            :bg-color="searchBgColor"
-            @clear="keyword = ''"
-          ></u-search>
+            shape="circle"
+            placeholderClass="pl-class"
+            placeholderStyle="color:rgba(29,35,38,0.3)"
+          >
+            <image
+              :src="
+                isMapExpanded
+                  ? 'https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/小搜索.png'
+                  : 'https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/搜索.png'
+              "
+              mode="scaleToFill"
+              :style="
+                isMapExpanded
+                  ? 'width: 16px; height: 16px; margin-left: 10px'
+                  : 'width: 24px; height: 24px; margin-left: 10px'
+              "
+              slot="prefix"
+            />
+            <image
+              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/扫描.png"
+              mode="scaleToFill"
+              style="width: 24px; height: 24px; margin-right: 10px"
+              slot="suffix"
+            />
+          </u-input>
         </view>
       </view>
     </u-navbar>
@@ -60,12 +80,6 @@
       :scale="18"
       v-if="!isSticky || isMapExpanded"
     >
-      <view class="mapBox">
-        <view class="button" @tap="toMarkSite">
-          <view><text>标记</text></view>
-          <view><text>场地</text></view>
-        </view>
-      </view>
     </map>
 
     <view
@@ -78,6 +92,7 @@
     >
       <image
         src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/pull.png"
+        style="width: 16px; height: 8px"
       />
       <view class="value">下拉试试</view>
     </view>
@@ -92,8 +107,10 @@
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png"
           />
           <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/near.png"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/附近.png"
           />
+          <view class="next"></view>
+          <view class="dian"></view>
         </view>
         <view class="item">关注</view>
         <view class="item">美式橄榄球</view>
@@ -110,7 +127,7 @@
       <view class="main">
         <view class="item">
           <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/01.jpg"
             mode="widthFix"
           />
           <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
@@ -418,7 +435,9 @@
 </template>
 
 <script>
+// import Tabbar from "@/components/tabbar.vue";
 export default {
+  // components: { Tabbar },
   data() {
     return {
       latitude: 23,
@@ -472,10 +491,11 @@ export default {
     };
   },
   onLoad() {
-    // uni.reLaunch({
-    //   // url: "/competition/apply/appear",
-    //   url: "/competition/publish/saishi",
-    // });
+    uni.reLaunch({
+      // url: "/competition/apply/appear",
+      // url: "/competition/publish/saishi",
+      url: "/user/competition",
+    });
     this.Location();
     this.Location().then(() => {
       this.initIntersectionObserver();
@@ -496,27 +516,27 @@ export default {
         this.markers[1].latitude = res.latitude + 0.0005;
         this.markers[1].longitude = res.longitude + 0.0005;
         // 调用逆地理编码接口
-        const apiKey = "OVPBZ-6ABC5-XWDIP-IVGK4-UJMIS-ALBZT ";
-        const url = `https://apis.map.qq.com/ws/geocoder/v1/?location=${this.latitude},${this.longitude}&key=${apiKey}`;
+        // const apiKey = "OVPBZ-6ABC5-XWDIP-IVGK4-UJMIS-ALBZT ";
+        // const url = `https://apis.map.qq.com/ws/geocoder/v1/?location=${this.latitude},${this.longitude}&key=${apiKey}`;
 
-        const addressRes = await uni.request({ url });
-        if (addressRes.statusCode === 200 && addressRes.data.status === 0) {
-          this.address = addressRes.data.result.address;
-          uni.setStorageSync(
-            "city",
-            addressRes.data.result.address_component.city
-          );
-          // 获取完整地址
-          if (this.address) {
-            var result = await uni.$u.http.post("/saveWjLocation", {
-              address: this.address,
-              locationLat: this.latitude,
-              locationLng: this.longitude,
-            });
-          }
-        } else {
-          console.error("逆地理编码失败:", addressRes.data);
-        }
+        // const addressRes = await uni.request({ url });
+        // if (addressRes.statusCode === 200 && addressRes.data.status === 0) {
+        //   this.address = addressRes.data.result.address;
+        //   uni.setStorageSync(
+        //     "city",
+        //     addressRes.data.result.address_component.city
+        //   );
+        //   // 获取完整地址
+        //   if (this.address) {
+        //     var result = await uni.$u.http.post("/saveWjLocation", {
+        //       address: this.address,
+        //       locationLat: this.latitude,
+        //       locationLng: this.longitude,
+        //     });
+        //   }
+        // } else {
+        //   console.error("逆地理编码失败:", addressRes.data);
+        // }
       } catch (err) {
         console.error("定位失败:", err);
       }
@@ -567,6 +587,9 @@ export default {
     toMarkSite() {
       uni.navigateTo({ url: "/else/index/markSite" });
     },
+    toPlay() {
+      uni.navigateTo({ url: "/pages/play/play" });
+    },
   },
 
   computed: {
@@ -574,11 +597,13 @@ export default {
       return this.isSticky && !this.isMapExpanded ? "#fff" : "rgba(0,0,0,0)";
     },
     searchBgColor() {
-      return this.isMapExpanded
-        ? "#FFFFFF"
-        : this.isSticky
-        ? "#F7F7F7"
-        : "#F5F7F5";
+      if (this.isMapExpanded) {
+        return "#FFFFFF"; // 地图展开时背景颜色为白色
+      } else if (this.isSticky) {
+        return "#F7F7F7"; // 吸顶时背景颜色为 #F7F7F7
+      } else {
+        return "rgba(255, 255, 255, 0.5)"; // 正常时背景颜色为半透明白色
+      }
     },
     stickyTop() {
       return `${this.statusBarHeight + this.navbarHeight}px`;
@@ -615,6 +640,7 @@ export default {
       display: flex;
       align-items: center;
       gap: 3px;
+      position: relative;
 
       image:nth-child(1) {
         width: 18px;
@@ -624,6 +650,25 @@ export default {
       image:nth-child(2) {
         width: 36px;
         height: 15px;
+      }
+      .next {
+        position: absolute;
+        bottom: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 10px solid #fff;
+      }
+      .dian {
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background-color: black;
       }
     }
 
@@ -640,6 +685,7 @@ export default {
     background: #ffffff;
     border-radius: 20px;
     padding: 10px 10px 50px 10px; // 新增内边距
+    box-shadow: 0px -2px 8px 0px rgba(168, 186, 197, 0.2);
 
     .item {
       width: 100%;
@@ -760,11 +806,15 @@ map {
 .search-container {
   display: flex;
   align-items: center;
-  background: #f7f7f7;
   border-radius: 20px;
-
+  border: 1px solid #ffffff;
+  height: 36px;
+  background-color: rgba(255, 255, 255, 0.5);
+  width: 80%;
+  backdrop-filter: blur(30px);
   &.search-y {
     background: #ffffff;
+    width: 85%;
 
     .back-btn {
       width: 20px;
@@ -842,5 +892,15 @@ map {
       }
     }
   }
+}
+.pl-class {
+  font-weight: 400;
+  font-size: 14px;
+  color: black;
+}
+.pl-class1 {
+  font-weight: 400;
+  font-size: 14px;
+  color: black;
 }
 </style>

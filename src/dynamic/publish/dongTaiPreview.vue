@@ -1,26 +1,55 @@
 <template>
   <view class="box">
-    <u-navbar class="nav" autoBack leftText="发布动态" :fixed="false" bgColor="#fff">
-      <view slot="left" style="display: flex;align-items: center;">
+    <u-navbar
+      class="nav"
+      autoBack
+      leftText="发布动态"
+      :fixed="false"
+      bgColor="#fff"
+    >
+      <view slot="left" style="display: flex; align-items: center">
         <u-icon name="arrow-left" size="19"></u-icon>
-        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/avatar.png"
-          mode="scaleToFill" style="margin-left: 6px;width: 36px;height: 36px;border-radius: 50%;" />
-        <view style="font-family: PingFang SC, PingFang SC;
-             font-weight: 400;
-             font-size: 16px;
-             color: #1D2326;
-             line-height: 24px;
-             text-align: left;
-             font-style: normal;
-             text-transform: none;
-             margin-left: 8px;">爱运动的橘子
+        <image
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/avatar.png"
+          mode="scaleToFill"
+          style="
+            margin-left: 6px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+          "
+        />
+        <view
+          style="
+            font-family: PingFang SC, PingFang SC;
+            font-weight: 400;
+            font-size: 16px;
+            color: #1d2326;
+            line-height: 24px;
+            text-align: left;
+            font-style: normal;
+            text-transform: none;
+            margin-left: 8px;
+          "
+          >爱运动的橘子
         </view>
       </view>
     </u-navbar>
     <view>
-      <scroll-view scroll-y :style="{ height: windowHeight - bottomBoxHeight - statusBarHeight - 44 + 'px' }">
+      <scroll-view
+        scroll-y
+        :style="{
+          height: windowHeight - bottomBoxHeight - statusBarHeight - 44 + 'px',
+        }"
+      >
         <view class="parent">
-          <swiper @change="monitorCurrent" :indicator-dots="false" :circular="true" :current="current" :autoplay="true">
+          <swiper
+            @change="monitorCurrent"
+            :indicator-dots="false"
+            :circular="true"
+            :current="current"
+            :autoplay="true"
+          >
             <block v-for="(item, index) in backgroundArr" :key="index">
               <swiper-item>
                 <view :class="item"></view>
@@ -29,10 +58,11 @@
           </swiper>
           <view class="numDots">
             <view>
-              <image src="@/static/photo.png" mode="scaleToFill" />
-              <text>
-                {{ current + 1 }}/3
-              </text>
+              <image
+                src="@https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/photo.png"
+                mode="scaleToFill"
+              />
+              <text> {{ current + 1 }}/3 </text>
             </view>
           </view>
           <!-- 自定义轮播图进度点 -->
@@ -43,26 +73,17 @@
           </view>
         </view>
         <view class="contentBox">
-          <text class="title">2024年|我的徒步passion时刻</text><br>
+          <text class="title">2024年|我的徒步passion时刻</text><br />
           <text class="titleContent">
-            晒出你的徒步照片
-            看看2024你都去了哪些地方徒步
-            春天大理看爱心湖夏天重庆金佛山玩水
-            “秋天去川西看看雪山”
-            攀冬天去丽江感受一下阳光
-            回看这些走过的路，仍然充满passion
-            晒出你的徒步照片
-            看看2024你都去了哪些地方徒步
-            春天大理看爱心湖夏天重庆金佛山玩水
-            “秋天去川西看看雪山”
-            攀冬天去丽江感受一下阳光
-            回看这些走过的路，仍然充满passion
-            晒出你的徒步照片
-            看看2024你都去了哪些地方徒步
-            春天大理看爱心湖夏天重庆金佛山玩水
-            “秋天去川西看看雪山”
-            攀冬天去丽江感受一下阳光
-            回看这些走过的路，仍然充满passion
+            晒出你的徒步照片 看看2024你都去了哪些地方徒步
+            春天大理看爱心湖夏天重庆金佛山玩水 “秋天去川西看看雪山”
+            攀冬天去丽江感受一下阳光 回看这些走过的路，仍然充满passion
+            晒出你的徒步照片 看看2024你都去了哪些地方徒步
+            春天大理看爱心湖夏天重庆金佛山玩水 “秋天去川西看看雪山”
+            攀冬天去丽江感受一下阳光 回看这些走过的路，仍然充满passion
+            晒出你的徒步照片 看看2024你都去了哪些地方徒步
+            春天大理看爱心湖夏天重庆金佛山玩水 “秋天去川西看看雪山”
+            攀冬天去丽江感受一下阳光 回看这些走过的路，仍然充满passion
           </text>
           <u-gap height="8" bgColor="#F7F7F7"></u-gap>
           <view class="functionBox">
@@ -70,20 +91,31 @@
             <view class="rightPart">
               <view>
                 <!-- <view class="frie-svg"></view> -->
-                <image class="frie-svg" src="@/static/images/frie.svg" mode="scaleToFill" />
+                <image
+                  class="frie-svg"
+                  src="@https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/frie.svg"
+                  mode="scaleToFill"
+                />
                 <text>0</text>
               </view>
               <view>
                 <!-- <view class="star-svg"></view> -->
-                <image class="star-svg" src="@/static/images/collect.svg" mode="scaleToFill" />
+                <image
+                  class="star-svg"
+                  src="@https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/collect.svg"
+                  mode="scaleToFill"
+                />
                 <text>0</text>
               </view>
               <view>
                 <!-- <view class="comment-svg"></view> -->
-                <image class="comment-svg" src="@/static/images/comment.svg" mode="scaleToFill" />
+                <image
+                  class="comment-svg"
+                  src="@https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/comment.svg"
+                  mode="scaleToFill"
+                />
                 <text>0</text>
               </view>
-
             </view>
           </view>
         </view>
@@ -99,88 +131,85 @@ export default {
   data() {
     return {
       fileList: [],
-      title: '',
+      title: "",
       titleLength: 20,
-      titleContent: '',
+      titleContent: "",
       bottomBoxHeight: 0,
       windowHeight: uni.getSystemInfoSync().windowHeight,
       statusBarHeight: uni.getSystemInfoSync().statusBarHeight,
       isShow: false,
       isShowPopup: false,
       //轮播图的数组
-      backgroundArr: ['red', 'green', 'blue'],
+      backgroundArr: ["red", "green", "blue"],
       //轮播图当前的下标
       current: 0,
       //是否自动播放轮播图
       autoplay: false,
-      indicatorColor: '#000000',
-    }
+      indicatorColor: "#000000",
+    };
   },
   methods: {
-
     //图片读取后的处理函数
     afterRead(e) {
       console.log(e);
       // this.fileList = e.file
-      this.fileList.push(e.file[0])
+      this.fileList.push(e.file[0]);
       console.log(this.fileList);
     },
     //图片删除函数
     deletePic(e) {
-      this.fileList.splice(e.index, 1)
+      this.fileList.splice(e.index, 1);
     },
     //标题输入事件
     inputEvent(e) {
-      this.titleLength = 20
+      this.titleLength = 20;
       if (e.length <= 20) {
-        this.titleLength = this.titleLength - e.length
-        this.isShowPopup = false
+        this.titleLength = this.titleLength - e.length;
+        this.isShowPopup = false;
       } else {
-        this.titleLength = 0
+        this.titleLength = 0;
         uni.showToast({
-          icon: 'none',
-          title: '标题最多输入20个字',
-          mask: false
-        })
+          icon: "none",
+          title: "标题最多输入20个字",
+          mask: false,
+        });
       }
       if (e.length >= 1) {
-        this.isShow = true
+        this.isShow = true;
+      } else {
+        this.isShow = false;
       }
-      else {
-        this.isShow = false
-      }
-
     },
     changeEvent(e) {
       console.log(e);
-
     },
     onClearTitle() {
-      this.title = ''
+      this.title = "";
     },
     toPreview() {
-      uni.navigateTo({ url: '/dynamic/publish/dongTaiPreview' })
-
+      uni.navigateTo({ url: "/dynamic/publish/dongTaiPreview" });
     },
     monitorCurrent: function (e) {
       this.current = e.detail.current;
     },
-
   },
   onLoad() {
     this.$nextTick(() => {
-      uni.createSelectorQuery().select(".bottomBox").boundingClientRect(data => {
-        this.bottomBoxHeight = data.height
-        console.log(this.statusBarHeight);
-        console.log(this.windowHeight);
-      }).exec()
-    })
+      uni
+        .createSelectorQuery()
+        .select(".bottomBox")
+        .boundingClientRect((data) => {
+          this.bottomBoxHeight = data.height;
+          console.log(this.statusBarHeight);
+          console.log(this.windowHeight);
+        })
+        .exec();
+    });
   },
-}
+};
 </script>
 
-
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .parent {
   position: relative;
 
@@ -207,9 +236,6 @@ export default {
   }
 }
 
-
-
-
 .numDots {
   position: relative;
   top: -40px;
@@ -235,7 +261,7 @@ export default {
       font-family: PingFang SC, PingFang SC;
       font-weight: 600;
       font-size: 12px;
-      color: #FFFFFF;
+      color: #ffffff;
       line-height: 16px;
       text-align: right;
       font-style: normal;
@@ -243,8 +269,6 @@ export default {
     }
   }
 }
-
-
 
 .dots {
   position: absolute;
@@ -259,15 +283,14 @@ export default {
     height: 10rpx;
     margin: 0 6rpx;
     border-radius: 10rpx;
-    background-color: #CCCCCC;
+    background-color: #cccccc;
   }
 
   .active {
     width: 30rpx;
-    background-color: #15181A;
+    background-color: #15181a;
   }
 }
-
 
 ::v-deep .u-icon__icon.data-v-172979f2.uicon-close {
   font-size: 15px !important;
@@ -278,14 +301,15 @@ export default {
 
 ::v-deep .u-input__content.data-v-fdbb9fe6 {
   background-color: #fff;
-
 }
 
 ::v-deep .u-input__content__field-wrapper__field.data-v-fdbb9fe6 {
   font-size: 14px !important;
 }
 
-::v-deep .data-v-0e3867ac .u-input__content__field-wrapper__field.data-v-fdbb9fe6 {
+::v-deep
+  .data-v-0e3867ac
+  .u-input__content__field-wrapper__field.data-v-fdbb9fe6 {
   font-family: PingFang SC, PingFang SC;
   font-weight: 400;
   font-size: 16px;
@@ -304,8 +328,6 @@ export default {
   width: 327px;
   height: 44px;
 }
-
-
 
 .box {
   background-color: #fff;
@@ -354,7 +376,7 @@ export default {
       font-family: PingFang SC, PingFang SC;
       font-weight: 600;
       font-size: 18px;
-      color: #1D2326;
+      color: #1d2326;
       line-height: 24px;
       text-align: left;
       font-style: normal;
@@ -390,14 +412,12 @@ export default {
             width: 30px;
             height: 30px;
             margin-left: 14px;
-
           }
 
           .star-svg {
             width: 30px;
             height: 30px;
             margin-left: 14px;
-
           }
 
           .comment-svg {
@@ -408,14 +428,11 @@ export default {
 
           text {
             margin-left: 6px;
-
           }
         }
       }
     }
-
   }
-
 
   .bottomBox {
     width: 100%;
@@ -425,19 +442,16 @@ export default {
     padding-bottom: 46px;
     padding-top: 12px;
 
-
-
     .publishButton {
       font-family: PingFang SC, PingFang SC;
       font-weight: 600;
       font-size: 16px;
-      color: #FFFFFF;
+      color: #ffffff;
       line-height: 24px;
       text-align: left;
       font-style: normal;
       text-transform: none;
     }
-
   }
 }
 </style>

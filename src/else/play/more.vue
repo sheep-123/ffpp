@@ -3,7 +3,7 @@
     <u-navbar
       leftText="运动积分等级排行"
       leftIconColor="black"
-      bgColor="rgba(0,0,0,0)"
+      :bgColor="navBgColor"
       autoBack
     >
     </u-navbar>
@@ -18,7 +18,7 @@
         <u-icon name="map"></u-icon>
         <view class="text">
           全国
-          <u-icon name="arrow-down-fill" size="8" color="black"></u-icon>
+          <u-icon name="arrow-down-fill" size="12" color="black"></u-icon>
         </view>
       </view>
     </view>
@@ -40,7 +40,16 @@
     </view>
 
     <view style="margin-top: 20px; margin-left: 10px">
-      <u-tabs :list="list1" @click="click" lineColor="red"></u-tabs>
+      <u-tabs
+        :list="list1"
+        @click="click"
+        lineColor="red"
+        :activeStyle="{
+          color: '#303133',
+          fontWeight: 'bold',
+          transform: 'scale(1.05)',
+        }"
+      ></u-tabs>
     </view>
 
     <view class="main">
@@ -128,7 +137,7 @@
             黄金I
             <view class="line"></view>
             400
-            <u-icon name="arrow-right" size="8" color="#CCCCCC"></u-icon>
+            <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
           </view>
         </view>
         <view class="item">
@@ -143,7 +152,7 @@
             黄金I
             <view class="line"></view>
             400
-            <u-icon name="arrow-right" size="8" color="#CCCCCC"></u-icon>
+            <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
           </view>
         </view>
         <view class="item">
@@ -158,7 +167,7 @@
             黄金I
             <view class="line"></view>
             400
-            <u-icon name="arrow-right" size="8" color="#CCCCCC"></u-icon>
+            <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
           </view>
         </view>
         <view class="item">
@@ -173,7 +182,7 @@
             黄金I
             <view class="line"></view>
             400
-            <u-icon name="arrow-right" size="8" color="#CCCCCC"></u-icon>
+            <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
           </view>
         </view>
         <view class="item">
@@ -188,7 +197,7 @@
             黄金I
             <view class="line"></view>
             400
-            <u-icon name="arrow-right" size="8" color="#CCCCCC"></u-icon>
+            <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
           </view>
         </view>
         <view class="item">
@@ -203,7 +212,7 @@
             黄金I
             <view class="line"></view>
             400
-            <u-icon name="arrow-right" size="8" color="#CCCCCC"></u-icon>
+            <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
           </view>
         </view>
         <view class="item">
@@ -218,7 +227,7 @@
             黄金I
             <view class="line"></view>
             400
-            <u-icon name="arrow-right" size="8" color="#CCCCCC"></u-icon>
+            <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
           </view>
         </view>
       </view>
@@ -237,7 +246,7 @@
           黄金I
           <view class="line"></view>
           400
-          <u-icon name="arrow-right" size="8" color="#CCCCCC"></u-icon>
+          <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
         </view>
       </view>
     </view>
@@ -279,7 +288,21 @@ export default {
           name: "手工",
         },
       ],
+      navBgColor: "rgba(255, 255, 255, 0)",
     };
+  },
+  onPageScroll(e) {
+    const scrollTop = e.scrollTop; // 获取滚动距离
+    let opacity = 0;
+
+    if (scrollTop > 0 && scrollTop <= 100) {
+      opacity = scrollTop / 250; // 计算透明度（0 到 1）
+    } else if (scrollTop > 100) {
+      opacity = 1; //
+    }
+
+    // 动态更新导航栏背景颜色
+    this.navBgColor = `rgba(255, 255, 255, ${opacity})`;
   },
   methods: {
     selectTab(index) {
@@ -677,7 +700,7 @@ export default {
         .i1 {
           font-weight: 800;
           font-size: 12px;
-          color: #1d2326;
+          color: #ec384a;
         }
         .i2 {
           display: flex;
@@ -685,7 +708,7 @@ export default {
           gap: 5px;
           font-weight: 400;
           font-size: 14px;
-          color: #1d2326;
+          color: #ec384a;
         }
       }
 
@@ -694,7 +717,7 @@ export default {
         align-items: center;
         font-weight: 400;
         font-size: 14px;
-        color: rgba(29, 35, 38, 0.6);
+        color: #ec384a;
         gap: 5px;
 
         .line {

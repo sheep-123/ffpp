@@ -1,6 +1,6 @@
 <template>
   <view>
-    <u-navbar leftText="赛事模版" @leftClick="back" :fixed="false"></u-navbar>
+    <u-navbar leftText="赛事模版" autoBack :fixed="false"></u-navbar>
     <view class="main">
       <view class="content" v-if="list.length > 0">
         <view class="title"> 标准极限飞盘赛制（竞技向） </view>
@@ -42,8 +42,8 @@ export default {
       labelId: 0,
       list: [],
       selectIndex: null,
-      templateId: uni.getStorageSync("templateId") || "",
-      templateName: uni.getStorageSync("templateName") || "",
+      templateId: "",
+      templateName: "",
     };
   },
   methods: {
@@ -55,8 +55,8 @@ export default {
         this.list = res.data;
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
-          message: err.data.message,
+          type: "default",
+          message: err.message,
         });
       }
     },
@@ -80,21 +80,14 @@ export default {
           uni.setStorageSync("way", result.data.way);
           uni.setStorageSync("templateId", this.templateId);
           uni.setStorageSync("templateName", this.templateName);
-          uni.navigateTo({
-            url: `/competition/publish/saishi`,
-          });
+          uni.navigateBack({ delta: 1 });
         }
       } catch (err) {
         this.$refs.notice.show({
-          type: "error",
-          message: err.data.message,
+          type: "default",
+          message: err.message,
         });
       }
-    },
-    back() {
-      uni.navigateBack({
-        delta: 1,
-      });
     },
   },
   onShow() {

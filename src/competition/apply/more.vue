@@ -29,7 +29,11 @@ export default {
     return {
       list: [],
       price: [],
+      matchId: null,
     };
+  },
+  onload(option) {
+    this.matchId = option.matchId;
   },
   onShow() {
     this.load();
@@ -38,13 +42,12 @@ export default {
     async load() {
       var result = await uni.$u.http.get("/match/getMatchSponsorUser", {
         params: {
-          matchId: 11,
+          matchId: this.matchId,
         },
       });
       this.list = result.data.sponsors;
       this.price = result.data.prizes;
       this.add();
-      console.log(this.list);
     },
     async add() {
       this.price.map((item, index) => {

@@ -1,16 +1,40 @@
 <template>
   <view class="box">
-    <u-navbar class="nav" autoBack leftText="发布动态" :fixed="false" bgColor="#fff"> </u-navbar>
+    <u-navbar
+      class="nav"
+      autoBack
+      leftText="发布动态"
+      :fixed="false"
+      bgColor="#fff"
+    >
+    </u-navbar>
     <view>
-
-      <scroll-view scroll-y scrollbar="true"
-        :style="{ height: windowHeight - bottomBoxHeight - statusBarHeight - 44 + 'px' }">
+      <scroll-view
+        scroll-y
+        scrollbar="true"
+        :style="{
+          height: windowHeight - bottomBoxHeight - statusBarHeight - 44 + 'px',
+        }"
+      >
         <view class="contentBox">
           <view>
-            <scroll-view scroll-x style="width: 100%; ">
-              <u-upload class="custom-upload" :fileList="fileList" @afterRead="afterRead" @delete="deletePic"
-                accept="image" name="6" multiple :maxCount="18" width="86" height="86" :deleteIcon="'close'"
-                :deleteIconColor="'#ff0000'" :deleteIconSize="20" :previewFullImage="true">
+            <scroll-view scroll-x style="width: 100%">
+              <u-upload
+                class="custom-upload"
+                :fileList="fileList"
+                @afterRead="afterRead"
+                @delete="deletePic"
+                accept="image"
+                name="6"
+                multiple
+                :maxCount="18"
+                width="86"
+                height="86"
+                :deleteIcon="'close'"
+                :deleteIconColor="'#ff0000'"
+                :deleteIconSize="20"
+                :previewFullImage="true"
+              >
                 <view class="custom-upload">
                   <view class="plusIcon">
                     <u-icon name="plus" size="13px" color="#CCCCCC"></u-icon>
@@ -21,52 +45,87 @@
             </scroll-view>
           </view>
           <view class="tipsBox">
-            <image class="topIcon"
+            <image
+              class="topIcon"
               src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/topArrow.svg"
-              mode="scaleToFill" />
+              mode="scaleToFill"
+            />
             <view class="box1">
-              <image class="tipsIcon"
+              <image
+                class="tipsIcon"
                 src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/tips.png"
-                mode="scaleToFill" />
-              <text class="tipsText">
-                说说你最近一次运动
-              </text>
-              <image class="reloadIcon"
+                mode="scaleToFill"
+              />
+              <text class="tipsText"> 说说你最近一次运动 </text>
+              <image
+                class="reloadIcon"
                 src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/reload.svg"
-                mode="scaleToFill" />
+                mode="scaleToFill"
+              />
             </view>
           </view>
           <view class="textBox">
-            <u-input v-model="title" type="text" placeholder="添加标题" :maxlength="300" border="none" @input="inputEvent"
-              @focus="focusEvent" @change="changeEvent">
+            <u-input
+              v-model="title"
+              type="text"
+              placeholder="添加标题"
+              :maxlength="300"
+              border="none"
+              @input="inputEvent"
+              @focus="focusEvent"
+              @change="changeEvent"
+            >
               <template slot="suffix">
-                <view style="display: flex;align-items: center;">
-                  <image v-show="isShow" src="@/static/close.png" mode="scaleToFill" style="width: 20px;height: 20px;"
-                    @click="onClearTitle" />
-                  <text style="font-family: PingFang SC, PingFang SC;
-                       font-weight: 400;
-                       font-size: 12px;
-                       color: rgba(29,35,38,0.3);
-                       line-height: 16px;
-                       text-align: left;
-                       font-style: normal;
-                       text-transform: none;">{{ titleLength }}</text>
+                <view style="display: flex; align-items: center">
+                  <image
+                    v-show="isShow"
+                    src="@https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/close.png"
+                    mode="scaleToFill"
+                    style="width: 20px; height: 20px"
+                    @click="onClearTitle"
+                  />
+                  <text
+                    style="
+                      font-family: PingFang SC, PingFang SC;
+                      font-weight: 400;
+                      font-size: 12px;
+                      color: rgba(29, 35, 38, 0.3);
+                      line-height: 16px;
+                      text-align: left;
+                      font-style: normal;
+                      text-transform: none;
+                    "
+                    >{{ titleLength }}</text
+                  >
                 </view>
               </template>
             </u-input>
-            <view style="margin-top: 8px;margin-bottom: 12px;">
+            <view style="margin-top: 8px; margin-bottom: 12px">
               <u-divider color="#F0F0F0"></u-divider>
             </view>
-            <view style="display: flex;">
-              <scroll-view scroll-y style="height:278px;" @scroll="onScroll">
-                <textarea placeholder-style="color:rgba(29,35,38,0.3);font-size:14px;font-weig1ht: 400;"
-                  style="width: 100%;overflow: scroll !important;-webkit-overflow-scrolling: touch !important;"
-                  v-model="titleContent" type="text" maxlength="800" disable-default-padding="true"
-                  placeholder="和大家聊聊你的热爱吧..." border="none" autoHeight="true"></textarea>
+            <view style="display: flex">
+              <scroll-view scroll-y style="height: 278px" @scroll="onScroll">
+                <textarea
+                  placeholder-style="color:rgba(29,35,38,0.3);font-size:14px;font-weig1ht: 400;"
+                  style="
+                    width: 100%;
+                    overflow: scroll !important;
+                    -webkit-overflow-scrolling: touch !important;
+                  "
+                  v-model="titleContent"
+                  type="text"
+                  maxlength="800"
+                  disable-default-padding="true"
+                  placeholder="和大家聊聊你的热爱吧..."
+                  border="none"
+                  autoHeight="true"
+                ></textarea>
               </scroll-view>
-              <view style="height: 100px;">
-                <view style="width: 5px;height: 10px;background-color: #F0F0F0;"
-                  :style="{ paddingTop: obj.lineTop + 'px' }">
+              <view style="height: 100px">
+                <view
+                  style="width: 5px; height: 10px; background-color: #f0f0f0"
+                  :style="{ paddingTop: obj.lineTop + 'px' }"
+                >
                   {{ obj.lineTop }}
                 </view>
               </view>
@@ -75,32 +134,40 @@
             <!-- <scroll-view scroll-y :scroll-top="obj.lineTop" style="height: 278px;">
                     </scroll-view> -->
           </view>
-
         </view>
         <view class="siteSelectionBox">
           <view class="box1">
             <view class="left">
-              <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png"
-                mode="scaleToFill" style="width: 16px;height: 16px;" />
-              <text style="padding-left: 3px;
-                font-family: PingFang SC, PingFang SC;
-                font-weight: 400;
-                font-size: 14px;
-                color: #1D2326;
-                line-height: 22px;
-                text-align: left;
-                font-style: normal;
-                text-transform: none;">添加位置</text>
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png"
+                mode="scaleToFill"
+                style="width: 16px; height: 16px"
+              />
+              <text
+                style="
+                  padding-left: 3px;
+                  font-family: PingFang SC, PingFang SC;
+                  font-weight: 400;
+                  font-size: 14px;
+                  color: #1d2326;
+                  line-height: 22px;
+                  text-align: left;
+                  font-style: normal;
+                  text-transform: none;
+                "
+                >添加位置</text
+              >
             </view>
             <view class="right" @tap="toAddLocation()">
-
-              <text v-if="obj.addAddressName != ''">{{ obj.addAddressName }}</text>
+              <text v-if="obj.addAddressName != ''">{{
+                obj.addAddressName
+              }}</text>
               <text v-else>去选择</text>
               <u-icon name="arrow-right" size="6 10" color="#CCCCCC"></u-icon>
             </view>
           </view>
           <!-- <view class="box2">
-            <image class="top2Icon" src="@/static/images/topArrow2.svg" mode="scaleToFill" />
+            <image class="top2Icon" src="@https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/topArrow2.svg" mode="scaleToFill" />
             <view class="scrollxBox">
               <scroll-view scroll-x style="width:100%;">
                 <view class="cardBox">
@@ -127,7 +194,9 @@
             <view>预览</view>
           </view>
         </view>
-        <u-button class="publishButton" color="#15181A " @click="sendDongTai">发布动态</u-button>
+        <u-button class="publishButton" color="#15181A " @click="sendDongTai"
+          >发布动态</u-button
+        >
       </view>
     </view>
     <!-- <upload></upload> -->
@@ -141,12 +210,11 @@ export default {
   //   upload
   // },
   data() {
-
     return {
       fileList: [],
-      title: '',
+      title: "",
       titleLength: 20,
-      titleContent: '',
+      titleContent: "",
       bottomBoxHeight: 0,
       windowHeight: uni.getSystemInfoSync().windowHeight,
       statusBarHeight: uni.getSystemInfoSync().statusBarHeight,
@@ -155,66 +223,61 @@ export default {
       showPreview: false,
       obj: {
         lineTop: 0,
-        addAddressName: ''
+        addAddressName: "",
       },
-      isShowInput: false
-
-    }
+      isShowInput: false,
+    };
   },
   methods: {
     //图片读取后的处理函数
     afterRead(e) {
       console.log(e);
       // this.fileList = e.file
-      e.file.forEach(element => {
-        this.fileList.push(element)
+      e.file.forEach((element) => {
+        this.fileList.push(element);
       });
     },
     //图片删除函数
     deletePic(e) {
-      this.fileList.splice(e.index, 1)
+      this.fileList.splice(e.index, 1);
     },
     //标题输入事件
     inputEvent(e) {
-      this.titleLength = 20
+      this.titleLength = 20;
       if (e.length <= 20) {
-        this.titleLength = this.titleLength - e.length
-        this.isShowPopup = false
+        this.titleLength = this.titleLength - e.length;
+        this.isShowPopup = false;
       } else {
-        this.titleLength = 0
+        this.titleLength = 0;
         uni.showToast({
-          icon: 'none',
-          title: '标题最多输入20个字',
-          mask: false
-        })
+          icon: "none",
+          title: "标题最多输入20个字",
+          mask: false,
+        });
       }
       if (e.length >= 1) {
-        this.isShow = true
+        this.isShow = true;
+      } else {
+        this.isShow = false;
       }
-      else {
-        this.isShow = false
-      }
-
     },
     changeEvent(e) {
       console.log(e);
-
     },
     onClearTitle() {
-      this.title = ''
+      this.title = "";
     },
     toPreview() {
-      uni.navigateTo({ url: '/dynamic/publish/dongTaiPreview' })
-
+      uni.navigateTo({ url: "/dynamic/publish/dongTaiPreview" });
     },
     toAddLocation() {
-      var that = this
+      var that = this;
       uni.chooseLocation({
         success: function (res) {
           console.log(res);
 
           // this.addAddressName = res.name
-          that.$set(that.obj, 'addAddressName', res.name)
+          that.$set(that.obj, "addAddressName", res.name);
           console.log(that.obj.addAddressName);
 
           // uni.setStorageSync("fullAddress", res.address);
@@ -222,13 +285,13 @@ export default {
           //   url: `/competition/publish/saishi`,
           // });
         },
-        fail: function () { },
-        complete: function () { },
+        fail: function () {},
+        complete: function () {},
       });
       // uni.navigateTo({ url: '/competition/publish/addLocation' })
     },
     onScroll(e) {
-      this.$set(this.obj, 'lineTop', e.detail.scrollTop)
+      this.$set(this.obj, "lineTop", e.detail.scrollTop);
       console.log(e.detail.scrollTop);
 
       // this.$nextTick(() => {
@@ -247,38 +310,41 @@ export default {
         ageLimitMin: this.ageLimitMin,
         ageLimitMax: this.ageLimitMax,
         entryFee: this.entryFee,
-        keyboardHeight: 0
+        keyboardHeight: 0,
       });
       console.log(res);
     },
     focusEvent() {
-      this.isShowInput = true
-    }
-
+      this.isShowInput = true;
+    },
   },
   onLoad() {
     this.$nextTick(() => {
-      uni.createSelectorQuery().select(".bottomBox").boundingClientRect(data => {
-        this.bottomBoxHeight = data.height
-        console.log(this.statusBarHeight);
-        console.log(this.windowHeight);
-      }).exec()
-    })
-    wx.onKeyboardHeightChange(res => { //监听键盘高度变化
+      uni
+        .createSelectorQuery()
+        .select(".bottomBox")
+        .boundingClientRect((data) => {
+          this.bottomBoxHeight = data.height;
+          console.log(this.statusBarHeight);
+          console.log(this.windowHeight);
+        })
+        .exec();
+    });
+    wx.onKeyboardHeightChange((res) => {
+      //监听键盘高度变化
       this.setData({
-        keyboardHeight: res.height
+        keyboardHeight: res.height,
       });
       console.log(this.keyboardHeight);
 
       // this.setChatListHeight();
       // this.scroll2Bottom();
     });
-  }
-}
+  },
+};
 </script>
 
-
-<style lang='scss'>
+<style lang="scss">
 ::v-deep .u-upload__deletable.data-v-49deb6f2 {
   white-space: nowrap;
   /* 禁止换行 */
@@ -296,7 +362,6 @@ export default {
   border-bottom-left-radius: 5px;
   border-top-right-radius: 5px;
   background-color: #71767c;
-
 }
 
 ::v-deep .u-icon__icon.data-v-172979f2.uicon-close {
@@ -308,14 +373,15 @@ export default {
 
 ::v-deep .u-input__content.data-v-fdbb9fe6 {
   background-color: #fff;
-
 }
 
 ::v-deep .u-input__content__field-wrapper__field.data-v-fdbb9fe6 {
   font-size: 14px !important;
 }
 
-::v-deep .data-v-0e3867ac .u-input__content__field-wrapper__field.data-v-fdbb9fe6 {
+::v-deep
+  .data-v-0e3867ac
+  .u-input__content__field-wrapper__field.data-v-fdbb9fe6 {
   font-family: PingFang SC, PingFang SC;
   font-weight: 400;
   font-size: 16px;
@@ -334,9 +400,6 @@ export default {
   width: 220px;
   height: 44px;
 }
-
-
-
 
 .box {
   background-color: #fff;
@@ -361,7 +424,7 @@ export default {
     width: calc(100% - 60px);
     margin: 0 16px;
     padding: 12px;
-    background-color: #F3F4F5;
+    background-color: #f3f4f5;
     border-radius: 10px;
 
     .custom-preview-image {
@@ -398,12 +461,10 @@ export default {
         margin-bottom: 12px;
         width: 208px;
         height: 24px;
-        background: #FFFFFF;
+        background: #ffffff;
         border-radius: 4px 4px 4px 4px;
 
         .tipsText {
-
-
           padding: 0 5px;
           width: 130px;
           height: 12px;
@@ -411,7 +472,7 @@ export default {
 
           font-weight: 400;
           font-size: 14px;
-          color: #1D2326;
+          color: #1d2326;
           line-height: 12px;
           // text-align: left;
           font-style: normal;
@@ -429,7 +490,6 @@ export default {
           height: 16px;
         }
       }
-
     }
 
     .custom-upload {
@@ -469,8 +529,6 @@ export default {
       width: calc(100% - 24px);
       padding: 12px;
       background-color: #fff;
-
-
     }
   }
 
@@ -501,8 +559,6 @@ export default {
       margin: 0 16px;
       width: calc(100% - 36px);
 
-
-
       .top2Icon {
         position: relative;
         top: 4px;
@@ -516,7 +572,7 @@ export default {
         width: calc(100% - 12px);
         display: flex;
         border-radius: 4px;
-        background-color: #F3F4F5;
+        background-color: #f3f4f5;
 
         .cardBox {
           width: calc(100% - 12px);
@@ -548,12 +604,7 @@ export default {
           }
         }
       }
-
-
-
-
     }
-
   }
 
   .bottomBox {
@@ -565,7 +616,6 @@ export default {
     padding-bottom: 34px;
 
     .layoutBox {
-
       width: calc(100% - 48px);
       margin: 0 16px;
       display: flex;
@@ -604,7 +654,7 @@ export default {
         font-family: PingFang SC, PingFang SC;
         font-weight: 600;
         font-size: 16px;
-        color: #FFFFFF;
+        color: #ffffff;
         line-height: 24px;
         text-align: left;
         font-style: normal;

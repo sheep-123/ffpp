@@ -4,16 +4,16 @@
   },
   "pages": [
     {
-      "path": "pages/play/play",
+      "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "去玩",
+        "navigationBarTitleText": "首页",
         "navigationStyle": "custom"
       }
     },
     {
-      "path": "pages/index/index",
+      "path": "pages/play/play",
       "style": {
-        "navigationBarTitleText": "首页",
+        "navigationBarTitleText": "去玩",
         "navigationStyle": "custom"
       }
     },
@@ -198,6 +198,41 @@
             "navigationBarTitleText": "编辑运动",
             "navigationStyle": "custom"
           }
+        },
+        {
+          "path": "message/chat",
+          "style": {
+            "navigationBarTitleText": "聊天",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "message/team",
+          "style": {
+            "navigationBarTitleText": "组队",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "message/huodong",
+          "style": {
+            "navigationBarTitleText": "活动列表",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "message/search",
+          "style": {
+            "navigationBarTitleText": "搜索",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "message/challenge",
+          "style": {
+            "navigationBarTitleText": "发起挑战",
+            "navigationStyle": "custom"
+          }
         }
       ]
     },
@@ -229,6 +264,46 @@
           "path": "publish/dongTaiPreview",
           "style": {
             "navigationBarTitleText": "动态预览",
+            "navigationStyle": "custom"
+          }
+        }
+      ]
+    },
+    {
+      "root": "user",
+      "pages": [
+        {
+          "path": "competition",
+          "style": {
+            "navigationBarTitleText": "我的赛事",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "execute",
+          "style": {
+            "navigationBarTitleText": "执行赛事",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "sponsorIndex",
+          "style": {
+            "navigationBarTitleText": "我的赞助",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "sponsorCheck",
+          "style": {
+            "navigationBarTitleText": "赞助审核",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "sponsorAlter",
+          "style": {
+            "navigationBarTitleText": "修改赞助",
             "navigationStyle": "custom"
           }
         }

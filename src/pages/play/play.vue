@@ -276,6 +276,8 @@ export default {
   },
   onload() {},
   onShow() {
+    this.pageNum = 1;
+    this.matchList = [];
     const systemInfo = uni.getSystemInfoSync();
     this.initIntersectionObserver();
     this.statusBarHeight = systemInfo.statusBarHeight;
@@ -329,7 +331,6 @@ export default {
           }
         }
       } catch (err) {
-        console.error(err);
         this.status = "loadmore"; // 恢复加载状态
       }
     },

@@ -106,7 +106,7 @@ export default {
 <style lang="scss">
 .box {
   width: 100vw;
-  height: 100vh;
+  padding-bottom: 100px;
   .m-top {
     margin-left: 5%;
     display: flex;

@@ -288,9 +288,8 @@
                     :type="item.applyType == 'number' ? 'number' : ''"
                   ></u-input>
                   <u-radio-group
-                    v-model="gender"
+                    v-model="item.value"
                     placement="row"
-                    @change="genderChange"
                     v-if="item.applyType == 'radio'"
                   >
                     <u-radio
@@ -384,7 +383,7 @@
               <view class="item">
                 <view class="left">
                   <u-icon name="red-packet"></u-icon>
-                  小队报名费
+                  {{ way == 1 ? "个人报名费" : "小队报名费" }}
                 </view>
                 <view class="right-r"> ￥{{ entry_Fee }} </view>
               </view>
@@ -489,7 +488,7 @@
               <view class="title">{{ item.scheTypeName }}</view>
               <view class="time">{{ item.scheTime }}</view>
               <view class="line">
-                <view class="dian">····················</view>
+                <!-- <view class="dian">····················</view> -->
               </view>
             </view>
           </view>
@@ -1328,7 +1327,7 @@ export default {
     },
     toSponsor() {
       uni.navigateTo({
-        url: "/competition/apply/sponsor",
+        url: `/competition/apply/sponsor?matchId=${this.matchId}`,
       });
     },
     openModal() {
@@ -1377,7 +1376,7 @@ export default {
       uni.setStorageSync("requestJson", this.oldApplyData);
       uni.setStorageSync("responseJson", this.applyData);
       uni.navigateTo({
-        url: `/competition/apply/pay?matchId=${this.matchId}&&way=${this.way}&&serialNum=${this.serialNum}&&templateId=${this.templateId}&&teamType=${this.teamType}&&amount=${this.total}`,
+        url: `/competition/apply/pay?matchId=${this.matchId}&&way=${this.way}&&serialNum=${this.serialNum}&&templateId=${this.templateId}&&teamType=${this.teamType}&&amount=${this.total}&&number=${this.number}&&teamType=${this.teamType}`,
       });
     },
     async getMatchTemplateRegister() {
@@ -1397,9 +1396,6 @@ export default {
           message: err.message,
         });
       }
-    },
-    genderChange(n) {
-      console.log(n);
     },
     async getMatchTemplateNotice() {
       var result = await uni.$u.http.get("/match/getMatchTemplateNotice", {
@@ -2760,6 +2756,12 @@ export default {
           display: flex;
           align-items: center;
           gap: 30px;
+          .item:nth-last-child(1) {
+            padding-right: 50px;
+          }
+          .item-active:nth-last-child(1) {
+            padding-right: 50px;
+          }
           .item-active {
             display: flex;
             flex-direction: column;

@@ -2,7 +2,7 @@
   <view class="box">
     <u-navbar leftText="更多赞助" :autoBack="true" :fixed="false"> </u-navbar>
     <view class="main">
-      <view class="list">
+      <view class="list" v-if="list.length">
         <view class="item" v-for="(item, index) in list" :key="index">
           <u-avatar :src="item.sponsorAvatarUrl"></u-avatar>
           <view class="right">
@@ -15,6 +15,7 @@
           </view>
         </view>
       </view>
+      <u-empty v-else> </u-empty>
     </view>
 
     <view class="bt">
@@ -32,10 +33,8 @@ export default {
       matchId: null,
     };
   },
-  onload(option) {
+  onLoad(option) {
     this.matchId = option.matchId;
-  },
-  onShow() {
     this.load();
   },
   methods: {

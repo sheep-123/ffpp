@@ -68,7 +68,7 @@
               等{{ urls.length }}人已赞助
             </view>
             <view class="right">
-              您已赞助 <text>￥{{ list.cashSponsorVO.pendingBonus }}</text>
+              您已赞助 <text>￥{{ list.cashSponsorVO.pendingBonus || 0 }}</text>
             </view>
           </view>
         </view>
@@ -192,9 +192,11 @@ export default {
       column: ["赞助现金", "赞助奖品", "提供现场服务"],
       select: "",
       list: [],
+      matchId: null,
     };
   },
-  onShow() {
+  onLoad(options) {
+    this.matchId = options.matchId;
     this.load();
   },
   methods: {
@@ -210,7 +212,7 @@ export default {
     async load() {
       var result = await uni.$u.http.get("/match/getMatchSponsor", {
         params: {
-          matchId: 11,
+          matchId: this.matchId,
         },
       });
 

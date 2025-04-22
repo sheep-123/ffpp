@@ -87,6 +87,8 @@ export default {
       requestJson: [],
       responseJson: [],
       amount: null,
+      scheId: null,
+      number: null,
     };
   },
   onLoad(options) {
@@ -96,64 +98,24 @@ export default {
     this.templateId = options.templateId;
     this.teamType = options.teamType;
     this.amount = options.amount;
+    this.number = options.number;
     this.getMatchPayInfo();
+    this.getGame();
   },
   methods: {
     async pay() {
-      try {
-        var result = await uni.$u.http.post("/wechat/createOrder", {
-          total: String(0.01),
-          // total: String(this.amount),
-          desc: "非常好",
-        });
-        if (result.status == 200) {
-          const params = result.data.wechatResponse;
-          this.outTradeNo = result.data.outTradeNo;
-          //唤起微信支付
-          wx.requestPayment({
-            ...params,
-            success: (res) => {
-              this.save();
-            },
-            fail(res) {},
-          });
-        }
-      } catch (err) {
-        this.$refs.notice.show({
-          type: "default",
-          message: err.message,
-        });
-      }
-    },
-
-    async getMatchPayInfo() {
-      try {
-        var result = await uni.$u.http.post("/wechat/getMatchPayInfo", {
-          matchId: Number(this.matchId),
-          wjUserId: uni.getStorageSync("user").id,
-        });
-        this.payInfo = result.data;
-        this.refundPolicies = result.data.refundPolicies;
-      } catch (err) {
-        this.$refs.notice.show({
-          type: "default",
-          message: err.message,
-        });
-      }
-    },
-
-    async save() {
       try {
         if (this.way == 1) {
           var result = await uni.$u.http.post("/match/saveMatchRegister", {
             matchId: this.matchId,
             serialNum: this.serialNum,
             templateId: this.templateId,
-            way: this.teamType,
+            way: this.way,
             userId: uni.getStorageSync("user").id,
             requestJson: uni.getStorageSync("requestJson"),
             responseJson: uni.getStorageSync("responseJson"),
             amount: this.amount,
+            scheId: this.scheId,
           });
         } else if (this.way == 2) {
           var result = await uni.$u.http.post("/match/saveMatchRegisterTeam", {
@@ -169,24 +131,65 @@ export default {
                 responseJson: uni.getStorageSync("responseJson"),
               },
             ],
+            scheId: this.scheId,
           });
         }
-
-        if (result.status == 400) {
-          this.$refs.notice.show({
-            type: "default",
-            message: result.message,
-          });
-        }
+        var result = await uni.$u.http.post("/wechat/createOrder", {
+          total: String(0.01),
+          // total: String(this.amount),
+          desc: "非常好",
+          orderType: 3,
+          matchId: this.matchId,
+          userId: uni.getStorageSync("user").id,
+          registerNum: this.way == 1 ? 1 : this.number,
+        });
         if (result.status == 200) {
-          uni.navigateTo({
-            url: `/competition/apply/appear?isFinish=true&&matchId=${this.matchId}`,
+          const params = result.data.wechatResponse;
+          this.outTradeNo = result.data.outTradeNo;
+          //唤起微信支付
+          wx.requestPayment({
+            ...params,
+            success: (res) => {
+              uni.navigateTo({
+                url: `/competition/apply/appear?isFinish=true&&matchId=${this.matchId}`,
+              });
+            },
+            fail(res) {},
           });
         }
       } catch (err) {
         this.$refs.notice.show({
           type: "default",
-          message: err.message,
+          message: err.data.message,
+        });
+      }
+    },
+    async getGame() {
+      var result = await uni.$u.http.get("/match/getMatchScheTypeInfo", {
+        params: {
+          matchId: this.matchId,
+        },
+      });
+      if (result.status == 200) {
+        this.scheId = result.data[0].scheId;
+      }
+    },
+
+    async getMatchPayInfo() {
+      try {
+        var result = await uni.$u.http.post("/wechat/getMatchPayInfo", {
+          matchId: Number(this.matchId),
+          wjUserId: uni.getStorageSync("user").id,
+        });
+        this.payInfo = result.data;
+        this.refundPolicies = result.data.refundPolicies;
+      } catch (err) {
+        this.$refs.notice.show({
+          type: "default",
+          message: err.data.message || "获取数据失败",
+          complete: () => {
+            uni.navigateBack();
+          },
         });
       }
     },

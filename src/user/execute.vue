@@ -24,10 +24,15 @@
     </view>
 
     <view class="main">
-      <view class="jdsz"
+      <view class="jdsz" @click="gameList[op].isSave = !gameList[op].isSave"
         >阶段设置
-        <u-icon name="arrow-up-fill" color="#fff" size="10"></u-icon>
-        <!-- <u-icon name="arrow-down-fill" color="#fff" size="10" v-else></u-icon> -->
+        <u-icon
+          name="arrow-up-fill"
+          color="#fff"
+          size="10"
+          v-if="gameList[op].isSave"
+        ></u-icon>
+        <u-icon name="arrow-down-fill" color="#fff" size="10" v-else></u-icon>
       </view>
 
       <view class="o-text" v-if="!gameList[op].isSave">
@@ -74,7 +79,7 @@
             <view class="left"> 分组场地设置 <view class="icon">*</view> </view>
           </view>
           <view class="bt">
-            <u-radio-group v-model="groupVenueType" placement="row">
+            <u-radio-group v-model="groupVenueType" placement="row" disabled>
               <u-radio
                 activeColor="#EC384A"
                 label="系统订单匹配"
@@ -96,7 +101,7 @@
             <view class="left"> 分组裁判设置 <view class="icon">*</view> </view>
           </view>
           <view class="bt">
-            <u-radio-group v-model="groupUmpireType" placement="row">
+            <u-radio-group v-model="groupUmpireType" placement="row" disabled>
               <u-radio
                 activeColor="#EC384A"
                 label="系统随机匹配"
@@ -119,7 +124,7 @@
           </view>
           <view class="bt-radio">
             <view class="item-radio">
-              <u-radio-group v-model="scoringMethod">
+              <u-radio-group v-model="scoringMethod" disabled>
                 <u-radio
                   activeColor="#EC384A"
                   label="积分"
@@ -129,7 +134,7 @@
               </u-radio-group>
             </view>
             <view class="item-radio">
-              <u-radio-group v-model="scoringMethod">
+              <u-radio-group v-model="scoringMethod" disabled>
                 <u-radio
                   activeColor="#EC384A"
                   label="时间"
@@ -138,7 +143,7 @@
                 ></u-radio> </u-radio-group
             ></view>
             <view class="item-radio">
-              <u-radio-group v-model="scoringMethod">
+              <u-radio-group v-model="scoringMethod" disabled>
                 <u-radio
                   activeColor="#EC384A"
                   label="距离"
@@ -147,7 +152,7 @@
                 ></u-radio> </u-radio-group
             ></view>
             <view class="item-radio">
-              <u-radio-group v-model="scoringMethod">
+              <u-radio-group v-model="scoringMethod" disabled>
                 <u-radio
                   activeColor="#EC384A"
                   label="分数"
@@ -156,7 +161,7 @@
                 ></u-radio> </u-radio-group
             ></view>
             <view class="item-radio">
-              <u-radio-group v-model="scoringMethod">
+              <u-radio-group v-model="scoringMethod" disabled>
                 <u-radio
                   activeColor="#EC384A"
                   label="重量"
@@ -165,7 +170,7 @@
                 ></u-radio> </u-radio-group
             ></view>
             <view class="item-radio">
-              <u-radio-group v-model="scoringMethod">
+              <u-radio-group v-model="scoringMethod" disabled>
                 <u-radio
                   activeColor="#EC384A"
                   label="胜负"
@@ -179,14 +184,14 @@
 
       <view
         class="pp"
-        @click="preview = zz"
-        v-if="!ppStatus && !gameList[op].isSave"
+        @click="pp"
+        v-if="!groups[0].list[0].userId && !gameList[op].isSave"
         >开始匹配</view
       >
 
       <view
         class="pp-content"
-        v-if="preview == 1"
+        v-if="preview == 1 && lookStatus"
         v-for="(item, index) in groups"
         :key="index"
       >
@@ -274,7 +279,7 @@
 
       <view
         class="pp-content"
-        v-show="preview == 2"
+        v-show="preview == 2 && lookStatus"
         v-for="(item, index) in groups"
         :key="index"
       >
@@ -339,7 +344,7 @@
 
       <view
         class="pp-content"
-        v-show="preview == 3"
+        v-show="preview == 3 && lookStatus"
         style="padding-bottom: 0"
         v-for="(item, index) in groups"
         :key="index"
@@ -418,7 +423,8 @@
         <view
           class="item-list"
           v-for="(war, WIndex) in item.warList"
-          :key="index"
+          :key="warIndex"
+          v-if="item.expand"
         >
           <view class="detail">
             <view class="item">
@@ -435,6 +441,7 @@
                 <u-avatar :src="src" size="40"></u-avatar>
                 <view class="rank">参赛号</view>
               </view>
+              <view class="name">{{ user.username || "选手名称" }}</view>
               <view class="grade">积分0</view>
             </view>
             <view class="chang">第{{ WIndex + 1 }}场</view>
@@ -442,11 +449,11 @@
           <view class="sixth">
             <view class="top">比赛时间 <view class="icon">*</view></view>
             <view class="next" style="margin: 0">
-              <view class="time" @click="chooseTime1(item)">{{
+              <view class="time" @click="chooseTime1(item.warList[0])">{{
                 war.startTime
               }}</view
               >至
-              <view class="time" @click="chooseTime2(item)">{{
+              <view class="time" @click="chooseTime2(item.warList[0])">{{
                 war.endTime
               }}</view>
             </view>
@@ -457,21 +464,21 @@
           src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/卡片展开.png"
           mode="scaleToFill"
           style="width: 80px; height: 16px; margin: auto; display: block"
-          @click="getMatchHitWar(item)"
+          @click="changeExpand(item)"
           v-if="!item.expand"
         />
         <image
           src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/卡片收起.png"
           mode="scaleToFill"
           style="width: 80px; height: 16px; margin: auto; display: block"
-          @click="closeWar(item)"
+          @click="changeExpand(item)"
           v-else
         />
       </view>
 
       <view
         class="pp-content"
-        v-show="preview == 4"
+        v-show="preview == 4 && lookStatus"
         v-for="(item, index) in groups"
         :key="index"
       >
@@ -539,7 +546,7 @@
 
       <view
         class="pp-content"
-        v-show="preview == 5"
+        v-show="preview == 5 && lookStatus"
         v-for="(item, index) in groups"
         :key="index"
       >
@@ -676,7 +683,7 @@
 
       <view
         class="pp-content"
-        v-show="preview == 6"
+        v-show="preview == 6 && lookStatus"
         v-for="(item, index) in groups"
         :key="index"
       >
@@ -742,9 +749,11 @@
         </view>
       </view>
 
-      <view class="pp" @click="save4" v-if="!status">保存</view>
+      <view class="pp" @click="save4" v-if="!groups[0].list[0].userId"
+        >保存</view
+      >
 
-      <view class="next" v-if="ppStatus">
+      <view class="next" v-if="groups[0].list[0].userId">
         <view class="item">保存</view>
         <view class="item">执行下一轮</view>
       </view>
@@ -779,23 +788,7 @@ export default {
     return {
       columns21: [],
       op: 0,
-      gameList: [
-        {
-          scheTypeName: "赛制设置",
-        },
-        {
-          scheTypeName: "赛制模板",
-        },
-        {
-          scheTypeName: "赛制分组",
-        },
-        {
-          scheTypeName: "赛制分组",
-        },
-        {
-          scheTypeName: "赛制分组",
-        },
-      ],
+      gameList: [],
       way: 1, //，1-未开始  2-执行中
       expand: false,
       show21: false,
@@ -809,7 +802,6 @@ export default {
       group_num: null,
       group_num_name: null,
       view: null,
-      ppStatus: false,
       gameList: [],
       matchId: "",
       stageUserNum: "",
@@ -818,9 +810,11 @@ export default {
       serialNum: "",
       szList: [],
       timeShow: false,
+      timeShow1: false,
       currentTime: null,
       activeTooltipIndex: null,
       date: Date.now(),
+      lookStatus: false,
     };
   },
   onLoad(options) {
@@ -936,95 +930,60 @@ export default {
       this.currentTime.endTime = `${year}-${month}-${day} ${hours}:${minutes}`;
       this.timeShow1 = false;
     },
-    closeWar(item) {
-      item.expand = false;
-    },
 
     async save4() {
       try {
-        // var data = {
-        //   matchId: this.matchId,
-        //   serialNum: this.serialNum,
-        //   hitConfigList: [
-        //     {
-        //       scheId: this.gameList[this.op].scheId,
-        //       lastHitId: "",
-        //       hitTypeCode: this.gameList[this.op].scheId,
-        //       hitTypeName: this.gameList[this.op].scheTypeName,
-        //       stageUserNum: this.stageUserNum,
-        //       stageExplains: "",
-        //       groupNum: this.group_num,
-        //       stageUserNum: this.stageUserNum,
-        //       matchingManner: this.zz,
-        //       groupVenueType: this.groupVenueType,
-        //       groupUmpireType: this.groupUmpireType,
-        //       scoringMethod: this.scoringMethod,
-        //     },
-        //   ],
-        // };
-        // var result = await uni.$u.http.post("/match/saveMatchHitConfig", data);
-        // if (result.status == 400) {
-        //   this.$refs.notice.show({
-        //     type: "default",
-        //     message: result.message,
-        //   });
-        //   return;
-        // }
-        console.log(this.zz);
-        if (this.zz != 3) {
-          // 构造数据的辅助函数
-          const buildGroupData = (group) => ({
-            id: group.id,
-            matchId: this.matchId,
-            serialNum: this.serialNum,
-            hitId: group.hitId,
-            groupNum: group.groupNum,
-            groupName: group.groupName,
-            warType: group.warType,
-            address: group.address,
-            startTime: group.startTime,
-            endTime: group.endTime,
-            liveUrl: group.liveUrl,
-            scoringMethod: this.scoringMethod,
-            umpireId: group.umpireId,
-            list: group.list,
-          });
+        // 构造数据的辅助函数
+        const buildGroupData = (group) => ({
+          id: group.id,
+          matchId: this.matchId,
+          serialNum: this.serialNum,
+          hitId: group.hitId,
+          groupNum: group.groupNum,
+          groupName: group.groupName,
+          warType: group.warType,
+          address: group.address,
+          startTime: group.startTime,
+          endTime: group.endTime,
+          liveUrl: group.liveUrl,
+          scoringMethod: this.scoringMethod,
+          umpireId: group.umpireId,
+          list: group.list,
+        });
 
-          // 使用 Promise.all 并发处理所有组的更新请求
-          const updatePromises = this.groups.map(async (group, index) => {
-            try {
-              const data = buildGroupData(group);
-              const result = await uni.$u.http.put(
-                "/match/updateMatchHitGroup",
-                data
-              );
-              if (result.status !== 200) {
-                throw new Error(
-                  `第 ${index + 1} 组更新失败: ${result.message}`
-                );
-              }
-              return { success: true, message: result.message };
-            } catch (error) {
-              return { success: false, message: error.message || "未知错误" };
+        // 使用 Promise.all 并发处理所有组的更新请求
+        const updatePromises = this.groups.map(async (group, index) => {
+          try {
+            const data = buildGroupData(group);
+            const result = await uni.$u.http.put(
+              "/match/updateMatchHitGroup",
+              data
+            );
+            if (result.status !== 200) {
+              throw new Error(`第 ${index + 1} 组更新失败: ${result.message}`);
             }
-          });
-
-          // 等待所有请求完成
-          const results = await Promise.all(updatePromises);
-
-          // 统计成功和失败的数量
-          const successCount = results.filter((res) => res.success).length;
-
-          // 显示提示信息
-          if (successCount === this.groups.length) {
-            this.$refs.notice.show({
-              type: "default",
-              message: "保存成功",
-            });
-            this.gameList[this.op].isSave = true;
+            return { success: true, message: result.message };
+          } catch (error) {
+            return { success: false, message: error.message || "未知错误" };
           }
-        } else {
-          console.log(this.groups);
+        });
+
+        // 等待所有请求完成
+        const results = await Promise.all(updatePromises);
+
+        // 统计成功和失败的数量
+        const successCount = results.filter((res) => res.success).length;
+
+        // 显示提示信息
+        if (successCount === this.groups.length) {
+          this.$refs.notice.show({
+            type: "default",
+            message: "保存成功",
+          });
+          this.gameList[this.op].isSave = true;
+        }
+
+        if (this.zz == 3) {
           // 构造数据的辅助函数
           const buildWarData = (group, war) => ({
             id: war.id,
@@ -1092,11 +1051,18 @@ export default {
         });
       }
     },
+    changeExpand(item) {
+      item.expand = !item.expand;
+    },
     checkThis(index) {
       this.op = index;
       this.queryMatchHitConfig();
-      this.preview = null;
+      this.lookStatus = false;
       this.getMatchHitGroup();
+    },
+    pp() {
+      this.preview = this.zz;
+      this.lookStatus = true;
     },
     toggleTooltip(key) {
       // 如果当前 tooltip 已经显示，则隐藏；否则显示对应索引的 tooltip
@@ -1109,24 +1075,26 @@ export default {
         hitTypeName: this.gameList[this.op].scheTypeName,
       });
       if (result.status == 200) {
-        if (!result.data[0].list[0].userId) {
-          this.ppStatus = false;
-        }
         this.groups = result.data.map((item) => {
           item.expand = false;
           return item;
         });
-      }
-    },
-    async getMatchHitWar(item) {
-      var result = await uni.$u.http.get("/match/getMatchHitWar", {
-        params: {
-          hitGroupId: item.id,
-        },
-      });
-      if (result.status == 200) {
-        item.warList = result.data;
-        item.expand = true;
+        if (!this.groups[0].list[0].userId) {
+          this.gameList[this.op].isSave = false;
+        } else {
+          this.gameList[this.op].isSave = true;
+        }
+        if (this.zz == 3) {
+          this.groups.forEach(async (item) => {
+            var result = await uni.$u.http.get("/match/getMatchHitWar", {
+              params: {
+                hitGroupId: item.id,
+              },
+            });
+            item.warList = result.data;
+            return item;
+          });
+        }
       }
     },
   },

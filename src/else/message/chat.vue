@@ -234,9 +234,7 @@ export default {
         .exec();
     },
     back() {
-      uni.navigateBack({
-        delta: 1,
-      });
+      uni.switchTab({ url: "/pages/message/message" });
     },
     toggleTooltip() {
       this.show = !this.show; // 切换工具提示显示状态

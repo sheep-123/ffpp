@@ -2299,6 +2299,7 @@ export default {
     if (this.templateId && !this.items) {
       this.addItem();
     }
+    this.getSzList();
   },
   onShow() {
     this.labelId = uni.getStorageSync("labelId") || "";
@@ -2317,7 +2318,6 @@ export default {
       uni.setStorageSync("activeTab", index);
       if (index == 3) {
         this.getMatchTemplateHit();
-        this.getSzList();
       }
       if (index == 1 && this.templateId && !this.items) {
         this.addItem();
@@ -3079,7 +3079,6 @@ export default {
         this.szList = result.data.map((item) => {
           return item.label;
         });
-        console.log(this.szList);
       }
     },
     async queryMatchHitConfig() {
@@ -3306,7 +3305,7 @@ export default {
       });
     },
     back() {
-      uni.switchTab({ url: "/pages/add/add" });
+      // uni.switchTab({ url: "/pages/add/add" });
       uni.removeStorageSync("joinPointsRace");
       uni.removeStorageSync("joinList");
       uni.removeStorageSync("labelId");

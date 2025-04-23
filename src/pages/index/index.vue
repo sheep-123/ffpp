@@ -1,906 +1,833 @@
 <template>
-  <view class="box">
-    <u-navbar :bgColor="navbarBgColor">
-      <view slot="left">
-        <view
-          :class="['search-container', isMapExpanded ? 'search-y' : '']"
-          :style="{ backgroundColor: searchBgColor }"
-        >
-          <image
-            v-if="isMapExpanded"
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/left.png"
-            @click="back"
-            class="back-btn"
-          />
-          <u-input
-            placeholder="搜搜你感兴趣的~"
-            border="none"
-            v-model="keyword"
-            shape="circle"
-            placeholderClass="pl-class"
-            placeholderStyle="color:rgba(29,35,38,0.3)"
-          >
-            <image
-              :src="
+	<view class="box">
+		<u-navbar :bgColor="navbarBgColor">
+			<view slot="left">
+				<view :class="['search-container', isMapExpanded ? 'search-y' : '']"
+					:style="{ backgroundColor: searchBgColor }">
+					<image v-if="isMapExpanded"
+						src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/left.png"
+						@click="back" class="back-btn" />
+					<u-input placeholder="搜搜你感兴趣的~" border="none" v-model="keyword" shape="circle"
+						placeholderClass="pl-class" placeholderStyle="color:rgba(29,35,38,0.3)">
+						<image :src="
                 isMapExpanded
                   ? 'https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/小搜索.png'
                   : 'https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/搜索.png'
-              "
-              mode="scaleToFill"
-              :style="
+              " mode="scaleToFill" :style="
                 isMapExpanded
                   ? 'width: 16px; height: 16px; margin-left: 10px'
                   : 'width: 24px; height: 24px; margin-left: 10px'
-              "
-              slot="prefix"
-            />
-            <image
-              src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/扫描.png"
-              mode="scaleToFill"
-              style="width: 24px; height: 24px; margin-right: 10px"
-              slot="suffix"
-            />
-          </u-input>
-        </view>
-      </view>
-    </u-navbar>
+              " slot="prefix" />
+						<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/扫描.png"
+							mode="scaleToFill" style="width: 24px; height: 24px; margin-right: 10px" slot="suffix" />
+					</u-input>
+				</view>
+			</view>
+		</u-navbar>
 
-    <view
-      class="title-y"
-      v-if="isSticky && !isMapExpanded"
-      :style="{ top: stickyTop }"
-    >
-      <view class="first">
-        <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/定位.png"
-          style="width: 16px; height: 16px"
-        />
-        <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/附近.png"
-          style="width: 36px; height: 15px"
-        />
-      </view>
-      <view class="item">关注</view>
-      <view class="item">美式橄榄球</view>
-      <view class="item">飞盘</view>
-      <view class="item">桌游</view>
-      <view class="item">电竞</view>
-      <image
-        src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/more.png"
-        class="more"
-        @click="edit"
-      ></image>
-    </view>
+		<view class="title-y" v-if="isSticky && !isMapExpanded" :style="{ top: stickyTop }">
+			<view class="first">
+				<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/定位.png"
+					style="width: 16px; height: 16px" />
+				<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/附近.png"
+					style="width: 36px; height: 15px" />
+			</view>
+			<view class="item">关注</view>
+			<view class="item">美式橄榄球</view>
+			<view class="item">飞盘</view>
+			<view class="item">桌游</view>
+			<view class="item">电竞</view>
+			<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/more.png" class="more"
+				@click="edit"></image>
+		</view>
 
-    <map
-      id="myMap"
-      :latitude="latitude"
-      :longitude="longitude"
-      :markers="markers"
-      :scale="18"
-      v-if="!isSticky || isMapExpanded"
-    >
-    </map>
+		<map id="myMap"  :zIndex="1" :latitude="latitude" :longitude="longitude" :markers="markers" :scale="18" v-if="!isSticky || isMapExpanded">
+		</map>
 
-    <view
-      class="pull"
-      @touchstart="handleTouchStart"
-      @touchmove="handleTouchMove"
-      @touchend="handleTouchEnd"
-      :style="{ transform: `translateY(${pullTranslateY}px)` }"
-      v-show="!isSticky"
-    >
-      <image
-        src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/pull.png"
-        style="width: 16px; height: 8px"
-      />
-      <view class="value">下拉试试</view>
-    </view>
+		<view class="pull" @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd"
+			:style="{ transform: `translateY(${pullTranslateY}px)` }" v-show="!isSticky">
+			<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/pull.png"
+				style="width: 16px; height: 8px" />
+			<view class="value">下拉试试</view>
+		</view>
+		
+		
+		<view class="pull-up">
+			这里是拿来上拉的。
+		</view>
 
-    <view
-      class="content"
-      :style="{ transform: `translateY(${pullTranslateY}px)` }"
-    >
-      <view class="title" id="title">
-        <view class="first">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png"
-          />
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/附近.png"
-          />
-          <view class="next"></view>
-          <view class="dian"></view>
-        </view>
-        <view class="item">关注</view>
-        <view class="item">美式橄榄球</view>
-        <view class="item">飞盘</view>
-        <view class="item">桌游</view>
-        <view class="item">电竞</view>
-        <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/more.png"
-          class="more"
-          @click="edit"
-        ></image>
-      </view>
+		<view class="content" :style="{ transform: `translateY(${pullTranslateY}px)` }">
+			<view class="title" id="title">
+				<view class="first">
+					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png" />
+					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/附近.png" />
+					<view class="next"></view>
+					<view class="dian"></view>
+				</view>
+				<view class="item">关注</view>
+				<view class="item">美式橄榄球</view>
+				<view class="item">飞盘</view>
+				<view class="item">桌游</view>
+				<view class="item">电竞</view>
+				<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/more.png"
+					class="more" @click="edit"></image>
+			</view>
 
-      <view class="main">
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/01.jpg"
-            mode="widthFix"
-          />
-          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
-          <view class="buttom">
-            <view class="left">
-              <u-avatar :src="src" size="18"></u-avatar>
-              <view class="value">滑板高手</view>
-            </view>
-            <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
-              />
-              <view class="value">1000</view>
-            </view>
-          </view>
-        </view>
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
-          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
-          <view class="buttom">
-            <view class="left">
-              <u-avatar :src="src" size="18"></u-avatar>
-              <view class="value">滑板高手</view>
-            </view>
-            <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
-              />
-              <view class="value">1000</view>
-            </view>
-          </view>
-        </view>
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
-          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
-          <view class="buttom">
-            <view class="left">
-              <u-avatar :src="src" size="18"></u-avatar>
-              <view class="value">滑板高手</view>
-            </view>
-            <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
-              />
-              <view class="value">1000</view>
-            </view>
-          </view>
-        </view>
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
-          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
-          <view class="buttom">
-            <view class="left">
-              <u-avatar :src="src" size="18"></u-avatar>
-              <view class="value">滑板高手</view>
-            </view>
-            <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
-              />
-              <view class="value">1000</view>
-            </view>
-          </view>
-        </view>
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
-          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
-          <view class="buttom">
-            <view class="left">
-              <u-avatar :src="src" size="18"></u-avatar>
-              <view class="value">滑板高手</view>
-            </view>
-            <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
-              />
-              <view class="value">1000</view>
-            </view>
-          </view>
-        </view>
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
-          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
-          <view class="buttom">
-            <view class="left">
-              <u-avatar :src="src" size="18"></u-avatar>
-              <view class="value">滑板高手</view>
-            </view>
-            <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
-              />
-              <view class="value">1000</view>
-            </view>
-          </view>
-        </view>
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
-          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
-          <view class="buttom">
-            <view class="left">
-              <u-avatar :src="src" size="18"></u-avatar>
-              <view class="value">滑板高手</view>
-            </view>
-            <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
-              />
-              <view class="value">1000</view>
-            </view>
-          </view>
-        </view>
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
-          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
-          <view class="buttom">
-            <view class="left">
-              <u-avatar :src="src" size="18"></u-avatar>
-              <view class="value">滑板高手</view>
-            </view>
-            <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
-              />
-              <view class="value">1000</view>
-            </view>
-          </view>
-        </view>
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
-          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
-          <view class="buttom">
-            <view class="left">
-              <u-avatar :src="src" size="18"></u-avatar>
-              <view class="value">滑板高手</view>
-            </view>
-            <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
-              />
-              <view class="value">1000</view>
-            </view>
-          </view>
-        </view>
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
-          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
-          <view class="buttom">
-            <view class="left">
-              <u-avatar :src="src" size="18"></u-avatar>
-              <view class="value">滑板高手</view>
-            </view>
-            <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
-              />
-              <view class="value">1000</view>
-            </view>
-          </view>
-        </view>
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
-          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
-          <view class="buttom">
-            <view class="left">
-              <u-avatar :src="src" size="18"></u-avatar>
-              <view class="value">滑板高手</view>
-            </view>
-            <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
-              />
-              <view class="value">1000</view>
-            </view>
-          </view>
-        </view>
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
-          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
-          <view class="buttom">
-            <view class="left">
-              <u-avatar :src="src" size="18"></u-avatar>
-              <view class="value">滑板高手</view>
-            </view>
-            <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
-              />
-              <view class="value">1000</view>
-            </view>
-          </view>
-        </view>
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
-          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
-          <view class="buttom">
-            <view class="left">
-              <u-avatar :src="src" size="18"></u-avatar>
-              <view class="value">滑板高手</view>
-            </view>
-            <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
-              />
-              <view class="value">1000</view>
-            </view>
-          </view>
-        </view>
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
-          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
-          <view class="buttom">
-            <view class="left">
-              <u-avatar :src="src" size="18"></u-avatar>
-              <view class="value">滑板高手</view>
-            </view>
-            <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
-              />
-              <view class="value">1000</view>
-            </view>
-          </view>
-        </view>
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
-          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
-          <view class="buttom">
-            <view class="left">
-              <u-avatar :src="src" size="18"></u-avatar>
-              <view class="value">滑板高手</view>
-            </view>
-            <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
-              />
-              <view class="value">1000</view>
-            </view>
-          </view>
-        </view>
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
-            mode="widthFix"
-          />
-          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
-          <view class="buttom">
-            <view class="left">
-              <u-avatar :src="src" size="18"></u-avatar>
-              <view class="value">滑板高手</view>
-            </view>
-            <view class="right">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
-              />
-              <view class="value">1000</view>
-            </view>
-          </view>
-        </view>
-      </view>
-    </view>
-  </view>
+			<view class="main">
+				<view class="item">
+					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/01.jpg"
+						mode="widthFix" />
+					<view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+					<view class="buttom">
+						<view class="left">
+							<u-avatar :src="src" size="18"></u-avatar>
+							<view class="value">滑板高手</view>
+						</view>
+						<view class="right">
+							<image
+								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png" />
+							<view class="value">1000</view>
+						</view>
+					</view>
+				</view>
+				<view class="item">
+					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+						mode="widthFix" />
+					<view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+					<view class="buttom">
+						<view class="left">
+							<u-avatar :src="src" size="18"></u-avatar>
+							<view class="value">滑板高手</view>
+						</view>
+						<view class="right">
+							<image
+								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png" />
+							<view class="value">1000</view>
+						</view>
+					</view>
+				</view>
+				<view class="item">
+					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+						mode="widthFix" />
+					<view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+					<view class="buttom">
+						<view class="left">
+							<u-avatar :src="src" size="18"></u-avatar>
+							<view class="value">滑板高手</view>
+						</view>
+						<view class="right">
+							<image
+								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png" />
+							<view class="value">1000</view>
+						</view>
+					</view>
+				</view>
+				<view class="item">
+					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+						mode="widthFix" />
+					<view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+					<view class="buttom">
+						<view class="left">
+							<u-avatar :src="src" size="18"></u-avatar>
+							<view class="value">滑板高手</view>
+						</view>
+						<view class="right">
+							<image
+								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png" />
+							<view class="value">1000</view>
+						</view>
+					</view>
+				</view>
+				<view class="item">
+					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+						mode="widthFix" />
+					<view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+					<view class="buttom">
+						<view class="left">
+							<u-avatar :src="src" size="18"></u-avatar>
+							<view class="value">滑板高手</view>
+						</view>
+						<view class="right">
+							<image
+								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png" />
+							<view class="value">1000</view>
+						</view>
+					</view>
+				</view>
+				<view class="item">
+					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+						mode="widthFix" />
+					<view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+					<view class="buttom">
+						<view class="left">
+							<u-avatar :src="src" size="18"></u-avatar>
+							<view class="value">滑板高手</view>
+						</view>
+						<view class="right">
+							<image
+								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png" />
+							<view class="value">1000</view>
+						</view>
+					</view>
+				</view>
+				<view class="item">
+					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+						mode="widthFix" />
+					<view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+					<view class="buttom">
+						<view class="left">
+							<u-avatar :src="src" size="18"></u-avatar>
+							<view class="value">滑板高手</view>
+						</view>
+						<view class="right">
+							<image
+								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png" />
+							<view class="value">1000</view>
+						</view>
+					</view>
+				</view>
+				<view class="item">
+					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+						mode="widthFix" />
+					<view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+					<view class="buttom">
+						<view class="left">
+							<u-avatar :src="src" size="18"></u-avatar>
+							<view class="value">滑板高手</view>
+						</view>
+						<view class="right">
+							<image
+								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png" />
+							<view class="value">1000</view>
+						</view>
+					</view>
+				</view>
+				<view class="item">
+					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+						mode="widthFix" />
+					<view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+					<view class="buttom">
+						<view class="left">
+							<u-avatar :src="src" size="18"></u-avatar>
+							<view class="value">滑板高手</view>
+						</view>
+						<view class="right">
+							<image
+								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png" />
+							<view class="value">1000</view>
+						</view>
+					</view>
+				</view>
+				<view class="item">
+					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+						mode="widthFix" />
+					<view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+					<view class="buttom">
+						<view class="left">
+							<u-avatar :src="src" size="18"></u-avatar>
+							<view class="value">滑板高手</view>
+						</view>
+						<view class="right">
+							<image
+								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png" />
+							<view class="value">1000</view>
+						</view>
+					</view>
+				</view>
+				<view class="item">
+					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+						mode="widthFix" />
+					<view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+					<view class="buttom">
+						<view class="left">
+							<u-avatar :src="src" size="18"></u-avatar>
+							<view class="value">滑板高手</view>
+						</view>
+						<view class="right">
+							<image
+								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png" />
+							<view class="value">1000</view>
+						</view>
+					</view>
+				</view>
+				<view class="item">
+					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+						mode="widthFix" />
+					<view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+					<view class="buttom">
+						<view class="left">
+							<u-avatar :src="src" size="18"></u-avatar>
+							<view class="value">滑板高手</view>
+						</view>
+						<view class="right">
+							<image
+								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png" />
+							<view class="value">1000</view>
+						</view>
+					</view>
+				</view>
+				<view class="item">
+					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+						mode="widthFix" />
+					<view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+					<view class="buttom">
+						<view class="left">
+							<u-avatar :src="src" size="18"></u-avatar>
+							<view class="value">滑板高手</view>
+						</view>
+						<view class="right">
+							<image
+								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png" />
+							<view class="value">1000</view>
+						</view>
+					</view>
+				</view>
+				<view class="item">
+					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+						mode="widthFix" />
+					<view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+					<view class="buttom">
+						<view class="left">
+							<u-avatar :src="src" size="18"></u-avatar>
+							<view class="value">滑板高手</view>
+						</view>
+						<view class="right">
+							<image
+								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png" />
+							<view class="value">1000</view>
+						</view>
+					</view>
+				</view>
+				<view class="item">
+					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+						mode="widthFix" />
+					<view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+					<view class="buttom">
+						<view class="left">
+							<u-avatar :src="src" size="18"></u-avatar>
+							<view class="value">滑板高手</view>
+						</view>
+						<view class="right">
+							<image
+								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png" />
+							<view class="value">1000</view>
+						</view>
+					</view>
+				</view>
+				<view class="item">
+					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+						mode="widthFix" />
+					<view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+					<view class="buttom">
+						<view class="left">
+							<u-avatar :src="src" size="18"></u-avatar>
+							<view class="value">滑板高手</view>
+						</view>
+						<view class="right">
+							<image
+								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png" />
+							<view class="value">1000</view>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
 </template>
 
 <script>
-// import Tabbar from "@/components/tabbar.vue";
-export default {
-  // components: { Tabbar },
-  data() {
-    return {
-      latitude: 23,
-      longitude: 113,
-      markers: [
-        {
-          id: 0,
-          latitude: 0,
-          longitude: 0,
-          title: "当前位置",
-          iconPath:
-            "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/Frame.png",
-          width: 60, // 新增宽度
-          height: 60, // 新增高度
-          label: {
-            content: "青春足球场",
-            color: "rgba(29,35,38,0.5)",
-            fontSize: 12,
-            anchorY: -10,
-            textAlign: "center",
-          },
-        },
-        {
-          iconPath:
-            "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/Frame.png",
-          id: 1,
-          latitude: 0,
-          longitude: 0,
-          width: 60,
-          height: 60,
-          title: "其他位置",
-          label: {
-            content: "青春篮球场",
-            color: "rgba(29,35,38,0.5)",
-            fontSize: 12,
-            anchorY: -10,
-            textAlign: "center",
-          },
-        },
-      ],
-      isMapExpanded: false, //地图展开
-      isSticky: false, //吸顶状态
-      dragStartY: 0, //下拉开始的位置
-      isDragging: false, //下拉状态
-      screenHeight: 0, //屏幕高度
-      keyword: "",
-      statusBarHeight: 0,
-      navbarHeight: 44,
-      address: "",
-      pullTranslateY: 0,
-    };
-  },
-  onLoad() {
-    uni.reLaunch({
-      // url: "/competition/apply/appear",
-      // url: "/competition/publish/saishi",
-      url: "/user/competition",
-    });
-    this.Location();
-    this.Location().then(() => {
-      this.initIntersectionObserver();
-    });
-    const systemInfo = uni.getSystemInfoSync();
-    this.screenHeight = systemInfo.windowHeight;
-    this.statusBarHeight = systemInfo.statusBarHeight;
-  },
+	// import Tabbar from "@/components/tabbar.vue";
+	export default {
+		// components: { Tabbar },
+		data() {
+			return {
+				latitude: 23,
+				longitude: 113,
+				markers: [
+					{
+						id: 0,
+						latitude: 0,
+						longitude: 0,
+						title: "当前位置",
+						iconPath: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/Frame.png",
+						width: 60, // 新增宽度
+						height: 60, // 新增高度
+						label: {
+							content: "青春足球场",
+							color: "rgba(29,35,38,0.5)",
+							fontSize: 12,
+							anchorY: -10,
+							textAlign: "center",
+						},
+					},
+					{
+						iconPath: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/Frame.png",
+						id: 1,
+						latitude: 0,
+						longitude: 0,
+						width: 60,
+						height: 60,
+						title: "其他位置",
+						label: {
+							content: "青春篮球场",
+							color: "rgba(29,35,38,0.5)",
+							fontSize: 12,
+							anchorY: -10,
+							textAlign: "center",
+						},
+					},
+				],
+				isMapExpanded: false, //地图展开
+				isSticky: false, //吸顶状态
+				dragStartY: 0, //下拉开始的位置
+				isDragging: false, //下拉状态
+				screenHeight: 0, //屏幕高度
+				keyword: "",
+				statusBarHeight: 0,
+				navbarHeight: 44,
+				address: "",
+				pullTranslateY: 0,
+			};
+		},
+		onLoad() {
+			// uni.reLaunch({
+			//   // url: "/competition/apply/appear",
+			//   // url: "/competition/publish/saishi",
+			//   url: "/user/competition",
+			// });
+			this.Location();
+			this.Location().then(() => {
+				this.initIntersectionObserver();
+			});
+			const systemInfo = uni.getSystemInfoSync();
+			this.screenHeight = systemInfo.windowHeight;
+			this.statusBarHeight = systemInfo.statusBarHeight;
+		},
+		onShow() {
+			uni.showTabBar();
+		},
 
-  methods: {
-    async Location() {
-      try {
-        const res = await uni.getLocation({ type: "wgs84" });
-        this.latitude = res.latitude - 0.001;
-        this.longitude = res.longitude;
-        this.markers[0].latitude = res.latitude;
-        this.markers[0].longitude = res.longitude;
-        this.markers[1].latitude = res.latitude + 0.0005;
-        this.markers[1].longitude = res.longitude + 0.0005;
-        // 调用逆地理编码接口
-        // const apiKey = "OVPBZ-6ABC5-XWDIP-IVGK4-UJMIS-ALBZT ";
-        // const url = `https://apis.map.qq.com/ws/geocoder/v1/?location=${this.latitude},${this.longitude}&key=${apiKey}`;
+		methods: {
+			async Location() {
+				try {
+					const res = await this.getLocation();
+					this.latitude = res.latitude - 0.001;
+					this.longitude = res.longitude;
+					this.markers[0].latitude = res.latitude;
+					this.markers[0].longitude = res.longitude;
+					this.markers[1].latitude = res.latitude + 0.0005;
+					this.markers[1].longitude = res.longitude + 0.0005;
+					// 调用逆地理编码接口
+					// const apiKey = "OVPBZ-6ABC5-XWDIP-IVGK4-UJMIS-ALBZT ";
+					// const url = `https://apis.map.qq.com/ws/geocoder/v1/?location=${this.latitude},${this.longitude}&key=${apiKey}`;
 
-        // const addressRes = await uni.request({ url });
-        // if (addressRes.statusCode === 200 && addressRes.data.status === 0) {
-        //   this.address = addressRes.data.result.address;
-        //   uni.setStorageSync(
-        //     "city",
-        //     addressRes.data.result.address_component.city
-        //   );
-        //   // 获取完整地址
-        //   if (this.address) {
-        //     var result = await uni.$u.http.post("/saveWjLocation", {
-        //       address: this.address,
-        //       locationLat: this.latitude,
-        //       locationLng: this.longitude,
-        //     });
-        //   }
-        // } else {
-        //   console.error("逆地理编码失败:", addressRes.data);
-        // }
-      } catch (err) {
-        console.error("定位失败:", err);
-      }
-    },
+					// const addressRes = await uni.request({ url });
+					// if (addressRes.statusCode === 200 && addressRes.data.status === 0) {
+					//   this.address = addressRes.data.result.address;
+					//   uni.setStorageSync(
+					//     "city",
+					//     addressRes.data.result.address_component.city
+					//   );
+					//   // 获取完整地址
+					//   if (this.address) {
+					//     var result = await uni.$u.http.post("/saveWjLocation", {
+					//       address: this.address,
+					//       locationLat: this.latitude,
+					//       locationLng: this.longitude,
+					//     });
+					//   }
+					// } else {
+					//   console.error("逆地理编码失败:", addressRes.data);
+					// }
+				} catch (err) {
+					console.error("定位失败:", err);
+				}
+			},
+			
+			// 开始触摸
+			handleTouchStart(e) {
+				this.dragStartY = e.touches[0].clientY;
+				this.isDragging = true;
+			},
 
-    handleTouchStart(e) {
-      this.dragStartY = e.touches[0].clientY;
-      this.isDragging = true;
-    },
+			handleTouchMove(e) {
+				if (!this.isDragging) return;
+				const deltaY = e.touches[0].clientY - this.dragStartY;
+				if (deltaY >= 0 && deltaY <= this.screenHeight) {
+					this.pullTranslateY = deltaY;
+				}
+			},
+			
+			// 触摸结束
+			handleTouchEnd(e) {
+				this.isDragging = false;
+				if (this.pullTranslateY >= 60) {
+					this.isMapExpanded = true;
+					this.pullTranslateY = this.screenHeight;
+				} else {
+					this.pullTranslateY = 0;
+				}
+			},
+			back() {
+				this.isMapExpanded = false;
+				this.pullTranslateY = 0;
+			},
 
-    handleTouchMove(e) {
-      if (!this.isDragging) return;
-      const deltaY = e.touches[0].clientY - this.dragStartY;
-      if (deltaY >= 0 && deltaY <= this.screenHeight) {
-        this.pullTranslateY = deltaY;
-      }
-    },
-    handleTouchEnd(e) {
-      this.isDragging = false;
-      if (this.pullTranslateY >= 60) {
-        this.isMapExpanded = true;
-        this.pullTranslateY = this.screenHeight;
-      } else {
-        this.pullTranslateY = 0;
-      }
-    },
-    back() {
-      this.isMapExpanded = false;
-      this.pullTranslateY = 0;
-    },
+			edit() {
+				uni.navigateTo({
+					url: "/else/index/editSport",
+				});
+			},
 
-    edit() {
-      uni.navigateTo({
-        url: "/else/index/editSport",
-      });
-    },
+			initIntersectionObserver() {
+				this.observer = uni.createIntersectionObserver(this);
+				this.observer.relativeToViewport().observe("#title", (res) => {
+					this.isSticky = res.intersectionRatio <= 0;
+				});
+			},
 
-    initIntersectionObserver() {
-      this.observer = uni.createIntersectionObserver(this);
-      this.observer.relativeToViewport().observe("#title", (res) => {
-        this.isSticky = res.intersectionRatio <= 0;
-      });
-    },
+			toDongTaiDetail() {
+				uni.navigateTo({
+					url: "/dynamic/publish/dongTaiDetail"
+				});
+			},
+			toMarkSite() {
+				uni.navigateTo({
+					url: "/else/index/markSite"
+				});
+			},
+			toPlay() {
+				uni.navigateTo({
+					url: "/pages/play/play"
+				});
+			},
+		},
 
-    toDongTaiDetail() {
-      uni.navigateTo({ url: "/dynamic/publish/dongTaiDetail" });
-    },
-    toMarkSite() {
-      uni.navigateTo({ url: "/else/index/markSite" });
-    },
-    toPlay() {
-      uni.navigateTo({ url: "/pages/play/play" });
-    },
-  },
-
-  computed: {
-    navbarBgColor() {
-      return this.isSticky && !this.isMapExpanded ? "#fff" : "rgba(0,0,0,0)";
-    },
-    searchBgColor() {
-      if (this.isMapExpanded) {
-        return "#FFFFFF"; // 地图展开时背景颜色为白色
-      } else if (this.isSticky) {
-        return "#F7F7F7"; // 吸顶时背景颜色为 #F7F7F7
-      } else {
-        return "rgba(255, 255, 255, 0.5)"; // 正常时背景颜色为半透明白色
-      }
-    },
-    stickyTop() {
-      return `${this.statusBarHeight + this.navbarHeight}px`;
-    },
-  },
-};
+		computed: {
+			navbarBgColor() {
+				return this.isSticky && !this.isMapExpanded ? "#fff" : "rgba(0,0,0,0)";
+			},
+			searchBgColor() {
+				if (this.isMapExpanded) {
+					return "#FFFFFF"; // 地图展开时背景颜色为白色
+				} else if (this.isSticky) {
+					return "#F7F7F7"; // 吸顶时背景颜色为 #F7F7F7
+				} else {
+					return "rgba(255, 255, 255, 0.5)"; // 正常时背景颜色为半透明白色
+				}
+			},
+			stickyTop() {
+				return `${this.statusBarHeight + this.navbarHeight}px`;
+			},
+		},
+	};
 </script>
 
 <style lang="scss">
-.content {
-  // display: none;
-  position: absolute;
-  top: 30%;
-  width: 100%;
-  border-radius: 30px;
-  background-color: #f8f9f9;
-  height: auto;
-  box-shadow: 0px -2px 8px 0px rgba(98, 120, 134, 0.2);
-  border: 2px solid #ffffff;
-  margin-bottom: 60px;
-  overflow: hidden;
-  transition: all linear;
+	.content {
+		// display: none;
+		position: absolute;
+		top: 30%;
+		width: 100%;
+		border-radius: 30px;
+		background-color: #f8f9f9;
+		height: auto;
+		box-shadow: 0px -2px 8px 0px rgba(98, 120, 134, 0.2);
+		border: 2px solid #ffffff;
+		margin-bottom: 60px;
+		overflow: hidden;
+		transition: all linear;
 
-  .title {
-    width: 100%;
-    box-sizing: border-box;
-    display: flex;
-    padding: 10px;
-    align-items: center;
-    justify-content: space-evenly;
-    background-color: #f8f9f9;
+		.title {
+			width: 100%;
+			box-sizing: border-box;
+			display: flex;
+			padding: 10px;
+			align-items: center;
+			justify-content: space-evenly;
+			background-color: #f8f9f9;
 
-    .first {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      position: relative;
+			.first {
+				display: flex;
+				align-items: center;
+				gap: 3px;
+				position: relative;
 
-      image:nth-child(1) {
-        width: 18px;
-        height: 18px;
-      }
+				image:nth-child(1) {
+					width: 18px;
+					height: 18px;
+				}
 
-      image:nth-child(2) {
-        width: 36px;
-        height: 15px;
-      }
-      .next {
-        position: absolute;
-        bottom: -12px;
-        left: 50%;
-        transform: translateX(-50%);
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-bottom: 10px solid #fff;
-      }
-      .dian {
-        position: absolute;
-        bottom: -10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 3px;
-        height: 3px;
-        border-radius: 50%;
-        background-color: black;
-      }
-    }
+				image:nth-child(2) {
+					width: 36px;
+					height: 15px;
+				}
 
-    .item {
-      font-size: 14px;
-      color: rgba(29, 35, 38, 0.5);
-      font-family: "PING FANG SHAO HUA";
-    }
-  }
+				.next {
+					position: absolute;
+					bottom: -12px;
+					left: 50%;
+					transform: translateX(-50%);
+					border-left: 10px solid transparent;
+					border-right: 10px solid transparent;
+					border-bottom: 10px solid #fff;
+				}
 
-  .main {
-    column-count: 2;
-    column-gap: 10px;
-    background: #ffffff;
-    border-radius: 20px;
-    padding: 10px 10px 50px 10px; // 新增内边距
-    box-shadow: 0px -2px 8px 0px rgba(168, 186, 197, 0.2);
+				.dian {
+					position: absolute;
+					bottom: -10px;
+					left: 50%;
+					transform: translateX(-50%);
+					width: 3px;
+					height: 3px;
+					border-radius: 50%;
+					background-color: black;
+				}
+			}
 
-    .item {
-      width: 100%;
-      break-inside: avoid;
-      /* 防止元素被分割到不同列 */
-      margin-bottom: 10px;
+			.item {
+				font-size: 14px;
+				color: rgba(29, 35, 38, 0.5);
+				font-family: "PING FANG SHAO HUA";
+			}
+		}
 
-      image {
-        width: 100%;
-        border-radius: 10px;
-      }
+		.main {
+			column-count: 2;
+			column-gap: 10px;
+			background: #ffffff;
+			border-radius: 20px;
+			padding: 10px 10px 50px 10px; // 新增内边距
+			box-shadow: 0px -2px 8px 0px rgba(168, 186, 197, 0.2);
 
-      .value {
-        font-size: 14px;
-        color: #353738;
-        font-weight: 600;
-      }
+			.item {
+				width: 100%;
+				break-inside: avoid;
+				/* 防止元素被分割到不同列 */
+				margin-bottom: 10px;
 
-      .buttom {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 7px;
+				image {
+					width: 100%;
+					border-radius: 10px;
+				}
 
-        .left {
-          display: flex;
-          align-items: center;
-          gap: 5px;
+				.value {
+					font-size: 14px;
+					color: #353738;
+					font-weight: 600;
+				}
 
-          image {
-            width: 18px;
-            height: 18px !important;
-          }
+				.buttom {
+					display: flex;
+					justify-content: space-between;
+					margin-top: 7px;
 
-          .value {
-            font-size: 12px;
-            font-weight: 400;
-            color: #474747;
-          }
-        }
+					.left {
+						display: flex;
+						align-items: center;
+						gap: 5px;
 
-        .right {
-          display: flex;
-          align-items: center;
-          gap: 2px;
+						image {
+							width: 18px;
+							height: 18px !important;
+						}
 
-          image {
-            width: 20px;
-            height: 20px;
-          }
+						.value {
+							font-size: 12px;
+							font-weight: 400;
+							color: #474747;
+						}
+					}
 
-          .value {
-            font-weight: 400;
-            font-size: 12px;
-            color: #474747;
-          }
-        }
-      }
-    }
-  }
-}
+					.right {
+						display: flex;
+						align-items: center;
+						gap: 2px;
 
-.more {
-  width: 16px;
-  height: 16px;
-}
+						image {
+							width: 20px;
+							height: 20px;
+						}
 
-.search {
-  background: #f7f7f7;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-}
+						.value {
+							font-weight: 400;
+							font-size: 12px;
+							color: #474747;
+						}
+					}
+				}
+			}
+		}
+	}
 
-.search-y {
-  background: #ffffff;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
+	.more {
+		width: 16px;
+		height: 16px;
+	}
 
-  image {
-    width: 20px;
-    height: 20px;
-    margin: 10px;
-  }
-}
+	.search {
+		background: #f7f7f7;
+		border-radius: 20px;
+		display: flex;
+		align-items: center;
+	}
 
-.pull {
-  position: absolute;
-  top: 26%;
-  left: 0;
-  right: 0;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 30px;
-  transition: all linear;
+	.search-y {
+		background: #ffffff;
+		border-radius: 20px;
+		display: flex;
+		align-items: center;
 
-  .value {
-    font-weight: 400;
-    font-size: 10px;
-    color: rgba(29, 35, 38, 0.5);
-  }
+		image {
+			width: 20px;
+			height: 20px;
+			margin: 10px;
+		}
+	}
+	
+	.pull-up{
+		position: absolute;
+		bottom: 30rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: yellow;
+		z-index: 11;
+	}
+	
+	.pull {
+		position: absolute;
+		top: 26%;
+		left: 0;
+		right: 0;
+		margin: auto;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		height: 30px;
+		transition: all linear;
 
-  image {
-    width: 16px;
-    height: 8px;
-  }
-}
+		.value {
+			font-weight: 400;
+			font-size: 10px;
+			color: rgba(29, 35, 38, 0.5);
+		}
 
-map {
-  height: 100vh;
-  width: 100vw;
-  // display: none;
-}
+		image {
+			width: 16px;
+			height: 8px;
+		}
+	}
 
-.search-container {
-  display: flex;
-  align-items: center;
-  border-radius: 20px;
-  border: 1px solid #ffffff;
-  height: 36px;
-  background-color: rgba(255, 255, 255, 0.5);
-  width: 80%;
-  backdrop-filter: blur(30px);
-  &.search-y {
-    background: #ffffff;
-    width: 85%;
+	map {
+		height: 100vh;
+		width: 100vw;
+		// display: none;
+	}
 
-    .back-btn {
-      width: 20px;
-      height: 20px;
-      margin-right: 10px;
-    }
-  }
-}
+	.search-container {
+		display: flex;
+		align-items: center;
+		border-radius: 20px;
+		border: 1px solid #ffffff;
+		height: 36px;
+		background-color: rgba(255, 255, 255, 0.5);
+		width: 80%;
+		backdrop-filter: blur(30px);
 
-.box {
-  width: 100vw;
-  height: auto;
-  position: relative;
-  .title-y {
-    box-sizing: border-box;
-    position: fixed;
-    width: 100%;
-    display: flex;
-    padding: 10px;
-    align-items: center;
-    justify-content: space-evenly;
-    background-color: #fff;
-    z-index: 999999999;
+		&.search-y {
+			background: #ffffff;
+			width: 85%;
 
-    .first {
-      display: flex;
-      align-items: center;
-      gap: 3px;
+			.back-btn {
+				width: 20px;
+				height: 20px;
+				margin-right: 10px;
+			}
+		}
+	}
 
-      image:nth-child(1) {
-        width: 18px;
-        height: 18px;
-      }
+	.box {
+		width: 100vw;
+		height: auto;
+		position: relative;
 
-      image:nth-child(2) {
-        width: 36px;
-        height: 15px;
-      }
-    }
+		.title-y {
+			box-sizing: border-box;
+			position: fixed;
+			width: 100%;
+			display: flex;
+			padding: 10px;
+			align-items: center;
+			justify-content: space-evenly;
+			background-color: #fff;
+			z-index: 999999999;
 
-    .item {
-      font-size: 14px;
-      color: rgba(29, 35, 38, 0.5);
-      font-family: "PING FANG SHAO HUA";
-    }
-  }
+			.first {
+				display: flex;
+				align-items: center;
+				gap: 3px;
 
-  .mapBox {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
+				image:nth-child(1) {
+					width: 18px;
+					height: 18px;
+				}
 
-    .button {
-      width: 24px;
-      height: 30px;
-      padding: 6px 9px;
-      margin-right: 30px;
-      margin-bottom: 200px;
-      background-color: #15181a;
-      color: #fff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+				image:nth-child(2) {
+					width: 36px;
+					height: 15px;
+				}
+			}
 
-      text {
-        font-family: PingFang SC, PingFang SC;
-        font-weight: 600;
-        font-size: 12px;
-        color: #ffffff;
-        font-style: normal;
-        text-transform: none;
-      }
-    }
-  }
-}
-.pl-class {
-  font-weight: 400;
-  font-size: 14px;
-  color: black;
-}
-.pl-class1 {
-  font-weight: 400;
-  font-size: 14px;
-  color: black;
-}
+			.item {
+				font-size: 14px;
+				color: rgba(29, 35, 38, 0.5);
+				font-family: "PING FANG SHAO HUA";
+			}
+		}
+
+		.mapBox {
+			width: 100vw;
+			height: 100vh;
+			display: flex;
+			justify-content: flex-end;
+			align-items: flex-end;
+
+			.button {
+				width: 24px;
+				height: 30px;
+				padding: 6px 9px;
+				margin-right: 30px;
+				margin-bottom: 200px;
+				background-color: #15181a;
+				color: #fff;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				text {
+					font-family: PingFang SC, PingFang SC;
+					font-weight: 600;
+					font-size: 12px;
+					color: #ffffff;
+					font-style: normal;
+					text-transform: none;
+				}
+			}
+		}
+	}
+
+	.pl-class {
+		font-weight: 400;
+		font-size: 14px;
+		color: black;
+	}
+
+	.pl-class1 {
+		font-weight: 400;
+		font-size: 14px;
+		color: black;
+	}
 </style>

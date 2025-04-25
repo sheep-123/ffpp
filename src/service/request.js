@@ -2,15 +2,10 @@
 module.exports = (vm) => {
   // 初始化请求配置
   uni.$u.http.setConfig((config) => {
-    /* config 为默认全局配置 */
-    const to = require("@/config");
-
     //#ifdef MP-WEIXIN || APP-PLUS
-    config.baseURL = `${to.url}`; /* 根域名 */
-    //#endif
-
-    //#ifdef H5
-    config.baseURL = "/uni"; /* 根域名 */
+    // config.baseURL = "http://192.168.3.36:8001";
+    config.baseURL = "http://192.168.3.46:8001";
+    // config.baseURL = "https://testfeifanpaopao.jireplayer.com/wjapi";
     //#endif
 
     // 设置默认请求头

@@ -135,7 +135,11 @@
             mode="aspectFill"
           />
           <view class="buttom">
-            <u-avatar-group :urls="urls" size="18" gap="0.4"></u-avatar-group>
+            <u-avatar-group
+              :urls="item.recentUsers"
+              size="18"
+              gap="0.4"
+            ></u-avatar-group>
             <view class="value">已报名</view>
           </view>
         </view>
@@ -321,17 +325,22 @@ export default {
         });
 
         if (result.status === 200) {
-          const newData = result.data.list; // 获取新数据
+          const newData = result.data.list.map((item) => {
+            item.recentUsers = item.recentUsers.map(
+              (element) => element.avatarUrl
+            );
+            return item;
+          });
           if (newData.length > 0) {
-            this.matchList = this.matchList.concat(newData); // 将新数据追加到现有列表
-            this.pageNum++; // 更新页码
-            this.status = "loadmore"; // 恢复加载状态
+            this.matchList = this.matchList.concat(newData);
+            this.pageNum++;
+            this.status = "loadmore";
           } else {
-            this.status = "nomore"; // 没有更多数据
+            this.status = "nomore";
           }
         }
       } catch (err) {
-        this.status = "loadmore"; // 恢复加载状态
+        this.status = "loadmore";
       }
     },
     async queryMatchLabel() {

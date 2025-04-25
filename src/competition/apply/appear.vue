@@ -287,23 +287,25 @@
                     input-align="right"
                     :type="item.applyType == 'number' ? 'number' : ''"
                   ></u-input>
-                  <u-radio-group
-                    v-model="item.value"
-                    placement="row"
-                    v-if="item.applyType == 'radio'"
-                  >
-                    <u-radio
-                      activeColor="#EC384A"
-                      :label="gender"
-                      shape="circle"
-                      :name="genderIndex + 1"
+                  <view class="check" v-if="item.applyType == 'radio'">
+                    <u-radio-group
+                      v-model="item.value"
+                      placement="row"
                       v-for="(gender, genderIndex) in item.applyValue.split(
                         ','
                       )"
-                      :key="genderIndex"
-                      customStyle="margin-left: 20px"
-                    ></u-radio>
-                  </u-radio-group>
+                    >
+                      <u-radio
+                        activeColor="#EC384A"
+                        :label="gender"
+                        shape="circle"
+                        :name="genderIndex + 1"
+                        :key="genderIndex"
+                        customStyle="margin-left: 20px"
+                      ></u-radio>
+                    </u-radio-group>
+                  </view>
+
                   <u-checkbox-group
                     v-model="item.value"
                     v-if="item.applyType == 'checkbox'"
@@ -1298,18 +1300,13 @@ export default {
       this.activeIndex = index;
     },
     async getGame() {
-      var result = await uni.$u.http.get("/match/getMatchSche", {
+      var result = await uni.$u.http.get("/match/getMatchScheTypeInfo", {
         params: {
           matchId: this.matchId,
         },
       });
       if (result.status == 200) {
         this.gameList = result.data;
-        this.gameList = this.gameList.filter(
-          (item, index) =>
-            item.scheTypeCode !== "registrationTime" &&
-            item.scheTypeCode !== "publicationTime"
-        );
         uni.setStorageSync("gameList", this.gameList);
       }
     },
@@ -1327,7 +1324,7 @@ export default {
     },
     toSponsor() {
       uni.navigateTo({
-        url: `/competition/apply/sponsor?matchId=${this.matchId}`,
+        url: `/competition/apply/sponsor?matchId=${this.matchId}&&color=${this.selectColor}`,
       });
     },
     openModal() {
@@ -3454,14 +3451,5 @@ export default {
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-}
-.form {
-  .item {
-    .right {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-  }
 }
 </style>

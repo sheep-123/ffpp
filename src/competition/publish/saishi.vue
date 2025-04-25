@@ -597,6 +597,22 @@
       >
         <view class="main">
           <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/赛事地点设置.png"
+            mode="scaleToFill"
+            style="width: 100%; height: 22px; margin-top: 15px"
+          />
+          <view class="text">
+            <view class="item">
+              <view class="left"
+                ><text>赛事地点</text> <view class="icon">*</view></view
+              >
+              <view class="right"
+                ><text>请选择赛事地点</text
+                ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
+              ></view>
+            </view>
+          </view>
+          <image
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/赛事环节设置.png"
             mode="scaleToFill"
             style="width: 100%; height: 22px; margin-top: 15px"
@@ -1066,7 +1082,7 @@
                       shape="circle"
                     ></u-radio> </u-radio-group
                 ></view>
-                <view class="item-radio">
+                <!-- <view class="item-radio">
                   <u-radio-group v-model="scoringMethod">
                     <u-radio
                       activeColor="#EC384A"
@@ -1074,7 +1090,7 @@
                       name="6"
                       shape="circle"
                     ></u-radio> </u-radio-group
-                ></view>
+                ></view> -->
               </view>
             </view>
           </view>
@@ -2041,7 +2057,7 @@
       </u-popup>
       <u-picker
         :show="show21"
-        :columns="columns21"
+        :columns="szList"
         @cancel="show21 = false"
         @confirm="confirm21"
       ></u-picker>
@@ -2254,16 +2270,6 @@ export default {
         },
       ],
       show21: false,
-      columns21: [
-        [
-          "非对战淘汰赛",
-          "非对战排行赛",
-          "对战单循环赛",
-          "对战1V1赛",
-          "对战主客场赛",
-          "对战双败赛",
-        ],
-      ],
       zz: uni.getStorageSync("zz") || "",
       zzName: uni.getStorageSync("zzName") || "",
       preview: false,
@@ -2693,7 +2699,7 @@ export default {
       } catch (err) {
         this.$refs.notice.show({
           type: "default",
-          message: err.message,
+          message: err.data.message,
         });
         return;
       }
@@ -2766,6 +2772,7 @@ export default {
               groupVenueType: this.groupVenueType,
               groupUmpireType: this.groupUmpireType,
               scoringMethod: this.scoringMethod,
+              isPreview: true,
             },
           ],
         };
@@ -2904,11 +2911,9 @@ export default {
           }
         }
       } catch (err) {
-        console.log(err);
-        // 全局错误处理
         this.$refs.notice.show({
           type: "default",
-          message: err.message || "保存失败，请稍后重试",
+          message: err.data.message || "保存失败，请稍后重试",
         });
       }
     },
@@ -2948,6 +2953,7 @@ export default {
               groupVenueType: this.groupVenueType,
               groupUmpireType: this.groupUmpireType,
               scoringMethod: this.scoringMethod,
+              isPreview: true,
             },
           ],
         };
@@ -2970,7 +2976,7 @@ export default {
       } catch (err) {
         this.$refs.notice.show({
           type: "default",
-          message: err.message,
+          message: err.data.message || "生成预览失败，请稍后重试",
         });
       }
     },
@@ -2979,6 +2985,13 @@ export default {
         matchId: this.matchId,
         hitTypeName: this.gameList[this.op].scheTypeName,
       });
+      if (result.status == 400) {
+        this.$refs.notice.show({
+          type: "default",
+          message: result.message,
+        });
+        return;
+      }
       this.groups = result.data.map((item) => {
         item.expand = false;
         return item;
@@ -2987,14 +3000,21 @@ export default {
       uni.setStorageSync("groups", this.groups);
     },
     async getMatchHitWar(item) {
-      var result = await uni.$u.http.get("/match/getMatchHitWar", {
-        params: {
-          hitGroupId: item.id,
-        },
-      });
-      if (result.status == 200) {
-        item.warList = result.data;
-        item.expand = true;
+      try {
+        var result = await uni.$u.http.get("/match/getMatchHitWar", {
+          params: {
+            hitGroupId: item.id,
+          },
+        });
+        if (result.status == 200) {
+          item.warList = result.data;
+          item.expand = true;
+        }
+      } catch (err) {
+        this.$refs.notice.show({
+          type: "default",
+          message: err.data.message || "获取失败，请稍后重试",
+        });
       }
     },
     groupChange(n) {
@@ -3076,9 +3096,11 @@ export default {
         },
       });
       if (result.status == 200) {
-        this.szList = result.data.map((item) => {
-          return item.label;
-        });
+        this.szList = [
+          result.data.map((item) => {
+            return item.label;
+          }),
+        ];
       }
     },
     async queryMatchHitConfig() {
@@ -3098,7 +3120,7 @@ export default {
       if (result.status == 200) {
         this.zz = result.data[0].matchingManner;
         this.stageUserNum = result.data[0].stageUserNum;
-        this.zzName = this.szList[this.zz - 1];
+        this.zzName = this.szList[0][this.zz - 1];
         this.group_num = result.data[0].groupNum;
         this.groupVenueType = result.data[0].groupVenueType;
         this.groupUmpireType = result.data[0].groupUmpireType;
@@ -3123,17 +3145,11 @@ export default {
             list: arr,
             saveState: "1",
           });
-          if (result.status == 200) {
-            this.$refs.notice.show({
-              type: "default",
-              message: result.message,
-            });
-          }
         }
       } catch (err) {
         this.$refs.notice.show({
           type: "default",
-          message: err.message,
+          message: err.data.message,
         });
       }
 
@@ -3155,7 +3171,7 @@ export default {
       } catch (err) {
         this.$refs.notice.show({
           type: "default",
-          message: err.message,
+          message: err.data.message,
         });
       }
     },

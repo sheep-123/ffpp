@@ -182,16 +182,11 @@
         </view>
       </view>
 
-      <view
-        class="pp"
-        @click="pp"
-        v-if="!groups[0].list[0].userId && !gameList[op].isSave"
-        >开始匹配</view
-      >
+      <view class="pp" @click="pp" v-if="!gameList[op].isSave">开始匹配</view>
 
       <view
         class="pp-content"
-        v-if="preview == 1 && lookStatus"
+        v-if="(preview == 1 && lookStatus) || (gameList[op].isSave && zz == 1)"
         v-for="(item, index) in groups"
         :key="index"
       >
@@ -236,8 +231,71 @@
         </view>
         <view class="member">
           <view class="item" v-for="(user, UIndex) in item.list" :key="UIndex">
-            <view class="avatar" @click="toggleTooltip(`${index}-${UIndex}`)">
+            <view class="avatar" @click="toggleTooltip(user)">
               <u-avatar :src="user.avatarUrl" size="40"></u-avatar>
+              <view
+                class="jj"
+                v-if="
+                  user.isPromotion !== '淘汰' && user.isPromotion !== 'null'
+                "
+                >晋级</view
+              >
+              <view class="tooltip" v-if="activeTooltipIndex === user.userId">
+                <view class="t-first" v-if="tooltipState == 'first'">
+                  <view class="icon"></view>
+                  <view class="item" @tap.stop="tooltipState = 'second'"
+                    >晋级</view
+                  >
+                  <view
+                    class="item"
+                    @tap.stop="removeUserPromotion(item.list[0], item, 'out')"
+                    >淘汰</view
+                  >
+                  <view class="item" @tap.stop="tooltipState = 'fourth'"
+                    >设置排名</view
+                  >
+                </view>
+                <view class="t-second" v-if="tooltipState == 'second'">
+                  <view class="icon"></view>
+                  <view class="title">晋级至 </view>
+                  <view
+                    class="item"
+                    v-for="(option, index) in nextStageOptions"
+                    :key="index"
+                    @tap.stop="updateUserPromotion(user, item, option)"
+                  >
+                    {{ option }}
+                  </view>
+                  <view class="item"> 无 </view>
+                </view>
+                <view class="t-third" v-if="tooltipState == 'third'">
+                  <view class="icon"></view>
+                  <view
+                    class="item"
+                    @click="removeUserPromotion(item.list[0], item, 'cancelJJ')"
+                    >取消晋级</view
+                  >
+                </view>
+                <view class="t-fourth" v-if="tooltipState == 'fourth'">
+                  <view class="icon"></view>
+                  <view
+                    class="item"
+                    v-for="(rank, Rindex) in rankList"
+                    :key="Rindex"
+                    @tap.stop="updateUserRank(item.list[0], item, rank)"
+                  >
+                    {{ rank }}
+                  </view>
+                </view>
+                <view class="t-fifth" v-if="tooltipState == 'fifth'">
+                  <view class="icon"></view>
+                  <view
+                    class="item"
+                    @tap.stop="removeUserPromotion(item.list[0], item)"
+                    >取消淘汰
+                  </view>
+                </view>
+              </view>
               <view class="rank">{{ user.userNumber || "参赛号" }}</view>
               <view
                 class="tooltip"
@@ -253,7 +311,11 @@
             </view>
 
             <view class="name">{{ user.username || "选手名称" }}</view>
-            <view class="select" v-if="scoringMethod == 1">
+            <view
+              class="select"
+              v-if="scoringMethod == 1"
+              @click="showSc(user, item)"
+            >
               {{ user.userScore || "积分" }}
               <view class="icon"></view>
             </view>
@@ -261,25 +323,47 @@
               3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
             </view>
             <view class="time" v-if="scoringMethod == 3">
-              12 <text>米</text>
+              <input
+                type="number"
+                placeholder="0"
+                v-model="user.userScore"
+                style="width: 10px"
+              />
+              <text>米</text>
             </view>
             <view class="time" v-if="scoringMethod == 4">
-              89 <text>分</text>
+              <input
+                type="number"
+                placeholder="0"
+                v-model="user.userScore"
+                style="width: 10px"
+              />
+              <text>分</text>
             </view>
             <view class="time" v-if="scoringMethod == 5">
-              3 <text>千克</text>
+              <input
+                type="number"
+                placeholder="0"
+                v-model="user.userScore"
+                style="width: 15px"
+                @confirm="updateUserScore(item)"
+              />
+              <text>千克</text>
             </view>
-            <view class="select" v-if="scoringMethod == 6">
+            <!-- <view class="select" v-if="scoringMethod == 6">
               设置
               <view class="icon"></view>
-            </view>
+            </view> -->
           </view>
         </view>
+        <view class="confirm" style="margin-top: 20rpx"> 确认比赛结果 </view>
       </view>
 
       <view
         class="pp-content"
-        v-show="preview == 2 && lookStatus"
+        v-show="
+          (preview == 2 && lookStatus) || (gameList[op].isSave && zz == 2)
+        "
         v-for="(item, index) in groups"
         :key="index"
       >
@@ -344,7 +428,9 @@
 
       <view
         class="pp-content"
-        v-show="preview == 3 && lookStatus"
+        v-show="
+          (preview == 3 && lookStatus) || (gameList[op].isSave && zz == 3)
+        "
         style="padding-bottom: 0"
         v-for="(item, index) in groups"
         :key="index"
@@ -449,7 +535,7 @@
           <view class="sixth">
             <view class="top">比赛时间 <view class="icon">*</view></view>
             <view class="next" style="margin: 0">
-              <view class="time" @click="chooseTime1(item.warList[0])">{{
+              <view class="time" @click="chooseTime1(war)">{{
                 war.startTime
               }}</view
               >至
@@ -478,7 +564,9 @@
 
       <view
         class="pp-content"
-        v-show="preview == 4 && lookStatus"
+        v-show="
+          (preview == 5 && lookStatus) || (gameList[op].isSave && zz == 5)
+        "
         v-for="(item, index) in groups"
         :key="index"
       >
@@ -488,7 +576,7 @@
             <view class="h">{{ item.groupName }}</view>
           </view>
           <view class="judge">
-            <u-avatar :src="src" size="60"></u-avatar>
+            <u-avatar :src="item.umpireAvatarUrl" size="60"></u-avatar>
             <view class="name">裁判员</view>
           </view>
         </view>
@@ -524,166 +612,565 @@
         <view class="item-list">
           <view class="detail">
             <view class="item">
-              <view class="avatar">
-                <u-avatar :src="src" size="40"></u-avatar>
-                <view class="rank">参赛号</view>
+              <view class="avatar" @click="toggleTooltip(item.list[0])">
+                <u-avatar :src="item.list[0].avatarUrl" size="40"></u-avatar>
+                <view class="rank">{{
+                  item.list[0].userNumber || "参赛号"
+                }}</view>
+                <view
+                  class="jj"
+                  v-if="
+                    item.list[0].isPromotion !== '淘汰' &&
+                    item.list[0].isPromotion !== 'null'
+                  "
+                  >晋级</view
+                >
+                <view
+                  class="tooltip"
+                  v-if="activeTooltipIndex === item.list[0].userId"
+                >
+                  <view class="t-first" v-if="tooltipState == 'first'">
+                    <view class="icon"></view>
+                    <view class="item" @tap.stop="tooltipState = 'second'"
+                      >晋级</view
+                    >
+                    <view
+                      class="item"
+                      @tap.stop="removeUserPromotion(item.list[0], item, 'out')"
+                      >淘汰</view
+                    >
+                    <view class="item" @tap.stop="tooltipState = 'fourth'"
+                      >设置排名</view
+                    >
+                  </view>
+                  <view class="t-second" v-if="tooltipState == 'second'">
+                    <view class="icon"></view>
+                    <view class="title">晋级至 </view>
+                    <view
+                      class="item"
+                      v-for="(option, index) in nextStageOptions"
+                      :key="index"
+                      @tap.stop="
+                        updateUserPromotion(item.list[0], item, option)
+                      "
+                    >
+                      {{ option }}
+                    </view>
+                    <view class="item"> 无 </view>
+                  </view>
+                  <view class="t-third" v-if="tooltipState == 'third'">
+                    <view class="icon"></view>
+                    <view
+                      class="item"
+                      @click="
+                        removeUserPromotion(item.list[0], item, 'cancelJJ')
+                      "
+                      >取消晋级</view
+                    >
+                  </view>
+                  <view class="t-fourth" v-if="tooltipState == 'fourth'">
+                    <view class="icon"></view>
+                    <view
+                      class="item"
+                      v-for="(rank, Rindex) in rankList"
+                      :key="Rindex"
+                      @tap.stop="updateUserRank(item.list[0], item, rank)"
+                    >
+                      {{ rank }}
+                    </view>
+                  </view>
+                  <view class="t-fifth" v-if="tooltipState == 'fifth'">
+                    <view class="icon"></view>
+                    <view
+                      class="item"
+                      @tap.stop="removeUserPromotion(item.list[0], item)"
+                      >取消淘汰
+                    </view>
+                  </view>
+                </view>
               </view>
-              <view class="name">选手昵称</view>
-              <view class="grade">积分0</view>
+              <view class="name">{{
+                item.list[0].username || "选手名称"
+              }}</view>
+              <view
+                class="select"
+                v-if="scoringMethod == 1"
+                @click="showSc(item.list[0], item)"
+              >
+                {{ item.list[0].userScore || "积分" }}
+                <view class="icon"></view>
+              </view>
+
+              <view class="time" v-if="scoringMethod == 2">
+                3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+              </view>
+              <view class="time" v-if="scoringMethod == 3">
+                <input
+                  type="number"
+                  placeholder="0"
+                  v-model="item.list[0].userScore"
+                  style="width: 15px"
+                  @confirm="updateUserScore(item)"
+                />
+                <text>米</text>
+              </view>
+              <view class="time" v-if="scoringMethod == 4">
+                <input
+                  type="number"
+                  placeholder="0"
+                  v-model="item.list[0].userScore"
+                  style="width: 15px"
+                  @confirm="updateUserScore(item)"
+                />
+                <text>分</text>
+              </view>
+              <view class="time" v-if="scoringMethod == 5">
+                <input
+                  type="number"
+                  placeholder="0"
+                  v-model="item.list[0].userScore"
+                  style="width: 15px"
+                  @confirm="updateUserScore(item)"
+                />
+                <text>千克</text>
+              </view>
+              <!-- <view
+                class="select"
+                v-if="scoringMethod == 6"
+                @click="showResult(item.list[0], item)"
+              >
+                设置
+                <view class="icon"></view>
+              </view> -->
             </view>
             VS
             <view class="item">
-              <view class="avatar">
-                <u-avatar :src="src" size="40"></u-avatar>
-                <view class="rank">参赛号</view>
+              <view class="avatar" @click="toggleTooltip(item.list[1])">
+                <u-avatar :src="item.list[1].avatarUrl" size="40"></u-avatar>
+                <view class="rank">{{
+                  item.list[1].userNumber || "参赛号"
+                }}</view>
+                <view
+                  class="jj"
+                  v-if="
+                    item.list[1].isPromotion !== '淘汰' &&
+                    item.list[1].isPromotion !== 'null'
+                  "
+                  >晋级</view
+                >
+                <view
+                  class="tooltip"
+                  v-if="activeTooltipIndex === item.list[1].userId"
+                >
+                  <view class="t-first" v-if="tooltipState == 'first'">
+                    <view class="icon"></view>
+                    <view class="item" @tap.stop="tooltipState = 'second'"
+                      >晋级</view
+                    >
+                    <view
+                      class="item"
+                      @tap.stop="removeUserPromotion(item.list[1], item, 'out')"
+                      >淘汰</view
+                    >
+                    <view class="item" @tap.stop="tooltipState = 'fourth'"
+                      >设置排名</view
+                    >
+                  </view>
+                  <view class="t-second" v-if="tooltipState == 'second'">
+                    <view class="icon"></view>
+                    <view class="title">晋级至 </view>
+                    <view
+                      class="item"
+                      v-for="(option, index) in nextStageOptions"
+                      :key="index"
+                      @tap.stop="
+                        updateUserPromotion(item.list[1], item, option)
+                      "
+                    >
+                      {{ option }}
+                    </view>
+                    <view class="item"> 无 </view>
+                  </view>
+                  <view class="t-third" v-if="tooltipState == 'third'">
+                    <view class="icon"></view>
+                    <view
+                      class="item"
+                      @click="
+                        removeUserPromotion(item.list[1], item, 'cancelJJ')
+                      "
+                      >取消晋级</view
+                    >
+                  </view>
+                  <view class="t-fourth" v-if="tooltipState == 'fourth'">
+                    <view class="icon"></view>
+                    <view
+                      class="item"
+                      v-for="(rank, Rindex) in rankList"
+                      :key="Rindex"
+                      @tap.stop="updateUserRank(item.list[1], item, rank)"
+                    >
+                      {{ rank }}
+                    </view>
+                  </view>
+                  <view class="t-fifth" v-if="tooltipState == 'fifth'">
+                    <view class="icon"></view>
+                    <view
+                      class="item"
+                      @tap.stop="removeUserPromotion(item.list[1], item)"
+                      >取消淘汰
+                    </view>
+                  </view>
+                </view>
               </view>
-              <view class="name">选手昵称</view>
-              <view class="grade">积分0</view>
+              <view class="name">{{
+                item.list[1].username || "选手名称"
+              }}</view>
+              <view
+                class="select"
+                v-if="scoringMethod == 1"
+                @click="showSc(item.list[1], item)"
+              >
+                {{ item.list[1].userScore || "积分" }}
+                <view class="icon"></view>
+              </view>
+              <view class="time" v-if="scoringMethod == 2">
+                3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+              </view>
+              <view class="time" v-if="scoringMethod == 3">
+                <input
+                  type="number"
+                  placeholder="0"
+                  v-model="item.list[1].userScore"
+                  style="width: 10px"
+                />
+                <text>米</text>
+              </view>
+              <view class="time" v-if="scoringMethod == 4">
+                <input
+                  type="number"
+                  placeholder="0"
+                  v-model="item.list[1].userScore"
+                  style="width: 10px"
+                />
+                <text>分</text>
+              </view>
+              <view class="time" v-if="scoringMethod == 5">
+                <input
+                  type="number"
+                  placeholder="0"
+                  v-model="item.list[1].userScore"
+                  style="width: 15px"
+                  @confirm="updateUserScore(item)"
+                />
+                <text>千克</text>
+              </view>
+              <!-- <view class="select" v-if="scoringMethod == 6">
+                设置
+                <view class="icon"></view>
+              </view> -->
             </view>
           </view>
         </view>
+        <view class="confirm"> 确认比赛结果 </view>
       </view>
 
       <view
         class="pp-content"
-        v-show="preview == 5 && lookStatus"
+        v-show="
+          (preview == 4 && lookStatus) || (gameList[op].isSave && zz == 4)
+        "
         v-for="(item, index) in groups"
         :key="index"
       >
-        <view class="first">
-          <view class="left">
-            组名
-            <view class="h">{{ item.groupName }}</view>
-          </view>
-          <view class="judge">
-            <u-avatar :src="src" size="60"></u-avatar>
-            <view class="name">裁判员</view>
-          </view>
-        </view>
-        <view class="item-list">
-          <view class="detail">
-            <view class="item">
-              <view class="zc">主场</view>
-              <view class="avatar">
-                <u-avatar :src="src" size="40"></u-avatar>
-                <view class="rank">参赛号</view>
-              </view>
-              <view class="name">选手昵称</view>
-              <view class="grade">积分0</view>
+        <view
+          v-for="(war, wIndex) in item.warList"
+          :key="wIndex"
+          :style="wIndex == 1 ? 'margin-top: 30px;' : ''"
+        >
+          <view class="first">
+            <view class="left">
+              组名
+              <view class="h">{{ item.groupName }}</view>
             </view>
-            VS
-            <view class="item">
-              <view class="kc">客场</view>
-              <view class="avatar">
-                <u-avatar :src="src" size="40"></u-avatar>
-                <view class="rank">参赛号</view>
-              </view>
-              <view class="name">选手昵称</view>
-              <view class="grade">积分0</view>
+            <view class="judge">
+              <u-avatar :src="item.umpireAvatarUrl" size="60"></u-avatar>
+              <view class="name">裁判员</view>
             </view>
-            <view class="chang">第1场</view>
           </view>
-        </view>
-        <view class="second">
-          <view class="left">比赛场地 <view class="icon">*</view></view>
-          <view class="right" @click="chooseAddress1(item)"
-            >{{ item.address
-            }}<u-icon name="arrow-right" color="#CCCCCC" size="12"></u-icon
-          ></view>
-        </view>
-        <view class="sixth">
-          <view class="top">比赛时间 <view class="icon">*</view></view>
-          <view class="next">
-            <view class="time" @click="chooseTime1(item)">{{
-              item.startTime
-            }}</view
-            >至
-            <view class="time" @click="chooseTime2(item)">{{
-              item.endTime
-            }}</view>
-          </view>
-        </view>
-        <view class="third">
-          <view class="left">直播地址 </view>
-          <input
-            type="text"
-            placeholder="请输入直播地址"
-            placeholder-class="pl-class2"
-            class="input"
-            v-model="item.liveUrl"
-          />
-        </view>
+          <view class="item-list">
+            <view class="detail">
+              <view class="item">
+                <view
+                  class="zc"
+                  :style="wIndex == 0 ? 'color:#148aea' : 'color:#f33b57'"
+                  >主场</view
+                >
+                <view class="avatar" @click="toggleTooltip1(war, 'homeUser')">
+                  <u-avatar :src="war.homeAvatarUrl" size="40"></u-avatar>
+                  <view class="rank">{{ war.homeUserNumber || "参赛号" }}</view>
+                  <!-- <view
+                    class="jj"
+                    v-if="
+                      item.list[0].isPromotion !== '淘汰' &&
+                      item.list[0].isPromotion !== 'null'
+                    "
+                    >晋级</view
+                  > -->
+                  <view
+                    class="tooltip"
+                    v-if="activeTooltipIndex === war.homeUserId"
+                  >
+                    <view class="t-first" v-if="tooltipState == 'first'">
+                      <view class="icon"></view>
+                      <view class="item" @tap.stop="tooltipState = 'second'"
+                        >晋级</view
+                      >
+                      <view
+                        class="item"
+                        @tap.stop="
+                          removeUserPromotion(item.list[0], item, 'out')
+                        "
+                        >淘汰</view
+                      >
+                      <view class="item" @tap.stop="tooltipState = 'fourth'"
+                        >设置排名</view
+                      >
+                    </view>
+                    <view class="t-second" v-if="tooltipState == 'second'">
+                      <view class="icon"></view>
+                      <view class="title">晋级至 </view>
+                      <view
+                        class="item"
+                        v-for="(option, index) in nextStageOptions"
+                        :key="index"
+                        @tap.stop="
+                          updateUserPromotion(item.list[0], item, option)
+                        "
+                      >
+                        {{ option }}
+                      </view>
+                      <view class="item"> 无 </view>
+                    </view>
+                    <view class="t-third" v-if="tooltipState == 'third'">
+                      <view class="icon"></view>
+                      <view
+                        class="item"
+                        @click="
+                          removeUserPromotion(item.list[0], item, 'cancelJJ')
+                        "
+                        >取消晋级</view
+                      >
+                    </view>
+                    <view class="t-fourth" v-if="tooltipState == 'fourth'">
+                      <view class="icon"></view>
+                      <view
+                        class="item"
+                        v-for="(rank, Rindex) in rankList"
+                        :key="Rindex"
+                        @tap.stop="updateUserRank(item.list[0], item, rank)"
+                      >
+                        {{ rank }}
+                      </view>
+                    </view>
+                    <view class="t-fifth" v-if="tooltipState == 'fifth'">
+                      <view class="icon"></view>
+                      <view
+                        class="item"
+                        @tap.stop="removeUserPromotion(item.list[0], item)"
+                        >取消淘汰
+                      </view>
+                    </view>
+                  </view>
+                </view>
+                <view class="name">{{ war.homeUserName || "选手名称" }}</view>
+                <view
+                  class="select"
+                  v-if="scoringMethod == 1"
+                  @click="showZk('homeUserScore', war)"
+                >
+                  {{ war.homeUserScore || "积分" }}
+                  <view class="icon"></view>
+                </view>
 
-        <view class="first" style="margin-top: 30px">
-          <view class="left">
-            组名
-            <view class="h">{{ item.groupName }}</view>
-          </view>
-          <view class="judge">
-            <u-avatar :src="src" size="60"></u-avatar>
-            <view class="name">裁判员</view>
-          </view>
-        </view>
-        <view class="item-list">
-          <view class="detail">
-            <view class="item">
-              <view class="zc1">主场</view>
-              <view class="avatar">
-                <u-avatar :src="src" size="40"></u-avatar>
-                <view class="rank">参赛号</view>
+                <view class="time" v-if="scoringMethod == 2">
+                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 3">
+                  <input
+                    type="number"
+                    placeholder="0"
+                    v-model="war.homeUserScore"
+                    style="width: 15px"
+                    @confirm="updateHomeUserScore(war)"
+                  />
+                  <text>米</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 4">
+                  <input
+                    type="number"
+                    placeholder="0"
+                    v-model="war.homeUserScore"
+                    style="width: 15px"
+                    @confirm="updateHomeUserScore(war)"
+                  />
+                  <text>分</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 5">
+                  <input
+                    type="number"
+                    placeholder="0"
+                    v-model="war.homeUserScore"
+                    style="width: 15px"
+                    @confirm="updateHomeUserScore(war)"
+                  />
+                  <text>千克</text>
+                </view>
+                <!-- <view class="select" v-if="scoringMethod == 6">
+                  设置
+                  <view class="icon"></view>
+                </view> -->
               </view>
-              <view class="name">选手昵称</view>
-              <view class="grade">积分0</view>
-            </view>
-            VS
-            <view class="item">
-              <view class="kc1">客场</view>
-              <view class="avatar">
-                <u-avatar :src="src" size="40"></u-avatar>
-                <view class="rank">参赛号</view>
+              VS
+              <view class="item">
+                <view
+                  class="kc"
+                  :style="wIndex == 0 ? 'color:#f33b57' : 'color:#148aea'"
+                  >客场</view
+                >
+                <view class="avatar">
+                  <u-avatar :src="war.awayAvatarUrl" size="40"></u-avatar>
+                  <view class="rank">{{ war.awayUserNumber || "参赛号" }}</view>
+                </view>
+                <view class="name">{{ war.awayUserName || "选手名称" }}</view>
+                <!-- <view class="grade">{{ item.list[1].userScore || "积分0" }}</view> -->
+                <view
+                  class="select"
+                  v-if="scoringMethod == 1"
+                  @click="showZk('awayUserScore', war)"
+                >
+                  {{ war.awayUserScore || "积分" }}
+                  <view class="icon"></view>
+                </view>
+
+                <view class="time" v-if="scoringMethod == 2">
+                  3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 3">
+                  <input
+                    type="number"
+                    placeholder="0"
+                    v-model="war.awayUserScore"
+                    style="width: 15px"
+                    @confirm="updateAwayUserScore(war)"
+                  />
+                  <text>米</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 4">
+                  <input
+                    type="number"
+                    placeholder="0"
+                    v-model="war.awayUserScore"
+                    style="width: 15px"
+                    @confirm="updateAwayUserScore(war)"
+                  />
+                  <text>分</text>
+                </view>
+                <view class="time" v-if="scoringMethod == 5">
+                  <input
+                    type="number"
+                    placeholder="0"
+                    v-model="war.awayUserScore"
+                    style="width: 15px"
+                    @confirm="updateAwayUserScore(war)"
+                  />
+                  <text>千克</text>
+                </view>
+                <!-- <view class="select" v-if="scoringMethod == 6">
+                  设置
+                  <view class="icon"></view>
+                </view> -->
               </view>
-              <view class="name">选手昵称</view>
-              <view class="grade">积分0</view>
+              <view class="chang">第{{ wIndex + 1 }}场</view>
             </view>
-            <view class="chang">第2场</view>
           </view>
-          <view class="next">
-            <view class="left">比赛时间 <view class="icon">*</view></view>
-            <view class="right"
-              >10月12日 14:00-17:00
-              <u-icon name="arrow-right" size="10"></u-icon
+          <view class="second">
+            <view class="left">比赛场地 <view class="icon">*</view></view>
+            <view class="right" @click="chooseAddress1(war)"
+              >{{ war.address || "请选择"
+              }}<u-icon name="arrow-right" color="#CCCCCC" size="12"></u-icon
             ></view>
           </view>
+          <view class="sixth">
+            <view class="top">比赛时间 <view class="icon">*</view></view>
+            <view class="next">
+              <view class="time" @click="chooseTime1(war)">{{
+                war.startTime
+              }}</view
+              >至
+              <view class="time" @click="chooseTime2(war)">{{
+                war.endTime
+              }}</view>
+            </view>
+          </view>
+          <view class="third">
+            <view class="left">直播地址 </view>
+            <input
+              type="text"
+              placeholder="请输入直播地址"
+              placeholder-class="pl-class2"
+              class="input"
+              v-model="war.liveUrl"
+            />
+          </view>
         </view>
-        <view class="second">
+
+        <!-- <view class="first" style="margin-top: 30px">
+          <view class="left">
+            组名
+            <view class="h">{{ item.groupName }}</view>
+          </view>
+          <view class="judge">
+            <u-avatar :src="item.umpireAvatarUrl" size="60"></u-avatar>
+            <view class="name">裁判员</view>
+          </view>
+        </view> -->
+
+        <!-- <view class="second">
           <view class="left">比赛场地 <view class="icon">*</view></view>
-          <view class="right"
-            >天河体育中心羽毛球馆<u-icon
-              name="arrow-right"
-              color="#CCCCCC"
-              size="12"
-            ></u-icon
+          <view class="right" @click="chooseAddress1(item)"
+            >{{ item.address
+            }}<u-icon name="arrow-right" color="#CCCCCC" size="12"></u-icon
           ></view>
-        </view>
-        <view class="second">
-          <view class="left">比赛时间 <view class="icon">*</view></view>
-          <view class="right"
-            >10月12日 14:00<u-icon
-              name="arrow-right"
-              color="#CCCCCC"
-              size="12"
-            ></u-icon
-          ></view>
-        </view>
-        <view class="third">
+        </view> -->
+        <!-- <view class="sixth">
+          <view class="top">比赛时间 <view class="icon">*</view></view>
+          <view class="next">
+            <view class="time" @click="chooseTime1(item)">{{
+              item.startTime
+            }}</view
+            >至
+            <view class="time" @click="chooseTime2(item)">{{
+              item.endTime
+            }}</view>
+          </view>
+        </view> -->
+        <!-- <view class="third">
           <view class="left">直播地址 </view>
-          <view class="right">https://v.douyin.com/iA23Phvv/7@7.com :9pm</view>
-        </view>
+          <input
+            type="text"
+            placeholder="请输入直播地址"
+            placeholder-class="pl-class2"
+            class="input"
+            v-model="item.liveUrl"
+          />
+        </view> -->
       </view>
 
       <view
         class="pp-content"
-        v-show="preview == 6 && lookStatus"
+        v-show="
+          (preview == 6 && lookStatus) || (gameList[op].isSave && zz == 6)
+        "
         v-for="(item, index) in groups"
         :key="index"
       >
@@ -693,7 +1180,7 @@
             <view class="h">{{ item.groupName }}</view>
           </view>
           <view class="judge">
-            <u-avatar :src="src" size="60"></u-avatar>
+            <u-avatar :src="item.umpireAvatarUrl" size="60"></u-avatar>
             <view class="name">裁判员</view>
           </view>
         </view>
@@ -730,40 +1217,80 @@
           <view class="detail">
             <view class="item">
               <view class="avatar">
-                <u-avatar :src="src" size="40"></u-avatar>
-                <view class="rank">参赛号</view>
+                <u-avatar :src="item.list[0].avatarUrl" size="40"></u-avatar>
+                <view class="rank">{{
+                  item.list[0].userNumber || "参赛号"
+                }}</view>
               </view>
-              <view class="name">选手昵称</view>
-              <view class="grade">积分0</view>
+              <view class="name">{{
+                item.list[0].username || "选手名称"
+              }}</view>
+              <!-- <view class="grade">积分0</view> -->
+              <view class="select" v-if="scoringMethod == 1">
+                {{ item.list[0].userScore || "积分" }}
+                <view class="icon"></view>
+              </view>
+              <view class="time" v-if="scoringMethod == 2">
+                3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+              </view>
+              <view class="time" v-if="scoringMethod == 3">
+                12 <text>米</text>
+              </view>
+              <view class="time" v-if="scoringMethod == 4">
+                89 <text>分</text>
+              </view>
+              <view class="time" v-if="scoringMethod == 5">
+                3 <text>千克</text>
+              </view>
+              <view class="select" v-if="scoringMethod == 6">
+                设置
+                <view class="icon"></view>
+              </view>
             </view>
             VS
             <view class="item">
               <view class="avatar">
-                <u-avatar :src="src" size="40"></u-avatar>
-                <view class="rank">参赛号</view>
+                <u-avatar :src="item.list[0].avatarUrl" size="40"></u-avatar>
+                <view class="rank">{{
+                  item.list[0].userNumber || "参赛号"
+                }}</view>
               </view>
-              <view class="name">选手昵称</view>
-              <view class="grade">积分0</view>
+              <view class="name">{{
+                item.list[0].username || "选手名称"
+              }}</view>
+              <!-- <view class="grade">积分0</view> -->
+              <view class="select" v-if="scoringMethod == 1">
+                {{ item.list[0].userScore || "积分" }}
+                <view class="icon"></view>
+              </view>
+              <view class="time" v-if="scoringMethod == 2">
+                3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+              </view>
+              <view class="time" v-if="scoringMethod == 3">
+                12 <text>米</text>
+              </view>
+              <view class="time" v-if="scoringMethod == 4">
+                89 <text>分</text>
+              </view>
+              <view class="time" v-if="scoringMethod == 5">
+                3 <text>千克</text>
+              </view>
+              <view class="select" v-if="scoringMethod == 6">
+                设置
+                <view class="icon"></view>
+              </view>
             </view>
           </view>
         </view>
       </view>
 
-      <view class="pp" @click="save4" v-if="!groups[0].list[0].userId"
-        >保存</view
-      >
+      <view class="pp" @click="save4" v-if="!gameList[op].isSave">保存</view>
 
-      <view class="next" v-if="groups[0].list[0].userId">
-        <view class="item">保存</view>
-        <view class="item">执行下一轮</view>
+      <view class="next" v-if="gameList[op].isSave">
+        <view class="item" @click="save4">保存</view>
+        <view class="item" @click="excuteNext">执行下一轮</view>
       </view>
     </view>
-    <u-picker
-      :show="show21"
-      :columns="columns21"
-      @cancel="show21 = false"
-      @confirm="confirm21"
-    ></u-picker>
     <u-datetime-picker
       :show="timeShow"
       v-model="date"
@@ -778,6 +1305,25 @@
       @cancel="timeShow1 = false"
       @confirm="confirm26"
     ></u-datetime-picker>
+    <u-picker
+      :show="scShow"
+      :columns="scList"
+      @cancel="scShow = false"
+      @confirm="scConfirm"
+    ></u-picker>
+    <u-picker
+      :show="zkShow"
+      :columns="scList"
+      @cancel="zkShow = false"
+      @confirm="zkConfirm"
+    ></u-picker>
+    <u-picker
+      :show="reShow"
+      :columns="reList"
+      @cancel="reShow = false"
+      @confirm="reConfirm"
+    ></u-picker>
+
     <u-toast ref="notice"></u-toast>
   </view>
 </template>
@@ -791,7 +1337,6 @@ export default {
       gameList: [],
       way: 1, //，1-未开始  2-执行中
       expand: false,
-      show21: false,
       zz: "",
       zzName: "",
       stageExplains: "",
@@ -815,6 +1360,16 @@ export default {
       activeTooltipIndex: null,
       date: Date.now(),
       lookStatus: false,
+      activeTooltipIndex: null,
+      tooltipState: null,
+      nextStageOptions: [],
+      rankList: ["8强", "第四名", "季军", "亚军", "冠军"],
+      sc: null,
+      scShow: false,
+      zkShow: false,
+      scList: [["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]],
+      currentItem: null,
+      ready: false,
     };
   },
   onLoad(options) {
@@ -856,6 +1411,46 @@ export default {
         this.getMatchHitGroup();
       }
     },
+    async saveMatchHitConfig() {
+      try {
+        const params = {
+          matchId: this.matchId,
+          serialNum: this.serialNum,
+          hitConfigList: [
+            {
+              scheId: this.gameList[this.op].scheId,
+              hitId: "",
+              hitTypeCode: String(this.gameList[this.op].scheId),
+              hitTypeName: this.gameList[this.op].scheTypeName,
+              stageUserNum: this.stageUserNum,
+              stageExplains: "",
+              groupNum: this.group_num,
+              matchingManner: this.zz,
+              groupVenueType: this.groupVenueType,
+              groupUmpireType: this.groupUmpireType,
+              scoringMethod: this.scoringMethod,
+              isPreview: false,
+            },
+          ],
+        };
+        var result = await uni.$u.http.post(
+          "/match/saveMatchHitConfig",
+          params
+        );
+        if (result.status == 400) {
+          this.$refs.notice.show({
+            type: "default",
+            message: result.message,
+          });
+          return;
+        }
+      } catch (e) {
+        this.$refs.notice.show({
+          type: "default",
+          message: e.data.message,
+        });
+      }
+    },
     async getSzList() {
       var result = await uni.$u.http.get("/match/getSysDictByName", {
         params: {
@@ -891,6 +1486,19 @@ export default {
         this.groupVenueType = result.data[0].groupVenueType;
         this.groupUmpireType = result.data[0].groupUmpireType;
         this.scoringMethod = result.data[0].scoringMethod;
+
+        const arr = this.gameList.map((item) => {
+          return item.scheTypeName;
+        });
+
+        const currentStage = this.gameList[this.op].scheTypeName;
+        const currentIndex = arr.indexOf(currentStage);
+        if (currentIndex !== 1 && currentIndex < arr.length - 1) {
+          this.nextStageOptions = arr.slice(currentIndex + 1);
+        } else {
+          this.nextStageOptions = [];
+        }
+        this.saveMatchHitConfig();
       }
     },
     chooseAddress1(item) {
@@ -933,7 +1541,6 @@ export default {
 
     async save4() {
       try {
-        // 构造数据的辅助函数
         const buildGroupData = (group) => ({
           id: group.id,
           matchId: this.matchId,
@@ -950,8 +1557,6 @@ export default {
           umpireId: group.umpireId,
           list: group.list,
         });
-
-        // 使用 Promise.all 并发处理所有组的更新请求
         const updatePromises = this.groups.map(async (group, index) => {
           try {
             const data = buildGroupData(group);
@@ -968,13 +1573,8 @@ export default {
           }
         });
 
-        // 等待所有请求完成
         const results = await Promise.all(updatePromises);
-
-        // 统计成功和失败的数量
         const successCount = results.filter((res) => res.success).length;
-
-        // 显示提示信息
         if (successCount === this.groups.length) {
           this.$refs.notice.show({
             type: "default",
@@ -982,9 +1582,7 @@ export default {
           });
           this.gameList[this.op].isSave = true;
         }
-
         if (this.zz == 3) {
-          // 构造数据的辅助函数
           const buildWarData = (group, war) => ({
             id: war.id,
             matchId: war.matchId,
@@ -1005,9 +1603,7 @@ export default {
             umpireId: war.umpireId,
           });
 
-          // 收集所有需要更新的 war 数据
           const updatePromises = (this.groups || []).flatMap((group) => {
-            // 确保 group.warList 是一个数组
             const warList = group.warList || [];
             return warList.map(async (war, j) => {
               try {
@@ -1028,13 +1624,8 @@ export default {
             });
           });
 
-          // 等待所有请求完成
           const results = await Promise.all(updatePromises);
-
-          // 统计成功和失败的数量
           const successCount = results.filter((res) => res.success).length;
-
-          // 显示提示信息
           if (successCount === updatePromises.length) {
             this.$refs.notice.show({
               type: "default",
@@ -1044,15 +1635,33 @@ export default {
           }
         }
       } catch (err) {
-        // 全局错误处理
         this.$refs.notice.show({
           type: "default",
-          message: err.message || "保存失败，请稍后重试",
+          message: err.data.message || "保存失败，请稍后重试",
         });
       }
     },
     changeExpand(item) {
       item.expand = !item.expand;
+    },
+
+    async updateUserPromotion(n, item, option) {
+      try {
+        n.isPromotion = option;
+        n.scheId = this.gameList[this.op + 1].scheId;
+        var result = await uni.$u.http.put("/match/updateUserPromotion", item);
+        if (result.status == 200) {
+          this.tooltipState = null;
+          this.activeTooltipIndex = null;
+        }
+      } catch (err) {
+        this.$refs.notice.show({
+          type: "default",
+          message: err.data.message,
+        });
+        n.isPromotion = "null";
+        n.scheId = "";
+      }
     },
     checkThis(index) {
       this.op = index;
@@ -1060,13 +1669,98 @@ export default {
       this.lookStatus = false;
       this.getMatchHitGroup();
     },
+    excuteNext() {
+      if (this.op > this.gameList.length) {
+        return;
+      }
+      this.op++;
+      this.queryMatchHitConfig();
+      this.lookStatus = false;
+      this.getMatchHitGroup();
+    },
     pp() {
+      this.saveMatchHitConfig();
+      this.getMatchHitGroup();
       this.preview = this.zz;
       this.lookStatus = true;
     },
-    toggleTooltip(key) {
-      // 如果当前 tooltip 已经显示，则隐藏；否则显示对应索引的 tooltip
-      this.activeTooltipIndex = this.activeTooltipIndex === key ? null : key;
+    toggleTooltip(value) {
+      if (this.activeTooltipIndex === value.userId) {
+        this.activeTooltipIndex = null;
+        this.tooltipState = null;
+      } else {
+        this.activeTooltipIndex = value.userId;
+        if (value.isPromotion === "淘汰") {
+          this.tooltipState = "fifth";
+        } else if (value.isPromotion === "null") {
+          this.tooltipState = "first";
+        } else {
+          this.tooltipState = "third";
+        }
+      }
+    },
+    toggleTooltip1(value, name) {
+      if (name == "homeUser") {
+        this.activeTooltipIndex = value.homeUserId;
+      } else if (name == "awayUser") {
+        this.activeTooltipIndex = value.awayUserId;
+      }
+      // if (this.activeTooltipIndex === value.userId) {
+      //   this.activeTooltipIndex = null;
+      //   this.tooltipState = null;
+      // } else {
+      //   if (value.isPromotion === "淘汰") {
+      //     this.tooltipState = "fifth";
+      //   } else if (value.isPromotion === "null") {
+      //     this.tooltipState = "first";
+      //   } else {
+      //     this.tooltipState = "third";
+      //   }
+      // }
+    },
+    async removeUserPromotion(n, item, action) {
+      try {
+        if (action == "out") {
+          n.isPromotion = "淘汰";
+        } else {
+          n.isPromotion = "null";
+        }
+        var result = await uni.$u.http.put("/match/removeUserPromotion", item);
+        if (result.status == 200) {
+          this.tooltipState = null;
+          this.activeTooltipIndex = null;
+        }
+      } catch (err) {
+        this.$refs.notice.show({
+          type: "default",
+          message: err.data.message,
+        });
+      }
+    },
+    async updateUserRank(n, item, value) {
+      try {
+        n.rank = value;
+        var result = await uni.$u.http.put("/match/updateUserRank", item);
+        if (result.status == 200) {
+          this.tooltipState = null;
+          this.activeTooltipIndex = null;
+        }
+      } catch (err) {
+        this.$refs.notice.show({
+          type: "default",
+          message: err.data.message,
+        });
+      }
+    },
+    async updateUserScore(item) {
+      try {
+        var result = await uni.$u.http.put("/match/updateUserScore", item);
+      } catch (err) {
+        this.$refs.notice.show({
+          type: "default",
+          message: err.data.message,
+        });
+      }
     },
     async getMatchHitGroup() {
       this.groups = [];
@@ -1080,21 +1774,66 @@ export default {
           return item;
         });
         if (!this.groups[0].list[0].userId) {
+          this.$refs.notice.show({
+            type: "default",
+            message: "该赛事还没报满，请稍后开始匹配",
+          });
           this.gameList[this.op].isSave = false;
+          return;
         } else {
           this.gameList[this.op].isSave = true;
         }
-        if (this.zz == 3) {
-          this.groups.forEach(async (item) => {
-            var result = await uni.$u.http.get("/match/getMatchHitWar", {
+        if (this.zz == 3 || this.zz == 4) {
+          for (const group of this.groups) {
+            const result = await uni.$u.http.get("/match/getMatchHitWar", {
               params: {
-                hitGroupId: item.id,
+                hitGroupId: group.id,
               },
             });
-            item.warList = result.data;
-            return item;
+            group.warList = result.data;
+          }
+          this.groups = this.groups.map((group) => {
+            group.a = group.warList;
+            return group;
           });
+          console.log(this.groups);
         }
+      }
+    },
+    showSc(list, item) {
+      this.scShow = true;
+      this.sc = list;
+      this.currentItem = item;
+    },
+    showZk(list, item) {
+      this.zkShow = true;
+      this.sc = list;
+      this.currentItem = item;
+    },
+    scConfirm(n) {
+      this.sc.userScore = n.value[0];
+      this.updateUserScore(this.currentItem);
+      this.scShow = false;
+    },
+    zkConfirm(n) {
+      if (this.sc == "homeUserScore") {
+        this.currentItem.homeUserScore = n.value[0];
+      } else if (this.sc == "awayUserScore") {
+        this.currentItem.awayUserScore = n.value[0];
+      }
+      this.updateHomeUserScore(this.currentItem);
+      this.zkShow = false;
+    },
+    async updateHomeUserScore(item) {
+      try {
+        var result = await uni.$u.http.put("/match/updateHomeUserScore", item);
+        if (result.status == 200) {
+        }
+      } catch (err) {
+        this.$refs.notice.show({
+          type: "default",
+          message: err.data.message,
+        });
       }
     },
   },
@@ -1324,9 +2063,23 @@ body {
           }
           .avatar {
             position: relative;
+            .jj {
+              position: absolute;
+              top: 0;
+              left: 50%;
+              font-weight: 600;
+              font-size: 20rpx;
+              color: #ffffff;
+              background-color: #ec384a;
+              border-top-right-radius: 20px;
+              border-bottom-right-radius: 20px;
+              border-bottom-left-radius: 15px;
+              padding: 4rpx 8rpx;
+              white-space: nowrap;
+            }
             .rank {
               position: absolute;
-              bottom: -5px;
+              bottom: -15px;
               left: 50%;
               transform: translateX(-50%);
               background-color: white;
@@ -1341,17 +2094,14 @@ body {
             }
             .tooltip {
               position: absolute;
-              top: 125%;
+              top: 145%;
               left: 50%;
               transform: translateX(-50%);
               background-color: #232323;
               border-radius: 4px;
               padding: 12px 26px;
-              .title {
-                font-weight: 600;
-                font-size: 10px;
-                color: rgba(255, 255, 255, 0.49);
-                white-space: nowrap;
+              z-index: 999;
+              .t-first {
                 position: relative;
                 .icon {
                   content: "";
@@ -1362,17 +2112,124 @@ body {
                   top: -16px;
                   left: 16px;
                 }
+                .item:nth-last-child(1) {
+                  border: none;
+                }
+                .item {
+                  width: 100%;
+                  font-weight: 600;
+                  font-size: 10px;
+                  color: #ffffff;
+                  border-bottom: 2rpx solid rgba(255, 255, 255, 0.5);
+                  white-space: nowrap;
+                }
               }
-              .item:nth-last-child(1) {
-                border: none;
+              .t-second {
+                position: relative;
+                .icon {
+                  content: "";
+                  position: absolute;
+                  border-left: 4px solid transparent;
+                  border-right: 4px solid transparent;
+                  border-bottom: 4px solid #232323;
+                  top: -16px;
+                  left: 16px;
+                }
+                .title {
+                  font-weight: 600;
+                  font-size: 10px;
+                  color: rgba(255, 255, 255, 0.49);
+                  white-space: nowrap;
+                  position: relative;
+                }
+                .item:nth-last-child(1) {
+                  border: none;
+                }
+                .item {
+                  width: 100%;
+                  font-weight: 600;
+                  font-size: 10px;
+                  color: #ffffff;
+                  border-bottom: 2rpx solid rgba(255, 255, 255, 0.5);
+                  white-space: nowrap;
+                }
               }
-              .item {
-                width: 100%;
-                font-weight: 600;
-                font-size: 10px;
-                color: #ffffff;
-                border-bottom: 1px solid #fff;
-                white-space: nowrap;
+              .t-third {
+                position: relative;
+                .icon {
+                  content: "";
+                  position: absolute;
+                  border-left: 4px solid transparent;
+                  border-right: 4px solid transparent;
+                  border-bottom: 4px solid #232323;
+                  top: -16px;
+                  left: 16px;
+                }
+                .title {
+                  font-weight: 600;
+                  font-size: 10px;
+                  color: rgba(255, 255, 255, 0.49);
+                  white-space: nowrap;
+                  position: relative;
+                }
+                .item:nth-last-child(1) {
+                  border: none;
+                }
+                .item {
+                  width: 100%;
+                  font-weight: 600;
+                  font-size: 10px;
+                  color: #ffffff;
+                  border-bottom: 2rpx solid rgba(255, 255, 255, 0.5);
+                  white-space: nowrap;
+                }
+              }
+              .t-fourth {
+                position: relative;
+                .icon {
+                  content: "";
+                  position: absolute;
+                  border-left: 4px solid transparent;
+                  border-right: 4px solid transparent;
+                  border-bottom: 4px solid #232323;
+                  top: -16px;
+                  left: 16px;
+                }
+                .item:nth-last-child(1) {
+                  border: none;
+                }
+                .item {
+                  width: 100%;
+                  font-weight: 600;
+                  font-size: 10px;
+                  color: #ffffff;
+                  border-bottom: 2rpx solid rgba(255, 255, 255, 0.5);
+                  white-space: nowrap;
+                }
+              }
+              .t-fifth {
+                position: relative;
+                .icon {
+                  content: "";
+                  position: absolute;
+                  border-left: 4px solid transparent;
+                  border-right: 4px solid transparent;
+                  border-bottom: 4px solid #232323;
+                  top: -16px;
+                  left: 16px;
+                }
+
+                .item:nth-last-child(1) {
+                  border: none;
+                }
+                .item {
+                  width: 100%;
+                  font-weight: 600;
+                  font-size: 10px;
+                  color: #ffffff;
+                  border-bottom: 2rpx solid rgba(255, 255, 255, 0.5);
+                  white-space: nowrap;
+                }
               }
             }
           }
@@ -1449,6 +2306,7 @@ body {
           // justify-content: space-between;
         }
       }
+
       .item-list {
         border-bottom: 1px solid #f0f0f0;
         margin-bottom: 18px;
@@ -1460,6 +2318,7 @@ body {
           position: relative;
           padding: 0px 20px;
           box-sizing: border-box;
+
           .item {
             display: flex;
             flex-direction: column;
@@ -1502,9 +2361,23 @@ body {
             }
             .avatar {
               position: relative;
+              .jj {
+                position: absolute;
+                top: 0;
+                left: 50%;
+                font-weight: 600;
+                font-size: 20rpx;
+                color: #ffffff;
+                background-color: #ec384a;
+                border-top-right-radius: 20px;
+                border-bottom-right-radius: 20px;
+                border-bottom-left-radius: 15px;
+                padding: 4rpx 8rpx;
+                white-space: nowrap;
+              }
               .rank {
                 position: absolute;
-                bottom: -5px;
+                bottom: -15px;
                 left: 50%;
                 transform: translateX(-50%);
                 background-color: white;
@@ -1517,18 +2390,192 @@ body {
                 font-size: 12px;
                 color: #ec384a;
               }
+              .tooltip {
+                position: absolute;
+                top: 145%;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: #232323;
+                border-radius: 4px;
+                padding: 12px 26px;
+                z-index: 999;
+                .t-first {
+                  position: relative;
+                  .icon {
+                    content: "";
+                    position: absolute;
+                    border-left: 4px solid transparent;
+                    border-right: 4px solid transparent;
+                    border-bottom: 4px solid #232323;
+                    top: -16px;
+                    left: 16px;
+                  }
+                  .item:nth-last-child(1) {
+                    border: none;
+                  }
+                  .item {
+                    width: 100%;
+                    font-weight: 600;
+                    font-size: 10px;
+                    color: #ffffff;
+                    border-bottom: 2rpx solid rgba(255, 255, 255, 0.5);
+                    white-space: nowrap;
+                  }
+                }
+                .t-second {
+                  position: relative;
+                  .icon {
+                    content: "";
+                    position: absolute;
+                    border-left: 4px solid transparent;
+                    border-right: 4px solid transparent;
+                    border-bottom: 4px solid #232323;
+                    top: -16px;
+                    left: 16px;
+                  }
+                  .title {
+                    font-weight: 600;
+                    font-size: 10px;
+                    color: rgba(255, 255, 255, 0.49);
+                    white-space: nowrap;
+                    position: relative;
+                  }
+                  .item:nth-last-child(1) {
+                    border: none;
+                  }
+                  .item {
+                    width: 100%;
+                    font-weight: 600;
+                    font-size: 10px;
+                    color: #ffffff;
+                    border-bottom: 2rpx solid rgba(255, 255, 255, 0.5);
+                    white-space: nowrap;
+                  }
+                }
+                .t-third {
+                  position: relative;
+                  .icon {
+                    content: "";
+                    position: absolute;
+                    border-left: 4px solid transparent;
+                    border-right: 4px solid transparent;
+                    border-bottom: 4px solid #232323;
+                    top: -16px;
+                    left: 16px;
+                  }
+                  .title {
+                    font-weight: 600;
+                    font-size: 10px;
+                    color: rgba(255, 255, 255, 0.49);
+                    white-space: nowrap;
+                    position: relative;
+                  }
+                  .item:nth-last-child(1) {
+                    border: none;
+                  }
+                  .item {
+                    width: 100%;
+                    font-weight: 600;
+                    font-size: 10px;
+                    color: #ffffff;
+                    border-bottom: 2rpx solid rgba(255, 255, 255, 0.5);
+                    white-space: nowrap;
+                  }
+                }
+                .t-fourth {
+                  position: relative;
+                  .icon {
+                    content: "";
+                    position: absolute;
+                    border-left: 4px solid transparent;
+                    border-right: 4px solid transparent;
+                    border-bottom: 4px solid #232323;
+                    top: -16px;
+                    left: 16px;
+                  }
+                  .item:nth-last-child(1) {
+                    border: none;
+                  }
+                  .item {
+                    width: 100%;
+                    font-weight: 600;
+                    font-size: 10px;
+                    color: #ffffff;
+                    border-bottom: 2rpx solid rgba(255, 255, 255, 0.5);
+                    white-space: nowrap;
+                  }
+                }
+                .t-fifth {
+                  position: relative;
+                  .icon {
+                    content: "";
+                    position: absolute;
+                    border-left: 4px solid transparent;
+                    border-right: 4px solid transparent;
+                    border-bottom: 4px solid #232323;
+                    top: -16px;
+                    left: 16px;
+                  }
+
+                  .item:nth-last-child(1) {
+                    border: none;
+                  }
+                  .item {
+                    width: 100%;
+                    font-weight: 600;
+                    font-size: 10px;
+                    color: #ffffff;
+                    border-bottom: 2rpx solid rgba(255, 255, 255, 0.5);
+                    white-space: nowrap;
+                  }
+                }
+              }
             }
             .name {
               font-weight: 400;
               font-size: 10px;
               color: #1d2326;
-              margin-top: 10px;
+              margin-top: 22px;
             }
             .grade {
               font-weight: 400;
               font-size: 10px;
               color: rgba(29, 35, 38, 0.5);
               margin-top: 5px;
+            }
+            .time {
+              display: flex;
+              align-items: center;
+              gap: 5px;
+              padding: 4px 8px;
+              background-color: white;
+              font-weight: 600;
+              font-size: 12px;
+              color: #1d2326;
+              border-radius: 4px;
+              margin-top: 8px;
+              text {
+                font-weight: 600;
+                font-size: 12px;
+                color: rgba(29, 35, 38, 0.3);
+              }
+            }
+            .select {
+              display: flex;
+              align-items: center;
+              gap: 5px;
+              padding: 4px 8px;
+              background-color: white;
+              border-radius: 4px;
+              font-weight: 600;
+              font-size: 12px;
+              color: #1d2326;
+              margin-top: 8px;
+              .icon {
+                border-left: 4px solid transparent;
+                border-right: 4px solid transparent;
+                border-top: 4px solid black;
+              }
             }
           }
           .chang {
@@ -1567,6 +2614,19 @@ body {
             color: #1d2326;
           }
         }
+      }
+      .confirm {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60%;
+        height: 64rpx;
+        font-weight: 400;
+        font-size: 28rpx;
+        color: #15181a;
+        margin: auto;
+        border: 1px solid #e6e6e6;
+        border-radius: 32rpx;
       }
     }
     .o-text {

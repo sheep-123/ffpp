@@ -50,10 +50,12 @@
               </view>
             </view>
             <view class="price">
-              ￥<view class="num">{{ list.cashSponsorVO.cashPool }}</view>
+              ￥<view class="num">{{ list.cashSponsorVO.cashPool || 0 }}</view>
               现金池
               <text>|</text>
-              ￥<view class="num">{{ list.cashSponsorVO.pendingBonus }}</view>
+              ￥<view class="num">{{
+                list.cashSponsorVO.pendingBonus || 0
+              }}</view>
               待分配奖金
             </view>
           </view>
@@ -184,7 +186,7 @@
 export default {
   data() {
     return {
-      bgColor: uni.getStorageSync("theme") || "#1B4CA7",
+      bgColor: null,
       urls: [],
       t1: "",
       t2: "现场服务 赛后被动拉伸体验",
@@ -197,6 +199,7 @@ export default {
   },
   onLoad(options) {
     this.matchId = options.matchId;
+    this.bgColor = options.color;
     this.load();
   },
   methods: {

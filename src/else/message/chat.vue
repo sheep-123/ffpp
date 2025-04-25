@@ -18,7 +18,7 @@
         </view>
         <view class="vs">
           <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/vs.png"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/vs.png"
             mode="scaleToFill"
             style="width: 50px; height: 50px"
           />

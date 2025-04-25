@@ -491,11 +491,11 @@ export default {
     };
   },
   onLoad() {
-    // uni.reLaunch({
-    //   // url: "/competition/apply/appear",
-    //   // url: "/competition/publish/saishi",
-    //   url: "/user/competition",
-    // });
+    uni.reLaunch({
+      // url: "/competition/apply/appear",
+      // url: "/competition/publish/saishi",
+      url: "/user/competition",
+    });
 
     this.Location();
     this.Location().then(() => {
@@ -544,18 +544,24 @@ export default {
     },
 
     handleTouchStart(e) {
+      e.stopPropagation();
+      e.preventDefault();
       this.dragStartY = e.touches[0].clientY;
       this.isDragging = true;
     },
 
     handleTouchMove(e) {
       if (!this.isDragging) return;
+      e.stopPropagation();
+      e.preventDefault();
       const deltaY = e.touches[0].clientY - this.dragStartY;
       if (deltaY >= 0 && deltaY <= this.screenHeight) {
         this.pullTranslateY = deltaY;
       }
     },
     handleTouchEnd(e) {
+      e.stopPropagation();
+      e.preventDefault();
       this.isDragging = false;
       if (this.pullTranslateY >= 60) {
         this.isMapExpanded = true;
@@ -627,6 +633,7 @@ export default {
   margin-bottom: 60px;
   overflow: hidden;
   transition: all linear;
+  z-index: 99999999;
 
   .title {
     width: 100%;

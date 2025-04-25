@@ -9,7 +9,11 @@
         </view>
         <view class="name">篮球使者</view>
       </view>
-      VS
+      <image
+        src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/vs.png"
+        mode="scaleToFill"
+        style="width: 50px; height: 50px"
+      />
       <view class="item">
         <view class="avatar">
           <u-avatar :src="src" size="80"></u-avatar>

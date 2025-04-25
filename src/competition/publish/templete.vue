@@ -48,17 +48,10 @@ export default {
   },
   methods: {
     async getList() {
-      try {
-        const res = await uni.$u.http.get("/match/getMatchTemplateMain", {
-          params: { labelId: this.labelId },
-        });
-        this.list = res.data;
-      } catch (err) {
-        this.$refs.notice.show({
-          type: "default",
-          message: err.message,
-        });
-      }
+      const res = await uni.$u.http.get("/match/getMatchTemplateMain", {
+        params: { labelId: this.labelId },
+      });
+      this.list = res.data;
     },
     selectItem(item, index) {
       this.selectIndex = index;

@@ -107,7 +107,7 @@
           </view>
         </view>
         <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/cup.png"
+          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/match/cup.png"
           mode="scaleToFill"
           style="
             width: 96px;
@@ -1388,74 +1388,6 @@
 
           <view
             class="pp-content"
-            v-show="preview == 4"
-            v-for="(item, index) in groups"
-            :key="index"
-          >
-            <view class="first">
-              <view class="left">
-                组名
-                <view class="h">{{ item.groupName }}</view>
-              </view>
-              <view class="judge">
-                <u-avatar :src="src" size="60"></u-avatar>
-                <view class="name">裁判员</view>
-              </view>
-            </view>
-            <view class="second">
-              <view class="left">比赛场地 <view class="icon">*</view></view>
-              <view class="right" @click="chooseAddress1(item)"
-                >{{ item.address
-                }}<u-icon name="arrow-right" color="#CCCCCC" size="12"></u-icon
-              ></view>
-            </view>
-            <view class="sixth">
-              <view class="top">比赛时间 <view class="icon">*</view></view>
-              <view class="next">
-                <view class="time" @click="chooseTime1(item)">{{
-                  item.startTime
-                }}</view
-                >至
-                <view class="time" @click="chooseTime2(item)">{{
-                  item.endTime
-                }}</view>
-              </view>
-            </view>
-            <view class="third">
-              <view class="left">直播地址 </view>
-              <input
-                type="text"
-                placeholder="请输入直播地址"
-                placeholder-class="pl-class2"
-                class="input"
-                v-model="item.liveUrl"
-              />
-            </view>
-            <view class="item-list">
-              <view class="detail">
-                <view class="item">
-                  <view class="avatar">
-                    <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">参赛号</view>
-                  </view>
-                  <view class="name">选手昵称</view>
-                  <view class="grade">积分0</view>
-                </view>
-                VS
-                <view class="item">
-                  <view class="avatar">
-                    <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">参赛号</view>
-                  </view>
-                  <view class="name">选手昵称</view>
-                  <view class="grade">积分0</view>
-                </view>
-              </view>
-            </view>
-          </view>
-
-          <view
-            class="pp-content"
             v-show="preview == 5"
             v-for="(item, index) in groups"
             :key="index"
@@ -1466,32 +1398,8 @@
                 <view class="h">{{ item.groupName }}</view>
               </view>
               <view class="judge">
-                <u-avatar :src="src" size="60"></u-avatar>
+                <u-avatar :src="item.umpireAvatarUrl" size="60"></u-avatar>
                 <view class="name">裁判员</view>
-              </view>
-            </view>
-            <view class="item-list">
-              <view class="detail">
-                <view class="item">
-                  <view class="zc">主场</view>
-                  <view class="avatar">
-                    <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">参赛号</view>
-                  </view>
-                  <view class="name">选手昵称</view>
-                  <view class="grade">积分0</view>
-                </view>
-                VS
-                <view class="item">
-                  <view class="kc">客场</view>
-                  <view class="avatar">
-                    <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">参赛号</view>
-                  </view>
-                  <view class="name">选手昵称</view>
-                  <view class="grade">积分0</view>
-                </view>
-                <view class="chang">第1场</view>
               </view>
             </view>
             <view class="second">
@@ -1523,73 +1431,307 @@
                 v-model="item.liveUrl"
               />
             </view>
-
-            <view class="first" style="margin-top: 30px">
-              <view class="left">
-                组名
-                <view class="h">{{ item.groupName }}</view>
-              </view>
-              <view class="judge">
-                <u-avatar :src="src" size="60"></u-avatar>
-                <view class="name">裁判员</view>
-              </view>
-            </view>
             <view class="item-list">
               <view class="detail">
                 <view class="item">
-                  <view class="zc1">主场</view>
-                  <view class="avatar">
-                    <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">参赛号</view>
+                  <view class="avatar" @click="toggleTooltip(item.list[0])">
+                    <u-avatar
+                      :src="item.list[0].avatarUrl"
+                      size="40"
+                    ></u-avatar>
+                    <view class="rank">{{
+                      item.list[0].userNumber || "参赛号"
+                    }}</view>
                   </view>
-                  <view class="name">选手昵称</view>
-                  <view class="grade">积分0</view>
+                  <view class="name">{{
+                    item.list[0].username || "选手名称"
+                  }}</view>
+                  <view class="select" v-if="scoringMethod == 1">
+                    {{ item.list[0].userScore || "积分" }}
+                    <view class="icon"></view>
+                  </view>
+
+                  <view class="time" v-if="scoringMethod == 2">
+                    3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                  </view>
+                  <view class="time" v-if="scoringMethod == 3">
+                    <input
+                      type="number"
+                      placeholder="0"
+                      v-model="item.list[0].userScore"
+                      style="width: 15px"
+                    />
+                    <text>米</text>
+                  </view>
+                  <view class="time" v-if="scoringMethod == 4">
+                    <input
+                      type="number"
+                      placeholder="0"
+                      v-model="item.list[0].userScore"
+                      style="width: 15px"
+                    />
+                    <text>分</text>
+                  </view>
+                  <view class="time" v-if="scoringMethod == 5">
+                    <input
+                      type="number"
+                      placeholder="0"
+                      v-model="item.list[0].userScore"
+                      style="width: 15px"
+                    />
+                    <text>千克</text>
+                  </view>
+                  <!-- <view
+                class="select"
+                v-if="scoringMethod == 6"
+                @click="showResult(item.list[0], item)"
+              >
+                设置
+                <view class="icon"></view>
+              </view> -->
                 </view>
                 VS
                 <view class="item">
-                  <view class="kc1">客场</view>
                   <view class="avatar">
-                    <u-avatar :src="src" size="40"></u-avatar>
-                    <view class="rank">参赛号</view>
+                    <u-avatar
+                      :src="item.list[1].avatarUrl"
+                      size="40"
+                    ></u-avatar>
+                    <view class="rank">{{
+                      item.list[1].userNumber || "参赛号"
+                    }}</view>
                   </view>
-                  <view class="name">选手昵称</view>
-                  <view class="grade">积分0</view>
+                  <view class="name">{{
+                    item.list[1].username || "选手名称"
+                  }}</view>
+                  <view class="select" v-if="scoringMethod == 1">
+                    {{ item.list[1].userScore || "积分" }}
+                    <view class="icon"></view>
+                  </view>
+                  <view class="time" v-if="scoringMethod == 2">
+                    3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                  </view>
+                  <view class="time" v-if="scoringMethod == 3">
+                    <input
+                      type="number"
+                      placeholder="0"
+                      v-model="item.list[1].userScore"
+                      style="width: 10px"
+                    />
+                    <text>米</text>
+                  </view>
+                  <view class="time" v-if="scoringMethod == 4">
+                    <input
+                      type="number"
+                      placeholder="0"
+                      v-model="item.list[1].userScore"
+                      style="width: 10px"
+                    />
+                    <text>分</text>
+                  </view>
+                  <view class="time" v-if="scoringMethod == 5">
+                    <input
+                      type="number"
+                      placeholder="0"
+                      v-model="item.list[1].userScore"
+                      style="width: 15px"
+                    />
+                    <text>千克</text>
+                  </view>
+                  <!-- <view class="select" v-if="scoringMethod == 6">
+                设置
+                <view class="icon"></view>
+              </view> -->
                 </view>
-                <view class="chang">第2场</view>
               </view>
-              <view class="next">
-                <view class="left">比赛时间 <view class="icon">*</view></view>
-                <view class="right"
-                  >10月12日 14:00-17:00
-                  <u-icon name="arrow-right" size="10"></u-icon
+            </view>
+          </view>
+
+          <view
+            class="pp-content"
+            v-show="preview == 4"
+            v-for="(item, index) in groups"
+            :key="index"
+          >
+            <view
+              v-for="(war, wIndex) in item.warList"
+              :key="wIndex"
+              :style="wIndex == 1 ? 'margin-top: 30px;' : ''"
+            >
+              <view class="first">
+                <view class="left">
+                  组名
+                  <view class="h">{{ item.groupName }}</view>
+                </view>
+                <view class="judge">
+                  <u-avatar :src="item.umpireAvatarUrl" size="60"></u-avatar>
+                  <view class="name">裁判员</view>
+                </view>
+              </view>
+              <view class="item-list">
+                <view class="detail">
+                  <view class="item">
+                    <view
+                      class="zc"
+                      :style="wIndex == 0 ? 'color:#148aea' : 'color:#f33b57'"
+                      >主场</view
+                    >
+                    <view class="avatar">
+                      <u-avatar :src="war.homeAvatarUrl" size="40"></u-avatar>
+                      <view class="rank">{{
+                        war.homeUserNumber || "参赛号"
+                      }}</view>
+                    </view>
+                    <view class="name">{{
+                      war.homeUserName || "选手名称"
+                    }}</view>
+                    <view
+                      class="select"
+                      v-if="scoringMethod == 1"
+                      @click="showZk('homeUserScore', war)"
+                    >
+                      {{ war.homeUserScore || "积分" }}
+                      <view class="icon"></view>
+                    </view>
+
+                    <view class="time" v-if="scoringMethod == 2">
+                      3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                    </view>
+                    <view class="time" v-if="scoringMethod == 3">
+                      <input
+                        type="number"
+                        placeholder="0"
+                        v-model="war.homeUserScore"
+                        style="width: 15px"
+                        @confirm="updateHomeUserScore(war)"
+                      />
+                      <text>米</text>
+                    </view>
+                    <view class="time" v-if="scoringMethod == 4">
+                      <input
+                        type="number"
+                        placeholder="0"
+                        v-model="war.homeUserScore"
+                        style="width: 15px"
+                        @confirm="updateHomeUserScore(war)"
+                      />
+                      <text>分</text>
+                    </view>
+                    <view class="time" v-if="scoringMethod == 5">
+                      <input
+                        type="number"
+                        placeholder="0"
+                        v-model="war.homeUserScore"
+                        style="width: 15px"
+                        @confirm="updateHomeUserScore(war)"
+                      />
+                      <text>千克</text>
+                    </view>
+                    <!-- <view class="select" v-if="scoringMethod == 6">
+                  设置
+                  <view class="icon"></view>
+                </view> -->
+                  </view>
+                  VS
+                  <view class="item">
+                    <view
+                      class="kc"
+                      :style="wIndex == 0 ? 'color:#f33b57' : 'color:#148aea'"
+                      >客场</view
+                    >
+                    <view class="avatar">
+                      <u-avatar :src="war.awayAvatarUrl" size="40"></u-avatar>
+                      <view class="rank">{{
+                        war.awayUserNumber || "参赛号"
+                      }}</view>
+                    </view>
+                    <view class="name">{{
+                      war.awayUserName || "选手名称"
+                    }}</view>
+                    <!-- <view class="grade">{{ item.list[1].userScore || "积分0" }}</view> -->
+                    <view
+                      class="select"
+                      v-if="scoringMethod == 1"
+                      @click="showZk('awayUserScore', war)"
+                    >
+                      {{ war.awayUserScore || "积分" }}
+                      <view class="icon"></view>
+                    </view>
+
+                    <view class="time" v-if="scoringMethod == 2">
+                      3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
+                    </view>
+                    <view class="time" v-if="scoringMethod == 3">
+                      <input
+                        type="number"
+                        placeholder="0"
+                        v-model="war.awayUserScore"
+                        style="width: 15px"
+                        @confirm="updateAwayUserScore(war)"
+                      />
+                      <text>米</text>
+                    </view>
+                    <view class="time" v-if="scoringMethod == 4">
+                      <input
+                        type="number"
+                        placeholder="0"
+                        v-model="war.awayUserScore"
+                        style="width: 15px"
+                        @confirm="updateAwayUserScore(war)"
+                      />
+                      <text>分</text>
+                    </view>
+                    <view class="time" v-if="scoringMethod == 5">
+                      <input
+                        type="number"
+                        placeholder="0"
+                        v-model="war.awayUserScore"
+                        style="width: 15px"
+                        @confirm="updateAwayUserScore(war)"
+                      />
+                      <text>千克</text>
+                    </view>
+                    <!-- <view class="select" v-if="scoringMethod == 6">
+                  设置
+                  <view class="icon"></view>
+                </view> -->
+                  </view>
+                  <view class="chang">第{{ wIndex + 1 }}场</view>
+                </view>
+              </view>
+              <view class="second">
+                <view class="left">比赛场地 <view class="icon">*</view></view>
+                <view class="right" @click="chooseAddress1(war)"
+                  >{{ war.address || "请选择"
+                  }}<u-icon
+                    name="arrow-right"
+                    color="#CCCCCC"
+                    size="12"
+                  ></u-icon
                 ></view>
               </view>
-            </view>
-            <view class="second">
-              <view class="left">比赛场地 <view class="icon">*</view></view>
-              <view class="right"
-                >天河体育中心羽毛球馆<u-icon
-                  name="arrow-right"
-                  color="#CCCCCC"
-                  size="12"
-                ></u-icon
-              ></view>
-            </view>
-            <view class="second">
-              <view class="left">比赛时间 <view class="icon">*</view></view>
-              <view class="right"
-                >10月12日 14:00<u-icon
-                  name="arrow-right"
-                  color="#CCCCCC"
-                  size="12"
-                ></u-icon
-              ></view>
-            </view>
-            <view class="third">
-              <view class="left">直播地址 </view>
-              <view class="right"
-                >https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
-              >
+              <view class="sixth">
+                <view class="top">比赛时间 <view class="icon">*</view></view>
+                <view class="next">
+                  <view class="time" @click="chooseTime1(war)">{{
+                    war.startTime
+                  }}</view
+                  >至
+                  <view class="time" @click="chooseTime2(war)">{{
+                    war.endTime
+                  }}</view>
+                </view>
+              </view>
+              <view class="third">
+                <view class="left">直播地址 </view>
+                <input
+                  type="text"
+                  placeholder="请输入直播地址"
+                  placeholder-class="pl-class2"
+                  class="input"
+                  v-model="war.liveUrl"
+                />
+              </view>
             </view>
           </view>
 
@@ -2961,12 +3103,6 @@ export default {
           "/match/saveMatchHitConfig",
           params
         );
-        if (result.status == 400) {
-          this.$refs.notice.show({
-            type: "default",
-            message: result.message,
-          });
-        }
         if (result.status == 200) {
           this.groups = [];
           this.getMatchHitGroup();
@@ -2985,19 +3121,24 @@ export default {
         matchId: this.matchId,
         hitTypeName: this.gameList[this.op].scheTypeName,
       });
-      if (result.status == 400) {
-        this.$refs.notice.show({
-          type: "default",
-          message: result.message,
-        });
-        return;
-      }
+
       this.groups = result.data.map((item) => {
         item.expand = false;
         return item;
       });
 
       uni.setStorageSync("groups", this.groups);
+      if (this.zz == 3 || this.zz == 4) {
+        for (const group of this.groups) {
+          const result = await uni.$u.http.get("/match/getMatchHitWar", {
+            params: {
+              hitGroupId: group.id,
+            },
+          });
+          this.$set(group, "warList", result.data);
+        }
+        console.log(this.groups);
+      }
     },
     async getMatchHitWar(item) {
       try {
@@ -4882,6 +5023,23 @@ export default {
                 font-size: 10px;
                 color: rgba(29, 35, 38, 0.5);
                 margin-top: 5px;
+              }
+              .select {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                padding: 4px 8px;
+                background-color: white;
+                border-radius: 4px;
+                font-weight: 600;
+                font-size: 12px;
+                color: #1d2326;
+                margin-top: 8px;
+                .icon {
+                  border-left: 4px solid transparent;
+                  border-right: 4px solid transparent;
+                  border-top: 4px solid black;
+                }
               }
             }
             .chang {

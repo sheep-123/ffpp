@@ -491,11 +491,11 @@ export default {
     };
   },
   onLoad() {
-    uni.reLaunch({
-      // url: "/competition/apply/appear",
-      // url: "/competition/publish/saishi",
-      url: "/user/competition",
-    });
+    // uni.reLaunch({
+    //   // url: "/competition/apply/appear",
+    //   // url: "/competition/publish/saishi",
+    //   url: "/user/competition",
+    // });
 
     this.Location();
     this.Location().then(() => {

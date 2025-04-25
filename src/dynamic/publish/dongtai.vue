@@ -55,7 +55,7 @@
 						</scroll-view>
 					</view>
 				</view>
-			</view>
+			</view> 
 			<view class="siteSelectionBox">
 				<!-- 位置 -->
 				<view class="box1">

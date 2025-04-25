@@ -15,7 +15,7 @@
 					<text>默认排序</text>
 					<view :class="activeSelect=='3'?'triangle-down-999C9D active1 ':'triangle-down-999C9D'"></view>
 				</view>
-			</view>
+			</view> 
 			<view class="right">
 				<view class="address-box"></view>
 			</view>

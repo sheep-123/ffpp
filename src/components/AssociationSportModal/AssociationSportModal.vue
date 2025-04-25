@@ -7,24 +7,24 @@
 				<div class="right" @click="confrimHandle">确定</div>
 			</div>
 		</view>
-		<view style="height: 48vh;">
+		<scroll-view scroll-y style="height: 874rpx;">
 			<view class="chose-box">
-				<div :class="choseList.includes(index)?'chose-item active':'chose-item'" @click="choseItemHandle(index)"
-					v-for="(item,index) in sportList" :key="index">
-					{{item}}
-					<view class="dot" v-if="choseList.includes(index)" >
+				<div :class="choseList.findIndex(e=>e.label_code==item.label_code)>-1?'chose-item active u-line-1':'chose-item u-line-1 '"
+					@click="choseItemHandle(item)" v-for="(item,index) in sportList" :key="index">
+					{{item.label_name}}
+					<!-- <view class="dot" v-if="choseList.findIndex(e=>e.label_code==item.label_code)>-1">
 						—
-					</view>
+					</view> -->
 				</div>
 			</view>
-		</view>
-		<view class="ready-chose-box">
+		</scroll-view>
+		<view  class="ready-chose-box">
 			<text>已选择</text>
-			<view class="flex-box">
+			<scroll-view scroll-x class="flex-box">
 				<div class="item" v-for="(item,index) in choseList" :key="index">
-					{{item}}
+					{{item.label_name}}
 				</div>
-			</view>
+			</scroll-view>
 		</view>
 	</u-popup>
 </template>
@@ -40,27 +40,28 @@
 		},
 		data() {
 			return {
-				sportList: [
-					'篮球', '足球', '足球', '篮球', '足球', '足球', '篮球', '足球', '足球', '篮球', '足球', '足球', '篮球', '足球', '足球', '篮球',
-					'足球', '足球',
-				],
+				sportList: [],
 				choseList: []
 			};
 		},
+		mounted() {
+			this.getSportList();
+		},
 		methods: {
+			async getSportList() {
+				const res = await this.$requestAll.dynamics.getSportTypeList();
+				this.sportList = res.data;
+			},
 			choseItemHandle(current) {
-				if (this.choseList.includes(current)) {
-					this.choseList.splice(this.choseList.findIndex(i => i == current), 1)
+				if (this.choseList.findIndex(e => e.label_code == current.label_code) > -1) {
+					this.choseList.splice(this.choseList.findIndex(i => i.label_code == current.label_code), 1)
 				} else {
 					this.choseList.push(current)
 				}
 			},
-			confrimHandle(){
-				if(!this.choseList.length){
-					this.$utils.toast('请选择关联运动')
-					return
-				}
-				this.$emit('confrim',this.choseList);
+			confrimHandle() {
+				
+				this.$emit('confrim', this.choseList);
 				this.$emit('close')
 			}
 		}
@@ -68,21 +69,23 @@
 </script>
 
 <style lang="scss">
-	.ready-chose-box{
-		padding: 0 32rpx;
+	.ready-chose-box {
+		padding:  32rpx;
 		display: flex;
 		align-items: center;
-		>text{
+
+		>text {
 			font-weight: 400;
 			font-size: 24rpx;
 			color: #000000;
 			margin-right: 12rpx;
 		}
-		.flex-box{
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			.item{
+
+		.flex-box {
+			 width: 80%;
+			 white-space: nowrap;
+			.item {
+				display: inline-block;
 				padding: 6rpx 12rpx;
 				border-radius: 8rpx;
 				border: 2rpx solid #EC383C;
@@ -94,24 +97,23 @@
 			}
 		}
 	}
-	
+
 	.chose-box {
 		padding: 24rpx 32rpx;
 		display: flex;
 		flex-wrap: wrap;
 
 		.chose-item {
-			width: 160rpx;
+			width: 164rpx;
 			height: 64rpx;
 			background: #F7F7F7;
 			border-radius: 8rpx;
 			font-weight: 400;
 			font-size: 24rpx;
 			color: #1D2326;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			margin-right: 8rpx;
+			text-align: center;
+			line-height: 64rpx;
+			margin-right: 6rpx;
 			margin-bottom: 16rpx;
 		}
 
@@ -119,14 +121,15 @@
 			border: 2rpx solid #EC384A;
 			box-sizing: border-box;
 			position: relative;
-			.dot{
+
+			.dot {
 				width: 36rpx;
 				height: 36rpx;
 				background: #FFFFFF;
 				border: 3rpx solid #CCCCCC;
 				border-radius: 50%;
 				display: flex;
-				align-items: baseline;
+				align-items: center;
 				justify-content: center;
 				position: absolute;
 				right: -18rpx;

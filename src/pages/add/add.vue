@@ -14,7 +14,7 @@
 					<view class="value">{{item.value}}</view>
 				</view>
 			</view>
-			<view class="delete" @click="$utils.toPath.back()">
+			<view class="delete" @click="$utils.toPath.back(true)">
 				<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/delete.png"
 					mode="scaleToFill" style="width: 24px; height: 24px" />
 			</view>

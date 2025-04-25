@@ -23,7 +23,6 @@
 					
 				</slot>
 			</view>
-
 			<view class="right">
 				<slot name="right"> </slot>
 			</view>

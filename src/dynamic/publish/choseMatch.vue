@@ -11,15 +11,15 @@
 		</Navbar>
 		<filterArea/>
 		<view class="list-box">
-			<div class="list-item" v-for="(item,index) in 20" :key="item" >
+			<div class="list-item" v-for="(item,index) in list" :key="item.id" >
 				<div class="item-top">
 					<view class="img-box">
-						<image src="https://testfeifanpaopao.jireplayer.com/download/upload/20250422/nNwnFZ5g5EF8a759114c3e129b83a43097a287130830.jpg" mode=""></image>
+						<image :src="item.mainImageUrl" mode=""></image>
 					</view>
 					<view class="info-box">
 						<view class="title u-line-2">
-							天健S1赛季橄榄球联赛｜4.12橄榄三队车轮战
-						</view>
+							{{item.name}}
+						</view> 
 						<view class="time">
 							<u-icon name="clock"></u-icon>
 							<text>周日3.18 19:00-20:30</text>
@@ -32,7 +32,7 @@
 				</div>
 				<view class="item-bottom">
 					<div class="num">
-						<text>12</text>人已报名
+						<text>{{item.registerNum}}</text>人已报名
 					</div>
 					<div class="status">
 						<div class="dot"></div>
@@ -61,9 +61,15 @@
 		},
 		data(){
 			return {
+				list:[],
 				searchParams:{
 					pageNum: 1,
 					pageSize: 10,
+					userLat:0,
+					userLng:0,
+					labelCode:'',
+					adcode4:'',
+					adcode6:'',
 					sortType: '',
 					keywords: '',
 				}
@@ -72,8 +78,12 @@
 		methods:{
 			async getList(){
 				try {
+					uni.showLoading({
+						title:'加载中...'
+					})
 					const res = await this.$requestAll.dynamics.getRaceList(this.searchParams);
-					console.log(res,'??/');
+					this.list = [...this.list,...res.data.list]
+					uni.hideLoading()
 				} catch (error) {
 					
 				}

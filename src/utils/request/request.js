@@ -7,7 +7,7 @@ class HttpRequest {
 		timeout: 60000,
 		headers: {
 			'Content-Type': 'application/json'
-		}
+		},
 	};
 
 	constructor(config = {}) {
@@ -88,7 +88,7 @@ class HttpRequest {
 	}
 
 	// 执行uni.request
-	_uniRequest(config) {
+	_uniRequest(config) { 
 		return new Promise((resolve, reject) => {
 			uni.request({
 				...config,
@@ -127,6 +127,11 @@ class HttpRequest {
 	// POST请求
 	post(url, data = {}, config = {}) {
 		return this.request('POST', url, data, config);
+	}
+	
+	// DELETE
+	delete(url, data = {}, config = {}){
+		return this.request('DELETE', url, data, config);
 	}
 
 	

@@ -1,121 +1,107 @@
 <template>
 	<view class="box">
-		<u-navbar class="nav"  fixed bgColor="#fff">
-			<template #left> 
-				<view class="left-nav">
-					<u-icon @click="$utils.toPath.back(false)" name="arrow-left" bold color="#1D2326"></u-icon>
+		<u-navbar class="nav" fixed bgColor="#fff">
+			<template #left>
+				<view class="left-nav" @click="$utils.toPath.back(true)">
+					<u-icon name="arrow-left" bold color="#1D2326"></u-icon>
 					<text>发布动态</text>
 				</view>
 			</template>
 		</u-navbar>
-		<view class="zhanWei" :style="{height:(50+statusBarHeight)+'px'}" ></view>
+		<view class="zhanWei" :style="{height:(50+statusBarHeight)+'px'}"></view>
 		<view style="margin-top: 24rpx;">
-				<view class="contentBox">
-					<view id="tipsBox">
-						<scroll-view scroll-x style="width: 100%">
-							<u-upload class="custom-upload" :fileList="fileList" @afterRead="afterRead"
-								@delete="deletePic" accept="image" name="6" multiple :maxCount="18" width="86"
-								height="86" :deleteIcon="'close'" :deleteIconColor="'#ff0000'" :deleteIconSize="20"
-								:previewFullImage="true">
-								<view class="custom-upload">
-									<view class="plusIcon">
-										<u-icon name="plus" size="52rpx" color="#CCCCCC"></u-icon>
-									</view>
-									<text class="upload-text">图片/视频</text>
+			<view class="contentBox">
+				<view id="tipsBox">
+					<scroll-view scroll-x style="width: 100%">
+						<u-upload class="custom-upload" :fileList="fileList" @afterRead="afterRead" @delete="deletePic"
+							accept="image" name="6" multiple :maxCount="18" width="86" height="86" :deleteIcon="'close'"
+							:deleteIconColor="'#ff0000'" :deleteIconSize="20" :previewFullImage="true">
+							<view class="custom-upload">
+								<view class="plusIcon">
+									<u-icon name="plus" size="52rpx" color="#CCCCCC"></u-icon>
 								</view>
-							</u-upload>
+								<text class="upload-text">图片/视频</text>
+							</view>
+						</u-upload>
+					</scroll-view>
+				</view>
+				<view class="tipsBox">
+					<image class="topIcon" :src="imgs.topArrow" mode="scaleToFill" />
+					<view class="box1">
+						<image class="tipsIcon" :src="imgs.tips" mode="scaleToFill" />
+						<text class="tipsText"> 说说你最近一次运动 </text>
+						<image class="reloadIcon" :src="imgs.reload" mode="scaleToFill" />
+					</view>
+				</view>
+				<view class="textBox">
+					<u-input v-model="postBody.title" type="text" placeholder="添加标题" :maxlength="20" border="none">
+						<template slot="suffix">
+							<view style="display: flex; align-items: center">
+								<image :src="imgs.close" mode="scaleToFill" style="width: 20px; height: 20px"
+									@click="onClearTitle" />
+								<text class="text-tips">{{ titleLength }}</text>
+							</view>
+						</template>
+					</u-input>
+					<view style="margin-top: 16rpx; margin-bottom: 24rpx">
+						<u-divider color="#F0F0F0"></u-divider>
+					</view>
+					<view style="display: flex">
+						<scroll-view scroll-y style="height: 512rpx" @scroll="onScroll">
+							<textarea placeholder-style="color:rgba(29,35,38,0.3);font-size:14px;font-weig1ht: 400;"
+								style="width: 100%; overflow: scroll !important;-webkit-overflow-scrolling: touch !important;"
+								v-model="postBody.content" type="text" maxlength="800" disable-default-padding="true"
+								placeholder="和大家聊聊你的热爱吧..." border="none" autoHeight="true"></textarea>
 						</scroll-view>
 					</view>
-					<view class="tipsBox" >
-						<image class="topIcon"
-							src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/topArrow.svg"
-							mode="scaleToFill" />
-						<view class="box1">
-							<image class="tipsIcon"
-								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/tips.png"
-								mode="scaleToFill" />
-							<text class="tipsText"> 说说你最近一次运动 </text>
-							<image class="reloadIcon"
-								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/reload.svg"
-								mode="scaleToFill" />
-						</view>
+				</view>
+			</view>
+			<view class="siteSelectionBox">
+				<!-- 位置 -->
+				<view class="box1">
+					<view class="left">
+						<image :src="imgs.location" mode="scaleToFill" style="width: 16px; height: 16px" />
+						<text class="cell-title">添加位置</text>
 					</view>
-					<view class="textBox">
-						<u-input v-model="postBody.title" type="text" placeholder="添加标题" :maxlength="20" border="none">
-							<template slot="suffix">
-								<view style="display: flex; align-items: center">
-									<image 
-										src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/close.png"
-										mode="scaleToFill" style="width: 20px; height: 20px" @click="onClearTitle" />
-									<text class="text-tips">{{ titleLength }}</text>
-								</view>
-							</template>
-						</u-input>
-						<view style="margin-top: 16rpx; margin-bottom: 24rpx">
-							<u-divider color="#F0F0F0"></u-divider>
-						</view>
-						<view style="display: flex">
-							<scroll-view scroll-y style="height: 512rpx" @scroll="onScroll">
-								<textarea placeholder-style="color:rgba(29,35,38,0.3);font-size:14px;font-weig1ht: 400;"
-									style="width: 100%; overflow: scroll !important;-webkit-overflow-scrolling: touch !important;"
-									v-model="titleContent" type="text" maxlength="800" disable-default-padding="true"
-									placeholder="和大家聊聊你的热爱吧..." border="none" autoHeight="true"></textarea>
-							</scroll-view>
-						</view>
+					<view class="right" @click="toAddLocation()">
+						<text>{{postBody.address||'去选择'}}</text>
+						<u-icon name="arrow-right" size="6 10" color="#CCCCCC"></u-icon>
 					</view>
 				</view>
-				<view class="siteSelectionBox">
-					<!-- 位置 -->
-					<view class="box1">
-						<view class="left">
-							<image
-								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png"
-								mode="scaleToFill" style="width: 16px; height: 16px" />
-							<text class="cell-title">添加位置</text>
-						</view>
-						<view class="right" @click="toAddLocation()">
-							<text>{{obj.addAddressName||'去选择'}}</text>
-							<u-icon name="arrow-right" size="6 10" color="#CCCCCC"></u-icon>
-						</view>
+				<!-- 关联赛事 -->
+				<view class="box1">
+					<view class="left">
+						<image :src="imgs.cup" mode="scaleToFill" style="width: 16px; height: 16px" />
+						<text class="cell-title">关联赛事</text>
 					</view>
-					<!-- 关联赛事 -->
-					<view class="box1">
-						<view class="left">
-							<image
-								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png"
-								mode="scaleToFill" style="width: 16px; height: 16px" />
-							<text class="cell-title">关联赛事</text>
-						</view>
-						<view class="right" @click="$utils.toPath.navigateTo('/dynamic/publish/choseMatch')">
-							<text>{{obj.addAddressName||'去选择'}}</text>
-							<u-icon name="arrow-right" size="6 10" color="#CCCCCC"></u-icon>
-						</view>
-					</view>
-					<!-- 关联运动 -->
-					<view class="box1">
-						<view class="left">
-							<image
-								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/location.png"
-								mode="scaleToFill" style="width: 16px; height: 16px" />
-							<text class="cell-title">关联运动</text>
-						</view>
-						<view class="right" @click="showModal=true">
-							<view v-if="postBody.sportList.length" class="l-box">
-								<div class="l-box-item" v-for="(item,index) in postBody.sportList" :key="index">
-									{{item}}
-								</div>
-							</view>
-							<text v-else >去选择</text>
-							<u-icon name="arrow-right" size="6 10" color="#CCCCCC"></u-icon>
-						</view>
+					<view class="right" @click="$utils.toPath.navigateTo('/dynamic/publish/choseMatch')">
+						<text>{{obj.addAddressName||'去选择'}}</text>
+						<u-icon name="arrow-right" size="6 10" color="#CCCCCC"></u-icon>
 					</view>
 				</view>
+				<!-- 关联运动 -->
+				<view class="box1">
+					<view class="left">
+						<image :src="imgs.basketball" mode="scaleToFill" style="width: 16px; height: 16px" />
+						<text class="cell-title">关联运动</text>
+					</view>
+					<view class="right" @click="showModal=true">
+						<scroll-view scroll-x v-if="sportList.length" class="l-box">
+							<div class="l-box-item" v-for="(item,index) in sportList" :key="index">
+								{{item.label_name}}
+							</div>
+						</scroll-view>
+						<text v-else>去选择</text>
+						<u-icon name="arrow-right" size="6 10" color="#CCCCCC"></u-icon>
+					</view>
+				</view>
+			</view>
 		</view>
-		
-		<AssociationSportModalVue :show="showModal" @close="showModal=false" @confrim="confrimHandle"/>
+
+		<AssociationSportModalVue :show="showModal" @close="showModal=false" @confrim="confrimHandle" />
 		<!-- 占位 -->
-		<view class="zhanWei" style="height: 136rpx;" ></view>
-		<view class="zhanWei" :style="{height: (keyboardHeight?1000:0)+'px'}" ></view>
+		<view class="zhanWei" style="height: 136rpx;"></view>
+		<view class="zhanWei" :style="{height: (keyboardHeight?1000:0)+'px'}"></view>
 		<!-- 底部按钮 -->
 		<view class="bottomBox safe-bottom">
 			<view class="layoutBox">
@@ -129,7 +115,7 @@
 						<view>预览</view>
 					</view>
 				</view>
-				<u-button class="publishButton" color="#15181A " @click="sendDongTai">发布动态</u-button>
+				<u-button class="publishButton" color="#15181A ">发布动态</u-button>
 			</view>
 		</view>
 	</view>
@@ -137,10 +123,10 @@
 <script>
 	import AssociationSportModalVue from '@/components/AssociationSportModal/AssociationSportModal.vue';
 	export default {
-		components:{
+		components: {
 			AssociationSportModalVue
 		},
-		computed: { 
+		computed: {
 			titleLength() {
 				return (20 - this.postBody.title.length)
 			},
@@ -150,7 +136,8 @@
 		},
 		data() {
 			return {
-				showModal:false,//选择体育弹窗
+				imgs: this.$img.dynamic,
+				showModal: false, //选择体育弹窗
 				fileList: [],
 				title: "",
 				titleContent: "",
@@ -163,15 +150,24 @@
 					lineTop: 0,
 					addAddressName: "",
 				},
-				isShowInput: false,
 				postBody: {
+					matchId: '', //赛事id?
+					venueId: '', //场地id?
+					labelCode: '', //'赛事项目代码，多个以逗号隔开',
+					serialNum: '', //流水号
 					title: '', //标题
 					content: '', //内容
-					sportList:[],//关联运动
-					match:''//关联比赛
+					address: '', //发布地址
+					detailAddress: '', //详细地址
+					courseUrl: '', //课程链接?
+					venueUrl: '', //场地链接？
+					state: '', //动态状态：0-草稿，1-已发布
+					locationLng: 0, //
+					locationLat: 0
 				},
 				keyboardHeight: 0,
-				scrollTop: 0
+				scrollTop: 0,
+				sportList: []
 			};
 		},
 		watch: {
@@ -182,36 +178,64 @@
 					}
 				},
 				deep: true,
-				
+
 			},
 			keyboardHeight(newVal) {
 				if (newVal > 0) {
 					this.$nextTick(() => {
 						uni.pageScrollTo({
-							selector:'#tipsBox'
+							selector: '#tipsBox'
 						})
 					});
 				} else {
 					this.scrollTop = 0; // 重置滚动位置
 					uni.pageScrollTo({
-						scrollTop:0
+						scrollTop: 0
 					})
 				}
 			}
 		},
 		methods: {
-			confrimHandle(evt){
-				this.postBody.sportList = evt;
+			async getNewsSerialNum() {
+				const res = await this.$requestAll.dynamics.getNewsSerialNum();
+				this.postBody.serialNum = res.data.newsSerialNum;
+			},
+			// ========
+			confrimHandle(evt) {
+				this.sportList = evt;
 			},
 			//图片读取后的处理函数
-			afterRead(e) {
-				e.file.forEach((element) => {
-					this.fileList.push(element);
-				});
+			async afterRead(e) {
+				console.log(e);
+				try {
+					let that = this;
+					const res = await Promise.all(e.file.map(item => this.$utils.uploadImg(
+						'http://192.168.3.46:8001/news/upload',
+						item.url, {
+							file: item.url,
+							serialNum: that.postBody.serialNum,
+							fileTypeCode: '111',
+							fileTypeName: '动态发布'
+						}
+					)))
+					this.$utils.toast('上传成功');
+					this.fileList = res.map(o => ({
+						...o,
+						url: o.fileURL
+					}));
+				} catch (error) {}
 			},
 			//图片删除函数
-			deletePic(e) {
-				this.fileList.splice(e.index, 1);
+			async deletePic(e) {
+				console.log(e.file.id, '点击删除');
+				const id = e.file.id;
+				const res = await this.$requestAll.dynamics.delImg(id);
+				if (res.status == 200) {
+					this.$utils.toast('删除成功');
+					this.fileList.splice(e.index, 1);
+				} else {
+					this.$utils.toast(res.message);
+				}
 			},
 			//标题输入事件
 			changeEvent(e) {
@@ -221,9 +245,7 @@
 				this.postBody.title = '';
 			},
 			toPreview() {
-				uni.navigateTo({
-					url: "/dynamic/publish/dongTaiPreview"
-				});
+				
 			},
 			toAddLocation() {
 				this.$utils.toPath.navigateTo('/dynamic/publish/addLocation');
@@ -232,54 +254,55 @@
 				this.$set(this.obj, "lineTop", e.detail.scrollTop);
 
 			},
-			sendDongTai() {
-				let res = uni.$u.http.post("/saveNewsRelease", {
-					matchId: this.matchId,
-					serialNum: this.serialNum,
-					way: this.way,
-					number: this.number,
-					genderLimit: this.genderLimit,
-					ageLimitMin: this.ageLimitMin,
-					ageLimitMax: this.ageLimitMax,
-					entryFee: this.entryFee,
-					keyboardHeight: 0,
-				});
-				console.log(res);
-			},
-			focusEvent() {
-				this.isShowInput = true;
-			},
 		},
 
 		onLoad() {
+			this.getNewsSerialNum();
 			uni.onKeyboardHeightChange((res) => {
 				this.keyboardHeight = res.height || 0
 			});
 		},
 		onShow() {
-			if(uni.getStorageSync('choseMachItem')){
-				this.postBody.match = uni.getStorageSync('choseMachItem');
-				uni.removeStorageSync('choseMachItem')
+
+			// 选择赛事
+			// if (uni.getStorageSync('choseMachItem')) {
+			// 	this.postBody.match = uni.getStorageSync('choseMachItem');
+			// 	uni.removeStorageSync('choseMachItem')
+			// }
+
+			// 添加位置
+			if (uni.getStorageSync('choseAddressInfo')) {
+				const choseAddressInfo = JSON.parse(uni.getStorageSync('choseAddressInfo'));
+				Object.assign(this.postBody, choseAddressInfo);
+				uni.removeStorageSync('choseAddressInfo');
+				if (!choseAddressInfo.venueId) {
+					this.postBody.venueId = '';
+				}
 			}
+
+
 		}
 	};
 </script>
 
 <style lang="scss">
-	.l-box{
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		.l-box-item{
+	.l-box {
+		width: 400rpx;
+		white-space: nowrap;
+		text-align: end;
+
+		.l-box-item {
+			display: inline-block;
 			padding: 6rpx 12rpx;
 			font-weight: 600;
 			font-size: 24rpx;
 			color: #EC383C;
-			border: 2rpx solid rgba(236,56,74,0.2);
+			border: 2rpx solid rgba(236, 56, 74, 0.2);
 			border-radius: 4rpx;
 			margin-right: 12rpx;
 		}
 	}
+
 	.cell-title {
 		padding-left: 3px;
 		font-family: PingFang SC, PingFang SC;
@@ -377,7 +400,7 @@
 		.text-area {
 			display: flex;
 			justify-content: center;
-		} 
+		}
 
 		.title {
 			font-size: 26rpx;
@@ -516,7 +539,8 @@
 					color: #8a8a8a;
 					display: flex;
 					align-items: center;
-					>text{
+
+					>text {
 						font-weight: 400;
 						font-size: 28rpx;
 					}

@@ -55,7 +55,7 @@
 						</scroll-view>
 					</view>
 				</view>
-			</view> 
+			</view>
 			<view class="siteSelectionBox">
 				<!-- 位置 -->
 				<view class="box1">
@@ -75,7 +75,7 @@
 						<text class="cell-title">关联赛事</text>
 					</view>
 					<view class="right" @click="$utils.toPath.navigateTo('/dynamic/publish/choseMatch')">
-						<text>{{obj.addAddressName||'去选择'}}</text>
+						<text>{{matchName||'去选择'}}</text>
 						<u-icon name="arrow-right" size="6 10" color="#CCCCCC"></u-icon>
 					</view>
 				</view>
@@ -106,7 +106,7 @@
 		<view class="bottomBox safe-bottom">
 			<view class="layoutBox">
 				<view class="part">
-					<view class="draftBox">
+					<view class="draftBox" @click="submit('0')">
 						<u-icon name="file-text" color="#000" size="24"></u-icon>
 						<view>存草稿</view>
 					</view>
@@ -115,7 +115,7 @@
 						<view>预览</view>
 					</view>
 				</view>
-				<u-button class="publishButton" color="#15181A ">发布动态</u-button>
+				<u-button class="publishButton" color="#15181A" @click="submit('1')"  >发布动态</u-button>
 			</view>
 		</view>
 	</view>
@@ -136,6 +136,7 @@
 		},
 		data() {
 			return {
+				matchName:'',
 				imgs: this.$img.dynamic,
 				showModal: false, //选择体育弹窗
 				fileList: [],
@@ -163,7 +164,8 @@
 					venueUrl: '', //场地链接？
 					state: '', //动态状态：0-草稿，1-已发布
 					locationLng: 0, //
-					locationLat: 0
+					locationLat: 0,
+					fileUrlList:[]//文件列表
 				},
 				keyboardHeight: 0,
 				scrollTop: 0,
@@ -171,15 +173,15 @@
 			};
 		},
 		watch: {
-			postBody: {
-				handler(newVal, oldVal) {
-					if (newVal.title.length == 20) {
-						this.$utils.toast('标题最多输入20字');
-					}
-				},
-				deep: true,
+			// postBody: {
+			// 	handler(newVal, oldVal) {
+			// 		if (newVal.title.length == 20) {
+			// 			this.$utils.toast('标题最多输入20字');
+			// 		}
+			// 	},
+			// 	deep: true,
 
-			},
+			// },
 			keyboardHeight(newVal) {
 				if (newVal > 0) {
 					this.$nextTick(() => {
@@ -196,6 +198,40 @@
 			}
 		},
 		methods: {
+			async submit(status){
+				this.postBody.state = status;
+				this.postBody.fileUrlList = this.fileList.map(i=>i.url);
+				if(!this.postBody.fileUrlList.length){
+					this.$utils.toast('请先上传图片哦')
+					return
+				}
+				if(!this.postBody.title){
+					this.$utils.toast('请先填写标题')
+					return
+				}
+				if(!this.postBody.content){
+					this.$utils.toast('请先填写内容')
+					return
+				}
+				if(this.sportList.length){
+					this.postBody.labelCode = this.sportList.map(i=>i.label_code) .join(',')
+				}
+				uni.showLoading({
+					title: this.postBody.state=='1'?'发布中...':'保存中...'
+				})
+				const res = await this.$requestAll.dynamics.saveNewsRelease(this.postBody);
+				uni.hideLoading();
+				if(res.status==200){
+					this.$utils.toast(this.postBody.state=='1'?'发布成功':'保存成功');
+					setTimeout(()=>{
+						this.$utils.toPath.switchTab('/pages/user/user')
+					},1500)
+				}else{
+					this.$utils.toast(res.message);
+				}
+				
+				console.log(this.postBody);
+			},
 			async getNewsSerialNum() {
 				const res = await this.$requestAll.dynamics.getNewsSerialNum();
 				this.postBody.serialNum = res.data.newsSerialNum;
@@ -246,13 +282,44 @@
 			},
 			toPreview() {
 				
+				const postBody =  uni.$u.deepClone(this.postBody)
+				
+				
+				postBody.fileUrlList = this.fileList.map(i=>i.url);
+				if(!postBody.fileUrlList.length){
+					this.$utils.toast('请先上传图片哦')
+					return
+				}
+				if(!postBody.title){
+					this.$utils.toast('请先填写标题')
+					return
+				}
+				if(!postBody.content){ 
+					this.$utils.toast('请先填写内容')
+					return
+				}
+				if(!postBody.address){
+					this.$utils.toast('请先添加地址')
+					return
+				}
+				if(this.sportList.length){
+					postBody.labelCode = this.sportList.map(i=>i.label_code) .join(',')
+					postBody.labelName = this.sportList.map(i=>i.label_name) .join(',')
+				}
+				if(this.matchName){
+					postBody.matchName =this.matchName;
+				}
+				
+				
+				
+				this.$utils.toPath.navigateTo('/dynamic/publish/dongTaiPreview?postBody='+encodeURIComponent(JSON.stringify(postBody)))
+				
 			},
 			toAddLocation() {
 				this.$utils.toPath.navigateTo('/dynamic/publish/addLocation');
 			},
 			onScroll(e) {
 				this.$set(this.obj, "lineTop", e.detail.scrollTop);
-
 			},
 		},
 
@@ -265,10 +332,12 @@
 		onShow() {
 
 			// 选择赛事
-			// if (uni.getStorageSync('choseMachItem')) {
-			// 	this.postBody.match = uni.getStorageSync('choseMachItem');
-			// 	uni.removeStorageSync('choseMachItem')
-			// }
+			if (uni.getStorageSync('choseMachItem')) {
+				const choseMachItem = JSON.parse(uni.getStorageSync('choseMachItem'));
+				this.postBody.matchId = choseMachItem.id;
+				this.matchName = choseMachItem.name;
+				uni.removeStorageSync('choseMachItem')
+			}
 
 			// 添加位置
 			if (uni.getStorageSync('choseAddressInfo')) {

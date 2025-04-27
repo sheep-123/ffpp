@@ -1,4 +1,5 @@
-const toast = (title, icon = 'none', duration=1500) => {
+import citys from "@/utils/city.json"
+const toast = (title, icon = 'none', duration = 1500) => {
 	uni.showToast({
 		icon,
 		title,
@@ -56,11 +57,11 @@ const toPath = {
 }
 
 
-const uploadImg = (requestUrl,filePath,params)=>{
+const uploadImg = (requestUrl, filePath, params) => {
 	uni.showLoading({
-		title:'上传中...'
+		title: '上传中...'
 	})
-	return new Promise((resolve,reject)=>{
+	return new Promise((resolve, reject) => {
 		uni.uploadFile({
 			url: requestUrl,
 			filePath,
@@ -83,9 +84,29 @@ const uploadImg = (requestUrl,filePath,params)=>{
 	})
 }
 
+function findCityCode(data, cityName) {
+  for (const item of data) {
+    // 检查当前节点名称是否匹配
+    if (item.Name === cityName) {
+      return item.Code;
+    }
+    
+    // 递归检查子节点
+    if (item.ChildList && item.ChildList.length > 0) {
+      const code = findCityCode(item.ChildList, cityName);
+      if (code) return code;
+    }
+  }
+  return null; // 未找到时返回 null
+}
+const getCodeByCity = (code)=>{
+	const provinceList = uni.$u.deepClone(citys.options);
+	return findCityCode(provinceList,code);
+}
 
 export default {
 	toast,
 	toPath,
-	uploadImg
+	uploadImg,
+	getCodeByCity
 }

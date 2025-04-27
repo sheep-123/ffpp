@@ -2,7 +2,7 @@ import utils from "@/utils/utils.js";
 import {
 	judgePermission
 } from "@/utils/PermissionManager.js";
-			const apiKey = "OVPBZ-6ABC5-XWDIP-IVGK4-UJMIS-ALBZT";
+import api from "@/api";
 export default {
 	computed: {
 		systemInfo() {
@@ -15,56 +15,46 @@ export default {
 		},
 	},
 	methods: {
-		
-		async TXInverse(address){
-			// 
-			return new Promise((resolve)=>{
-				uni.request({
-					url:'https://apis.map.qq.com/ws/geocoder/v1',
-					method:'GET',
-					data:{
-						key:apiKey,
-						address
-					},
-					success(res) {
-						console.log(res,'你解析');
-					}
+
+
+		async TXSearch(keyword, lat, lng) {
+			return new Promise((resolve) => {
+				api.mapApi.placeSearch({
+					keyword,
+					keyword,
+					lng,
+					radius: 1000
+				}).then((res) => {
+					console.log('疼腾讯搜索', res);
 				})
+				// uni.request({
+				// 	url: 'https://apis.map.qq.com/ws/place/v1/search',
+				// 	method: 'GET',
+				// 	data: {
+				// 		keyword,
+				// 		boundary: `nearby(${lat},${lng},1000,1)`,
+				// 		page_size: 20
+				// 	},
+				// 	success(res) {
+				// 		const reslut = res.data;
+				// 		if (reslut.status === 0) {
+				// 			resolve(reslut.data)
+				// 		}
+				// 	}
+				// })
 			})
 		},
-		
-		async TXSearch(keyword,lat,lng){
-			return new Promise((resolve)=>{
-				uni.request({
-					url:'https://apis.map.qq.com/ws/place/v1/search',
-					method:'GET',
-					data:{
-						key:apiKey,
-						keyword,
-						boundary:`nearby(${lat},${lng},1000,1)`,
-						page_size:20
-					},
-					success(res) {
-						const reslut = res.data;
-						if(reslut.status===0){
-							resolve(reslut.data)
-						}
-					}
-				})
-			})
-		},
-		
+
 		// 获取当前未知设置 地区
 		async getLocationToAddress() {
 			return new Promise(async (resolve) => {
-				const location = getApp().globalData.location;
-
+				const location = getApp().globalData.location||'';
 				// 如果已经缓存记录就直接返回
 				if (location.cityName) {
 					resolve(location.cityName)
 					return
 				}
-				
+
 				// 已经保存经纬度
 				if (location.latitude) {
 					const rej = await this.getTencentMaps(location.latitude, location.longitude);
@@ -76,44 +66,43 @@ export default {
 					}
 					return
 				}
-				
+
 				// 什么都没有
 				const res = await this.getLocation();
-				if(res){
+				if (res) {
 					const rej = await this.getTencentMaps(res.latitude, res.longitude);
-					if(rej.city){
+					if (rej.city) {
+						console.log(rej, '经纬度信息转换');
 						resolve(rej.city)
-						getApp().globalData.location.cityName = rej.city;
-					}else{
+						
+						getApp().globalData.location = {
+							latitude:res.latitude,
+							longitude:res.longitude,
+							cityName:rej.city
+						};
+					} else {
 						resolve('未知')
 					}
-				}else{
+				} else {
 					resolve('未知')
 				}
 			})
 		},
 		getTencentMaps(lat, lng, poi = 0) {
-			const url = `https://apis.map.qq.com/ws/geocoder/v1?location=${lat+','+lng}&key=${apiKey}&get_poi=${poi}`
 			return new Promise((resolve) => {
-				uni.request({
-					url,
-					success: ({
-						data
-					}) => {
-						if (data.status == 0) {
-							if (poi == 0) {
-								resolve(data.result.address_component)
-							} else {
-								resolve(data.result.pois || [])
-							}
-						} else {
-							resolve()
+				api.mapApi.reverseGeocoder({
+					lng,
+					lat,
+					getPoi:poi
+				}).then(res => {
+					if(res.status==200){
+						if(poi==0){
+							resolve(res.data)
+						}else{
+							
 						}
-					},
-					fail: (err) => {
-						console.log(err);
-						resolve()
 					}
+					console.log(res, '看我的');
 				})
 			})
 		},

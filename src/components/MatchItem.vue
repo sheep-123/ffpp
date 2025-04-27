@@ -48,6 +48,9 @@
 			};
 		},
 		methods:{
+			choseMatchHandle(item){
+				this.$emit('choseMatch',item)
+			},
 			checkSignupStatus(deadlineStr) {
 				// 解析时间字符串为本地时间对象
 				const parseDateTime = (str) => {

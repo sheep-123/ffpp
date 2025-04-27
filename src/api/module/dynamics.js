@@ -27,5 +27,22 @@ export default {
 	// 获取场地列表
 	getSiteList(data){
 		return defHttp.get('/cd/queryCdInfo',data)
-	} 
+	} ,
+	// 获取行政区县信息
+	queryAdCode(code){
+		return defHttp.get('/match/queryAdCode',{adcode4:code})
+	},
+	// 根据区县查街道
+	queryStreetCode(code){
+		return defHttp.get('/match/queryStreetCode',{adcode6:code})
+	},
+	// 动态发布 /news/saveNewsRelease
+	saveNewsRelease(data){
+		return defHttp.post('/news/saveNewsRelease',data)
+	}
+	
+	
+	
+	
+  
 }

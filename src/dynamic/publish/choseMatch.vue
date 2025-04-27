@@ -9,28 +9,35 @@
 				</view>
 			</template>
 		</Navbar>
-		<filterArea />
+		<filterArea @choseAdd="choseAdd" @choseSport="choseSport" @choseSort="choseSort" />
 		<view class="list-box">
-			<MatchItemVue v-for="(item,index) in list" :key="item.id" :item="item"/>
+			<MatchItemVue @choseMatch="choseMatchHandle" v-for="(item,index) in list" :key="item.id" :item="item" />
 		</view>
 	</view>
 </template>
 
 <script>
+	const app = getApp();
 	import MatchItemVue from '@/components/MatchItem.vue';
 	import filterArea from './components/filterArea.vue';
 	import Navbar from '@/components/WNavbar/index.vue';
 	export default {
-		components: {
+		components: { 
 			Navbar,
 			filterArea,
 			MatchItemVue
 		},
-		onLoad() {
+		async onLoad() {
+			if (!this.globalData.location.latitude) {
+				await this.getLocation();
+			}
+			this.searchParams.userLat = this.globalData.location.latitude;
+			this.searchParams.userLng = this.globalData.location.longitude;
 			this.getList();
 		},
 		data() {
 			return {
+				globalData:app.globalData,
 				list: [],
 				searchParams: {
 					pageNum: 1,
@@ -46,6 +53,23 @@
 			}
 		},
 		methods: {
+			startFn() {
+				this.searchParams.pageNum = 1;
+				this.list = [];
+				this.getList();
+			},
+			choseAdd(e) {
+				this.searchParams.adcode6 = e.distCode;
+				this.startFn();
+			},
+			choseSport(e) {
+				this.searchParams.labelCode = e.value;
+				this.startFn();
+			},
+			choseSort(e) {
+				this.searchParams.sortType = e.value;
+				this.startFn();
+			},
 			async getList() {
 				try {
 					uni.showLoading({
@@ -60,11 +84,15 @@
 			},
 			choseMatchHandle(e) {
 				// 模拟
-				uni.setStorageSync('choseMachItem', '麻将馆比赛');
+				uni.setStorageSync('choseMachItem', JSON.stringify({
+					id: e.id,
+					name: e.name
+				}));
+				this.$utils.toPath.back();
 				// this.$utils.toast('选择成功')
-				setTimeout(() => {
-					this.$utils.toPath.back(false);
-				})
+				// setTimeout(() => {
+				// 	this.$utils.toPath.back(false);
+				// })
 			}
 		}
 	}

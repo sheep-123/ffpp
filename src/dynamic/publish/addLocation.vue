@@ -79,7 +79,7 @@
 	import WSerch from '@/components/WSerch/WSerch.vue';
 	import addressPoup from '@/components/addressPopup/addressPopup.vue';
 	export default {
-		components: {
+		components: { 
 			WNavbar,
 			WSerch,
 			addressPoup
@@ -165,8 +165,8 @@
 					const data = {
 						address:this.choseInfo.title,
 						detailAddress:this.choseInfo.address,
-						locationLng:this.choseInfo.location.lng,
-						locationLat:this.choseInfo.location.lat,
+						locationLng:this.choseInfo.locationLng,
+						locationLat:this.choseInfo.locationLat,
 					}
 					uni.setStorageSync('choseAddressInfo',JSON.stringify(data));
 				}

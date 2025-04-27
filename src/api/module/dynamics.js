@@ -39,8 +39,11 @@ export default {
 	// 动态发布 /news/saveNewsRelease
 	saveNewsRelease(data){
 		return defHttp.post('/news/saveNewsRelease',data)
+	},
+	// 首页动态列表 /news/getMainNews
+	getMainNews(data){
+		return defHttp.get('/news/getMainNews',data)
 	}
-	
 	
 	
 	

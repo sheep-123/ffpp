@@ -21,34 +21,21 @@ export default {
 			return new Promise((resolve) => {
 				api.mapApi.placeSearch({
 					keyword,
-					keyword,
+					lat,
 					lng,
 					radius: 1000
-				}).then((res) => {
-					console.log('疼腾讯搜索', res);
+				}).then((reslut) => {
+					if (reslut.status === 200) {
+						resolve(reslut.data)
+					}
 				})
-				// uni.request({
-				// 	url: 'https://apis.map.qq.com/ws/place/v1/search',
-				// 	method: 'GET',
-				// 	data: {
-				// 		keyword,
-				// 		boundary: `nearby(${lat},${lng},1000,1)`,
-				// 		page_size: 20
-				// 	},
-				// 	success(res) {
-				// 		const reslut = res.data;
-				// 		if (reslut.status === 0) {
-				// 			resolve(reslut.data)
-				// 		}
-				// 	}
-				// })
 			})
 		},
 
 		// 获取当前未知设置 地区
 		async getLocationToAddress() {
 			return new Promise(async (resolve) => {
-				const location = getApp().globalData.location||'';
+				const location = getApp().globalData.location || '';
 				// 如果已经缓存记录就直接返回
 				if (location.cityName) {
 					resolve(location.cityName)
@@ -74,11 +61,11 @@ export default {
 					if (rej.city) {
 						console.log(rej, '经纬度信息转换');
 						resolve(rej.city)
-						
+
 						getApp().globalData.location = {
-							latitude:res.latitude,
-							longitude:res.longitude,
-							cityName:rej.city
+							latitude: res.latitude,
+							longitude: res.longitude,
+							cityName: rej.city
 						};
 					} else {
 						resolve('未知')
@@ -93,13 +80,13 @@ export default {
 				api.mapApi.reverseGeocoder({
 					lng,
 					lat,
-					getPoi:poi
+					getPoi: 1
 				}).then(res => {
-					if(res.status==200){
-						if(poi==0){
-							resolve(res.data)
-						}else{
-							
+					if (res.status == 200) {
+						if (poi == 0) {
+							resolve(res.data.addressInfo)
+						} else {
+							resolve(res.data.pois)
 						}
 					}
 					console.log(res, '看我的');

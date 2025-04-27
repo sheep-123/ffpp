@@ -78,9 +78,9 @@
 					<!-- 最结束 为 830 -->
 
 					<scroll-view @scroll="pageScrollHandle" :scroll-y="!isDragging"
-						:style="{height:   `calc(100vh - ${scrollY}px)`}" class="list-box">
+						:style="{height:  scrollY>0? `calc(100vh - ${scrollY}px)`:'100vh'}" class="list-box">
 						<view class="main">
-							<view class="item">
+							<!-- <view class="item">
 								<image
 									src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/01.jpg"
 									mode="widthFix" />
@@ -96,16 +96,16 @@
 										<view class="value">1000</view>
 									</view>
 								</view>
-							</view>
-							<view class="item" v-for="(item,index) in 50" :key="index">
+							</view> -->
+							<view class="item" @click="$utils.toPath.navigateTo('/dynamic/publish/dongTaiDetail')"  v-for="(item,index) in newsList" :key="index">
 								<image
-									src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+									:src="item.fileUrl"
 									mode="widthFix" />
-								<view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+								<view class="value">{{item.title}}</view>
 								<view class="buttom">
 									<view class="left">
-										<u-avatar :src="src" size="18"></u-avatar>
-										<view class="value">滑板高手</view>
+										<u-avatar :src="item.releaseUserUrl" size="18"></u-avatar>
+										<view class="value">{{item.releaseUserName}}</view>
 									</view>
 									<view class="right">
 										<image
@@ -143,13 +143,20 @@
 					height:58,
 					iconPath: 'https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/Frame.png'
 				},
-				markers:[]
+				searchParmas:{
+					page:1,
+					pageSize:5
+				},
+				markers:[],
+				newsList:[],
+				
 			}
 		},
 		components: {
 			navbar
 		},
 		async onLoad() {
+			this.getList()
 			 if(!this.globalData.location.latitude){
 			 	await this.getLocation();
 			 }
@@ -158,6 +165,10 @@
 			 this.markers = [this.nowAddInfo];
 		},
 		methods: {
+			async getList(){
+				const res = await this.$requestAll.dynamics.getMainNews(this.searchParmas);
+				this.newsList=  [...this.newsList,...res.data]
+			},
 			handleTouchStart(e) {
 				this.isDragging = true;
 			},

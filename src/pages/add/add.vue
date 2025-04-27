@@ -11,41 +11,17 @@
         />
         <text>你已加入泡泡365天</text>
       </view>
-
       <view class="content">
-        <view class="item">
+        <view class="item" v-for="(item, index) in navList" :key="index">
           <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/发赛事.png"
-            @click="toSaishi"
+            :src="item.imgUrl"
+            @click="$utils.toPath.navigateTo(item.path)"
           />
-          <view class="title">发赛事</view>
-          <view class="value">赛场上见</view>
-        </view>
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/发动态.png"
-            @click="toDongTai"
-          />
-          <view class="title">发动态</view>
-          <view class="value">记录好心情</view>
-        </view>
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/发活动.png"
-          />
-          <view class="title">发活动</view>
-          <view class="value">敬请期待...</view>
-        </view>
-        <view class="item">
-          <image
-            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/1V1挑战.png"
-          />
-          <view class="title">1V1挑战</view>
-          <view class="value">挑战即将开启</view>
+          <view class="title">{{ item.title }}</view>
+          <view class="value">{{ item.value }}</view>
         </view>
       </view>
-
-      <view class="delete" @click="back">
+      <view class="delete" @click="$utils.toPath.back(true)">
         <image
           src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/delete.png"
           mode="scaleToFill"
@@ -58,33 +34,45 @@
 
 <script>
 export default {
+  data() {
+    return {
+      navList: [
+        {
+          imgUrl:
+            "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/发赛事.png",
+          title: "发赛事",
+          value: "赛场上见",
+          path: "/competition/publish/saishi",
+        },
+        {
+          imgUrl:
+            "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/发动态.png",
+          title: "发动态",
+          value: "记录好心情",
+          path: "/dynamic/publish/dongtai",
+        },
+        {
+          imgUrl:
+            "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/发活动.png",
+          title: "发活动",
+          value: "敬请期待...",
+          path: "",
+        },
+        {
+          imgUrl:
+            "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/1V1挑战.png",
+          title: "1V1挑战",
+          value: "挑战即将开启",
+          path: "",
+        },
+      ],
+    };
+  },
   onShow() {
     uni.hideTabBar();
   },
 
-  methods: {
-    back() {
-      const pages = getCurrentPages();
-      if (pages.length > 1) {
-        uni.navigateBack({ delta: 1 });
-        uni.showTabBar();
-      } else {
-        uni.reLaunch({ url: "/pages/index/index" });
-        uni.showTabBar();
-      }
-    },
-
-    toSaishi() {
-      uni.navigateTo({
-        url: "/competition/publish/saishi",
-      });
-    },
-    toDongTai() {
-      uni.navigateTo({
-        url: "/dynamic/publish/dongtai",
-      });
-    },
-  },
+  methods: {},
 };
 </script>
 
@@ -92,7 +80,6 @@ export default {
 .box {
   width: 100vw;
   height: 100vh;
-
   .main {
     width: 90%;
     margin: auto;
@@ -104,7 +91,7 @@ export default {
       gap: 5px;
       align-items: center;
       padding: 4px;
-
+      border-radius: 8rpx;
       image {
         width: 45px;
         height: 16px;
@@ -127,6 +114,7 @@ export default {
       .item {
         width: 48%;
         position: relative;
+
         .title {
           position: absolute;
           top: 20px;
@@ -136,6 +124,7 @@ export default {
           color: #1d2326;
           font-family: youshe;
         }
+
         .value {
           font-weight: 400;
           font-size: 12px;
@@ -144,6 +133,7 @@ export default {
           top: 50px;
           left: 12px;
         }
+
         image {
           width: 100%;
           height: 90px;

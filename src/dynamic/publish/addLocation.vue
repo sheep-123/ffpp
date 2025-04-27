@@ -1,253 +1,404 @@
 <template>
-  <view class="box">
-    <u-navbar class="nav" autoBack leftText="发布动态" :fixed="false" bgColor="#fff">
-      <view class="u-nav-slot" slot="left" style="display: flex;align-items: center;">
-        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/left.png" @click="back"
-          class="back-btn" />
-        <text class="navTitle">添加位置</text>
-      </view>
-    </u-navbar>
-    <button @tap="nearby_search">搜索周边KFC</button>
-    <!-- 地图容器 -->
-    <!-- <map id="myMap" :latitude="latitude" :longitude="longitude" scale="16" /> -->
-    <map id="myMap" :markers="markers" style="width:100%;height:300px;" longitude="116.313972" latitude="39.980014"
-      scale='16'>
-    </map>
-    <view style="position: absolute;">
-      <!-- 搜索栏 -->
-      <view class="search-box">
-        <view
-          style="display: flex;align-items: center;background-color: #F5F5F5;width: 100%;border-radius: 20px;padding: 7px 16px;">
-          <view style="display: flex;align-items: center;">
-            <text style="font-size: 12px;">广州</text>
-            <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/bottomArrow.svg"
-              mode="scaleToFill" style="width: 12px;height: 12px;" />
-          </view>
-          <view style="width: 1px;height: 14px;background-color: #DBDBDB;margin-left: 6px;"></view>
-          <u-input v-model="addressDetail" placeholder="输入地点关键词" placeholder-class="input-placeholder"
-            placeholder-style="color:#1D2326;font-size:14px" border="false" @input="" />
-        </view>
-        <!-- <input placeholder="输入地点关键词" @input.throttle="onSearchInput" /> -->
-      </view>
-      <!-- 地址列表 -->
-      <view class="addressList">
-        <scroll-view class="list-container" scroll-y style="height: 100px;">
-          <view style="width: calc(100vw - 32px);margin: 0px 16px;">
-            <view style="padding: 11px 0;" v-for="(item, index) in 10" :key="index">
-              <view style="display: flex;justify-content: space-between;">
-                <view><text style="font-size: 16px;
-color: #EC384A;">红盾大厦省市场监督管理局大楼</text></view>
-                <view><text style="font-size: 12px;
-color: rgba(29,35,38,0.5);">18m</text></view>
-              </view>
-              <view>
-                <view><text style="font-size: 12px;
-color: rgba(29,35,38,0.5);">广东省广州市天河区体育西路57号(体育西路地铁A口旁)</text></view>
-              </view>
-            </view>
-          </view>
-        </scroll-view>
-      </view>
-    </view>
-    <view class="bottomBox">
-      <u-button class="publishButton" color="#15181A">
-        <text>确认选择</text>
-      </u-button>
-    </view>
-  </view>
+	<view class="box">
+		<WNavbar title="添加位置" />
+		<u-sticky :offsetTop="(44+systemInfo.statusBarHeight)+'px'">
+			<view class="tabs-box">
+				<u-tabs :activeStyle="{color:'#1D2326','font-weight':600}" lineColor="#EC384A" :list="list1"
+					@click="tabClickHandle"></u-tabs>
+				<div class="search-box" v-if="currentKey==0">
+					<WSerch  @clear="searchParams.keywords='';searchHandle()" v-model="searchParams.keywords"
+						@search="searchHandle" :cityName="cityName" @choseAddHandle="choseAddHandle" />
+				</div>
+			</view>
+		</u-sticky>
+
+		<view class="chose-site-box" v-if="currentKey==0">
+			<div class="chose-site-box-item" @click="choseSiteHandle(item)" v-for="(item,index) in siteList" :key="index">
+				<div class="left">
+					<image :src="item.doorPhoto" mode=""></image>
+				</div>
+				<div class="right">
+					<div class="site-info flex-jb">
+						<div class="site-name u-line-1">{{item.siteName}}</div>
+						<div class="km">{{(item.distance/1000).toFixed(2)}}km</div>
+					</div>
+					<div class="site-type">{{item.siteType}}</div>
+					<div class="site-address flex-jb">
+						<text style="width: 80%;" class="u-line-1">{{item.siteAddress}}</text>
+						<u-icon v-if="choseInfo.id==item.id" name="checkbox-mark" size="38rpx" color="#EC384A"></u-icon>
+					</div>
+				</div>
+			</div>
+		</view>
+
+		<view class="chose-map-box" v-if="currentKey==1">
+			<map id="search-box" @tap="poitap" style="width: 100%;height: 466rpx;"
+				:longitude="globalData.location.longitude" :latitude="globalData.location.latitude" :markers="markers">
+			</map>
+
+			<view class="map-list-box">
+				<div class="search-box">
+					<WSerch :leftShow="false" @choseAddHandle="addPopupShowChoseMap=true"  v-model="mapKeyWord" :cityName="cityName" @search="mapSearchHandle"  placeholder="请输入地点关键词" />
+				</div>
+				<div class="list">
+					<div class="map-list-item" @click="choseAddressHandle(item)" v-for="(item,index) in mapList" :key="index">
+						<div class="top flex-jb">
+							<div class="title">{{item.title}}</div>
+							<div class="distance">{{(item._distance/1000).toFixed(2)}}km</div>
+						</div>
+						<div class="bottom flex-jb">
+							<div class="add u-line-1" >{{item.address}}</div>
+							<u-icon v-if="choseInfo.id==item.id" name="checkbox-mark" size="38rpx" color="#EC384A"></u-icon>
+						</div>
+					</div>
+				</div>
+			</view>
+		</view>
+
+		<addressPopup :show.sync="addPopupShow" :safe='false' @handelAddress="handleAddress"></addressPopup>
+		<addressPopup :show.sync="addPopupShowChoseMap" :safe='false' @handelAddress="handleAddressByMap"></addressPopup>
+		
+		<!-- 占位用 -->
+		<view style="height: 136rpx;"></view>
+
+		<!-- 底部选择按钮 -->
+		<view class="safe-bottom bottom-btn">
+			<view class="btn"  @click="sureHandle"  :style="{'background-color':choseInfo?'#15181A':'#B9BABA'}">
+				确认选择
+			</view>
+		</view>
+
+
+	</view>
 </template>
+
+
 <script>
-import { onLoad } from 'uview-ui/libs/mixin/mixin'
+	const app = getApp();
+	import WNavbar from '@/components/WNavbar/index.vue';
+	import WSerch from '@/components/WSerch/WSerch.vue';
+	import addressPoup from '@/components/addressPopup/addressPopup.vue';
+	export default {
+		components: { 
+			WNavbar,
+			WSerch,
+			addressPoup
+		},
+		data() {
+			return {
+				globalData: app.globalData,
+				addPopupShow: false,
+				addPopupShowChoseMap:false,
+				currentKey: 0,
+				list1: [{
+					name: '选场地',
+				}, {
+					name: '选地址',
+				}],
+				markers: [],
+				nowAddInfo: {
+					id: 1,
+					latitude: null,
+					longitude: null,
+					width:58,
+					height:58,
+					iconPath: 'https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/Frame.png'
+				},
+				mapList: [],
+				searchParams: { 
+					city: '',
+					keywords: '',
+					userLat: 0,
+					userLng: 0,
+					page: 1,
+					pageSize: 15
+				},
+				siteList: [],
+				choseInfo: '', //选择的信息
+				loading: false,
+				cityName: '未知',
+				mapKeyWord:''
+			}
+		},
+		onReachBottom() {
+			if(this.currentKey==0){
+				if (this.loading) {
+					return
+				}
+				this.searchParams.page++;
+				this.getSiteList();
+			}
+			
+		},
+		async onLoad() {
+			if (!this.globalData.location.latitude) {
+				await this.getLocation();
+			}
+			this.cityName = await this.getLocationToAddress();
+			this.nowAddInfo.latitude = this.globalData.location.latitude;
+			this.nowAddInfo.longitude = this.globalData.location.longitude;
+			this.searchParams.userLat = this.globalData.location.latitude;
+			this.searchParams.userLng = this.globalData.location.longitude;
+			this.getSiteList();
+			this.markers = [this.nowAddInfo];
+			this.mapList = await this.getTencentMaps(this.nowAddInfo.latitude, this.nowAddInfo.longitude, 1);
+		},
+		methods: {
+			sureHandle(){
+				if(!this.choseInfo){
+					return 
+				}
+				console.log(this.choseInfo,'this.choseInfo');
+				let data;
+				if(this.choseInfo.type==='site'){
+					const data = {
+						venueId:this.choseInfo.id,
+						address:this.choseInfo.siteName,
+						detailAddress:this.choseInfo.siteAddress,
+						locationLng:this.choseInfo.locationLng,
+						locationLat:this.choseInfo.locationLat,
+					}
+					uni.setStorageSync('choseAddressInfo',JSON.stringify(data));
+				}
+				if(this.choseInfo.type==='address'){
+					console.log('???');
+					const data = {
+						address:this.choseInfo.title,
+						detailAddress:this.choseInfo.address,
+						locationLng:this.choseInfo.locationLng,
+						locationLat:this.choseInfo.locationLat,
+					}
+					uni.setStorageSync('choseAddressInfo',JSON.stringify(data));
+				}
+				uni.navigateBack();
+			
+			},
+			handleAddressByMap({
+				province,
+				city,
+				area
+			}){
+				const address = province+city+area;
+				this.TXInverse(address)        	
+			},
+			async mapSearchHandle(){
+				if(!this.mapKeyWord){
+					this.mapList = await this.getTencentMaps(this.nowAddInfo.latitude, this.nowAddInfo.longitude, 1);
+					return
+				}
+				this.mapList = await this.TXSearch(this.mapKeyWord,this.nowAddInfo.latitude,this.nowAddInfo.longitude);
+			},
+			choseAddressHandle(e){
+				this.choseInfo = {
+					...e,
+					type:'address'
+				}
+			},
+			choseSiteHandle(e){
+				this.choseInfo = {
+					...e,
+					type:'site'
+				}
+			},
+			searchHandle() {
+				this.searchParams.page = 1;
+				this.siteList = [];
+				this.getSiteList();
+			},
+			async getSiteList() {
+				uni.showLoading({
+					title: '加载中...'
+				})
+				try {
+					if (this.cityName && this.cityName != '未知') {
+						this.searchParams.city = this.cityName;
+					}
+					this.loading = true;
+					const res = await this.$requestAll.dynamics.getSiteList(this.searchParams);
+					this.siteList = [...this.siteList, ...res.data];
+					this.loading = false;
+					uni.hideLoading();
+				} catch (error) {
+					uni.hideLoading();
+				}
 
-
-
-export default {
-
-  data() {
-    return {
-      latitude: 39.90469,  // 默认北京中心坐标
-      longitude: 116.40717,
-      poiList: [],
-      keyword: '',
-      markers: [],
-      // QQMapWX: {},
-      qqmapsdk: {}
-
-    }
-  },
-  onLoad() {
-    // 引入SDK核心类
-    // var QQMapWX = require('../../assets/qqmap-wx-jssdk1.2/qqmap-wx-jssdk');
-
-    // // 实例化API核心类
-    // this.qqmapsdk = new QQMapWX({
-    //   key: 'OVPBZ-6ABC5-XWDIP-IVGK4-UJMIS-ALBZT' // 必填
-    // });
-
-
-  },
-  methods: {
-    // 正确初始化插件
-    // 事件触发，调用接口
-    // nearby_search: function () {
-    //   var _this = this
-    //   // 调用接口
-    //   this.qqmapsdk.search({
-    //     keyword: 'kfc',  //搜索关键词
-    //     location: '39.980014,116.313972',  //设置周边搜索中心点
-    //     success: function (res) { //搜索成功后的回调
-    //       console.log(res);
-
-    //       var mks = []
-    //       for (var i = 0; i < res.data.length; i++) {
-    //         mks.push({ // 获取返回结果，放到mks数组中
-    //           title: res.data[i].title,
-    //           id: res.data[i].id,
-    //           latitude: res.data[i].location.lat,
-    //           longitude: res.data[i].location.lng,
-    //           iconPath: "/resources/my_marker.png", //图标路径
-    //           width: 20,
-    //           height: 20,
-    //         })
-    //       }
-    //       _this.markers = mks
-
-    //     },
-    //     fail: function (res) {
-    //       console.log(res);
-    //     },
-    //     complete: function (res) {
-    //       console.log(res);
-    //     }
-    //   })
-    // }
-    // // 搜索地点
-    // onSearchInput(e) {
-    //   this.keyword = e.detail.value.trim()
-    // },
-    // // 调用腾讯地图POI搜索
-    // searchPOI() {
-    //   const qqmap = requirePlugin('qqmap-wx-jssdk')
-    //   new qqmap({ key: 'ZGVBZ-W2HCJ-HFUFU-XNBUP-NF56V-IKBT7' }).search({
-    //     keyword: this.keyword,
-    //     success: res => {
-    //       this.poiList = res.data
-    //     }
-    //   })
-    // },
-    // // 选择地点
-    // selectPOI(e) {
-    //   const { latitude, longitude } = e.currentTarget.dataset.item.location
-    //   this.setData({ latitude, longitude })
-    //   wx.navigateBack({ delta: 1 })  // 返回上一页带参数
-    // }
-  }
-}
-
+			},
+			async poitap(evt) {
+				this.nowAddInfo.latitude = evt.detail.latitude
+				this.nowAddInfo.longitude = evt.detail.longitude
+				this.markers = [this.nowAddInfo]
+				this.mapList = await this.getTencentMaps(evt.detail.latitude, evt.detail.longitude, 1)
+			},
+			tabClickHandle(e) {
+				this.choseInfo = '';
+				this.currentKey = e.index;
+			},
+			choseAddHandle() {
+				this.addPopupShow = true;
+			},
+			handleAddress({
+				province,
+				city,
+				area
+			}) {
+				if (area) {
+					this.cityName = area;
+					this.searchHandle();
+					return
+				}
+				if (city) {
+					this.cityName = city;
+					this.searchHandle();
+					return
+				}
+				this.cityName = province;
+				this.searchHandle();
+			},
+		},
+	}
 </script>
 
 
-<style scoped lang="scss">
-::v-deep .u-button.u-reset-button.data-v-3bf2dba7.u-button--square.u-button--normal {
-  border-radius: 40px;
-  padding: 10px 0;
-}
+<style lang="scss">
+	page {
+		height: 100%;
+		background-color: #F7F7F7;
+	}
 
-.box {
-  .bottomBox {
-    width: calc(100vw - 48px);
-    padding: 0 24px;
-    padding-top: 12px;
-    background-color: #fff;
-    position: absolute;
-    bottom: 0;
-    padding-bottom: 34px;
+	.tabs-box {
+		padding: 8rpx 32rpx;
+		background-color: #fff;
 
-    .publishButton {
+		.search-box {
+			margin-top: 20rpx;
+		}
+	}
 
+	.chose-map-box {
+		.map-list-box {
+			padding: 24rpx 32rpx;
+			background-color: #fff;
 
-      text {
-        font-family: PingFang SC, PingFang SC;
-        font-weight: 600;
-        font-size: 16px;
-        color: #FFFFFF;
-        line-height: 24px;
-        text-align: left;
-        font-style: normal;
-        text-transform: none;
-      }
-    }
-  }
+			.search-box {
+				margin-bottom: 24rpx;
+			}
 
-  .back-btn {
-    width: 24px;
-    height: 24px;
-    margin-right: 16px;
-  }
+			.list {
+				.map-list-item {
+					padding: 22rpx 0;
 
-  .navTitle {
-    margin-left: 4px;
-    font-family: PingFang SC, PingFang SC;
-    font-weight: 600;
-    font-size: 16px;
-    color: #1D2326;
-    line-height: 24px;
-    text-align: left;
-    font-style: normal;
-    text-transform: none;
-  }
+					.top {
+						width: 100%;
+						margin-bottom: 8rpx;
 
-  .formBox {
-    width: calc(100% - 32px);
-    padding: 12px 16px;
-  }
-}
+						.title {
+							font-weight: 400;
+							font-size: 32rpx;
+							color: #1D2326;
+						}
 
-/* 地图容器 */
-#myMap {
-  width: 100%;
-  height: 50vh;
-}
+						.distance {
+							font-weight: 400;
+							font-size: 24rpx;
+							color: rgba(29, 35, 38, 0.5);
+						}
+					}
 
-/* 搜索栏 */
-.search-box {
-  width: calc(100vw - 32px);
-  margin: 0 16px;
-  margin-top: 12px;
-  display: flex;
-  background: #fff;
-}
+					.bottom {
+						.add {
+							width: 80%;
+							font-weight: 400;
+							font-size: 24rpx;
+							color: rgba(29, 35, 38, 0.5);
+						}
+					}
+				}
+			}
+		}
+	}
 
-.search-box input {
-  flex: 1;
-  border: 1rpx solid #ddd;
-  padding: 10rpx 20rpx;
-}
+	.chose-site-box {
+		padding: 48rpx 23rpx;
 
-.search-box image {
-  width: 40rpx;
-  height: 40rpx;
-  margin-left: 20rpx;
-}
+		.chose-site-box-item {
+			height: 204rpx;
+			box-sizing: border-box;
+			padding: 24rpx;
+			background: #FFFFFF;
+			border-radius: 8rpx;
+			display: flex;
+			margin-bottom: 24rpx;
 
-/* 地址列表 */
-.poi-item {
-  padding: 20rpx;
-  border-bottom: 1rpx solid #eee;
-}
+			.left {
+				width: 156rpx;
+				height: 156rpx;
+				background-color: #ccc;
+				margin-right: 28rpx;
 
-.poi-item .name {
-  font-weight: bold;
-  display: block;
-}
+				>image {
+					width: 100%;
+					height: 100%;
+				}
+			}
 
-.poi-item .address {
-  color: #666;
-  font-size: 24rpx;
-}
+			.right {
+				flex: 1;
+				height: 100%;
 
-.poi-item .distance {
-  float: right;
-  color: #888;
-}
+				.site-info {
+					width: 100%;
+					margin-bottom: 12rpx;
+
+					.site-name {
+						font-weight: 600;
+						font-size: 28rpx;
+						color: #15181A;
+					}
+
+					.km {
+						font-weight: 400;
+						font-size: 24rpx;
+						color: rgba(29, 35, 38, 0.6);
+					}
+				}
+
+				.site-type {
+					font-weight: 400;
+					font-size: 24rpx;
+					color: rgba(29, 35, 38, 0.6);
+					margin-bottom: 36rpx;
+				}
+
+				.site-address {
+					width: 100%;
+					font-weight: 400;
+					font-size: 24rpx;
+					color: rgba(29, 35, 38, 0.6);
+				}
+			}
+		}
+	}
+
+	.bottom-btn {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 136rpx;
+		background-color: #fff;
+		padding: 24rpx 38rpx;
+
+		.btn {
+			font-weight: 600;
+			font-size: 32rpx;
+			color: #FFFFFF;
+			width: 654rpx;
+			height: 88rpx;
+			background: #15181A;
+			border-radius: 80rpx 80rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
 </style>

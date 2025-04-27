@@ -1,256 +1,278 @@
 <template>
-  <view class="box">
-    <u-navbar
-      class="nav"
-      autoBack
-      leftText="发布动态"
-      :fixed="false"
-      bgColor="#fff"
-    >
-      <view slot="left" style="display: flex; align-items: center">
+  <view class="box" v-if="postBody">
+    <Navbar bgColor="#fff">
+      <view
+        @click="$utils.toPath.back()"
+        slot="left"
+        style="display: flex; align-items: center"
+      >
         <u-icon name="arrow-left" size="19"></u-icon>
         <image
           src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/avatar.png"
           mode="scaleToFill"
-          style="
-            margin-left: 6px;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-          "
+          class="img-1"
         />
-        <view
-          style="
-            font-family: PingFang SC, PingFang SC;
-            font-weight: 400;
-            font-size: 16px;
-            color: #1d2326;
-            line-height: 24px;
-            text-align: left;
-            font-style: normal;
-            text-transform: none;
-            margin-left: 8px;
-          "
-          >爱运动的橘子
+        <view class="img-2">爱运动的橘子</view>
+      </view>
+    </Navbar>
+    <view class="parent">
+      <swiper
+        :indicator-dots="false"
+        :circular="true"
+        :current="current"
+        :autoplay="true"
+      >
+        <block v-for="(item, index) in postBody.fileUrlList" :key="index">
+          <swiper-item>
+            <image
+              style="height: 504rpx; width: 702rpx; border-radius: 8rpx"
+              :src="item"
+              mode=""
+            >
+            </image>
+          </swiper-item>
+        </block>
+      </swiper>
+      <view class="numDots">
+        <view>
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/photo.png"
+            mode="scaleToFill"
+          />
+          <text> {{ current + 1 }}/{{ postBody.fileUrlList.length }} </text>
         </view>
       </view>
-    </u-navbar>
-    <view>
-      <scroll-view
-        scroll-y
-        :style="{
-          height: windowHeight - bottomBoxHeight - statusBarHeight - 44 + 'px',
-        }"
-      >
-        <view class="parent">
-          <swiper
-            @change="monitorCurrent"
-            :indicator-dots="false"
-            :circular="true"
-            :current="current"
-            :autoplay="true"
-          >
-            <block v-for="(item, index) in backgroundArr" :key="index">
-              <swiper-item>
-                <view :class="item"></view>
-              </swiper-item>
-            </block>
-          </swiper>
-          <view class="numDots">
-            <view>
-              <image
-                src="@https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/photo.png"
-                mode="scaleToFill"
-              />
-              <text> {{ current + 1 }}/3 </text>
-            </view>
-          </view>
-          <!-- 自定义轮播图进度点 -->
-          <view class="dots">
-            <block v-for="(item, index) in backgroundArr" :key="index">
-              <view :class="current == index ? 'active' : ''"></view>
-            </block>
-          </view>
-        </view>
-        <view class="contentBox">
-          <text class="title">2024年|我的徒步passion时刻</text><br />
-          <text class="titleContent">
-            晒出你的徒步照片 看看2024你都去了哪些地方徒步
-            春天大理看爱心湖夏天重庆金佛山玩水 “秋天去川西看看雪山”
-            攀冬天去丽江感受一下阳光 回看这些走过的路，仍然充满passion
-            晒出你的徒步照片 看看2024你都去了哪些地方徒步
-            春天大理看爱心湖夏天重庆金佛山玩水 “秋天去川西看看雪山”
-            攀冬天去丽江感受一下阳光 回看这些走过的路，仍然充满passion
-            晒出你的徒步照片 看看2024你都去了哪些地方徒步
-            春天大理看爱心湖夏天重庆金佛山玩水 “秋天去川西看看雪山”
-            攀冬天去丽江感受一下阳光 回看这些走过的路，仍然充满passion
-          </text>
-          <u-gap height="8" bgColor="#F7F7F7"></u-gap>
-          <view class="functionBox">
-            <view></view>
-            <view class="rightPart">
-              <view>
-                <!-- <view class="frie-svg"></view> -->
-                <image
-                  class="frie-svg"
-                  src="@https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/frie.svg"
-                  mode="scaleToFill"
-                />
-                <text>0</text>
-              </view>
-              <view>
-                <!-- <view class="star-svg"></view> -->
-                <image
-                  class="star-svg"
-                  src="@https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/collect.svg"
-                  mode="scaleToFill"
-                />
-                <text>0</text>
-              </view>
-              <view>
-                <!-- <view class="comment-svg"></view> -->
-                <image
-                  class="comment-svg"
-                  src="@https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/comment.svg"
-                  mode="scaleToFill"
-                />
-                <text>0</text>
-              </view>
-            </view>
-          </view>
-        </view>
-      </scroll-view>
+      <view class="dots">
+        <block v-for="(item, index) in postBody.fileUrlList" :key="index">
+          <view :class="current == index ? 'active' : ''"></view>
+        </block>
+      </view>
     </view>
-    <view class="bottomBox">
-      <u-button class="publishButton" color="#15181A ">立即发布</u-button>
+    <view class="contentBox">
+      <view style="margin-bottom: 24rpx">
+        <view class="title">{{ postBody.title }}</view>
+        <text class="titleContent">
+          {{ postBody.content }}
+        </text>
+      </view>
+      <div class="address flex-jb">
+        <text>{{ postBody.address }}</text>
+        <u-icon name="arrow-right" color="#484D4F"></u-icon>
+      </div>
+      <div v-if="postBody.matchName" class="match flex-jb">
+        <text>{{ postBody.matchName }}</text>
+        <u-icon name="arrow-right" color="#484D4F"></u-icon>
+      </div>
+      <div v-if="postBody.labelCode" class="sport">
+        <text>#</text>
+        <view v-if="sportList.length" class="l-box">
+          <div
+            class="l-box-item"
+            v-for="(item, index) in sportList"
+            :key="index"
+          >
+            {{ item }}
+          </div>
+        </view>
+      </div>
+    </view>
+    <view class="functionBox">
+      <view></view>
+      <view class="rightPart">
+        <view>
+          <image
+            class="frie-svg"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/frie.svg"
+            mode="scaleToFill"
+          />
+          <text>0</text>
+        </view>
+        <view>
+          <image
+            class="star-svg"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/collect.svg"
+            mode="scaleToFill"
+          />
+          <text>0</text>
+        </view>
+        <view>
+          <image
+            class="comment-svg"
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/comment.svg"
+            mode="scaleToFill"
+          />
+          <text>0</text>
+        </view>
+      </view>
+    </view>
+
+    <view style="height: 120rpx"></view>
+    <view class="bottomBox safe-bottom">
+      <view class="publishButton" color="#15181A " @click="submitEvent"
+        >立即发布</view
+      >
     </view>
   </view>
 </template>
 <script>
+import Navbar from "@/components/WNavbar/index.vue";
 export default {
   data() {
     return {
-      fileList: [],
-      title: "",
-      titleLength: 20,
-      titleContent: "",
-      bottomBoxHeight: 0,
-      windowHeight: uni.getSystemInfoSync().windowHeight,
-      statusBarHeight: uni.getSystemInfoSync().statusBarHeight,
-      isShow: false,
-      isShowPopup: false,
-      //轮播图的数组
-      backgroundArr: ["red", "green", "blue"],
-      //轮播图当前的下标
       current: 0,
-      //是否自动播放轮播图
-      autoplay: false,
       indicatorColor: "#000000",
+      postBody: "",
+      sportList: [],
     };
   },
+  components: {
+    Navbar,
+  },
   methods: {
-    //图片读取后的处理函数
-    afterRead(e) {
-      console.log(e);
-      // this.fileList = e.file
-      this.fileList.push(e.file[0]);
-      console.log(this.fileList);
-    },
-    //图片删除函数
-    deletePic(e) {
-      this.fileList.splice(e.index, 1);
-    },
-    //标题输入事件
-    inputEvent(e) {
-      this.titleLength = 20;
-      if (e.length <= 20) {
-        this.titleLength = this.titleLength - e.length;
-        this.isShowPopup = false;
+    async submitEvent() {
+      this.postBody.state = "1";
+      const res = await this.$requestAll.dynamics.saveNewsRelease(
+        this.postBody
+      );
+      uni.hideLoading();
+      if (res.status == 200) {
+        this.$utils.toast(this.postBody.state == "1" ? "发布成功" : "保存成功");
+        setTimeout(() => {
+          this.$utils.toPath.switchTab("/pages/user/user");
+        }, 1500);
       } else {
-        this.titleLength = 0;
-        uni.showToast({
-          icon: "none",
-          title: "标题最多输入20个字",
-          mask: false,
-        });
+        this.$utils.toast(res.message);
       }
-      if (e.length >= 1) {
-        this.isShow = true;
-      } else {
-        this.isShow = false;
-      }
-    },
-    changeEvent(e) {
-      console.log(e);
-    },
-    onClearTitle() {
-      this.title = "";
-    },
-    toPreview() {
-      uni.navigateTo({ url: "/dynamic/publish/dongTaiPreview" });
-    },
-    monitorCurrent: function (e) {
-      this.current = e.detail.current;
     },
   },
-  onLoad() {
-    this.$nextTick(() => {
-      uni
-        .createSelectorQuery()
-        .select(".bottomBox")
-        .boundingClientRect((data) => {
-          this.bottomBoxHeight = data.height;
-          console.log(this.statusBarHeight);
-          console.log(this.windowHeight);
-        })
-        .exec();
-    });
+  onLoad(option) {
+    console.log(decodeURIComponent(option.postBody), "????");
+    this.postBody = JSON.parse(decodeURIComponent(option.postBody));
+    if (this.postBody.labelName) {
+      this.sportList = this.postBody.labelName.split(",");
+    }
   },
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
+page {
+  height: 100%;
+  background-color: #f5f5f5;
+}
+
+.functionBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  background-color: #fff;
+  padding: 44rpx;
+  box-sizing: border-box;
+  .rightPart {
+    display: flex;
+
+    view {
+      display: flex;
+      align-items: center;
+
+      .frie-svg {
+        width: 60rpx;
+        height: 60rpx;
+        margin-left: 28rpx;
+      }
+
+      .star-svg {
+        width: 60rpx;
+        height: 60rpx;
+        margin-left: 28rpx;
+      }
+
+      .comment-svg {
+        width: 60rpx;
+        height: 60rpx;
+        margin-left: 28rpx;
+      }
+
+      text {
+        margin-left: 12rpx;
+      }
+    }
+  }
+}
+
+.sport {
+  > text {
+    color: #f0f0f0;
+    font-size: 32rpx;
+    font-weight: bolder;
+    margin-right: 16rpx;
+  }
+
+  .l-box {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    .l-box-item {
+      padding: 6rpx 12rpx;
+      font-weight: 600;
+      font-size: 24rpx;
+      color: #ec383c;
+      border: 2rpx solid rgba(236, 56, 74, 0.2);
+      border-radius: 4rpx;
+      margin-right: 12rpx;
+      box-sizing: border-box;
+    }
+  }
+}
+
+.img-1 {
+  margin-left: 6px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.img-2 {
+  font-family: PingFang SC, PingFang SC;
+  font-weight: 400;
+  font-size: 16px;
+  color: #1d2326;
+  line-height: 24px;
+  text-align: left;
+  font-style: normal;
+  text-transform: none;
+  margin-left: 8px;
+}
+
 .parent {
   position: relative;
-
+  background-color: #fff;
+  padding: 0 24rpx;
   swiper {
-    height: 252px;
-    width: calc(100% - 24px);
-    margin: 0 12px;
+    height: 510rpx;
 
     swiper-item view {
       height: 100%;
-    }
-
-    .red {
-      background-color: Pink;
-    }
-
-    .green {
-      background-color: PaleGreen;
-    }
-
-    .blue {
-      background-color: SkyBlue;
     }
   }
 }
 
 .numDots {
-  position: relative;
-  top: -40px;
-  right: -300px;
+  position: absolute;
+  top: 432rpx;
+  right: 48rpx;
 
   view {
-    width: 51-16px;
-    height: 24-12px;
-    border-radius: 20px;
+    width: 102rpx;
+    height: 48rpx;
+    background: rgba(41, 41, 41, 0.3);
+    border-radius: 40rpx;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: rgba(41, 41, 41, 0.3);
-    padding: 6px 8px;
-
+    padding: 12rpx 16rpx;
+    box-sizing: border-box;
     image {
       width: 12px;
       height: 12px;
@@ -330,10 +352,6 @@ export default {
 }
 
 .box {
-  background-color: #fff;
-  width: 100vw;
-  height: 100vh;
-
   .indicator {
     @include flex(row);
     justify-content: center;
@@ -367,90 +385,71 @@ export default {
   }
 
   .contentBox {
-    width: calc(100% - 32px);
-    margin: 0 16px;
-    margin-top: 24px;
     background-color: #fff;
-
+    padding: 48rpx 24rpx;
+    margin-bottom: 16rpx;
+    box-sizing: border-box;
     .title {
-      font-family: PingFang SC, PingFang SC;
       font-weight: 600;
-      font-size: 18px;
+      font-size: 36rpx;
       color: #1d2326;
-      line-height: 24px;
-      text-align: left;
-      font-style: normal;
-      text-transform: none;
+      margin-bottom: 24rpx;
     }
 
     .titleContent {
-      margin-top: 12px;
-      margin-bottom: 24px;
-      font-family: PingFang SC, PingFang SC;
+      margin-bottom: 32rpx;
       font-weight: 400;
-      font-size: 16px;
+      font-size: 32rpx;
       color: rgba(29, 35, 38, 0.8);
-      line-height: 24px;
-      text-align: left;
-      font-style: normal;
-      text-transform: none;
     }
 
-    .functionBox {
-      margin-top: 20px;
-      display: flex;
-      justify-content: space-between;
+    .address {
+      // width: 686rpx;
+      height: 76rpx;
+      background: #f5f5f5;
+      border-radius: 8rpx;
+      padding: 16rpx 24rpx;
+      font-weight: 400;
+      font-size: 28rpx;
+      color: rgba(29, 35, 38, 0.8);
+      margin-bottom: 24rpx;
+      box-sizing: border-box;
+    }
 
-      .rightPart {
-        display: flex;
-
-        view {
-          display: flex;
-          align-items: center;
-
-          .frie-svg {
-            width: 30px;
-            height: 30px;
-            margin-left: 14px;
-          }
-
-          .star-svg {
-            width: 30px;
-            height: 30px;
-            margin-left: 14px;
-          }
-
-          .comment-svg {
-            width: 30px;
-            height: 30px;
-            margin-left: 14px;
-          }
-
-          text {
-            margin-left: 6px;
-          }
-        }
-      }
+    .match {
+      // width: 686rpx;
+      height: 76rpx;
+      background: #f5f5f5;
+      border-radius: 8rpx;
+      padding: 16rpx 24rpx;
+      font-weight: 400;
+      font-size: 28rpx;
+      color: rgba(29, 35, 38, 0.8);
+      margin-bottom: 40rpx;
+      box-sizing: border-box;
     }
   }
 
   .bottomBox {
-    width: 100%;
+    width: 750rpx;
     background-color: #fff;
-    position: absolute;
+    position: fixed;
     bottom: 0;
-    padding-bottom: 46px;
-    padding-top: 12px;
-
+    left: 0;
+    padding: 24rpx 48rpx;
+    box-sizing: border-box;
     .publishButton {
+      width: 654rpx;
+      height: 88rpx;
+      background: #15181a;
+      border-radius: 80rpx;
       font-family: PingFang SC, PingFang SC;
       font-weight: 600;
-      font-size: 16px;
+      font-size: 32rpx;
       color: #ffffff;
-      line-height: 24px;
-      text-align: left;
-      font-style: normal;
-      text-transform: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 }

@@ -325,6 +325,9 @@ export default {
       });
     },
   },
+  onShow() {
+    uni.showTabBar();
+  },
 };
 </script>
 

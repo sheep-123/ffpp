@@ -408,12 +408,14 @@ body {
         box-sizing: border-box;
         padding: 0 12px;
         height: 50px;
+
         .title {
           font-weight: 400;
           font-size: 18px;
           color: #ffffff;
           font-family: youshe;
         }
+
         .more {
           display: flex;
           align-items: center;
@@ -480,6 +482,7 @@ body {
             display: flex;
             align-items: center;
             justify-content: center;
+
             .b2 {
               width: 40px;
               height: 40px;
@@ -499,6 +502,7 @@ body {
             display: flex;
             align-items: center;
             justify-content: center;
+
             .b4 {
               width: 50px;
               height: 50px;
@@ -549,9 +553,11 @@ body {
       .item:nth-child(1) {
         border-right: 1px solid #e6e6e6;
       }
+
       .item:nth-child(2) {
         border-right: 1px solid #e6e6e6;
       }
+
       .item {
         display: flex;
         align-items: center;
@@ -560,12 +566,14 @@ body {
         justify-content: center;
       }
     }
+
     .right {
       display: flex;
       align-items: center;
       font-weight: 400;
       font-size: 12px;
       color: rgba(29, 35, 38, 0.5);
+
       image {
         width: 16px;
         height: 16px;

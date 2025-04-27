@@ -2,6 +2,9 @@ import Vue from "vue";
 import App from "./App.vue";
 import "./uni.promisify.adaptor";
 
+import * as api from "./utils/api";
+Vue.prototype.$api = api;
+
 import uView from "uview-ui";
 Vue.use(uView);
 

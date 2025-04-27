@@ -435,9 +435,7 @@
 </template>
 
 <script>
-// import Tabbar from "@/components/tabbar.vue";
 export default {
-  // components: { Tabbar },
   data() {
     return {
       latitude: 23,
@@ -478,11 +476,11 @@ export default {
           },
         },
       ],
-      isMapExpanded: false, //地图展开
-      isSticky: false, //吸顶状态
-      dragStartY: 0, //下拉开始的位置
-      isDragging: false, //下拉状态
-      screenHeight: 0, //屏幕高度
+      isMapExpanded: false,
+      isSticky: false,
+      dragStartY: 0,
+      isDragging: false,
+      screenHeight: 0,
       keyword: "",
       statusBarHeight: 0,
       navbarHeight: 44,
@@ -493,8 +491,8 @@ export default {
   onLoad() {
     // uni.reLaunch({
     //   // url: "/competition/apply/appear",
-    //   // url: "/competition/publish/saishi",
-    //   url: "/user/competition",
+    //   url: "/competition/publish/saishi",
+    //   // url: "/user/competition",
     // });
 
     this.Location();

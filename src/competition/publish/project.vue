@@ -35,9 +35,7 @@
       </view>
     </view>
 
-    <view class="bt">
-      <view class="enter" @click="enter">确认选择</view>
-    </view>
+    <bt @onConfirm="enter"></bt>
   </view>
 </template>
 
@@ -158,27 +156,6 @@ export default {
         color: #ec384a;
         margin-bottom: 12px;
       }
-    }
-  }
-
-  .bt {
-    position: fixed;
-    bottom: 0;
-    height: 88px;
-    box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    .enter {
-      width: 80%;
-      background-color: black;
-      height: 44px;
-      border-radius: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: 600;
-      font-size: 16px;
-      color: #ffffff;
-      margin: 12px auto;
     }
   }
 }

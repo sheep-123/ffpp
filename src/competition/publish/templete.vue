@@ -28,9 +28,7 @@
       </view>
       <u-empty v-else></u-empty>
     </view>
-    <view class="bt" v-if="list.length > 0">
-      <view class="enter" @click="enter">确认选择</view>
-    </view>
+    <bt @onConfirm="enter"></bt>
     <u-toast ref="notice"></u-toast>
   </view>
 </template>

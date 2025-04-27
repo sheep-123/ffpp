@@ -251,7 +251,6 @@
 
 <script>
 export default {
-  // components: { Tabbar },
   data() {
     return {
       status: "loadmore",

@@ -309,5 +309,8 @@
         }
       ]
     }
-  ]
+  ],
+  "usingComponents": {
+    "bt": "/components/bt/bt"
+  }
 }

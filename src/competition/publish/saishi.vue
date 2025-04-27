@@ -2359,7 +2359,7 @@ export default {
       group_num: uni.getStorageSync("group_num") ?? null,
       show12: false,
       columns12: [],
-      columns11: [],
+      columns11: [["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]],
       matchingMannerName: uni.getStorageSync("matchingMannerName") ?? null,
       matchingManner: uni.getStorageSync("matchingManner") ?? null,
       op: 0,
@@ -3604,7 +3604,6 @@ export default {
       result.data.map((item, index) => {
         arr.push(item.label);
       });
-      this.columns11 = [arr];
       this.columns19 = [arr];
     },
     confirm19(n) {

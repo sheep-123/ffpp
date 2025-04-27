@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view class="box">
     <u-navbar leftText="赛事地点" autoBack :fixed="false"></u-navbar>
     <view class="type">
       <u-tabs
@@ -10,23 +10,42 @@
         :current="action"
       ></u-tabs>
     </view>
-    <view class="content">
-      <view class="main">
-        <view class="search">
-          <u-input
-            shape="circle"
-            placeholder="请输入场地关键词"
-            placeholderClass="placehoder"
-          >
-            <view slot="prefix" class="prefix">
-              广州
-              <u-icon size="8" name="arrow-down-fill" color="#CCCCCC"></u-icon>
-            </view>
-            <view slot="suffix" class="suffix">搜索</view>
-          </u-input>
+
+    <view class="main">
+      <view class="search">
+        <view class="prefix">广州 <text></text></view>
+        <input
+          shape="circle"
+          placeholder="请输入场地关键词"
+          placeholder-class="placehoder"
+          style="width: 100%"
+          v-model="keywords"
+        />
+        <view class="suffix" @click="getUserLocation">搜索</view>
+      </view>
+      <view class="list">
+        <view class="item" v-for="(item, index) in list" :key="index">
+          <image
+            :src="
+              item.doorPhoto ||
+              'https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg'
+            "
+            mode="aspectFill"
+            style="width: 78px; height: 78px; border-radius: 4px"
+          />
+          <view class="right">
+            <view class="top"> {{ item.siteName }} <text>0.4km</text> </view>
+            <view class="place">{{ item.siteType }}</view>
+            <view class="position"
+              >{{ item.siteAddress
+              }}<u-icon name="checkbox-mark" color="#EC384A" size="24"></u-icon
+            ></view>
+          </view>
         </view>
       </view>
     </view>
+    <bt @onConfirm="enter" />
+    <u-toast ref="notice"></u-toast>
   </view>
 </template>
 
@@ -42,12 +61,45 @@ export default {
           name: "选地址",
         },
       ],
-      statusBarHeight: 0,
-      navbarHeight: 44,
       action: 0,
+      keywords: "",
+      latitude: null,
+      longitude: null,
+      page: 1,
+      pageSize: 10,
+      list: [],
     };
   },
+  async onLoad() {
+    this.getUserLocation();
+  },
   methods: {
+    async getUserLocation() {
+      const res = await uni.getLocation({
+        type: "gcj02", // 坐标系类型，常用 gcj02（国测局坐标系）
+      });
+      const { latitude, longitude } = res;
+      this.latitude = latitude;
+      this.longitude = longitude;
+      try {
+        const params = {
+          city: "广州",
+          keywords: this.keywords,
+          userLat: this.latitude,
+          userLng: this.longitude,
+          page: this.page,
+          pageSize: this.pageSize,
+        };
+
+        const result = await this.$api.queryCdInfo(params);
+        this.list = result.data;
+      } catch (error) {
+        this.$refs.notice.show({
+          type: "default",
+          message: error.data.message,
+        });
+      }
+    },
     click(item) {
       this.action = item.index;
       if (item.index == 1) {
@@ -65,77 +117,116 @@ export default {
         });
       }
     },
-    enter() {},
+    enter() {
+      console.log(4555744);
+    },
   },
 };
 </script>
 
 <style lang="scss">
-.content {
+page {
   background-color: #f7f7f7;
+}
+.box {
+  width: 100%;
+  position: relative;
+  height: 100vh;
   .main {
-    width: 95%;
+    width: 90%;
     margin: auto;
-    height: 600px;
-    overflow: hidden;
-    z-index: 99;
+    padding-bottom: 100px;
     .search {
       background-color: #fff;
       border-radius: 20px;
-      margin: 10px;
+      margin: 10px 0;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       .prefix {
         display: flex;
         align-items: center;
+        justify-content: center;
         font-weight: 400;
         font-size: 12px;
         color: rgba(29, 35, 38, 0.6);
         gap: 3px;
-        padding: 5px;
+        padding: 0 5px 0 10px;
+        margin-right: 10px;
+        white-space: nowrap;
+
+        width: 15%;
+        border-right: 1px solid #ccc;
+        text {
+          border-left: 4px solid transparent;
+          border-right: 4px solid transparent;
+          border-top: 4px solid #cccccc;
+        }
       }
       .suffix {
         font-weight: 600;
         font-size: 12px;
         color: #ffffff;
-        // width: 56px;
-        // height: 28px;
         padding: 6px 16px;
         border-radius: 20px;
         background-color: #ec384a;
         display: flex;
         align-items: center;
         justify-content: center;
+        white-space: nowrap;
+        margin-right: 5px;
       }
     }
 
     .list {
-      width: 90%;
       margin: auto;
       display: flex;
       flex-direction: column;
-      gap: 20px;
-      margin-top: 20px;
+      gap: 12px;
       .item {
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        background-color: #fff;
+        border-radius: 4px;
+        padding: 12px;
+        box-sizing: border-box;
         gap: 7px;
-        .top {
+        .right {
           display: flex;
+          flex-direction: column;
           justify-content: space-between;
+          gap: 10px;
+          flex: 1;
+          .top {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 14px;
+            color: #15181a;
+            align-items: center;
+            text {
+              font-weight: 400;
+              font-size: 12px;
+              color: rgba(29, 35, 38, 0.6);
+            }
+          }
           .place {
             font-weight: 400;
-            font-size: 16px;
-            color: #1d2326;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            max-width: 80%;
-            overflow: hidden;
+            font-size: 12px;
+            color: rgba(29, 35, 38, 0.6);
+            margin-top: -10px;
           }
-          .way {
+          .position {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             font-weight: 400;
             font-size: 12px;
             color: rgba(29, 35, 38, 0.5);
           }
         }
+
         .detail {
           font-weight: 400;
           font-size: 12px;
@@ -178,52 +269,14 @@ export default {
       }
     }
   }
+  .type {
+    padding-left: 1%;
+    background-color: #fff;
+  }
 }
-
-.type {
-  width: 95%;
-  margin: auto;
-}
-
 .placehoder {
   font-weight: 400;
   font-size: 14px;
   color: rgba(29, 35, 38, 0.5);
-}
-
-.placehoder-y {
-  font-weight: 400;
-  font-size: 14px;
-  color: rgba(29, 35, 38, 0.6);
-}
-
-map {
-  width: 100%;
-  height: 250px;
-}
-
-.ab {
-  position: fixed;
-  bottom: 0;
-  height: 68px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  width: 100%;
-  box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.05);
-  background-color: #fff;
-  .bt {
-    font-weight: 600;
-    font-size: 16px;
-    color: #ffffff;
-    width: 80%;
-    border-radius: 20px;
-    background-color: #b9baba;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
 }
 </style>

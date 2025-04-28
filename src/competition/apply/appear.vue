@@ -294,6 +294,7 @@
                       v-for="(gender, genderIndex) in item.applyValue.split(
                         ','
                       )"
+                      :key="genderIndex"
                     >
                       <u-radio
                         activeColor="#EC384A"

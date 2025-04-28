@@ -3,9 +3,9 @@ module.exports = (vm) => {
   // 初始化请求配置
   uni.$u.http.setConfig((config) => {
     //#ifdef MP-WEIXIN || APP-PLUS
-    config.baseURL = "http://192.168.3.36:8001";
+    // config.baseURL = "http://192.168.3.36:8001";
     // config.baseURL = "http://192.168.3.46:8001";
-    // config.baseURL = "https://testfeifanpaopao.jireplayer.com/wjapi";
+    config.baseURL = "https://testfeifanpaopao.jireplayer.com/wjapi";
     //#endif
 
     // 设置默认请求头

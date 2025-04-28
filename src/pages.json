@@ -253,13 +253,13 @@
             "navigationStyle": "custom"
           }
         },
-		{
-		  "path": "publish/choseMatch",
-		  "style": {
-		    "navigationBarTitleText": "关联赛事",
-		    "navigationStyle": "custom"
-		  }
-		},
+        {
+          "path": "publish/choseMatch",
+          "style": {
+            "navigationBarTitleText": "关联赛事",
+            "navigationStyle": "custom"
+          }
+        },
         {
           "path": "publish/dongTaiDetail",
           "style": {

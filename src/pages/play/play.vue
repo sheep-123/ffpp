@@ -68,9 +68,11 @@
         prefixIcon="search"
         prefixIconStyle="font-size: 22px;color: #909399"
         shape="circle"
+        v-model="keyword"
+        @confirm="search"
       >
         <template slot="suffix">
-          <view class="bt1" @click="getQueryMatchList">搜索</view>
+          <view class="bt1" @click="search">搜索</view>
         </template>
       </u-input>
     </view>
@@ -371,7 +373,6 @@ export default {
       this.userLocation.cityName = res;
       this.userLocation.code = cityCode;
       this.getAreaByCode();
-      console.log(this.userLocation);
       this.getQueryMatchList();
     },
     async getAreaByCode() {
@@ -399,6 +400,11 @@ export default {
       this.getQueryMatchList();
       this.show = false;
       this.activeTab = null;
+    },
+    async search() {
+      this.pageNum = 1;
+      this.matchList = [];
+      this.getQueryMatchList();
     },
   },
 

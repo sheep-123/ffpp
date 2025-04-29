@@ -70,7 +70,7 @@
         shape="circle"
       >
         <template slot="suffix">
-          <view class="bt1">搜索</view>
+          <view class="bt1" @click="getQueryMatchList">搜索</view>
         </template>
       </u-input>
     </view>
@@ -122,7 +122,7 @@
       </view>
       <view class="right">
         <u-icon name="map" size="16" color="#CCCCCC"></u-icon>
-        <view class="value">{{ city }}</view>
+        <view class="value">{{ userLocation.cityName }}</view>
       </view>
     </view>
 
@@ -131,7 +131,7 @@
         <view class="left">
           <image
             :src="item.mainImageUrl"
-            style="width: 90px; height: 90px"
+            style="width: 90px; height: 90px; border-radius: 4px"
             mode="aspectFill"
           />
           <view class="buttom">
@@ -184,32 +184,21 @@
       <view class="local">
         <view class="top" v-if="activeTab == 0">
           <view class="left">
-            <view class="item">荔湾区</view>
-            <view class="item">荔湾区</view>
-            <view class="item">荔湾区</view>
-            <view class="item">荔湾区</view>
-            <view class="item">荔湾区</view>
-            <view class="item">荔湾区</view>
-            <view class="item">荔湾区</view>
-            <view class="item">荔湾区</view>
-            <view class="item">荔湾区</view>
-            <view class="item">荔湾区</view>
+            <view
+              :class="item.adcode == adInfo.adcode ? 'item-active' : 'item'"
+              @click="choseDistrictHandle(item)"
+              v-for="(item, index) in districtList"
+              :key="index"
+              >{{ item.name }}</view
+            >
           </view>
           <view class="right">
             <u-radio-group v-model="value" placement="column">
               <u-radio
+                v-for="(item, index) in streetList"
+                :key="index"
                 activeColor="red"
-                label="不限"
-                customStyle="margin-bottom: 20px;margin-left: 20px"
-              ></u-radio>
-              <u-radio
-                activeColor="red"
-                label="车陂"
-                customStyle="margin-bottom: 20px;margin-left: 20px"
-              ></u-radio>
-              <u-radio
-                activeColor="red"
-                label="东圃"
+                :label="item.street_name"
                 customStyle="margin-bottom: 20px;margin-left: 20px"
               ></u-radio>
             </u-radio-group>
@@ -265,7 +254,6 @@ export default {
         "https://uviewui.com/album/3.jpg",
         "https://uviewui.com/album/4.jpg",
       ],
-      city: "暂无",
       show: false,
       matchList: [],
       matchLabel: [],
@@ -275,9 +263,15 @@ export default {
       sortType: "0",
       labelCode: "",
       active: "",
+      districtList: [],
+      userLocation: {},
+      adInfo: {
+        adcode: "",
+        name: "",
+      },
+      streetList: [],
     };
   },
-  onload() {},
   onShow() {
     this.pageNum = 1;
     this.matchList = [];
@@ -286,8 +280,8 @@ export default {
     this.statusBarHeight = systemInfo.statusBarHeight;
     this.queryMatchLabel();
     this.getSort();
-    this.getQueryMatchList();
-    this.city = uni.getStorageSync("city") || "暂无";
+    this.getLocationInfo();
+    this.getAreaByCode();
   },
   methods: {
     initIntersectionObserver() {
@@ -312,7 +306,6 @@ export default {
       this.activeTab = index;
       this.show = true;
     },
-
     async getQueryMatchList() {
       this.status = "loading";
       try {
@@ -321,6 +314,9 @@ export default {
           pageSize: this.pageSize,
           sortType: this.sortType,
           keywords: this.keyword,
+          adcode4: this.userLocation.code.slice(0, 4),
+          adcode6: this.adInfo.adcode,
+          labelCode: this.labelCode,
         });
 
         if (result.status === 200) {
@@ -368,6 +364,41 @@ export default {
       this.show = false;
       this.matchList = [];
       this.getQueryMatchList();
+    },
+    async getLocationInfo() {
+      const res = await this.getLocationToAddress();
+      const cityCode = this.$utils.getCodeByCity(res);
+      this.userLocation.cityName = res;
+      this.userLocation.code = cityCode;
+      this.getAreaByCode();
+      console.log(this.userLocation);
+      this.getQueryMatchList();
+    },
+    async getAreaByCode() {
+      const res = await this.$requestAll.dynamics.queryAdCode(
+        this.userLocation.code.slice(0, 4)
+      );
+      this.districtList = res.data;
+    },
+    async choseDistrictHandle(e) {
+      this.adInfo.adcode = e.adcode;
+      this.adInfo.name = e.name;
+      const res = await this.$requestAll.dynamics.queryStreetCode(e.adcode);
+      this.streetList = res.data;
+    },
+    reset() {
+      this.pageNum = 1;
+      this.active = "";
+      this.labelCode = "";
+      this.adInfo = {
+        adcode: "",
+        name: "",
+      };
+      // this.streetList = [];
+      this.matchList = [];
+      this.getQueryMatchList();
+      this.show = false;
+      this.activeTab = null;
     },
   },
 
@@ -751,12 +782,24 @@ body {
         color: #1d2326;
         text-indent: 30px;
       }
+      .item-active {
+        width: 100%;
+        height: 46px;
+        padding: 12px 0;
+        box-sizing: border-box;
+        font-weight: 400;
+        font-size: 14px;
+        color: #1d2326;
+        text-indent: 30px;
+        background-color: white;
+      }
     }
     .right {
       width: 70%;
       height: 264px;
       padding-top: 20px;
       box-sizing: border-box;
+      overflow-y: scroll;
     }
   }
 

@@ -134,13 +134,16 @@
             '--active-color': activeTab == index ? activeTabColor : '#1e54ba',
           }"
         >
-          <view class="value" v-if="activeTab != index">{{ tab.name }}</view>
-          <image
+          <view class="value-active" v-if="activeTab == index">{{ tab }}</view>
+          <view class="value" v-else>{{ tab }}</view>
+
+          <!-- <view class="value" v-if="activeTab != index">{{ tab.name }}</view> -->
+          <!-- <image
             :src="tab.img"
             mode="scaleToFill"
             style="width: 52px; height: 12px"
             v-else
-          />
+          /> -->
           <image
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/biao.png"
             mode="scaleToFill"
@@ -323,7 +326,7 @@
             <view class="item">
               <view class="left">赛事裁判 <view class="icon">*</view></view>
               <view class="right">
-                <u-avatar></u-avatar>
+                <u-avatar :src="userAvatar"></u-avatar>
                 <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
               ></view>
             </view>
@@ -601,11 +604,11 @@
           />
           <view class="text">
             <view class="item">
-              <view class="left"
-                ><text>赛事地点</text> <view class="icon">*</view></view
-              >
-              <view class="right"
-                ><text>请选择赛事地点</text
+              <view class="left">赛事地点 <view class="icon">*</view></view>
+              <view class="right" :style="fullAddress ? 'width:50%' : ''"
+                ><text :style="{ color: fullAddress ? 'black' : '' }">{{
+                  fullAddress || "请选择赛事地点"
+                }}</text
                 ><u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon
               ></view>
             </view>
@@ -2279,28 +2282,7 @@ export default {
       custom: false,
       sliderValue: 0,
       isDragging: false, // 是否正在拖动
-      tabs: [
-        {
-          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/报名设置.png",
-          name: "报名设置",
-        },
-        {
-          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/环节设置.png",
-          name: "环节设置",
-        },
-        {
-          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/奖励设置.png",
-          name: "奖励设置",
-        },
-        {
-          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/直击设置.png",
-          name: "直击设置",
-        },
-        {
-          img: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/规则设置.png",
-          name: "规则设置",
-        },
-      ],
+      tabs: ["报名设置", "信息设置", "奖励设置", "直击设置", "规则设置"],
       bmType: [],
       serialNum: uni.getStorageSync("serialNum") || "",
       fileList: [],
@@ -2419,6 +2401,7 @@ export default {
       currentTime: "",
       timeShow1: false,
       szList: [],
+      userAvatar: null,
     };
   },
   onPageScroll(e) {
@@ -2446,6 +2429,7 @@ export default {
       this.addItem();
     }
     this.getSzList();
+    this.getUserAvatar();
   },
   onShow() {
     this.labelId = uni.getStorageSync("labelId") || "";
@@ -2468,6 +2452,9 @@ export default {
       if (index == 1 && this.templateId && !this.items) {
         this.addItem();
       }
+    },
+    getUserAvatar() {
+      this.userAvatar = uni.getStorageSync("user").avatarUrl || "";
     },
     skin() {
       this.changeSkin = !this.changeSkin;
@@ -4151,10 +4138,12 @@ export default {
         border-top: 10px solid var(--active-color); // 动态绑定颜色
       }
 
-      .value {
+      .value-active {
+        font-family: "youshe";
         font-weight: 400;
-        font-size: 12px;
-        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+        color: #ffffff;
+        white-space: nowrap;
       }
     }
   }

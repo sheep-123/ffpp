@@ -1,9 +1,15 @@
 <template>
   <view>
-    <view class="tooltip">
+    <view class="tooltip" :style="zz == 2 || zz == 1 ? 'top:116%' : ''">
       <view class="t-first" v-if="tooltipState == 'first'">
         <view class="icon"></view>
-        <view class="t-item" @tap.stop="$emit('update-tooltip-state', 'second')"
+        <view
+          class="t-item"
+          @tap.stop="
+            zz == 6
+              ? $emit('update-tooltip-state', 'sixth')
+              : $emit('update-tooltip-state', 'second')
+          "
           >晋级</view
         >
         <view
@@ -16,7 +22,7 @@
         >
       </view>
       <view class="t-first" v-else-if="tooltipState == 'second'">
-        <view class="icon"></view>
+        <view class="icon" style="top: -16px"></view>
         <view class="title">晋级至 </view>
         <view
           class="t-item"
@@ -37,7 +43,7 @@
         >
       </view>
       <view class="t-first" v-else-if="tooltipState == 'fourth'">
-        <view class="icon"></view>
+        <view class="icon" style="top: -16px"></view>
         <view class="title">设置排名 </view>
         <view
           class="t-item"
@@ -60,6 +66,31 @@
           class="t-item"
           @tap.stop="$emit('removeUserPromotion', user, item, 'null')"
           >取消淘汰
+        </view>
+      </view>
+      <view class="t-first" v-else-if="tooltipState == 'second'">
+        <view class="icon"></view>
+        <view class="title">晋级至 </view>
+        <view
+          class="t-item"
+          v-for="(option, oIndex) in nextStageOptions"
+          :key="oIndex"
+          @tap.stop="$emit('updateUserPromotion', user, item, option)"
+        >
+          {{ option }}
+        </view>
+        <view class="t-item"> 无 </view>
+      </view>
+      <view class="t-first" v-else-if="tooltipState == 'sixth'">
+        <view class="icon" style="top: -16px"></view>
+        <view class="title">晋级至 </view>
+        <view
+          class="t-item"
+          v-for="(dou, dIndex) in doubleList"
+          :key="dIndex"
+          @tap.stop="$emit('updateUserPromotion', user, item, dou)"
+        >
+          {{ dou }}
         </view>
       </view>
     </view>
@@ -86,10 +117,15 @@ export default {
       type: Array,
       required: true,
     },
+    zz: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
       rankList: ["8强", "第四名", "季军", "亚军", "冠军"],
+      doubleList: ["双败赛胜者组", "双败赛败者组"],
     };
   },
 };
@@ -137,6 +173,7 @@ export default {
       white-space: nowrap;
       position: relative;
       margin-top: 12px;
+      text-align: center;
     }
   }
 }

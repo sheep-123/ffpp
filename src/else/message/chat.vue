@@ -101,7 +101,6 @@
       :scroll-top="scrollTop"
       scroll-y
       @click="show = false"
-      show-scrollbar
     >
       <view class="main">
         <view class="others">

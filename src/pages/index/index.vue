@@ -83,7 +83,7 @@
 						enable-back-to-top @scrolltolower="scrolltolowerHandel" :scroll-y="(!isDragging||scrollDoFlag)"
 						:style="{height: scrollViewHeight,'z-index':1}" class="list-box">
 						<view class="main">
-							<view class="item" v-for="(item,index) in newsList" :key="item.id">
+							<view class="item" @click="$utils.toPath.navigateTo('/dynamic/publish/dongTaiDetail?newsId='+item.id)" v-for="(item,index) in newsList" :key="item.id">
 								<image :src="item.fileUrl" mode="widthFix" />
 								<view class="value">{{item.title}}</view>
 								<view class="buttom">

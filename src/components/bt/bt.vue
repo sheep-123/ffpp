@@ -19,7 +19,7 @@ export default {
 .confirm-select {
   width: 100%;
   height: 102px;
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   background: #fff;

@@ -24,7 +24,12 @@
         <view class="suffix" @click="getUserLocation">搜索</view>
       </view>
       <view class="list">
-        <view class="item" v-for="(item, index) in list" :key="index">
+        <view
+          class="item"
+          v-for="(item, index) in list"
+          :key="index"
+          @click="select(item, index)"
+        >
           <image
             :src="
               item.doorPhoto ||
@@ -37,8 +42,13 @@
             <view class="top"> {{ item.siteName }} <text>0.4km</text> </view>
             <view class="place">{{ item.siteType }}</view>
             <view class="position"
-              >{{ item.siteAddress
-              }}<u-icon name="checkbox-mark" color="#EC384A" size="24"></u-icon
+              ><text style="width: 80%">{{ item.siteAddress }}</text
+              ><u-icon
+                v-if="active == index"
+                name="checkbox-mark"
+                color="#EC384A"
+                size="24"
+              ></u-icon
             ></view>
           </view>
         </view>
@@ -68,6 +78,7 @@ export default {
       page: 1,
       pageSize: 10,
       list: [],
+      active: null,
     };
   },
   async onLoad() {
@@ -101,7 +112,6 @@ export default {
       }
     },
     click(item) {
-      this.action = item.index;
       if (item.index == 1) {
         uni.chooseLocation({
           success: function (res) {
@@ -118,7 +128,12 @@ export default {
       }
     },
     enter() {
-      console.log(4555744);
+      uni.navigateBack({ delta: 1 });
+      uni.setStorageSync("fullAddress", this.selectItem);
+    },
+    select(item, index) {
+      this.active = index;
+      this.selectItem = item.siteAddress;
     },
   },
 };
@@ -135,7 +150,7 @@ page {
   .main {
     width: 90%;
     margin: auto;
-    padding-bottom: 100px;
+    padding-bottom: 150px;
     .search {
       background-color: #fff;
       border-radius: 20px;

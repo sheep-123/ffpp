@@ -20,7 +20,9 @@
             style="width: 62px; height: 62px; border-radius: 5px"
           />
           <view class="right">
-            <view class="title">{{ item.name }} <text>待发布</text></view>
+            <view class="title"
+              >{{ item.name }} <text>{{ item.matchStateName }}</text></view
+            >
             <view class="g">地点：{{ item.address }}</view>
             <view class="g">时间：{{ item.startTime }}</view>
           </view>

@@ -192,7 +192,7 @@
               <view
                 class="right"
                 @click="toTemplete"
-                :style="{ width: templateName ? '60%' : '' }"
+                :style="{ width: templateName ? '50%' : '' }"
                 ><text :style="{ color: templateName ? 'black' : '' }">{{
                   templateName || "请选择赛事模版"
                 }}</text
@@ -201,32 +201,30 @@
             </view>
             <view class="item">
               <view class="left">赛事名称 <view class="icon">*</view></view>
-              <view class="right">
-                <view style="width: 110px">
-                  <textarea
-                    style="width: 110px"
-                    maxlength="500"
-                    placeholder="请填写赛事名称"
-                    placeholder-class="pl-class1"
-                    auto-height
-                    v-model="name"
-                    @blur="blur1"
-                  >
-                  </textarea>
-                </view>
+              <view class="right" style="width: 50%">
+                <textarea
+                  style="text-align: right"
+                  maxlength="11"
+                  placeholder="请填写赛事名称"
+                  placeholder-class="pl-class1"
+                  auto-height
+                  v-model="name"
+                  @input="blur1"
+                >
+                </textarea>
               </view>
             </view>
             <view class="item">
               <view class="left">赛事副标题<view class="icon">*</view></view>
-              <view class="right">
+              <view class="right" style="width: 50%">
                 <textarea
-                  style="width: 115px"
-                  maxlength="500"
+                  style="text-align: right"
+                  maxlength="15"
                   placeholder="请填写赛事副标题"
                   placeholder-class="pl-class1"
                   auto-height
                   v-model="fuTitle"
-                  @blur="blur2"
+                  @input="blur2"
                 >
                 </textarea>
               </view>
@@ -284,7 +282,7 @@
               <view
                 class="right"
                 @click="toPlace"
-                :style="fullAddress ? 'width:45%' : ''"
+                :style="fullAddress ? 'width:50%' : ''"
                 ><text :style="{ color: fullAddress ? 'black' : '' }">{{
                   fullAddress || "请选择赛事地点"
                 }}</text
@@ -5264,6 +5262,7 @@ export default {
   font-weight: 400;
   font-size: 14px;
   color: rgba(29, 35, 38, 0.3);
+  text-align: right;
 }
 
 .pl-class2 {

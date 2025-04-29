@@ -43,6 +43,9 @@ export default {
 	// 首页动态列表 /news/getMainNews
 	getMainNews(data){
 		return defHttp.get('/news/getMainNews',data)
+	},
+	newsDetail(newsId){
+		return defHttp.get('/news/getNewsDetail',{newsId})
 	}
 	
 	

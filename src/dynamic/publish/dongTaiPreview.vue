@@ -263,8 +263,8 @@ page {
   right: 48rpx;
 
   view {
-    width: 102rpx;
-    height: 48rpx;
+    // width: 102rpx;
+    // height: 48rpx;
     background: rgba(41, 41, 41, 0.3);
     border-radius: 40rpx;
     display: flex;

@@ -44,7 +44,7 @@
 					<div class="map-list-item" @click="choseAddressHandle(item)" v-for="(item,index) in mapList" :key="index">
 						<div class="top flex-jb">
 							<div class="title">{{item.title}}</div>
-							<div class="distance">{{(item._distance/1000).toFixed(2)}}km</div>
+							<div class="distance">{{(item.distance/1000).toFixed(2)}}km</div>
 						</div>
 						<div class="bottom flex-jb">
 							<div class="add u-line-1" >{{item.address}}</div>

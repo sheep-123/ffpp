@@ -290,7 +290,8 @@
 					.chose1-right {
 						flex: 1;
 						height: 100%;
-						padding: 30rpx 28rpx;
+						padding: 30rpx 28rpx 0 28rpx;
+						box-sizing: border-box;
 					}
 				}
 

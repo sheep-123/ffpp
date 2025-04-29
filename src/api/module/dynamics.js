@@ -26,7 +26,7 @@ export default {
 	},
 	// 获取场地列表
 	getSiteList(data){
-		return defHttp.get('/cd/queryCdInfo',data)
+		return defHttp.post('/cd/queryCdInfo',data)
 	} ,
 	// 获取行政区县信息
 	queryAdCode(code){
@@ -44,11 +44,20 @@ export default {
 	getMainNews(data){
 		return defHttp.get('/news/getMainNews',data)
 	},
-	newsDetail(newsId){
-		return defHttp.get('/news/getNewsDetail',{newsId})
+	newsDetail(data){
+		return defHttp.get('/news/getNewsDetail',data)
+	},
+	newsCommentList(data){
+		return defHttp.get('/news/getNewsComment',data)
+	},
+	// /news/
+	getNewsCommentReply(data){
+		return defHttp.get('/news/getNewsCommentReply',data)
+	},
+	// 发评论 
+	saveNewsComments(data){
+		return defHttp.post('/news/saveNewsComments',data)
 	}
-	
-	
 	
   
 }

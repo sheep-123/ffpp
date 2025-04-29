@@ -65,7 +65,7 @@
 									src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/附近.png"
 									style="width: 72rpx; height: 30rpx" />
 							</view>
-							<scroll-view enhanced @dragstart="dragstart" @dragend="dragend" @scroll="isDragging=false"
+							<scroll-view @click="toTopHandle" enhanced @dragstart="dragstart" @dragend="dragend" @scroll="isDragging=false"
 								class="center" scroll-x>
 								<view class="center-item" v-for="(item,index) in list" :key="index">{{item}}</view>
 							</scroll-view>
@@ -83,10 +83,10 @@
 						enable-back-to-top @scrolltolower="scrolltolowerHandel" :scroll-y="(!isDragging||scrollDoFlag)"
 						:style="{height: scrollViewHeight,'z-index':1}" class="list-box">
 						<view class="main">
-							<view class="item" @click="$utils.toPath.navigateTo('/dynamic/publish/dongTaiDetail?newsId='+item.id)" v-for="(item,index) in newsList" :key="item.id">
+							<view class="item" @click="$utils.toPath.navigateTo('/dynamic/publish/dongTaiDetail?newId='+item.id)" v-for="(item,index) in newsList" :key="item.id">
 								<image :src="item.fileUrl" mode="widthFix" />
 								<view class="value">{{item.title}}</view>
-								<view class="buttom">
+						 		<view class="buttom">
 									<view class="left">
 										<u-avatar :src="item.releaseUserUrl" size="18"></u-avatar>
 										<view class="value">{{item.releaseUserName}}</view>
@@ -108,7 +108,7 @@
 
 <script>
 	const app = getApp();
-	const mapHeight = 300; //地图可视区域常量
+	const mapHeight = 250; //地图可视区域常量
 	const pullHeight = 30; //滑动器高度常量
 	import navbar from '@/components/WNavbar/index.vue'
 	export default {

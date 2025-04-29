@@ -2,9 +2,8 @@
 	<view class="box" v-if="detail">
 		<Navbar bgColor="#fff">
 			<view @click="$utils.toPath.back()" slot="left" style="display: flex; align-items: center">
-				<u-icon name="arrow-left" size="19"></u-icon>
-				<image :src="detail.releaseUserUrl"
-					mode="scaleToFill" class="img-1" />
+				<u-icon bold name="arrow-left" size="19"></u-icon>
+				<image :src="detail.releaseUserUrl" mode="scaleToFill" class="img-1" />
 				<view class="img-2">{{detail.releaseUserName}}</view>
 			</view>
 		</Navbar>
@@ -12,7 +11,8 @@
 			<swiper :indicator-dots="false" :circular="true" :current="current" :autoplay="true">
 				<block v-for="(item, index) in detail.matchFiles" :key="index">
 					<swiper-item>
-						<image style="height: 504rpx; width: 702rpx; border-radius: 8rpx" :src="item.fileUrl" mode="">
+						<image @click="lookImgHandle" style="height: 504rpx; width: 702rpx; border-radius: 8rpx"
+							:src="item.fileUrl" mode="">
 						</image>
 					</swiper-item>
 				</block>
@@ -37,77 +37,147 @@
 					{{ detail.content }}
 				</text>
 			</view>
-			<div class="address flex-jb">
+			<div class="address flex-jb" @click="toAddressHandle">
 				<text>{{ detail.address }}</text>
-				<u-icon name="arrow-right" color="#484D4F"></u-icon>
+				<view class="right">
+					<text></text>
+					<u-icon name="arrow-right" color="#484D4F"></u-icon>
+				</view>
 			</div>
 			<div v-if="detail.matchName" class="match flex-jb">
 				<text>{{ detail.matchName }}</text>
-				<u-icon name="arrow-right" color="#484D4F"></u-icon>
+				<view class="right">
+					<text>查看</text>
+					<u-icon name="arrow-right" color="#484D4F"></u-icon>
+				</view>
 			</div>
-			<div v-if="detail.labelCode" class="sport">
+			<div v-if="detail.labelNameList.length" class="sport">
 				<text>#</text>
-				<view v-if="sportList.length" class="l-box">
-					<div class="l-box-item" v-for="(item, index) in sportList" :key="index">
+				<view v-if="detail.labelNameList.length" class="l-box">
+					<div class="l-box-item" v-for="(item, index) in detail.labelNameList" :key="index">
 						{{ item }}
 					</div>
 				</view>
 			</div>
 		</view>
-		<view class="functionBox">
-			<view></view>
-			<view class="rightPart">
-				<view>
-					<image class="frie-svg"
-						src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/frie.svg"
-						mode="scaleToFill" />
-					<text>0</text>
-				</view>
-				<view>
-					<image class="star-svg"
-						src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/collect.svg"
-						mode="scaleToFill" />
-					<text>0</text>
-				</view>
-				<view>
-					<image class="comment-svg"
-						src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/comment.svg"
-						mode="scaleToFill" />
-					<text>0</text>
-				</view>
-			</view>
+		<view class="comment-box" v-if="commentList.length">
+			<CommetItem :itemInfo="item" v-for="(item,index) in commentList" :key="index" />
 		</view>
-
-		<view style="height: 120rpx"></view>
+		<view style="height: 136rpx"></view>
 		<view class="bottomBox safe-bottom">
-			<view class="publishButton" color="#15181A " @click="submitEvent">立即发布</view>
+			<u-input @confirm="inputConfirm" confirmType="send" shape="circle" v-model="commentBody.content" height="72rpx" placeholder="聊聊你的想法..."></u-input>
+			<view>
+				<image class="frie-svg"
+					src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/frie.svg"
+					mode="scaleToFill" />
+				<text>{{detail.supportNum}}</text>
+			</view>
+			<view>
+				<image class="star-svg"
+					src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/collect.svg"
+					mode="scaleToFill" />
+				<text>{{detail.collectionNum}}</text>
+			</view>
+			<view>
+				<image class="comment-svg"
+					src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/comment.svg"
+					mode="scaleToFill" />
+				<text>{{detail.commentsNum}}</text>
+			</view>
 		</view>
 	</view>
 </template>
 <script>
+	const app = getApp();
 	import Navbar from "@/components/WNavbar/index.vue";
+	import CommetItem from "./components/commetItem.vue"
 	export default {
 		data() {
 			return {
+				glb: app.globalData,
 				current: 0,
 				indicatorColor: "#000000",
 				detail: "",
 				sportList: [],
-				newsId:''
+				newsId: '',
+				searchParmas: {
+					locationLng: '',
+					locationLat: ''
+				},
+				commentSearchParmas: {
+					page: 1,
+					pageSize: 10
+				},
+				commentList: [],
+				commentBody: {
+					content: ''
+				}
 			};
 		},
 		components: {
 			Navbar,
+			CommetItem
 		},
 		methods: {
-			async getDetail(){
-				const res = await this.$requestAll.dynamics.newsDetail(this.newsId);
+			async inputConfirm(e){
+				if(!this.commentBody.content){
+					this.$utils.toast('请输入评论内容');
+					return
+				}
+				uni.showLoading({
+					title:'评论中...'
+				})
+				const res = await this.$requestAll.dynamics.saveNewsComments({
+					newsId: this.newsId,
+					...this.commentBody
+				});
+				if(res.status==200){
+					this.$utils.toast('评论成功');
+					this.commentSearchParmas.page =1;
+					this.commentBody.content = '';
+					this.getCommetList()
+					uni.hideLoading();
+				}else{
+					this.$utils.toast(res.message);
+					uni.hideLoading();
+				}
+			},
+			async getCommetList() {
+				const res = await this.$requestAll.dynamics.newsCommentList({
+					newsId: this.newsId,
+					...this.commentSearchParmas
+				})
+				this.commentList = res.data;
+				
+			},
+			async getDetail() {
+				const res = await this.$requestAll.dynamics.newsDetail({
+					newsId: this.newsId,
+					...this.searchParmas
+				});
 				this.detail = res.data;
+			},
+			lookImgHandle() {
+				uni.previewImage({
+					urls: this.detail.matchFiles.map(i => i.fileUrl)
+				})
+			},
+			toAddressHandle() {
+				const {
+					detail
+				} = this;
+				uni.openLocation({
+					latitude: detail.locationLat,
+					longitude: detail.locationLng,
+					name: detail.address,
+					address: detail.detailAddress
+				})
 			}
 		},
 		onLoad(option) {
 			this.newsId = option.newId;
 			this.getDetail();
+			this.getCommetList();
 		},
 	};
 </script>
@@ -118,47 +188,19 @@
 		background-color: #f5f5f5;
 	}
 
-	.functionBox {
-		display: flex;
-		justify-content: space-between;
-		align-items: start;
+	.comment-box {
+		padding: 32rpx;
 		background-color: #fff;
-		padding: 44rpx;
 		box-sizing: border-box;
-
-		.rightPart {
-			display: flex;
-
-			view {
-				display: flex;
-				align-items: center;
-
-				.frie-svg {
-					width: 60rpx;
-					height: 60rpx;
-					margin-left: 28rpx;
-				}
-
-				.star-svg {
-					width: 60rpx;
-					height: 60rpx;
-					margin-left: 28rpx;
-				}
-
-				.comment-svg {
-					width: 60rpx;
-					height: 60rpx;
-					margin-left: 28rpx;
-				}
-
-				text {
-					margin-left: 12rpx;
-				}
-			}
+		.comment-box-item{
+			
 		}
 	}
 
 	.sport {
+		display: flex;
+		align-items: center;
+
 		>text {
 			color: #f0f0f0;
 			font-size: 32rpx;
@@ -207,6 +249,7 @@
 		position: relative;
 		background-color: #fff;
 		padding: 0 24rpx;
+		box-sizing: border-box;
 
 		swiper {
 			height: 510rpx;
@@ -223,8 +266,8 @@
 		right: 48rpx;
 
 		view {
-			width: 102rpx;
-			height: 48rpx;
+			// width: 102rpx;
+			// height: 48rpx;
 			background: rgba(41, 41, 41, 0.3);
 			border-radius: 40rpx;
 			display: flex;
@@ -255,12 +298,11 @@
 
 	.dots {
 		position: absolute;
-		bottom: 5px;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		width: 100%;
-
+		left: 50%;
+		transform: translateX(-50%);
 		view {
 			width: 10rpx;
 			height: 10rpx;
@@ -348,6 +390,7 @@
 			padding: 48rpx 24rpx;
 			margin-bottom: 16rpx;
 			box-sizing: border-box;
+			margin-bottom: 16rpx;
 
 			.title {
 				font-weight: 600;
@@ -374,6 +417,15 @@
 				color: rgba(29, 35, 38, 0.8);
 				margin-bottom: 24rpx;
 				box-sizing: border-box;
+
+				.right {
+					display: flex;
+					align-items: center;
+
+					>text {
+						margin-right: 10rpx;
+					}
+				}
 			}
 
 			.match {
@@ -387,30 +439,49 @@
 				color: rgba(29, 35, 38, 0.8);
 				margin-bottom: 40rpx;
 				box-sizing: border-box;
+
+				.right {
+					display: flex;
+					align-items: center;
+
+					>text {
+						margin-right: 10rpx;
+					}
+				}
 			}
 		}
 
 		.bottomBox {
 			width: 750rpx;
+			height: 136rpx;
 			background-color: #fff;
 			position: fixed;
 			bottom: 0;
 			left: 0;
-			padding: 24rpx 48rpx;
+			padding: 32rpx;
 			box-sizing: border-box;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
 
-			.publishButton {
-				width: 654rpx;
-				height: 88rpx;
-				background: #15181a;
-				border-radius: 80rpx;
-				font-family: PingFang SC, PingFang SC;
-				font-weight: 600;
-				font-size: 32rpx;
-				color: #ffffff;
+			.inputs {
+				width: 298rpx;
+				height: 72rpx;
+				background: #F0F0F0;
+				border-radius: 40rpx;
+				margin-right: 24rpx;
+			}
+
+			>view {
 				display: flex;
 				align-items: center;
-				justify-content: center;
+				margin-right: 12rpx;
+
+				>image {
+					width: 60rpx;
+					height: 60rpx;
+					margin-right: 8rpx;
+				}
 			}
 		}
 	}

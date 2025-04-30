@@ -65,7 +65,7 @@
 									src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/附近.png"
 									style="width: 72rpx; height: 30rpx" />
 							</view>
-							<scroll-view @click="toTopHandle" enhanced @dragstart="dragstart" @dragend="dragend" @scroll="isDragging=false"
+							<scroll-view  enhanced @dragstart="dragstart" @dragend="dragend" @scroll="isDragging=false"
 								class="center" scroll-x>
 								<view class="center-item" v-for="(item,index) in list" :key="index">{{item}}</view>
 							</scroll-view>
@@ -108,7 +108,7 @@
 
 <script>
 	const app = getApp();
-	const mapHeight = 250; //地图可视区域常量
+	const mapHeight = 208; //地图可视区域常量
 	const pullHeight = 30; //滑动器高度常量
 	import navbar from '@/components/WNavbar/index.vue'
 	export default {
@@ -177,9 +177,9 @@
 			}
 		},
 		onShow() {
-			this.getList();
 		},
 		async onLoad() {
+			this.getList();
 			if (!this.globalData.location.latitude) {
 				await this.getLocation();
 			}
@@ -194,7 +194,7 @@
 				}
 				this.searchParmas.page++;
 				this.getList();
-			},
+			}, 
 			async getList() {
 				const res = await this.$requestAll.dynamics.getMainNews(this.searchParmas);
 				res.data.length ? this.loadStatus = 'loadmore' : this.loadStatus = 'nomore';

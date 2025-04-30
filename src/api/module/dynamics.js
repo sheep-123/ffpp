@@ -57,7 +57,27 @@ export default {
 	// 发评论 
 	saveNewsComments(data){
 		return defHttp.post('/news/saveNewsComments',data)
-	}
+	},
+	// 回复某人评论 /news/saveNewsCommentReply
+	saveNewsCommentReply(data){
+		return defHttp.post('/news/saveNewsCommentReply',data)
+	},
 	
+	// 动态点赞 /news/saveNewsSupport
+	saveNewsSupport(id){
+		return defHttp.post('/news/saveNewsSupport?newsId='+id)
+	},
+	// 收藏 /news/
+	 saveNewsCollection(id){
+		 return defHttp.post('/news/saveNewsCollection?newsId='+id)
+	 },
+	 // 动态评论回复 /news/getNewsCommentReply
+	 getNewsCommentReply(data){
+		 return defHttp.get('/news/getNewsCommentReply',data)
+	 },
+	 // 回复点赞 /news/saveNewsCommentSupport
+	saveNewsCommentSupport(data){
+		return defHttp.post(`saveNewsCommentSupport?newsId=${data.newsId}&commentId=${data.commentId}`)
+	}
   
 }

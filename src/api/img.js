@@ -26,6 +26,11 @@ export default {
 		close:getImg('close.png'),
 		location:getImg('location.png'),
 		cup:getImg('news/cup.png'),
-		basketball:getImg('news/basketball.png')
+		Frie:getImg('news/red_fire.png'),
+		collectEd:getImg('news/yellow_star.png'),
+		basketball:getImg('news/basketball.png'),
+		noFrie:getImg('frie.svg'),
+		collect:getImg('collect.svg'),
+		comment:getImg('comment.svg'),
 	}
 }

@@ -117,7 +117,6 @@
                 />
               </view>
               <scroll-view
-                @click="toTopHandle"
                 enhanced
                 @dragstart="dragstart"
                 @dragend="dragend"
@@ -191,7 +190,7 @@
 
 <script>
 const app = getApp();
-const mapHeight = 250; //地图可视区域常量
+const mapHeight = 208; //地图可视区域常量
 const pullHeight = 30; //滑动器高度常量
 import navbar from "@/components/WNavbar/index.vue";
 export default {
@@ -283,13 +282,9 @@ export default {
         : (this.bgColor = "transparent");
     },
   },
-  onShow() {
-    this.getList();
-  },
+  onShow() {},
   async onLoad() {
-    // uni.removeStorageSync("user");
-    // uni.removeStorageSync("token");
-
+    this.getList();
     if (!this.globalData.location.latitude) {
       await this.getLocation();
     }

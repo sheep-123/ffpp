@@ -17,14 +17,14 @@
 					</swiper-item>
 				</block>
 			</swiper>
-			<view class="numDots">
+			<view class="numDots" v-if="detail.matchFiles.length>1">
 				<view>
 					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/photo.png"
 						mode="scaleToFill" />
 					<text> {{ current + 1 }}/{{ detail.matchFiles.length }} </text>
 				</view>
 			</view>
-			<view class="dots">
+			<view class="dots" v-if="detail.matchFiles.length>1">
 				<block v-for="(item, index) in detail.matchFiles" :key="index">
 					<view :class="current == index ? 'active' : ''"></view>
 				</block>
@@ -61,27 +61,25 @@
 			</div>
 		</view>
 		<view class="comment-box" v-if="commentList.length">
-			<CommetItem :itemInfo="item" v-for="(item,index) in commentList" :key="index" />
+			<CommetItem @clearLoadingId="loadingId=''" :loadingId="loadingId" @commetItemHandle="commetItemHandle"
+				:itemInfo="item" v-for="(item,index) in commentList" :key="index" />
+
 		</view>
 		<view style="height: 136rpx"></view>
 		<view class="bottomBox safe-bottom">
-			<u-input @confirm="inputConfirm" confirmType="send" shape="circle" v-model="commentBody.content" height="72rpx" placeholder="聊聊你的想法..."></u-input>
-			<view>
-				<image class="frie-svg"
-					src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/frie.svg"
-					mode="scaleToFill" />
+			<u-input @blur="focus=false" confirmHold :focus="focus" @confirm="inputConfirm" confirmType="send"
+				shape="circle" v-model="commentBody.content" height="72rpx" :placeholder="placeholder"></u-input>
+			<view @click="frieHandle">
+				<image class="frie-svg" :src="detail.supportStatus=='0'?img.noFrie:img.Frie" mode="scaleToFill" />
 				<text>{{detail.supportNum}}</text>
 			</view>
-			<view>
-				<image class="star-svg"
-					src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/collect.svg"
+			<view @click="conntectHandle">
+				<image class="star-svg" :src="detail.collectionStatus=='0'?img.collect:img.collectEd"
 					mode="scaleToFill" />
 				<text>{{detail.collectionNum}}</text>
-			</view>
-			<view>
-				<image class="comment-svg"
-					src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/comment.svg"
-					mode="scaleToFill" />
+			</view> 
+			<view @click="focus=true">
+				<image class="comment-svg" :src="img.comment" mode="scaleToFill" />
 				<text>{{detail.commentsNum}}</text>
 			</view>
 		</view>
@@ -90,11 +88,13 @@
 <script>
 	const app = getApp();
 	import Navbar from "@/components/WNavbar/index.vue";
-	import CommetItem from "./components/commetItem.vue"
+	import CommetItem from "./components/commetItem.vue";
 	export default {
 		data() {
 			return {
+				placeholder: '聊聊你的想法...',
 				glb: app.globalData,
+				img: this.$img.dynamic,
 				current: 0,
 				indicatorColor: "#000000",
 				detail: "",
@@ -106,40 +106,101 @@
 				},
 				commentSearchParmas: {
 					page: 1,
-					pageSize: 10
+					pageSize: 5
 				},
 				commentList: [],
 				commentBody: {
-					content: ''
-				}
+					commentId: '',
+					content: '',
+					replyTo: '', //被回复人id
+					replyType: '' //回复类型 1回复评论  2回复别人的评论
+				},
+				focus: false,
+				choseCommetUser: '',
+				loadStatus: 'loadmore', //loadmore还有更多 nomore没有了
+				loadingId: '', //此id变化 
 			};
 		},
 		components: {
 			Navbar,
 			CommetItem
 		},
+		watch: {
+			focus(newOption) {
+				if (!newOption) {
+					this.placeholder = '聊聊你的想法...';
+				}
+			}
+
+		},
+		onReachBottom() {
+			if (this.loadStatus == 'nomore') {
+				return
+			}
+			this.commentSearchParmas.page++;
+			this.getCommetList();
+		},
 		methods: {
-			async inputConfirm(e){
-				if(!this.commentBody.content){
+			commetItemHandle(evt) {
+				this.focus = true;
+				this.choseCommetUser = evt;
+				this.commentBody.commentId = evt.id;
+				this.commentBody.replyTo = evt.commentUser;
+				this.commentBody.replyType = evt.replyType;
+				this.placeholder = `回复 @${this.choseCommetUser.commentUserName}`
+			},
+			async frieHandle() {
+
+
+				const res = await this.$requestAll.dynamics[this.detail.supportStatus == '0' ? 'saveNewsSupport' :
+					'delNewsSupport'](this.newsId)
+				if (res.status == 200) {
+					this.$utils.toast(this.detail.supportStatus == '0' ? '点赞成功' : '取消点赞成功');
+					this.getDetail()
+				} else {
+					this.$utils.toast(res.message);
+				}
+			},
+			async conntectHandle() {
+				const res = await this.$requestAll.dynamics[this.detail.collectionStatus=='0'?'saveNewsCollection':'delNewsCollection'](this.newsId)
+				if (res.status == 200) {
+					this.$utils.toast(this.detail.collectionStatus == '0' ? '收藏成功' : '取消收藏成功');
+					this.getDetail()
+				} else {
+					this.$utils.toast(res.message);
+				}
+			},
+			async inputConfirm(e) {
+				if (!this.commentBody.content) {
 					this.$utils.toast('请输入评论内容');
 					return
 				}
-				uni.showLoading({
-					title:'评论中...'
-				})
-				const res = await this.$requestAll.dynamics.saveNewsComments({
+				const commentBody = uni.$u.deepClone(this.commentBody);
+				if (!commentBody.commentId) {
+					delete commentBody.commentId;
+					delete commentBody.replyTo;
+					delete commentBody.replyType;
+				}
+				const res = await this.$requestAll.dynamics[commentBody.commentId ? 'saveNewsCommentReply' :
+					'saveNewsComments']({
 					newsId: this.newsId,
-					...this.commentBody
+					...commentBody
 				});
-				if(res.status==200){
+				if (res.status == 200) {
 					this.$utils.toast('评论成功');
-					this.commentSearchParmas.page =1;
-					this.commentBody.content = '';
-					this.getCommetList()
-					uni.hideLoading();
-				}else{
+					if (!commentBody.commentId) {
+						this.commentSearchParmas.page = 1;
+						this.commentBody.content = '';
+						this.getCommetList();
+					} else {
+						this.loadingId = this.commentBody.commentId;
+						this.commentBody.commentId = '';
+						this.commentBody.replyTo = '';
+						this.commentBody.replyType = '';
+						this.commentBody.content = '';
+					}
+				} else {
 					this.$utils.toast(res.message);
-					uni.hideLoading();
 				}
 			},
 			async getCommetList() {
@@ -147,8 +208,9 @@
 					newsId: this.newsId,
 					...this.commentSearchParmas
 				})
-				this.commentList = res.data;
-				
+				res.data.content.length ? this.loadStatus = 'loadmore' : this.loadStatus = 'nomore';
+				this.commentList = [...this.commentList, ...res.data.content];
+
 			},
 			async getDetail() {
 				const res = await this.$requestAll.dynamics.newsDetail({
@@ -192,9 +254,8 @@
 		padding: 32rpx;
 		background-color: #fff;
 		box-sizing: border-box;
-		.comment-box-item{
-			
-		}
+
+		.comment-box-item {}
 	}
 
 	.sport {
@@ -303,6 +364,7 @@
 		align-items: center;
 		left: 50%;
 		transform: translateX(-50%);
+
 		view {
 			width: 10rpx;
 			height: 10rpx;
@@ -453,7 +515,7 @@
 
 		.bottomBox {
 			width: 750rpx;
-			height: 136rpx;
+			height: 178rpx;
 			background-color: #fff;
 			position: fixed;
 			bottom: 0;

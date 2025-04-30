@@ -52,7 +52,7 @@
         </view>
       </view>
       <image
-        src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/cup.png"
+        src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/match/cup.png"
         mode="scaleToFill"
         style="
           width: 96px;
@@ -1209,7 +1209,7 @@ export default {
       activeTab: 0,
       activeIndex: 0,
       selectColor: "",
-      tabs: ["报名比赛", "赛事环节", "赛事奖励", "赛事直击", "赛事规则"],
+      tabs: ["报名比赛", "赛事信息", "赛事奖励", "赛事直击", "赛事规则"],
       isFinish: false,
       isOver: false,
       know: false,

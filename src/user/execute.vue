@@ -22,20 +22,18 @@
         </view>
       </u-scroll-list>
     </view>
-
     <view class="main">
-      <view class="jdsz" @click="changeE"
+      <view class="jdsz" @click="lookStatus = !lookStatus"
         >阶段设置
         <u-icon
           name="arrow-up-fill"
           color="#fff"
           size="10"
-          v-if="gameList[op].isSave"
+          v-if="lookStatus"
         ></u-icon>
         <u-icon name="arrow-down-fill" color="#fff" size="10" v-else></u-icon>
       </view>
-
-      <view class="o-text" v-if="!gameList[op].isSave">
+      <view class="o-text" v-if="!lookStatus">
         <view class="item">
           <view class="left">本阶段 <view class="icon">*</view></view>
 
@@ -181,12 +179,10 @@
           </view>
         </view>
       </view>
-
-      <view class="pp" @click="pp" v-if="!gameList[op].isSave">开始匹配</view>
-
+      <view class="pp" @click="pp" v-if="!lookStatus">开始匹配</view>
       <view
         class="pp-content"
-        v-if="(preview == 1 && lookStatus) || (gameList[op].isSave && zz == 1)"
+        v-if="lookStatus && zz == 1"
         v-for="(item, index) in groups"
         :key="index"
       >
@@ -229,8 +225,19 @@
             v-model="item.liveUrl"
           />
         </view>
-        <view class="member">
-          <view class="item" v-for="(user, UIndex) in item.list" :key="UIndex">
+        <view class="fourth">
+          <view class="item">参赛号</view>
+          <view class="item">参赛选手</view>
+          <view class="item">成绩（环）</view>
+          <view class="item">排名</view>
+        </view>
+        <!-- <view class="member">
+          <view
+            class="item"
+            v-for="(user, UIndex) in item.list"
+            :key="UIndex"
+            :style="scoringMethod == 2 ? 'width: 50%' : ''"
+          >
             <view class="avatar" @click="toggleTooltip(user)">
               <u-avatar :src="user.avatarUrl" size="40"></u-avatar>
               <view
@@ -259,27 +266,66 @@
               ></Tooltip>
               <view class="rank">{{ user.userNumber || "参赛号" }}</view>
             </view>
-
             <view class="name">{{ user.username || "选手名称" }}</view>
-
-            <Sorce
+            <Score
               :scoringMethod="scoringMethod"
               :user="user"
               :item="item"
               @showSc="showSc(user, item)"
               @input="handleUpdateUserScore"
+              @updateUserTime="handleUpdateUserScore"
               @updateUserScore="updateUserScore(user, item)"
-            ></Sorce>
+            ></Score>
+          </view>
+        </view> -->
+        <view class="fifth">
+          <view class="item" v-for="(user, UIndex) in item.list" :key="UIndex">
+            <view class="num">{{ user.userNumber || "参赛号" }}</view>
+            <view class="avatar" @click="toggleTooltip(user)">
+              <u-avatar :src="user.avatarUrl" size="28"></u-avatar>
+              <view class="name">{{ user.username }}</view>
+              <view
+                class="jj"
+                v-if="
+                  user.isPromotion !== '淘汰' && user.isPromotion !== 'null'
+                "
+                >{{ user.isPromotion }}</view
+              >
+              <view class="jj" v-if="user.rank != 0">{{ user.rank }}</view>
+              <view
+                class="tt"
+                v-if="user.isPromotion == '淘汰' && user.isPromotion !== 'null'"
+                >淘汰</view
+              >
+              <Tooltip
+                :zz="zz"
+                v-if="activeTooltipIndex === user.userId"
+                :user="user"
+                :item="item"
+                :tooltipState="tooltipState"
+                :nextStageOptions="nextStageOptions"
+                @removeUserPromotion="removeUserPromotion"
+                @update-tooltip-state="updateTooltipState"
+                @updateUserPromotion="updateUserPromotion"
+                @updateUserRank="updateUserRank"
+              ></Tooltip>
+            </view>
+            <view class="grade"
+              ><view class="text"
+                ><input
+                  type="text"
+                  v-model="user.userScore"
+                  @input="(n) => inputChange(user, n)"
+                  @confirm="updateUserScore(user, item)" /></view
+            ></view>
+            <view class="rank">{{ user.rank || _ }}</view>
           </view>
         </view>
         <view class="confirm" style="margin-top: 20rpx"> 确认比赛结果 </view>
       </view>
-
       <view
         class="pp-content"
-        v-show="
-          (preview == 2 && lookStatus) || (gameList[op].isSave && zz == 2)
-        "
+        v-show="lookStatus && zz == 2"
         v-for="(item, index) in groups"
         :key="index"
       >
@@ -322,14 +368,12 @@
             v-model="item.liveUrl"
           />
         </view>
-
         <view class="fourth">
           <view class="item">参赛号</view>
           <view class="item">参赛选手</view>
           <view class="item">成绩（环）</view>
           <view class="item">排名</view>
         </view>
-
         <view class="fifth">
           <view class="item" v-for="(user, UIndex) in item.list" :key="UIndex">
             <view class="num">{{ user.userNumber || "参赛号" }}</view>
@@ -349,62 +393,18 @@
                 v-if="user.isPromotion == '淘汰' && user.isPromotion !== 'null'"
                 >淘汰</view
               >
-              <view class="tooltip" v-if="activeTooltipIndex === user.userId">
-                <view class="t-first" v-if="tooltipState == 'first'">
-                  <view class="icon"></view>
-                  <view class="item" @tap.stop="tooltipState = 'second'"
-                    >晋级</view
-                  >
-                  <view
-                    class="item"
-                    @tap.stop="removeUserPromotion(user, item, 'out')"
-                    >淘汰</view
-                  >
-                  <view class="item" @tap.stop="tooltipState = 'fourth'"
-                    >设置排名</view
-                  >
-                </view>
-                <view class="t-second" v-if="tooltipState == 'second'">
-                  <view class="icon"></view>
-                  <view class="title">晋级至 </view>
-                  <view
-                    class="item"
-                    v-for="(option, oIndex) in nextStageOptions"
-                    :key="oIndex"
-                    @tap.stop="updateUserPromotion(user, item, option)"
-                  >
-                    {{ option }}
-                  </view>
-                  <view class="item"> 无 </view>
-                </view>
-                <view class="t-third" v-if="tooltipState == 'third'">
-                  <view class="icon"></view>
-                  <view
-                    class="item"
-                    @click="removeUserPromotion(user, item, 'cancelJJ')"
-                    >取消晋级</view
-                  >
-                </view>
-                <view class="t-fourth" v-if="tooltipState == 'fourth'">
-                  <view class="icon"></view>
-                  <view class="title">设置排名 </view>
-                  <view
-                    class="item"
-                    v-for="(rank, Rindex) in rankList"
-                    :key="Rindex"
-                    @tap.stop="updateUserRank(user, item, rank)"
-                  >
-                    {{ rank }}
-                  </view>
-                  <view class="item"> 无 </view>
-                </view>
-                <view class="t-fifth" v-if="tooltipState == 'fifth'">
-                  <view class="icon"></view>
-                  <view class="item" @tap.stop="removeUserPromotion(user, item)"
-                    >取消淘汰
-                  </view>
-                </view>
-              </view>
+              <Tooltip
+                :zz="zz"
+                v-if="activeTooltipIndex === user.userId"
+                :user="user"
+                :item="item"
+                :tooltipState="tooltipState"
+                :nextStageOptions="nextStageOptions"
+                @removeUserPromotion="removeUserPromotion"
+                @update-tooltip-state="updateTooltipState"
+                @updateUserPromotion="updateUserPromotion"
+                @updateUserRank="updateUserRank"
+              ></Tooltip>
             </view>
             <view class="grade"
               ><view class="text"
@@ -421,9 +421,7 @@
 
       <view
         class="pp-content"
-        v-show="
-          (preview == 3 && lookStatus) || (gameList[op].isSave && zz == 3)
-        "
+        v-show="lookStatus && zz == 3"
         style="padding-bottom: 0"
         v-for="(item, index) in groups"
         :key="index"
@@ -486,6 +484,7 @@
                 >淘汰</view
               >
               <Tooltip
+                :zz="zz"
                 v-if="activeTooltipIndex === user.userId"
                 :user="user"
                 :item="item"
@@ -498,15 +497,10 @@
               ></Tooltip>
             </view>
             <view class="name">{{ user.username || "选手名称" }}</view>
-
-            <Sorce
-              :scoringMethod="scoringMethod"
-              :user="user"
-              :item="item"
-              @showSc="showSc(user, item)"
-              @input="handleUpdateUserScore"
-              @updateUserScore="updateUserScore(user, item)"
-            ></Sorce>
+            <view class="select" @click="showSc(user, item)">
+              {{ user.userScore || "积分" }}
+              <view class="icon"></view>
+            </view>
           </view>
         </view>
 
@@ -524,16 +518,35 @@
                 <view class="rank">{{ war.homeUserNumber || "参赛号" }}</view>
               </view>
               <view class="name">{{ war.homeUserName || "选手名称" }}</view>
-              <view class="grade">{{ war.homeUserScore }}</view>
+              <!-- <view class="grade">{{ war.homeUserScore }}</view> -->
+              <Score
+                :war="war"
+                :item="item"
+                :scoringMethod="scoringMethod"
+                @showZk="showZk"
+                @updateHomeUserScore="updateHomeUserScore(war, userInfo)"
+                value="homeUserScore"
+                @inputHome="(n) => (userInfo = n.homeUserScore)"
+              >
+              </Score>
             </view>
-            VS
+            <view class="vs">VS</view>
             <view class="item">
               <view class="avatar">
                 <u-avatar :src="war.awayAvatarUrl" size="40"></u-avatar>
                 <view class="rank">{{ war.awayUserNumber || "参赛号" }}</view>
               </view>
               <view class="name">{{ war.awayUserName || "选手名称" }}</view>
-              <view class="grade">{{ war.awayUserScore }}</view>
+              <Score
+                :war="war"
+                :item="item"
+                :scoringMethod="scoringMethod"
+                @showZk="showZk"
+                @updateAwayUserScore="updateAwayUserScore(war, userInfo)"
+                value="awayUserScore"
+                @inputHome="(n) => (userInfo = n.awayUserScore)"
+              >
+              </Score>
             </view>
             <view class="chang">第{{ WIndex + 1 }}场</view>
           </view>
@@ -568,165 +581,9 @@
       </view>
 
       <view
-        class="pp-content"
-        v-show="
-          (preview == 5 && lookStatus) || (gameList[op].isSave && zz == 5)
-        "
         v-for="(item, index) in groups"
         :key="index"
-      >
-        <view class="first">
-          <view class="left">
-            组名
-            <view class="h">{{ item.groupName }}</view>
-          </view>
-          <view class="judge">
-            <u-avatar :src="item.umpireAvatarUrl" size="60"></u-avatar>
-            <view class="name">裁判员</view>
-          </view>
-        </view>
-        <view class="second">
-          <view class="left">比赛场地 <view class="icon">*</view></view>
-          <view class="right" @click="chooseAddress1(item)"
-            >{{ item.address
-            }}<u-icon name="arrow-right" color="#CCCCCC" size="12"></u-icon
-          ></view>
-        </view>
-        <view class="sixth">
-          <view class="top">比赛时间 <view class="icon">*</view></view>
-          <view class="next">
-            <view class="time" @click="chooseTime1(item)">{{
-              item.startTime
-            }}</view
-            >至
-            <view class="time" @click="chooseTime2(item)">{{
-              item.endTime
-            }}</view>
-          </view>
-        </view>
-        <view class="third">
-          <view class="left">直播地址 </view>
-          <input
-            type="text"
-            placeholder="请输入直播地址"
-            placeholder-class="pl-class2"
-            class="input"
-            v-model="item.liveUrl"
-          />
-        </view>
-        <view class="item-list">
-          <view class="detail">
-            <view class="item">
-              <view class="avatar" @click="toggleTooltip(item.list[0])">
-                <u-avatar :src="item.list[0].avatarUrl" size="40"></u-avatar>
-                <view class="rank">{{
-                  item.list[0].userNumber || "参赛号"
-                }}</view>
-                <view
-                  class="jj"
-                  v-if="
-                    item.list[0].isPromotion !== '淘汰' &&
-                    item.list[0].isPromotion !== 'null'
-                  "
-                  >{{ item.list[0].isPromotion }}</view
-                >
-                <view class="jj" v-if="item.list[0].rank != 0">{{
-                  item.list[0].rank
-                }}</view>
-                <view
-                  class="tt"
-                  v-if="
-                    item.list[0].isPromotion == '淘汰' &&
-                    item.list[0].isPromotion !== 'null'
-                  "
-                  >{{ item.list[0].isPromotion }}</view
-                >
-
-                <Tooltip
-                  v-if="activeTooltipIndex === item.list[0].userId"
-                  :user="item.list[0]"
-                  :item="item"
-                  :tooltipState="tooltipState"
-                  :nextStageOptions="nextStageOptions"
-                  @removeUserPromotion="removeUserPromotion"
-                  @update-tooltip-state="updateTooltipState"
-                  @updateUserPromotion="updateUserPromotion"
-                  @updateUserRank="updateUserRank"
-                ></Tooltip>
-              </view>
-              <view class="name">{{
-                item.list[0].username || "选手名称"
-              }}</view>
-              <Sorce
-                :scoringMethod="scoringMethod"
-                :user="item.list[0]"
-                :item="item"
-                @showSc="showSc(item.list[0], item)"
-                @input="handleUpdateUserScore"
-                @updateUserScore="updateUserScore(item.list[0], item)"
-              ></Sorce>
-            </view>
-            VS
-            <view class="item">
-              <view class="avatar" @click="toggleTooltip(item.list[1])">
-                <u-avatar :src="item.list[1].avatarUrl" size="40"></u-avatar>
-                <view class="rank">{{
-                  item.list[1].userNumber || "参赛号"
-                }}</view>
-                <view
-                  class="jj"
-                  v-if="
-                    item.list[1].isPromotion !== '淘汰' &&
-                    item.list[1].isPromotion !== 'null'
-                  "
-                  >{{ item.list[1].isPromotion }}</view
-                >
-                <view class="jj" v-if="item.list[1].rank != 0">{{
-                  item.list[1].rank
-                }}</view>
-                <view
-                  class="tt"
-                  v-if="
-                    item.list[1].isPromotion == '淘汰' &&
-                    item.list[1].isPromotion !== 'null'
-                  "
-                  >{{ item.list[1].isPromotion }}</view
-                >
-
-                <Tooltip
-                  v-if="activeTooltipIndex === item.list[1].userId"
-                  :user="item.list[1]"
-                  :item="item"
-                  :tooltipState="tooltipState"
-                  :nextStageOptions="nextStageOptions"
-                  @removeUserPromotion="removeUserPromotion"
-                  @update-tooltip-state="updateTooltipState"
-                  @updateUserPromotion="updateUserPromotion"
-                  @updateUserRank="updateUserRank"
-                ></Tooltip>
-              </view>
-              <view class="name">{{
-                item.list[1].username || "选手名称"
-              }}</view>
-              <Sorce
-                :scoringMethod="scoringMethod"
-                :user="item.list[1]"
-                :item="item"
-                @showSc="showSc(item.list[1], item)"
-                @input="handleUpdateUserScore"
-                @updateUserScore="updateUserScore(item.list[1], item)"
-              ></Sorce>
-            </view>
-          </view>
-        </view>
-        <view class="confirm"> 确认比赛结果 </view>
-      </view>
-      <view
-        v-for="(item, index) in groups"
-        :key="index"
-        v-show="
-          (preview == 4 && lookStatus) || (gameList[op].isSave && zz == 4)
-        "
+        v-show="lookStatus && zz == 4"
       >
         <view class="pp-content">
           <view class="first">
@@ -793,6 +650,7 @@
                   >淘汰</view
                 >
                 <Tooltip
+                  :zz="zz"
                   v-if="activeTooltipIndex === user.userId"
                   :user="user"
                   :item="item"
@@ -805,15 +663,10 @@
                 ></Tooltip>
               </view>
               <view class="name">{{ user.username || "选手名称" }}</view>
-
-              <Sorce
-                :scoringMethod="scoringMethod"
-                :user="user"
-                :item="item"
-                @showSc="showSc(user, item)"
-                @input="handleUpdateUserScore"
-                @updateUserScore="updateUserScore(user, item)"
-              ></Sorce>
+              <view class="select" @click="showSc(user, item)">
+                {{ user.userScore || "积分" }}
+                <view class="icon"></view>
+              </view>
             </view>
           </view>
         </view>
@@ -849,54 +702,20 @@
                     }}</view>
                   </view>
                   <view class="name">{{ war.homeUserName || "选手名称" }}</view>
-                  <view
-                    class="select"
-                    v-if="scoringMethod == 1"
-                    @click="showZk('homeUserScore', war)"
-                  >
-                    {{ war.homeUserScore || "积分" }}
-                    <view class="icon"></view>
-                  </view>
 
-                  <view class="time" v-if="scoringMethod == 2">
-                    3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
-                  </view>
-                  <view class="time" v-if="scoringMethod == 3">
-                    <input
-                      type="number"
-                      placeholder="0"
-                      v-model="war.homeUserScore"
-                      style="width: 15px"
-                      @confirm="updateHomeUserScore(war)"
-                    />
-                    <text>米</text>
-                  </view>
-                  <view class="time" v-if="scoringMethod == 4">
-                    <input
-                      type="number"
-                      placeholder="0"
-                      v-model="war.homeUserScore"
-                      style="width: 15px"
-                      @confirm="updateHomeUserScore(war)"
-                    />
-                    <text>分</text>
-                  </view>
-                  <view class="time" v-if="scoringMethod == 5">
-                    <input
-                      type="number"
-                      placeholder="0"
-                      v-model="war.homeUserScore"
-                      style="width: 15px"
-                      @confirm="updateHomeUserScore(war)"
-                    />
-                    <text>千克</text>
-                  </view>
-                  <!-- <view class="select" v-if="scoringMethod == 6">
-                  设置
-                  <view class="icon"></view>
-                </view> -->
+                  <Score
+                    :war="war"
+                    :item="item"
+                    :scoringMethod="scoringMethod"
+                    @showZk="showZk"
+                    @updateHomeUserScore="updateHomeUserScore(war, userInfo)"
+                    value="homeUserScore"
+                    @inputHome="(n) => (userInfo = n.homeUserScore)"
+                    @showTimePicker="showTimePicker"
+                  >
+                  </Score>
                 </view>
-                VS
+                <view class="vs">VS</view>
                 <view class="item">
                   <view
                     class="kc"
@@ -910,49 +729,17 @@
                     }}</view>
                   </view>
                   <view class="name">{{ war.awayUserName || "选手名称" }}</view>
-                  <!-- <view class="grade">{{ item.list[1].userScore || "积分0" }}</view> -->
-                  <view
-                    class="select"
-                    v-if="scoringMethod == 1"
-                    @click="showZk('awayUserScore', war)"
+                  <Score
+                    :war="war"
+                    :item="item"
+                    :scoringMethod="scoringMethod"
+                    @showZk="showZk"
+                    @updateAwayUserScore="updateAwayUserScore(war, userInfo)"
+                    value="awayUserScore"
+                    @inputHome="(n) => (userInfo = n.awayUserScore)"
+                    @showTimePicker="showTimePicker"
                   >
-                    {{ war.awayUserScore || "积分" }}
-                    <view class="icon"></view>
-                  </view>
-
-                  <view class="time" v-if="scoringMethod == 2">
-                    3 <text>时</text> 23<text>分</text> 08 <text>秒</text>
-                  </view>
-                  <view class="time" v-if="scoringMethod == 3">
-                    <input
-                      type="number"
-                      placeholder="0"
-                      v-model="war.awayUserScore"
-                      style="width: 15px"
-                      @confirm="updateAwayUserScore(war)"
-                    />
-                    <text>米</text>
-                  </view>
-                  <view class="time" v-if="scoringMethod == 4">
-                    <input
-                      type="number"
-                      placeholder="0"
-                      v-model="war.awayUserScore"
-                      style="width: 15px"
-                      @confirm="updateAwayUserScore(war)"
-                    />
-                    <text>分</text>
-                  </view>
-                  <view class="time" v-if="scoringMethod == 5">
-                    <input
-                      type="number"
-                      placeholder="0"
-                      v-model="war.awayUserScore"
-                      style="width: 15px"
-                      @confirm="updateAwayUserScore(war)"
-                    />
-                    <text>千克</text>
-                  </view>
+                  </Score>
                   <!-- <view class="select" v-if="scoringMethod == 6">
                   设置
                   <view class="icon"></view>
@@ -993,12 +780,176 @@
           </view>
         </view>
       </view>
+      <view
+        class="pp-content"
+        v-show="lookStatus && zz == 5"
+        v-for="(item, index) in groups"
+        :key="index"
+      >
+        <view class="first">
+          <view class="left">
+            组名
+            <view class="h">{{ item.groupName }}</view>
+          </view>
+          <view class="judge">
+            <u-avatar :src="item.umpireAvatarUrl" size="60"></u-avatar>
+            <view class="name">裁判员</view>
+          </view>
+        </view>
+        <view class="second">
+          <view class="left">比赛场地 <view class="icon">*</view></view>
+          <view class="right" @click="chooseAddress1(item)"
+            >{{ item.address
+            }}<u-icon name="arrow-right" color="#CCCCCC" size="12"></u-icon
+          ></view>
+        </view>
+        <view class="sixth">
+          <view class="top">比赛时间 <view class="icon">*</view></view>
+          <view class="next">
+            <view class="time" @click="chooseTime1(item)">{{
+              item.startTime
+            }}</view
+            >至
+            <view class="time" @click="chooseTime2(item)">{{
+              item.endTime
+            }}</view>
+          </view>
+        </view>
+        <view class="third">
+          <view class="left">直播地址 </view>
+          <input
+            type="text"
+            placeholder="请输入直播地址"
+            placeholder-class="pl-class2"
+            class="input"
+            v-model="item.liveUrl"
+          />
+        </view>
+        <view class="item-list">
+          <view class="detail">
+            <view class="item">
+              <view class="avatar" @click="toggleTooltip(item.list[0])">
+                <u-avatar :src="item.list[0].avatarUrl" size="40"></u-avatar>
+                <view class="rank">{{
+                  item.list[0].userNumber || "参赛号"
+                }}</view>
+                <view
+                  class="jj"
+                  v-if="
+                    item.list[0].isPromotion !== '淘汰' &&
+                    item.list[0].isPromotion !== 'null'
+                  "
+                  >{{ item.list[0].isPromotion }}</view
+                >
+                <view class="jj" v-if="item.list[0].rank != 0">{{
+                  item.list[0].rank
+                }}</view>
+                <view
+                  class="tt"
+                  v-if="
+                    item.list[0].isPromotion == '淘汰' &&
+                    item.list[0].isPromotion !== 'null'
+                  "
+                  >{{ item.list[0].isPromotion }}</view
+                >
+
+                <Tooltip
+                  :zz="zz"
+                  v-if="activeTooltipIndex === item.list[0].userId"
+                  :user="item.list[0]"
+                  :item="item"
+                  :tooltipState="tooltipState"
+                  :nextStageOptions="nextStageOptions"
+                  @removeUserPromotion="removeUserPromotion"
+                  @update-tooltip-state="updateTooltipState"
+                  @updateUserPromotion="updateUserPromotion"
+                  @updateUserRank="updateUserRank"
+                ></Tooltip>
+              </view>
+              <view class="name">{{
+                item.list[0].username || "选手名称"
+              }}</view>
+              <Score
+                v-if="item.warList[0]"
+                :war="item.warList[0]"
+                :item="item"
+                :scoringMethod="scoringMethod"
+                @showZk="showZk"
+                @updateHomeUserScore="
+                  updateHomeUserScore(item.warList[0], userInfo)
+                "
+                value="homeUserScore"
+                @inputHome="(n) => (userInfo = n.homeUserScore)"
+                @showTimePicker="showTimePicker"
+              >
+              </Score>
+            </view>
+            <view class="vs">VS</view>
+            <view class="item">
+              <view class="avatar" @click="toggleTooltip(item.list[1])">
+                <u-avatar :src="item.list[1].avatarUrl" size="40"></u-avatar>
+                <view class="rank">{{
+                  item.list[1].userNumber || "参赛号"
+                }}</view>
+                <view
+                  class="jj"
+                  v-if="
+                    item.list[1].isPromotion !== '淘汰' &&
+                    item.list[1].isPromotion !== 'null'
+                  "
+                  >{{ item.list[1].isPromotion }}</view
+                >
+                <view class="jj" v-if="item.list[1].rank != 0">{{
+                  item.list[1].rank
+                }}</view>
+                <view
+                  class="tt"
+                  v-if="
+                    item.list[1].isPromotion == '淘汰' &&
+                    item.list[1].isPromotion !== 'null'
+                  "
+                  >{{ item.list[1].isPromotion }}</view
+                >
+
+                <Tooltip
+                  :zz="zz"
+                  v-if="activeTooltipIndex === item.list[1].userId"
+                  :user="item.list[1]"
+                  :item="item"
+                  :tooltipState="tooltipState"
+                  :nextStageOptions="nextStageOptions"
+                  @removeUserPromotion="removeUserPromotion"
+                  @update-tooltip-state="updateTooltipState"
+                  @updateUserPromotion="updateUserPromotion"
+                  @updateUserRank="updateUserRank"
+                ></Tooltip>
+              </view>
+              <view class="name">{{
+                item.list[1].username || "选手名称"
+              }}</view>
+              <Score
+                v-if="item.warList[0]"
+                :war="item.warList[0]"
+                :item="item"
+                :scoringMethod="scoringMethod"
+                @showZk="showZk"
+                @updateAwayUserScore="
+                  updateAwayUserScore(item.warList[0], userInfo)
+                "
+                value="awayUserScore"
+                @inputHome="(n) => (userInfo = n.awayUserScore)"
+                @showTimePicker="showTimePicker"
+              >
+              </Score>
+            </view>
+          </view>
+        </view>
+        <view class="confirm"> 确认比赛结果 </view>
+      </view>
 
       <view
         class="pp-content"
-        v-show="
-          (preview == 6 && lookStatus) || (gameList[op].isSave && zz == 6)
-        "
+        v-show="lookStatus && zz == 6"
         v-for="(item, index) in groups"
         :key="index"
       >
@@ -1066,6 +1017,7 @@
                   >{{ item.list[0].isPromotion }}</view
                 >
                 <Tooltip
+                  :zz="zz"
                   v-if="activeTooltipIndex === item.list[0].userId"
                   :user="item.list[0]"
                   :item="item"
@@ -1083,16 +1035,22 @@
               <view class="name">{{
                 item.list[0].username || "选手名称"
               }}</view>
-              <Sorce
-                :scoringMethod="scoringMethod"
-                :user="item.list[0]"
+              <Score
+                v-if="item.warList[0]"
+                :war="item.warList[0]"
                 :item="item"
-                @showSc="showSc(item.list[0], item)"
-                @input="handleUpdateUserScore"
-                @updateUserScore="updateUserScore(item.list[0], item)"
-              ></Sorce>
+                :scoringMethod="scoringMethod"
+                @showZk="showZk"
+                @updateHomeUserScore="
+                  updateHomeUserScore(item.warList[0], userInfo)
+                "
+                value="homeUserScore"
+                @inputHome="(n) => (userInfo = n.homeUserScore)"
+                @showTimePicker="showTimePicker"
+              >
+              </Score>
             </view>
-            VS
+            <view class="vs">VS</view>
             <view class="item">
               <view class="avatar" @click="toggleTooltip(item.list[1])">
                 <u-avatar :src="item.list[1].avatarUrl" size="40"></u-avatar>
@@ -1116,6 +1074,7 @@
                   >{{ item.list[1].isPromotion }}</view
                 >
                 <Tooltip
+                  :zz="zz"
                   v-if="activeTooltipIndex === item.list[1].userId"
                   :user="item.list[1]"
                   :item="item"
@@ -1133,22 +1092,28 @@
               <view class="name">{{
                 item.list[1].username || "选手名称"
               }}</view>
-              <Sorce
-                :scoringMethod="scoringMethod"
-                :user="item.list[1]"
+              <Score
+                v-if="item.warList[0]"
+                :war="item.warList[0]"
                 :item="item"
-                @showSc="showSc(item.list[1], item)"
-                @input="handleUpdateUserScore"
-                @updateUserScore="updateUserScore(item.list[1], item)"
-              ></Sorce>
+                :scoringMethod="scoringMethod"
+                @showZk="showZk"
+                @updateAwayUserScore="
+                  updateAwayUserScore(item.warList[0], userInfo)
+                "
+                value="awayUserScore"
+                @inputHome="(n) => (userInfo = n.awayUserScore)"
+                @showTimePicker="showTimePicker"
+              >
+              </Score>
             </view>
           </view>
         </view>
       </view>
 
-      <view class="pp" @click="save4" v-if="!gameList[op].isSave">保存</view>
+      <view class="pp" @click="save4" v-if="!lookStatus">保存</view>
 
-      <view class="next" v-if="gameList[op].isSave">
+      <view class="next" v-if="lookStatus">
         <view class="item" @click="save4">保存</view>
         <view class="item" @click="excuteNext">执行下一轮</view>
       </view>
@@ -1185,17 +1150,22 @@
       @cancel="reShow = false"
       @confirm="reConfirm"
     ></u-picker>
-
+    <u-picker
+      :show="show"
+      :columns="timeList"
+      @cancel="show = false"
+      @confirm="confirmTime"
+    ></u-picker>
     <u-toast ref="notice"></u-toast>
   </view>
 </template>
 
 <script>
-import Sorce from "@/components/execute/Sorce.vue";
+import Score from "@/components/execute/Score.vue";
 import Tooltip from "@/components/execute/Tooltip.vue";
 export default {
   components: {
-    Sorce,
+    Score,
     Tooltip,
   },
   data() {
@@ -1203,7 +1173,6 @@ export default {
       columns21: [],
       op: 0,
       gameList: [],
-      way: 1, //，1-未开始  2-执行中
       expand: false,
       zz: "",
       zzName: "",
@@ -1218,7 +1187,6 @@ export default {
       matchId: "",
       stageUserNum: "",
       groups: [],
-      preview: "",
       serialNum: "",
       szList: [],
       timeShow: false,
@@ -1237,9 +1205,10 @@ export default {
       scList: [["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]],
       currentItem: null,
       ready: false,
-      doubleList: ["双败赛胜者组", "双败赛败者组"],
       scoringMethod: "",
       userInfo: null,
+      show: false,
+      timeList: [["1"], ["2"], ["3"]],
     };
   },
   onLoad(options) {
@@ -1251,9 +1220,25 @@ export default {
     }
     this.getSzList();
     this.getGroupNum();
+    this.getTime();
     this.getGame();
   },
   methods: {
+    getTime() {
+      const arr1 = [];
+      for (var i = 0; i < 60; i++) {
+        arr1.push(i + "时");
+      }
+      const arr2 = [];
+      for (var i = 0; i < 60; i++) {
+        arr2.push(i + "分");
+      }
+      const arr3 = [];
+      for (var i = 0; i < 60; i++) {
+        arr3.push(i + "秒");
+      }
+      this.timeList = [arr1, arr2, arr3];
+    },
     async getGroupNum() {
       var result = await uni.$u.http.get("/match/getSysDictByName", {
         params: {
@@ -1331,10 +1316,6 @@ export default {
         }
       }
     },
-    changeE() {
-      if (!lookStatus) return;
-      gameList[op].isSave = !gameList[op].isSave;
-    },
     chooseAddress1(item) {
       uni.chooseLocation({
         success: function (res) {
@@ -1372,7 +1353,6 @@ export default {
       this.currentTime.endTime = `${year}-${month}-${day} ${hours}:${minutes}`;
       this.timeShow1 = false;
     },
-
     async save4() {
       try {
         const buildGroupData = (group) => ({
@@ -1415,6 +1395,7 @@ export default {
             message: "保存成功",
           });
           this.gameList[this.op].isSave = true;
+          this.lookStatus = true;
         }
         if (this.zz == 3) {
           const buildWarData = (group, war) => ({
@@ -1466,6 +1447,7 @@ export default {
               message: "保存成功",
             });
             this.gameList[this.op].isSave = true;
+            this.lookStatus = true;
           }
         }
       } catch (err) {
@@ -1564,7 +1546,6 @@ export default {
         };
         await uni.$u.http.post("/match/saveMatchHitConfig", params);
         this.getMatchHitGroup();
-        this.preview = this.zz;
         this.lookStatus = true;
       } catch (err) {
         this.$refs.notice.show({
@@ -1662,7 +1643,6 @@ export default {
           }
         }
       } catch (err) {
-        console.log(err);
         this.$refs.notice.show({
           type: "default",
           message: err.data.message,
@@ -1701,21 +1681,19 @@ export default {
           return item;
         });
         if (!this.groups[0].list[0].userId) {
-          this.gameList[this.op].isSave = false;
+          this.lookStatus = false;
         } else {
-          this.gameList[this.op].isSave = true;
+          this.lookStatus = true;
         }
-        if (this.zz == 3 || this.zz == 4) {
-          for (const group of this.groups) {
-            const result = await uni.$u.http.get("/match/getMatchHitWar", {
-              params: {
-                hitGroupId: group.id,
-              },
-            });
-            this.$set(group, "warList", result.data);
-          }
-          console.log(this.groups);
+        for (const group of this.groups) {
+          const result = await uni.$u.http.get("/match/getMatchHitWar", {
+            params: {
+              hitGroupId: group.id,
+            },
+          });
+          this.$set(group, "warList", result.data);
         }
+        console.log(this.groups);
       }
     },
     showSc(list, item) {
@@ -1749,12 +1727,30 @@ export default {
           homeUserScore: value,
         });
         if (result.status == 200) {
-          this.currentItem.homeUserScore = value;
+          const groupIndex = this.groups.findIndex((group) => {
+            return group.warList.some((user) => {
+              return user.homeUserId == item.homeUserId;
+            });
+          });
+          if (groupIndex != -1) {
+            const userIndex = this.groups[groupIndex].warList.findIndex(
+              (user) => {
+                return user.homeUserId == item.homeUserId;
+              }
+            );
+            if (userIndex != -1) {
+              this.$set(
+                this.groups[groupIndex].warList[userIndex],
+                "homeUserScore",
+                value
+              );
+            }
+          }
         }
       } catch (err) {
         this.$refs.notice.show({
           type: "default",
-          message: err.data.message,
+          message: err.data.message || err.data.error,
         });
       }
     },
@@ -1765,13 +1761,45 @@ export default {
           awayUserScore: value,
         });
         if (result.status == 200) {
-          this.currentItem.awayUserScore = value;
+          const groupIndex = this.groups.findIndex((group) => {
+            return group.warList.some((user) => {
+              return user.awayUserId == item.awayUserId;
+            });
+          });
+          if (groupIndex != -1) {
+            const userIndex = this.groups[groupIndex].warList.findIndex(
+              (user) => {
+                return user.awayUserId == item.awayUserId;
+              }
+            );
+            if (userIndex != -1) {
+              this.$set(
+                this.groups[groupIndex].warList[userIndex],
+                "awayUserScore",
+                value
+              );
+            }
+          }
         }
       } catch (err) {
         this.$refs.notice.show({
           type: "default",
-          message: err.data.message,
+          message: err.data.message || err.data.error,
         });
+      }
+    },
+    showTimePicker(value, war) {
+      this.userInfo = war;
+      this.userInfo.key = value;
+      this.show = true;
+    },
+    confirmTime(n) {
+      const value = n.value[0] + n.value[1] + n.value[2];
+      this.show = false;
+      if (this.userInfo.key == "homeUserScore") {
+        this.updateHomeUserScore(this.userInfo, value);
+      } else {
+        this.updateAwayUserScore(this.userInfo, value);
       }
     },
   },
@@ -1869,6 +1897,7 @@ body {
         .judge {
           margin-top: -40px;
           position: relative;
+          z-index: 999;
           .name {
             position: absolute;
             font-weight: 400;
@@ -1880,7 +1909,8 @@ body {
             white-space: nowrap;
             padding: 3px 5px;
             clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
-            bottom: -10px;
+            bottom: -20px;
+            font-family: "youshe";
           }
         }
       }
@@ -1981,23 +2011,6 @@ body {
           // border-right: 1px solid #e6e6e6;
           padding: 10px 0;
           box-sizing: border-box;
-          .select {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            background-color: #fff;
-            padding: 4px 8px;
-            box-sizing: border-box;
-            font-weight: 600;
-            font-size: 12px;
-            color: #000000;
-            margin-top: 8px;
-            .icon {
-              border-left: 4px solid transparent;
-              border-right: 4px solid transparent;
-              border-top: 4px solid black;
-            }
-          }
           .avatar {
             position: relative;
             .jj {
@@ -2050,28 +2063,22 @@ body {
             color: #1d2326;
             margin-top: 15px;
           }
-          .time {
+          .select {
             display: flex;
             align-items: center;
+            gap: 5px;
+            padding: 4px 8px;
+            background-color: white;
+            border-radius: 4px;
             font-weight: 600;
             font-size: 12px;
             color: #1d2326;
-            background-color: white;
-            margin-top: 10px;
-            gap: 3px;
-            padding: 4px 8px;
-            box-sizing: border-box;
-            text {
-              font-weight: 600;
-              font-size: 12px;
-              color: rgba(29, 35, 38, 0.3);
+            margin-top: 8px;
+            .icon {
+              border-left: 4px solid transparent;
+              border-right: 4px solid transparent;
+              border-top: 4px solid black;
             }
-          }
-          .grade {
-            font-weight: 400;
-            font-size: 10px;
-            color: rgba(29, 35, 38, 0.5);
-            margin-top: 5px;
           }
         }
       }
@@ -2156,180 +2163,6 @@ body {
               font-size: 12px;
               color: #ec384a;
             }
-            .tooltip {
-              position: absolute;
-              top: 114%;
-              left: 50%;
-              transform: translateX(-50%);
-              background-color: #232323;
-              border-radius: 4px;
-              padding: 0 20px;
-              z-index: 999;
-              .t-first {
-                position: relative;
-                .icon {
-                  content: "";
-                  position: absolute;
-                  border-left: 4px solid transparent;
-                  border-right: 4px solid transparent;
-                  border-bottom: 4px solid #232323;
-                  top: -4px;
-                  left: 16px;
-                }
-                .item:nth-last-child(1) {
-                  border: none;
-                }
-                .item {
-                  width: 100%;
-                  font-weight: 600;
-                  font-size: 10px;
-                  color: #ffffff;
-                  border-bottom: 2rpx solid rgba(255, 255, 255, 0.5);
-                  white-space: nowrap;
-                  display: flex;
-                  justify-content: center;
-                  padding: 12px 0;
-                  height: auto;
-                  background-color: #232323;
-                }
-              }
-              .t-second {
-                position: relative;
-                .icon {
-                  content: "";
-                  position: absolute;
-                  border-left: 4px solid transparent;
-                  border-right: 4px solid transparent;
-                  border-bottom: 4px solid #232323;
-                  top: -4px;
-                  left: 16px;
-                }
-                .title {
-                  font-weight: 600;
-                  font-size: 10px;
-                  color: rgba(255, 255, 255, 0.49);
-                  white-space: nowrap;
-                  position: relative;
-                  margin-top: 12px;
-                }
-                .item:nth-last-child(1) {
-                  border: none;
-                }
-                .item {
-                  width: 100%;
-                  font-weight: 600;
-                  font-size: 10px;
-                  color: #ffffff;
-                  border-bottom: 2rpx solid rgba(255, 255, 255, 0.5);
-                  white-space: nowrap;
-                  display: flex;
-                  justify-content: center;
-                  padding: 12px 0;
-                  height: auto;
-                  background-color: #232323;
-                }
-              }
-              .t-third {
-                position: relative;
-                .icon {
-                  content: "";
-                  position: absolute;
-                  border-left: 4px solid transparent;
-                  border-right: 4px solid transparent;
-                  border-bottom: 4px solid #232323;
-                  top: -4px;
-                  left: 16px;
-                }
-                .title {
-                  font-weight: 600;
-                  font-size: 10px;
-                  color: rgba(255, 255, 255, 0.49);
-                  white-space: nowrap;
-                  position: relative;
-                }
-                .item:nth-last-child(1) {
-                  border: none;
-                }
-                .item {
-                  width: 100%;
-                  font-weight: 600;
-                  font-size: 10px;
-                  color: #ffffff;
-                  border-bottom: 2rpx solid rgba(255, 255, 255, 0.5);
-                  white-space: nowrap;
-                  display: flex;
-                  justify-content: center;
-                  padding: 12px 0;
-                  height: auto;
-                  background-color: #232323;
-                }
-              }
-              .t-fourth {
-                position: relative;
-                .icon {
-                  content: "";
-                  position: absolute;
-                  border-left: 4px solid transparent;
-                  border-right: 4px solid transparent;
-                  border-bottom: 4px solid #232323;
-                  top: -4px;
-                  left: 12px;
-                }
-                .title {
-                  font-weight: 600;
-                  font-size: 10px;
-                  color: rgba(255, 255, 255, 0.49);
-                  white-space: nowrap;
-                  position: relative;
-                  margin-top: 12px;
-                }
-                .item:nth-last-child(1) {
-                  border: none;
-                }
-                .item {
-                  width: 100%;
-                  font-weight: 600;
-                  font-size: 10px;
-                  color: #ffffff;
-                  border-bottom: 2rpx solid rgba(255, 255, 255, 0.5);
-                  white-space: nowrap;
-                  display: flex;
-                  justify-content: center;
-                  padding: 12px 0;
-                  height: auto;
-                  background-color: #232323;
-                }
-              }
-              .t-fifth {
-                position: relative;
-                .icon {
-                  content: "";
-                  position: absolute;
-                  border-left: 4px solid transparent;
-                  border-right: 4px solid transparent;
-                  border-bottom: 4px solid #232323;
-                  top: -4px;
-                  left: 16px;
-                }
-
-                .item:nth-last-child(1) {
-                  border: none;
-                }
-                .item {
-                  width: 100%;
-                  font-weight: 600;
-                  font-size: 10px;
-                  color: #ffffff;
-                  border-bottom: 2rpx solid rgba(255, 255, 255, 0.5);
-                  white-space: nowrap;
-                  display: flex;
-                  justify-content: center;
-                  padding: 12px 0;
-                  height: auto;
-                  background-color: #232323;
-                }
-              }
-            }
           }
           .grade {
             flex: 1;
@@ -2361,7 +2194,6 @@ body {
           position: relative;
           padding: 0px 20px;
           box-sizing: border-box;
-
           .item {
             display: flex;
             flex-direction: column;
@@ -2905,7 +2737,9 @@ body {
     }
   }
 }
-
+.vs {
+  font-family: "youshe";
+}
 .pl-class2 {
   font-weight: 400;
   font-size: 14px;

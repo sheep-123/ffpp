@@ -21,7 +21,7 @@
           background: `linear-gradient(180deg,rgba(255,255,255,0.1) 0%,${selectColor} 30%)`,
         }"
       >
-        <view class="message">
+        <view class="message" v-if="sponsorList.length > 0">
           <u-icon name="volume" color="#ffffff"></u-icon>
           腾讯体育赞助现金1000元，恭祝赛事顺利举办
         </view>
@@ -38,12 +38,13 @@
         <view class="next">
           <view class="plus">
             <u-avatar
+              v-if="sponsorList.length > 0"
               :src="item.sponsorAvatarUrl"
               size="24"
               v-for="(item, index) in sponsorList"
               :key="index"
             ></u-avatar>
-            <view class="more" @click="toMore">
+            <view class="more" @click="toMore" v-if="sponsorList.length > 0">
               更多
               <u-icon name="play-right-fill" color="#fff" size="8"></u-icon>
             </view>
@@ -215,16 +216,14 @@
             <view class="item" v-if="way != 1">
               <view class="left">真实姓名</view>
               <view class="right">
-                <view style="width: 110px">
-                  <u-input
-                    v-model="realName"
-                    placeholder="请填写真实姓名"
-                    border="none"
-                    @change="blur1"
-                    input-align="right"
-                    placeholderClass="placeholderClass"
-                  ></u-input>
-                </view>
+                <u-input
+                  v-model="realName"
+                  placeholder="请填写真实姓名"
+                  border="none"
+                  @change="blur1"
+                  input-align="right"
+                  placeholderClass="placeholderClass"
+                ></u-input>
               </view>
             </view>
             <view class="item" v-if="way != 1">
@@ -247,16 +246,14 @@
             <view class="item" style="border: none" v-if="way != 1">
               <view class="left">证件号码</view>
               <view class="right">
-                <view style="width: 110px">
-                  <u-input
-                    v-model="identification"
-                    placeholder="请填写证件号码"
-                    border="none"
-                    @change="blur1"
-                    input-align="right"
-                    placeholderClass="placeholderClass"
-                  ></u-input>
-                </view>
+                <u-input
+                  v-model="identification"
+                  placeholder="请填写证件号码"
+                  border="none"
+                  @change="blur1"
+                  input-align="right"
+                  placeholderClass="placeholderClass"
+                ></u-input>
               </view>
             </view>
             <view class="autonym" v-if="way != 1" @click="autonym"
@@ -579,20 +576,24 @@
           <view class="xian"></view>
           <view class="zbf">主办方奖励</view>
           <view class="money">
-            <text>5000</text>
+            <text>{{ list[0].rewardAmount }}</text>
             RMB奖金
             <u-icon name="checkmark-circle" color="green"></u-icon>
             <view class="wen">?</view>
           </view>
-          <view class="food">尤尼克斯球拍×2</view>
-          <view class="zzs">赞助商奖励</view>
-          <view class="money">
-            <text>2000</text>
+          <view class="food" v-if="list[0].rewardName">{{
+            list[0].rewardName
+          }}</view>
+          <view class="zzs" v-if="list[0].sponsorAmount">赞助商奖励</view>
+          <view class="money" v-if="list[0].sponsorAmount">
+            <text>{{ list[0].sponsorAmount }}</text>
             RMB奖金
           </view>
-          <view class="lesson">
-            <view class="left">康复拉伸课×1</view>
-            <view class="right"><u-icon name="level"></u-icon>康复工作室</view>
+          <view class="lesson" v-if="list[0].spReward">
+            <view class="left">{{ list[0].serveContent }}</view>
+            <view class="right"
+              ><u-icon name="level"></u-icon>{{ list[0].serveName }}</view
+            >
           </view>
         </view>
       </view>
@@ -606,28 +607,28 @@
           龙猫
         </view>
         <view class="item">
-          <view class="title">4th</view>
+          <view class="title">5th</view>
           <view class="avatar">
             <u-avatar :src="src" size="30"></u-avatar>
           </view>
           龙猫
         </view>
         <view class="item">
-          <view class="title">4th</view>
+          <view class="title">6th</view>
           <view class="avatar">
             <u-avatar :src="src" size="30"></u-avatar>
           </view>
           龙猫
         </view>
         <view class="item">
-          <view class="title">4th</view>
+          <view class="title">7th</view>
           <view class="avatar">
             <u-avatar :src="src" size="30"></u-avatar>
           </view>
           龙猫
         </view>
         <view class="item">
-          <view class="title">4th</view>
+          <view class="title">8th</view>
           <view class="avatar">
             <u-avatar :src="src" size="30"></u-avatar>
           </view>
@@ -641,7 +642,7 @@
           mode="scaleToFill"
           style="width: 274px; height: 25px"
         />
-        <view class="thank-list">
+        <scroll-view class="thank-list" scroll-y>
           <view class="item">
             <view class="first">
               <u-avatar :src="src" size="20"></u-avatar>
@@ -691,7 +692,7 @@
             <text>赞助现金</text>
             <text>3000RMB</text>
           </view>
-        </view>
+        </scroll-view>
       </view>
 
       <view class="award">
@@ -714,23 +715,25 @@
               <view class="money">
                 <text>{{ item.rewardAmount }}</text>
                 RMB奖金
-                <u-icon name="checkmark-circle" color="green"></u-icon>
+                <u-icon name="checkmark-circle" color="#06B66C"></u-icon>
                 <view class="wen">?</view>
               </view>
-              <view class="food">{{ item.rewardName }}×2</view>
-              <view class="zzs">赞助商奖励</view>
-              <view class="money">
+              <view class="food" v-if="item.rewardName"
+                >{{ item.rewardName }}×2</view
+              >
+              <view class="zzs" v-if="item.sponsorAmount">赞助商奖励</view>
+              <view class="money" v-if="item.sponsorAmount">
                 <text>{{ item.sponsorAmount }}</text>
                 RMB奖金
               </view>
-              <view class="lesson">
+              <view class="lesson" v-if="item.spReward">
                 <view class="left">{{ item.spReward }}</view>
                 <view class="right"
                   ><u-icon name="level"></u-icon
                   >{{ item.sponsorsUsername }}</view
                 >
               </view>
-              <view class="lesson">
+              <view class="lesson" v-if="item.serveContent">
                 <view class="left">{{ item.serveContent }}</view>
                 <view class="right"
                   ><u-icon name="level"></u-icon>{{ item.serveName }}</view
@@ -749,239 +752,52 @@
       style="padding-bottom: 100px"
     >
       <view class="main">
-        <u-scroll-list :indicator="false" v-if="gameList.length > 0">
-          <view class="tick">
-            <view
-              v-for="(item, index) in gameList"
-              :key="index"
-              :class="op == index ? 'item-a' : 'item'"
-              @click="checkThis(index)"
-            >
-              {{ item.scheTypeName }}
-            </view>
-          </view>
-        </u-scroll-list>
-
-        <view class="group">
-          <view class="top"> 小组淘汰赛A组 </view>
-          <view class="bottom">
-            <view class="place">
-              <view class="item">
-                <u-icon name="map"></u-icon>天河体育中心羽毛球馆
-              </view>
-
-              <view class="judge">
-                <u-avatar :src="src" size="60"></u-avatar>
-                <view class="name">裁判员</view>
-              </view>
-            </view>
-            <view class="time">
-              <u-icon name="clock"></u-icon>
-              11月19日 14:00
-            </view>
-
-            <view class="link">
-              直播地址
-              <view class="lj">https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
-              ><text>复制</text>
-            </view>
-
-            <view class="member">
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A01</view>
-                </view>
-                <view class="grade">积分 0</view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A02</view>
-                </view>
-                <view class="grade">积分 0</view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A03</view>
-                </view>
-                <view class="grade">积分 0</view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A04</view>
-                </view>
-                <view class="grade">积分 0</view>
-              </view>
-            </view>
+        <view class="tick" v-if="gameList.length > 0">
+          <view
+            v-for="(item, index) in gameList"
+            :key="index"
+            :class="op == index ? 'item-a' : 'item'"
+            @click="checkThis(index)"
+          >
+            {{ item.scheTypeName }}
           </view>
         </view>
-        <view class="group">
-          <view class="top"> 小组淘汰赛A组 </view>
+
+        <view class="group" v-for="(item, index) in groups" :key="index">
+          <view class="top"> {{ item.groupName || "暂无" }} </view>
           <view class="bottom">
             <view class="place">
               <view class="item">
-                <u-icon name="map"></u-icon>天河体育中心羽毛球馆
+                <u-icon name="map"></u-icon>{{ item.address || "暂无" }}
               </view>
 
               <view class="judge">
-                <u-avatar :src="src" size="60"></u-avatar>
+                <u-avatar :src="item.umpireAvatarUrl" size="60"></u-avatar>
                 <view class="name">裁判员</view>
               </view>
             </view>
             <view class="time">
               <u-icon name="clock"></u-icon>
-              11月19日 14:00
+              {{ item.startTime || "暂无" }}
             </view>
 
-            <view class="link">
+            <view class="link" v-if="item.liveUrl">
               直播地址
-              <view class="lj">https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
+              <view class="lj">{{ item.liveUrl }}</view
               ><text>复制</text>
             </view>
 
             <view class="member">
-              <view class="item">
+              <view
+                class="item"
+                v-for="(user, UIndex) in item.list"
+                :key="UIndex"
+              >
                 <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A01</view>
+                  <u-avatar :src="user.avatarUrl" size="40"></u-avatar>
+                  <view class="rank">{{ user.userNumber || "参赛号" }}</view>
                 </view>
-                <view class="grade">积分 0</view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A02</view>
-                </view>
-                <view class="grade">积分 0</view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A03</view>
-                </view>
-                <view class="grade">积分 0</view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A04</view>
-                </view>
-                <view class="grade">积分 0</view>
-              </view>
-            </view>
-          </view>
-        </view>
-        <view class="group">
-          <view class="top"> 小组淘汰赛A组 </view>
-          <view class="bottom">
-            <view class="place">
-              <view class="item">
-                <u-icon name="map"></u-icon>天河体育中心羽毛球馆
-              </view>
-
-              <view class="judge">
-                <u-avatar :src="src" size="60"></u-avatar>
-                <view class="name">裁判员</view>
-              </view>
-            </view>
-            <view class="time">
-              <u-icon name="clock"></u-icon>
-              11月19日 14:00
-            </view>
-
-            <view class="link">
-              直播地址
-              <view class="lj">https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
-              ><text>复制</text>
-            </view>
-
-            <view class="member">
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A01</view>
-                </view>
-                <view class="grade">积分 0</view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A02</view>
-                </view>
-                <view class="grade">积分 0</view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A03</view>
-                </view>
-                <view class="grade">积分 0</view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A04</view>
-                </view>
-                <view class="grade">积分 0</view>
-              </view>
-            </view>
-          </view>
-        </view>
-        <view class="group">
-          <view class="top"> 小组淘汰赛A组 </view>
-          <view class="bottom">
-            <view class="place">
-              <view class="item">
-                <u-icon name="map"></u-icon>天河体育中心羽毛球馆
-              </view>
-
-              <view class="judge">
-                <u-avatar :src="src" size="60"></u-avatar>
-                <view class="name">裁判员</view>
-              </view>
-            </view>
-            <view class="time">
-              <u-icon name="clock"></u-icon>
-              11月19日 14:00
-            </view>
-
-            <view class="link">
-              直播地址
-              <view class="lj">https://v.douyin.com/iA23Phvv/7@7.com :9pm</view
-              ><text>复制</text>
-            </view>
-
-            <view class="member">
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A01</view>
-                </view>
-                <view class="grade">积分 0</view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A02</view>
-                </view>
-                <view class="grade">积分 0</view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A03</view>
-                </view>
-                <view class="grade">积分 0</view>
-              </view>
-              <view class="item">
-                <view class="avatar">
-                  <u-avatar :src="src" size="40"></u-avatar>
-                  <view class="rank">A04</view>
-                </view>
-                <view class="grade">积分 0</view>
+                <view class="grade">积分 {{ user.userScore || 0 }}</view>
               </view>
             </view>
           </view>
@@ -993,6 +809,7 @@
       class="content"
       v-if="activeTab == 4"
       :style="{ background: selectColor }"
+      style="padding-bottom: 100px"
     >
       <view class="main">
         <image
@@ -1027,10 +844,9 @@
           src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/赛事规则.png"
           mode="scaleToFill"
           style="width: 100%; height: 22px; margin-top: 15px"
-          v-if="gameList.length > 0"
         />
 
-        <u-scroll-list :indicator="false" v-if="gameList.length > 0">
+        <u-scroll-list :indicator="false">
           <view class="tick">
             <view
               v-for="(item, index) in gameList"
@@ -1043,22 +859,8 @@
           </view>
         </u-scroll-list>
 
-        <view class="tx-container" v-if="gameList.length > 0">
-          <textarea
-            class="t1"
-            maxlength="500"
-            placeholder="请输入内容"
-            placeholderClass="placeholderClass"
-            auto-height
-            @input="saveTextareaContent"
-            v-model="textareaContent[op]"
-          >
-          </textarea>
-          <view class="count">
-            <view class="count-i"
-              >{{ textareaContent[op].length || 0 }}/<text>500</text></view
-            >
-          </view>
+        <view class="tx-container">
+          <view class="t1">{{ "暂无" }}</view>
         </view>
 
         <image
@@ -1069,87 +871,6 @@
 
         <view class="sm">
           <view class="title">赛事说明</view>
-          <view v-for="(item, index) in contentList" :key="index">
-            <view class="gn" v-if="item.descriType == 1">
-              <view class="left">
-                <image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/文字.png"
-                  mode="scaleToFill"
-                  style="width: 16px; height: 16px"
-                />
-                文字
-              </view>
-              <view class="right">
-                <view class="up">上移</view>
-                <view class="down">下移</view>
-                <view class="delete">删除</view>
-              </view>
-            </view>
-            <textarea
-              class="t1"
-              maxlength="20000"
-              placeholder="请编辑赛事说明"
-              v-if="item.descriType == 1"
-              v-model="item.content"
-              @input="saveThis"
-            >
-            </textarea>
-            <view class="gn" v-if="item.descriType == 2">
-              <view class="left">
-                <image
-                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/图片.png"
-                  mode="scaleToFill"
-                  style="width: 16px; height: 16px"
-                />
-                图片
-              </view>
-              <view class="right">
-                <view class="down">上移</view>
-                <view class="up">下移</view>
-                <view class="delete">删除</view>
-              </view>
-            </view>
-
-            <image
-              mode="aspectFit"
-              style="width: 100%; height: 206px; margin-top: 12px"
-              v-if="item.descriType == 2"
-              :src="item.content"
-            />
-          </view>
-
-          <view class="add">
-            <view class="item" @click="addText">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/文字1.png"
-                mode="scaleToFill"
-                style="width: 24px; height: 24px"
-              />
-              文字
-            </view>
-            <view class="item" @click="addImage">
-              <image
-                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/图片1.png"
-                mode="scaleToFill"
-                style="width: 24px; height: 24px"
-              />
-              图片
-            </view>
-          </view>
-        </view>
-
-        <view class="end" style="justify-content: space-between">
-          <view class="end-i">
-            <u-icon name="file-text" color="#ffffff" size="24"></u-icon>
-            存草稿
-          </view>
-
-          <view class="end-i">
-            <u-icon name="eye" color="#ffffff" size="24"></u-icon>
-            预览
-          </view>
-
-          <view class="save" style="margin: 0" @click="save5">保存</view>
         </view>
       </view>
     </view>
@@ -1259,6 +980,7 @@ export default {
       identificationType: "1",
       identification: "",
       navBgColor: "rgba(255, 255, 255, 0)",
+      groups: [],
     };
   },
   onPageScroll(e) {
@@ -1293,8 +1015,19 @@ export default {
         this.getMatchSponsorPrize();
         this.getMatchSponsorServe();
       }
-      if (index == 3) {
-        this.getGame();
+    },
+    async getMatchHitGroup() {
+      this.groups = [];
+      var result = await uni.$u.http.post("/match/getMatchHitGroup", {
+        matchId: this.matchId,
+        hitTypeName: this.gameList[this.op].scheTypeName,
+      });
+      if (result.status == 200) {
+        this.groups = result.data.map((item) => {
+          item.expand = false;
+          return item;
+        });
+        console.log(this.groups);
       }
     },
     switchTeam(index) {
@@ -1309,6 +1042,7 @@ export default {
       if (result.status == 200) {
         this.gameList = result.data;
         uni.setStorageSync("gameList", this.gameList);
+        this.getMatchHitGroup();
       }
     },
     hexToRgb(hex) {
@@ -1486,6 +1220,7 @@ export default {
           });
         }
       });
+      console.log(this.list);
     },
     async getMatchReward() {
       var result = await uni.$u.http.get("/match/getMatchReward", {
@@ -1621,6 +1356,13 @@ export default {
       this.serialNum = result.data.serialNum;
       this.selectColor = result.data.color || "#1B4CA7";
     },
+    async getMatchRulesConfig() {
+      const params = {
+        labelCode: this.gameList[this.op].labelCode,
+        rulesType: "",
+      };
+      var result = await this.$api.getMatchRulesConfig(params);
+    },
   },
   onLoad(options) {
     if (options && options.matchId) {
@@ -1634,6 +1376,7 @@ export default {
     this.getMatchSponsorUser();
     this.getMatchBasicInfo();
     this.getGame();
+    this.getMatchRulesConfig();
   },
   onShow() {
     if (this.isFinish) {
@@ -1799,7 +1542,11 @@ export default {
         display: flex;
         justify-content: space-between;
         backdrop-filter: blur(10px);
-        background-color: rgba(255, 255, 255, 0.2);
+        background: linear-gradient(
+          92deg,
+          rgba(255, 255, 255, 0.3) 0%,
+          rgba(255, 255, 255, 0.2) 100%
+        );
         height: 65%;
         &::after {
           content: "";
@@ -1971,14 +1718,12 @@ export default {
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-top: 16px;
+      margin-top: 30px;
+      overflow-y: scroll;
       .item-a {
         background-color: black;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 84px;
-        height: 32px;
+        padding: 8px 12px;
+        white-space: nowrap;
         border-radius: 20px;
         font-weight: 600;
         font-size: 12px;
@@ -1986,11 +1731,8 @@ export default {
       }
       .item {
         background-color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 84px;
-        height: 32px;
+        padding: 8px 12px;
+        white-space: nowrap;
         border-radius: 20px;
         font-weight: 400;
         font-size: 12px;
@@ -2058,7 +1800,11 @@ export default {
       }
 
       .al {
-        background-color: rgba(255, 255, 255, 0.2);
+        background: linear-gradient(
+          92deg,
+          rgba(255, 255, 255, 0.3) 0%,
+          rgba(255, 255, 255, 0.2) 100%
+        );
         margin-top: 18px;
         border-radius: 10px;
         .al-top {
@@ -2136,6 +1882,7 @@ export default {
               display: flex;
               align-items: center;
               gap: 5px;
+              font-size: 15px;
             }
           }
         }
@@ -2497,9 +2244,11 @@ export default {
         border-radius: 10px;
         overflow: hidden;
         background: rgba(255, 255, 255, 0.2);
+        margin-top: 10px;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2),
+          -2px -2px 10px rgba(0, 0, 0, 0.2);
         .top {
           height: 36px;
-
           display: flex;
           align-items: center;
           justify-content: center;
@@ -2898,18 +2647,22 @@ export default {
 
       .group {
         border-radius: 12px;
-        height: 220px;
         box-sizing: border-box;
         overflow: hidden;
         margin-top: 22px;
-        background-color: rgba(255, 255, 255, 0.2);
+        background: linear-gradient(
+          92deg,
+          rgba(255, 255, 255, 0.3) 0%,
+          rgba(255, 255, 255, 0.2) 100%
+        );
+        box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2),
+          -2px -2px 15px rgba(0, 0, 0, 0.2);
         .top {
-          height: 15%;
           font-weight: 600;
           font-size: 14px;
           color: #ffffff;
-          line-height: 36px;
-          padding-left: 12px;
+          padding: 10px 0 6px 12px;
+          box-sizing: border-box;
         }
         .bottom {
           height: 85%;
@@ -2982,11 +2735,12 @@ export default {
           .member {
             display: flex;
             align-items: center;
-            height: 83px;
+            padding: 9px 0;
+            box-sizing: border-box;
             background-color: #f7f7f7;
             margin-top: 5px;
             justify-content: space-around;
-            .item:nth-child(4) {
+            .item:nth-last-child(1) {
               border: none;
             }
             .item {
@@ -2999,7 +2753,7 @@ export default {
                 position: relative;
                 .rank {
                   position: absolute;
-                  bottom: 0;
+                  bottom: -15px;
                   left: 50%;
                   transform: translateX(-50%);
                   background-color: white;
@@ -3017,7 +2771,7 @@ export default {
                 font-weight: 400;
                 font-size: 10px;
                 color: rgba(29, 35, 38, 0.5);
-                margin-top: 5px;
+                margin-top: 18px;
               }
             }
           }
@@ -3047,6 +2801,7 @@ export default {
           font-size: 16px;
           color: #ffffff;
           margin-top: 25px;
+          font-family: "youshe";
         }
 
         .avatar {
@@ -3142,6 +2897,8 @@ export default {
       border-radius: 10px;
       padding: 10px 0px;
       margin-top: 23px;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2),
+        -2px -2px 10px rgba(0, 0, 0, 0.2);
       .item {
         text-align: center;
         font-weight: 400;
@@ -3154,6 +2911,7 @@ export default {
           font-weight: 400;
           font-size: 12px;
           color: #ffffff;
+          font-family: "youshe";
         }
         .avatar {
           width: 36px;
@@ -3178,19 +2936,14 @@ export default {
 
       .thank-list {
         width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
         margin-top: 20px;
         background-color: rgba(255, 255, 255, 0.1);
         height: 130px;
         overflow-y: scroll;
         border-radius: 10px;
-        gap: 20px;
-        padding-top: 40px;
-
         box-sizing: border-box;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2),
+          -2px -2px 10px rgba(0, 0, 0, 0.2);
 
         .item {
           width: 100%;
@@ -3200,12 +2953,19 @@ export default {
           font-weight: 400;
           font-size: 13px;
           color: #ffffff;
+          padding: 10px 0;
           .first {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 5px;
           }
+        }
+        .item:nth-last-child(1) {
+          padding-bottom: 16px;
+        }
+        .item:nth-child(1) {
+          padding-top: 16px;
         }
       }
     }
@@ -3383,6 +3143,7 @@ export default {
 .tx-container {
   position: relative;
   width: 100%;
+
   .t1 {
     width: 100%;
     padding: 12px 12px 25px 12px; // 增加内边距
@@ -3396,6 +3157,8 @@ export default {
       -5px -5px 10px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
     margin-top: 15px;
+    height: 155px;
+    overflow-y: scroll;
   }
 
   .count {

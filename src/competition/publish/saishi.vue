@@ -59,7 +59,11 @@
       </view>
     </view>
     <view :class="['box', changeSkin ? 'scaled' : '']">
-      <u-navbar :bgColor="navBgColor" autoBack leftIconColor="black"></u-navbar>
+      <u-navbar
+        :bgColor="navBgColor"
+        @leftClick="confirmShow = true"
+        leftIconColor="black"
+      ></u-navbar>
       <view class="upload">
         <view class="top">
           <image
@@ -1895,7 +1899,7 @@
               <view class="gn" v-if="item.descriType == 1">
                 <view class="left">
                   <image
-                    src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/文字.png"
+                    src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/文字1.png"
                     mode="scaleToFill"
                     style="width: 16px; height: 16px"
                   />
@@ -1927,7 +1931,9 @@
                 <view class="right">
                   <view class="down" @click="moveUp(index)">上移</view>
                   <view class="down" @click="moveDown(index)">下移</view>
-                  <view class="delete" @click="deleteItem(index)">删除</view>
+                  <view class="delete" @click="deleteItem(index, 'image')"
+                    >删除</view
+                  >
                 </view>
               </view>
 
@@ -2218,6 +2224,17 @@
         @cancel="timeShow1 = false"
         @confirm="confirm26"
       ></u-datetime-picker>
+      <u-modal :show="confirmShow" title="提示" :showCancelButton="false">
+        <view class="tips">
+          退出这个界面后，是否保存赛事信息
+          <view class="icon" @click="confirmShow = false">X</view>
+        </view>
+
+        <view slot="confirmButton" class="modal-footer-row">
+          <view class="modal-footer" @click="notSave">不保存</view>
+          <view class="modal-footer" @click="saveAndClose">保存</view>
+        </view>
+      </u-modal>
       <u-toast ref="notice"></u-toast>
     </view>
   </view>
@@ -2315,14 +2332,14 @@ export default {
       ageLimitMax: uni.getStorageSync("ageLimitMax") || 99,
       genderLimitName: uni.getStorageSync("genderLimitName") ?? "",
       columns6: [],
-      badgeLevelMin: uni.getStorageSync("badgeLevelMin") ?? "",
-      badgeLevelMinName: uni.getStorageSync("badgeLevelMinName") ?? "",
-      badgeLevelMax: uni.getStorageSync("badgeLevelMax") ?? "",
-      badgeLevelMaxName: uni.getStorageSync("badgeLevelMaxName") ?? "",
-      matchLevelMin: uni.getStorageSync("matchLevelMin") ?? "",
-      matchLevelMinName: uni.getStorageSync("matchLevelMinName") ?? "",
-      matchLevelMax: uni.getStorageSync("matchLevelMax") ?? "",
-      matchLevelMaxName: uni.getStorageSync("matchLevelMaxName") ?? "",
+      badgeLevelMin: uni.getStorageSync("badgeLevelMin") || "",
+      badgeLevelMinName: uni.getStorageSync("badgeLevelMinName") || "无限制",
+      badgeLevelMax: uni.getStorageSync("badgeLevelMax") || "",
+      badgeLevelMaxName: uni.getStorageSync("badgeLevelMaxName") || "无限制",
+      matchLevelMin: uni.getStorageSync("matchLevelMin") || "",
+      matchLevelMinName: uni.getStorageSync("matchLevelMinName") || "无限制",
+      matchLevelMax: uni.getStorageSync("matchLevelMax") || "",
+      matchLevelMaxName: uni.getStorageSync("matchLevelMaxName") || "无限制",
       matchId: uni.getStorageSync("matchId") ?? "",
       show8: false,
       registrationEndTime: uni.getStorageSync("registrationEndTime") || "",
@@ -2402,6 +2419,7 @@ export default {
       timeShow1: false,
       szList: [],
       userAvatar: null,
+      confirmShow: false,
     };
   },
   onPageScroll(e) {
@@ -2595,6 +2613,7 @@ export default {
         result.data.map((item, index) => {
           arr.push(item.label);
         });
+        arr.splice(0, 1, "无限制");
         this.columns14 = [arr];
         this.matchLevelMin = 1;
         this.matchLevelMax = arr.length;
@@ -2639,10 +2658,10 @@ export default {
             genderLimit: this.genderLimit,
             ageLimitMin: this.ageLimitMin,
             ageLimitMax: this.ageLimitMax,
-            badgeLevelMin: this.badgeLevelMin,
-            badgeLevelMax: this.badgeLevelMax,
-            matchLevelMax: this.matchLevelMax,
-            matchLevelMin: this.matchLevelMin,
+            badgeLevelMin: this.badgeLevelMinName,
+            badgeLevelMax: this.badgeLevelMaxName,
+            matchLevelMax: this.matchLevelMaxName,
+            matchLevelMin: this.matchLevelMinName,
             entryFee: this.entryFee,
             refundDays: this.refundDays,
             insuranceId: this.insuranceId,
@@ -2651,6 +2670,7 @@ export default {
           if (this.way == "2") {
             params.groupNum = this.groupNum;
             params.groupPerNum = this.groupPerNum;
+            params.number = this.groupNum * this.groupPerNum;
           }
 
           var res = await uni.$u.http.post(
@@ -2836,11 +2856,11 @@ export default {
         const data = this.rewards.map((reward) => ({
           rewardType: reward.rewardType,
           rewardAmount: reward.rewardAmount,
-          sponsorType: reward.prizes[0].sponsorType,
-          receiveMethod: reward.prizes[0].receiveMethod,
-          pickupAddress: reward.prizes[0].pickupAddress,
-          contactInfo: reward.prizes[0].contactInfo,
-          prizes: reward.prizes.map((prize) => ({
+          sponsorType: reward.prizes[0]?.sponsorType,
+          receiveMethod: reward.prizes[0]?.receiveMethod,
+          pickupAddress: reward.prizes[0]?.pickupAddress,
+          contactInfo: reward.prizes[0]?.contactInfo,
+          prizes: reward.prizes?.map((prize) => ({
             rewardName: prize.rewardName,
             rewardNum: prize.rewardNum,
             rewardUnit: prize.rewardUnit,
@@ -2862,6 +2882,7 @@ export default {
           });
         }
       } catch (error) {
+        console.log(error);
         this.$refs.notice.show({
           type: "default",
           message: error.data.message,
@@ -3122,7 +3143,6 @@ export default {
           });
           this.$set(group, "warList", result.data);
         }
-        console.log(this.groups);
       }
     },
     async getMatchHitWar(item) {
@@ -3337,7 +3357,7 @@ export default {
             serialNum: this.serialNum,
             file: tempFilePath,
             fileTypeCode: "10",
-            fileTypeName: "规则设置",
+            fileTypeName: "赛事说明",
           };
 
           // 上传图片
@@ -3347,20 +3367,18 @@ export default {
             name: "file", // 文件对应的 key
             formData: params,
             header: {
-              Authorization: "Bearer " + token, // 示例：添加认证信息
+              Authorization: "Bearer " + token,
             },
             success: (uploadResult) => {
               const data = JSON.parse(uploadResult.data); // 解析返回结果
               if (data.status === 200) {
-                // 将图片内容添加到列表
                 this.contentList.push({
                   content: data.data, // 假设返回的图片 URL 在 data.url 中
                   descriType: 2, // 赛事说明类型：2-图片
-                  sort: this.contentList.length + 1, // 递增的序号
+                  sort: this.contentList.length + 1,
                 });
                 uni.setStorageSync("contentList", this.contentList);
               } else {
-                // 上传失败的提示
                 this.$refs.notice.show({
                   type: "default",
                   message: "图片上传失败：" + data.message,
@@ -3512,6 +3530,7 @@ export default {
       uni.removeStorageSync("groups");
     },
     async getMatchTemplateHit() {
+      console.log(this.gameList);
       const hitTypeCode = this.gameList[this.op].scheTypeCode;
       var result = await uni.$u.http.get("/match/getMatchTemplateHit", {
         params: {
@@ -3561,6 +3580,7 @@ export default {
       result.data.map((item, index) => {
         arr.push(item.label);
       });
+      arr.splice(0, 1, "无限制");
       this.columns6 = [arr];
       this.badgeLevelMin = 1;
       this.badgeLevelMax = arr.length;
@@ -3700,17 +3720,38 @@ export default {
         this.contentList.splice(index, 1);
         this.contentList.splice(index - 1, 0, temp);
       }
+      uni.setStorageSync("contentList", this.contentList);
     },
     moveDown(index) {
       const temp = this.contentList[index];
       this.contentList.splice(index, 1);
       this.contentList.splice(index + 1, 1, temp);
+      uni.setStorageSync("contentList", this.contentList);
     },
-    deleteItem(index) {
-      if (this.contentList.length > 1) {
+    async deleteItem(index, value) {
+      if (value == "image") {
+        try {
+          const params = {
+            serialNum: this.serialNum,
+            url: this.contentList[index].content,
+          };
+          var result = await this.$api.deleteRuleFile(params);
+          if (result.status == 200) {
+            this.contentList.splice(index, 1);
+            uni.setStorageSync("contentList", this.contentList);
+          }
+        } catch (e) {
+          this.$refs.notice.show({
+            type: "default",
+            message: e.data.message,
+          });
+        }
+      } else {
         this.contentList.splice(index, 1);
+        uni.setStorageSync("contentList", this.contentList);
       }
     },
+
     async getPP() {
       var result = await uni.$u.http.get("/match/getSysDictByName", {
         params: {
@@ -3770,6 +3811,15 @@ export default {
     closeWar(item) {
       item.warList = [];
       item.expand = false;
+    },
+    saveAndClose() {
+      this.confirmShow = false;
+      uni.navigateBack({ delta: 1 });
+    },
+    notSave() {
+      this.back();
+      this.confirmShow = false;
+      uni.navigateBack({ delta: 1 });
     },
   },
   computed: {
@@ -5491,6 +5541,25 @@ export default {
     font-weight: 600;
     font-size: 14px;
     color: #1d2326;
+  }
+}
+.modal-footer-row {
+  display: flex;
+  justify-content: space-between; /* 或 center，根据需要调整 */
+  width: 100%;
+}
+
+.modal-footer {
+  flex: 1;
+  text-align: center;
+  padding: 12px 0;
+}
+.tips {
+  position: relative;
+  .icon {
+    position: absolute;
+    top: -37px;
+    right: 0;
   }
 }
 </style>

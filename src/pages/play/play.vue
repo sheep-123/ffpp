@@ -97,29 +97,17 @@
       <view class="left">
         <view class="item" @click="selectTab(0)">
           <text :style="{ color: activeTab === 0 ? '#EC384A' : '' }">商圈</text>
-          <u-icon
-            name="arrow-down-fill"
-            size="8"
-            :color="activeTab === 0 ? '#EC384A' : '#ccc'"
-          ></u-icon>
+          <view class="icon"></view>
         </view>
         <view class="item" @click="selectTab(1)">
           <text :style="{ color: activeTab === 1 ? '#EC384A' : '' }">类型</text>
-          <u-icon
-            name="arrow-down-fill"
-            size="8"
-            :color="activeTab === 1 ? '#EC384A' : '#ccc'"
-          ></u-icon>
+          <view class="icon"></view>
         </view>
         <view class="item" style="margin-left: 13px" @click="selectTab(2)">
           <text :style="{ color: activeTab === 2 ? '#EC384A' : '' }"
             >默认排序</text
           >
-          <u-icon
-            name="arrow-down-fill"
-            size="8"
-            :color="activeTab === 2 ? '#EC384A' : '#ccc'"
-          ></u-icon>
+          <view class="icon"></view>
         </view>
       </view>
       <view class="right">
@@ -128,7 +116,16 @@
       </view>
     </view>
 
-    <view class="content">
+    <scroll-view
+      class="content"
+      scroll-y
+      :refresher-triggered="refresh"
+      :refresher-enabled="true"
+      :lower-threshold="12"
+      @refresherrefresh="search"
+      @scrolltolower="scrollTolower"
+      style="height: 101vh"
+    >
       <view class="item" v-for="(item, index) in matchList" :key="index">
         <view class="left">
           <image
@@ -175,7 +172,7 @@
         </view>
       </view>
       <u-loadmore :status="status" @loadmore="getQueryMatchList" />
-    </view>
+    </scroll-view>
 
     <u-popup
       :show="show"
@@ -250,12 +247,6 @@ export default {
       statusBarHeight: 0,
       navbarHeight: 44,
       activeTab: null,
-      urls: [
-        "https://uviewui.com/album/1.jpg",
-        "https://uviewui.com/album/2.jpg",
-        "https://uviewui.com/album/3.jpg",
-        "https://uviewui.com/album/4.jpg",
-      ],
       show: false,
       matchList: [],
       matchLabel: [],
@@ -266,12 +257,13 @@ export default {
       labelCode: "",
       active: "",
       districtList: [],
-      userLocation: {},
+      userLocation: { code: "", cityName: "" },
       adInfo: {
         adcode: "",
         name: "",
       },
       streetList: [],
+      refresh: false,
     };
   },
   onShow() {
@@ -310,6 +302,7 @@ export default {
     },
     async getQueryMatchList() {
       this.status = "loading";
+      this.refresh = true;
       try {
         const result = await uni.$u.http.post("/match/queryMatchList", {
           pageNum: this.pageNum,
@@ -335,6 +328,7 @@ export default {
           } else {
             this.status = "nomore";
           }
+          this.refresh = false;
         }
       } catch (err) {
         this.status = "loadmore";
@@ -395,7 +389,6 @@ export default {
         adcode: "",
         name: "",
       };
-      // this.streetList = [];
       this.matchList = [];
       this.getQueryMatchList();
       this.show = false;
@@ -404,7 +397,13 @@ export default {
     async search() {
       this.pageNum = 1;
       this.matchList = [];
-      this.getQueryMatchList();
+
+      await this.getQueryMatchList();
+    },
+    scrollTolower() {
+      if (this.status !== "nomore" && this.status !== "loading") {
+        this.getQueryMatchList();
+      }
     },
   },
 
@@ -601,6 +600,11 @@ body {
         gap: 3px;
         width: 70px;
         justify-content: center;
+        .icon {
+          border-left: 4px solid transparent;
+          border-right: 4px solid transparent;
+          border-top: 4px solid #cccccc;
+        }
       }
     }
 
@@ -624,7 +628,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    padding-bottom: 60px;
+    padding-bottom: 12px;
 
     .item {
       display: flex;
@@ -633,6 +637,7 @@ body {
       padding: 12px;
       border-radius: 10px;
       background: #fff;
+      margin-bottom: 12px;
 
       .left {
         width: 30%;

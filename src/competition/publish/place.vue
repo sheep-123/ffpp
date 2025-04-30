@@ -79,6 +79,8 @@ export default {
       pageSize: 10,
       list: [],
       active: null,
+      locationLat: null,
+      locationLng: null,
     };
   },
   async onLoad() {
@@ -130,10 +132,16 @@ export default {
     enter() {
       uni.navigateBack({ delta: 1 });
       uni.setStorageSync("fullAddress", this.selectItem);
+      uni.setStorageSync("bmLocal", {
+        latitude: this.locationLat,
+        longitude: this.locationLng,
+      });
     },
     select(item, index) {
       this.active = index;
       this.selectItem = item.siteAddress;
+      this.locationLng = item.locationLng;
+      this.locationLat = item.locationLat;
     },
   },
 };

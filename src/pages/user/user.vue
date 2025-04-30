@@ -11,7 +11,7 @@
     <view class="content">
       <view class="main">
         <view class="first">
-          <u-avatar :src="src" size="80"></u-avatar>
+          <u-avatar :src="avatar" size="80"></u-avatar>
           <view class="v">
             <view class="v-top">半场好球先生</view>
             <view class="value">
@@ -311,6 +311,7 @@ export default {
           name: "点赞",
         },
       ],
+      avatar: uni.getStorageSync("user").avatarUrl || "",
     };
   },
   methods: {

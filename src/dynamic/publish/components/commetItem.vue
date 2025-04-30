@@ -13,9 +13,9 @@
 						<view class="right">
 							<image @click="commetItemHandle('1')" class="comment-svg-small" :src="img.comment"
 								mode="scaleToFill" />
-							<image @click="frieHandle(itemInfo)" class="frie-svg-small" :src="img.noFrie" mode="scaleToFill" />
+							<image  class="frie-svg-small" :src="img.noFrie" mode="scaleToFill" />
 							<text>{{itemInfo.supportNum}}</text>
-						</view>
+						</view> 
 					</view>
 					<view class="row2">
 						<text>{{itemInfo.content}}</text>
@@ -43,7 +43,7 @@
 								<view class="right">
 									<image @click="commetItemHandle('2')" class="comment-svg-small" :src="img.comment"
 										mode="scaleToFill" />
-									<image @click="frieHandle(item)" class="frie-svg-small" :src="img.noFrie" mode="scaleToFill" />
+									<image  class="frie-svg-small" :src="img.noFrie" mode="scaleToFill" />
 									<text>{{item.supportNum}}</text>
 								</view>
 							</view>
@@ -92,18 +92,18 @@
 			}
 		},
 		computed: {
-			async frieHandle(item){
-				const res = await this.$requestAll.dynamics.delImg({
-					commentId:item.id,
-					newsId:item.newsId
-				})
-				if (res.status == 200) {
-					this.$utils.toast('点赞成功');
-					this.getList();
-				} else {
-					this.$utils.toast(res.message);
-				}
-			},
+			// async frieHandle(item){
+			// 	const res = await this.$requestAll.dynamics.saveNewsCommentSupport({
+			// 		commentId:item.id,
+			// 		newsId:item.newsId
+			// 	})
+			// 	if (res.status == 200) {
+			// 		this.$utils.toast('点赞成功');
+			// 		this.getList();
+			// 	} else {
+			// 		this.$utils.toast(res.message);
+			// 	}
+			// },
 			listStatus() {
 				if (this.itemInfo.commentsNum <= 1) {
 					// 一条够了

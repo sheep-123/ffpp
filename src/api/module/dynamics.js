@@ -77,7 +77,7 @@ export default {
 	 },
 	 // 回复点赞 /news/saveNewsCommentSupport
 	saveNewsCommentSupport(data){
-		return defHttp.post(`saveNewsCommentSupport?newsId=${data.newsId}&commentId=${data.commentId}`)
+		return defHttp.post(`/news/saveNewsCommentSupport?newsId=${data.newsId}&commentId=${data.commentId}`)
 	}
   
 }

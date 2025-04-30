@@ -6,7 +6,7 @@
 				<image :src="detail.releaseUserUrl" mode="scaleToFill" class="img-1" />
 				<view class="img-2">{{detail.releaseUserName}}</view>
 			</view>
-		</Navbar>
+		</Navbar> 
 		<view class="parent">
 			<swiper :indicator-dots="false" :circular="true" :current="current" :autoplay="true">
 				<block v-for="(item, index) in detail.matchFiles" :key="index">

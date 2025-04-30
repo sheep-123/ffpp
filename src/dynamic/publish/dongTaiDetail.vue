@@ -6,7 +6,7 @@
 				<image :src="detail.releaseUserUrl" mode="scaleToFill" class="img-1" />
 				<view class="img-2">{{detail.releaseUserName}}</view>
 			</view>
-		</Navbar> 
+		</Navbar>
 		<view class="parent">
 			<swiper :indicator-dots="false" :circular="true" :current="current" :autoplay="true">
 				<block v-for="(item, index) in detail.matchFiles" :key="index">
@@ -17,8 +17,8 @@
 					</swiper-item>
 				</block>
 			</swiper>
-			<view class="numDots" v-if="detail.matchFiles.length>1" >
-				<view> 
+			<view class="numDots" v-if="detail.matchFiles.length>1">
+				<view>
 					<image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/photo.png"
 						mode="scaleToFill" />
 					<text> {{ current + 1 }}/{{ detail.matchFiles.length }} </text>
@@ -77,8 +77,8 @@
 				<image class="star-svg" :src="detail.collectionStatus=='0'?img.collect:img.collectEd"
 					mode="scaleToFill" />
 				<text>{{detail.collectionNum}}</text>
-			</view>
-			<view>
+			</view> 
+			<view @click="focus=true">
 				<image class="comment-svg" :src="img.comment" mode="scaleToFill" />
 				<text>{{detail.commentsNum}}</text>
 			</view>
@@ -150,18 +150,21 @@
 				this.placeholder = `回复 @${this.choseCommetUser.commentUserName}`
 			},
 			async frieHandle() {
-				const res = await this.$requestAll.dynamics.saveNewsSupport(this.newsId)
+
+
+				const res = await this.$requestAll.dynamics[this.detail.supportStatus == '0' ? 'saveNewsSupport' :
+					'delNewsSupport'](this.newsId)
 				if (res.status == 200) {
-					this.$utils.toast('点赞成功');
+					this.$utils.toast(this.detail.supportStatus == '0' ? '点赞成功' : '取消点赞成功');
 					this.getDetail()
 				} else {
 					this.$utils.toast(res.message);
 				}
 			},
 			async conntectHandle() {
-				const res = await this.$requestAll.dynamics.saveNewsCollection(this.newsId)
+				const res = await this.$requestAll.dynamics[this.detail.collectionStatus=='0'?'saveNewsCollection':'delNewsCollection'](this.newsId)
 				if (res.status == 200) {
-					this.$utils.toast('收藏成功');
+					this.$utils.toast(this.detail.collectionStatus == '0' ? '收藏成功' : '取消收藏成功');
 					this.getDetail()
 				} else {
 					this.$utils.toast(res.message);
@@ -188,7 +191,7 @@
 					if (!commentBody.commentId) {
 						this.commentSearchParmas.page = 1;
 						this.commentBody.content = '';
-						this.getCommetList(); 
+						this.getCommetList();
 					} else {
 						this.loadingId = this.commentBody.commentId;
 						this.commentBody.commentId = '';

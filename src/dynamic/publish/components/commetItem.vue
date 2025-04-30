@@ -13,7 +13,7 @@
 						<view class="right">
 							<image @click="commetItemHandle('1')" class="comment-svg-small" :src="img.comment"
 								mode="scaleToFill" />
-							<image  class="frie-svg-small" :src="img.noFrie" mode="scaleToFill" />
+							<image  @click="frieHandleInner(itemInfo)"  class="frie-svg-small" :src="itemInfo.commentSupportStatus=='0'?img.noFrie:img.Frie" mode="scaleToFill" />
 							<text>{{itemInfo.supportNum}}</text>
 						</view> 
 					</view>
@@ -43,7 +43,7 @@
 								<view class="right">
 									<image @click="commetItemHandle('2')" class="comment-svg-small" :src="img.comment"
 										mode="scaleToFill" />
-									<image  class="frie-svg-small" :src="img.noFrie" mode="scaleToFill" />
+									<image @click="frieHandleInner(item)"  class="frie-svg-small" :src="item.commentSupportStatus=='0'?img.noFrie:img.Frie" mode="scaleToFill" />
 									<text>{{item.supportNum}}</text>
 								</view>
 							</view>
@@ -92,18 +92,6 @@
 			}
 		},
 		computed: {
-			// async frieHandle(item){
-			// 	const res = await this.$requestAll.dynamics.saveNewsCommentSupport({
-			// 		commentId:item.id,
-			// 		newsId:item.newsId
-			// 	})
-			// 	if (res.status == 200) {
-			// 		this.$utils.toast('点赞成功');
-			// 		this.getList();
-			// 	} else {
-			// 		this.$utils.toast(res.message);
-			// 	}
-			// },
 			listStatus() {
 				if (this.itemInfo.commentsNum <= 1) {
 					// 一条够了
@@ -159,6 +147,18 @@
 			}
 		},
 		methods: {
+			async frieHandleInner(item){
+				// const res = await this.$requestAll.dynamics.saveNewsCommentSupport({
+				// 	commentId:item.id,
+				// 	newsId:item.newsId
+				// })
+				// if (res.status == 200) {
+				// 	this.$utils.toast('点赞成功');
+				// 	this.getList(); 
+				// } else {
+				// 	this.$utils.toast(res.message);
+				// }
+			},
 			formatDate(inputStr) {
 				// 解析输入字符串为日期对象
 				const parseDate = (dateStr) => {

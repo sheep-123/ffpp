@@ -1115,7 +1115,9 @@
 
       <view class="next" v-if="lookStatus">
         <view class="item" @click="save4">保存</view>
-        <view class="item" @click="excuteNext">执行下一轮</view>
+        <view class="item" @click="excuteNext" v-if="gameList.length > 1"
+          >执行下一轮</view
+        >
       </view>
     </view>
     <u-datetime-picker

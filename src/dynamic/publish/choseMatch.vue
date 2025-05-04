@@ -36,9 +36,10 @@
 			this.getList();
 		},
 		data() {
-			return {
+			return { 
 				globalData:app.globalData,
 				list: [],
+				total:0,
 				searchParams: {
 					pageNum: 1,
 					pageSize: 10,
@@ -51,6 +52,13 @@
 					keywords: '',
 				}
 			}
+		},
+		onReachBottom() {
+			if(this.list.length==this.total){
+				return
+			}
+			this.searchParams.pageNum++;
+			this.getList();
 		},
 		methods: {
 			startFn() {
@@ -76,10 +84,11 @@
 						title: '加载中...'
 					})
 					const res = await this.$requestAll.dynamics.getRaceList(this.searchParams);
-					this.list = [...this.list, ...res.data.list]
-					uni.hideLoading()
+					this.list = [...this.list, ...res.data.list];
+					this.total = res.data.total;
+					uni.hideLoading();
 				} catch (error) {
-
+					
 				}
 			},
 			choseMatchHandle(e) {

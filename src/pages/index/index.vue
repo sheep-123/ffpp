@@ -110,7 +110,7 @@
 	const app = getApp();
 	const mapHeight = 208; //地图可视区域常量
 	const pullHeight = 30; //滑动器高度常量
-	import navbar from '@/components/WNavbar/index.vue'
+	import navbar from '@/components/WNavbar/index.vue';
 	export default {
 		data() {
 			return {

@@ -57,13 +57,13 @@
 					<div class="l-box-item" v-for="(item, index) in detail.labelNameList" :key="index">
 						{{ item }}
 					</div>
-				</view>
+				</view> 
 			</div>
-		</view>
+		</view> 
 		<view class="comment-box" v-if="commentList.length">
 			<CommetItem @clearLoadingId="loadingId=''" :loadingId="loadingId" @commetItemHandle="commetItemHandle"
-				:itemInfo="item" v-for="(item,index) in commentList" :key="index" />
-
+				:itemInfos="item" v-for="(item,index) in commentList" :key="index" />
+				
 		</view>
 		<view style="height: 136rpx"></view>
 		<view class="bottomBox safe-bottom">
@@ -150,7 +150,7 @@
 				this.placeholder = `回复 @${this.choseCommetUser.commentUserName}`
 			},
 			async frieHandle() {
-
+				
 
 				const res = await this.$requestAll.dynamics[this.detail.supportStatus == '0' ? 'saveNewsSupport' :
 					'delNewsSupport'](this.newsId)
@@ -192,6 +192,7 @@
 						this.commentSearchParmas.page = 1;
 						this.commentBody.content = '';
 						this.getCommetList();
+						this.getDetail();
 					} else {
 						this.loadingId = this.commentBody.commentId;
 						this.commentBody.commentId = '';
@@ -220,6 +221,7 @@
 				this.detail = res.data;
 			},
 			lookImgHandle() {
+			
 				uni.previewImage({
 					urls: this.detail.matchFiles.map(i => i.fileUrl)
 				})

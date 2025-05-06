@@ -83,18 +83,25 @@ export default {
 	// 回复点赞 
 	saveNewsCommentSupport(data) {
 		return defHttp.post(`/news/saveNewsCommentSupport?newsId=${data.newsId}&commentId=${data.commentId}`)
-	},
+	}, 
 	// 取消动态点赞 /news/delNewsSupport
 	delNewsSupport(id) {
 		return defHttp.delete('/news/delNewsSupport?newsId=' + id)
 	},
 
-	// 取消动态评论点赞 /news/delNewsCommentSupport
+	// 取消回复点赞 /news/delNewsCommentSupport
 	delNewsCommentSupport(id) {
-		return defHttp.delete('/news/delNewsCommentSupport?newsId=' + id)
+		return defHttp.delete('/news/delNewsCommentSupport?commentId=' + id)
 	},
 	// 取消动态收藏 /news/delNewsCollection
 	delNewsCollection(id) {
 		return defHttp.delete('/news/delNewsCollection?newsId='+id)
+	},
+	// saveNewsCommentReplySupport
+	saveNewsCommentReplySupport(data){
+		return defHttp.post(`/news/saveNewsCommentReplySupport?newsId=${data.newsId}&commentId=${data.commentId}&commentReplyId=${data.commentReplyId}`)
+	},
+	delNewsCommentReplySupport(data){
+		return defHttp.delete(`/news/delNewsCommentReplySupport?newsId=${data.newsId}&commentId=${data.commentId}&commentReplyId=${data.commentReplyId}`)
 	}
 }

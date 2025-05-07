@@ -140,8 +140,8 @@
 
 				<!-- 场地 -->
 				<cover-view v-if="isMapOpen && activeNode == 'stadium'" slot="callout">
-					<cover-view  :class="activeId==item.id?'map-callout-stadium-main':'map-callout-stadium-main-no'" v-for="(item, index) in markers" :key="index"
-						:marker-id="item.id">
+					<cover-view :class="activeId == item.id ? 'map-callout-stadium-main' : 'map-callout-stadium-main-no'"
+						v-for="(item, index) in markers" :key="index" :marker-id="item.id">
 						<cover-view class="map-callout-stadium">
 							<cover-view class="map-callout-stadium-box">
 								<cover-image class="map-callout-stadium-img"
@@ -185,7 +185,6 @@
 							<div class="pull_inner"></div>
 						</view>
 					</view>
-					<!-- tab栏 -->
 					<view class="flow-tabs">
 						<view style="width: 100%" class="flow-box">
 							<view class="left">
@@ -207,9 +206,6 @@
 							</view>
 						</view>
 					</view>
-
-					<!-- 最开始 为 204 -->
-					<!-- 最结束 为 830 -->
 					<scroll-view :scroll-with-animation="true" :show-scrollbar="false" :bounces="false" enhanced
 						enable-back-to-top @scrolltolower="scrolltolowerHandel" :scroll-y="!isDragging || scrollDoFlag"
 						:style="{ height: scrollViewHeight, 'z-index': 1 }" class="list-box">
@@ -225,7 +221,7 @@
 									<view class="right">
 										<image
 											src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png" />
-										<view class="value">1000</view>
+										<view class="value">{{ item.supportNum }}</view>
 									</view>
 								</view>
 							</view>
@@ -610,6 +606,7 @@ export default {
 		margin: 0 auto;
 
 	}
+
 	.map-callout-stadium {
 		width: 220rpx;
 		height: 122rpx;
@@ -636,14 +633,16 @@ export default {
 				font-weight: 600;
 				text-overflow: ellipsis;
 				font-size: 24rpx;
-				color: rgba(29, 35, 38, 0.6);
+				color: rgba(29, 35, 38);
 			}
 		}
 
 	}
 }
+
 .map-callout-stadium-main-no {
 	opacity: .8;
+
 	.sanjiao {
 		// 正三角形
 		width: 0;
@@ -654,6 +653,7 @@ export default {
 		margin: 0 auto;
 
 	}
+
 	.map-callout-stadium {
 		width: 220rpx;
 		height: 122rpx;

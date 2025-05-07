@@ -1,16 +1,13 @@
 <template>
   <view class="box">
-    <WNavbar bgColor="rgba(0,0,0,0)"> 
+    <u-navbar bgColor="rgba(0,0,0,0)">
       <view slot="left">
         <image
-        @click="visible = true"
           src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/更多-白色.png"
           class="more"
         />
       </view>
-    </WNavbar>
-
-
+    </u-navbar>
     <view class="content">
       <view class="main">
         <view class="first">
@@ -67,6 +64,26 @@
               />
               <text>徽章</text>
               <view class="prizes">
+                <image
+                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/huizhang1.png"
+                  mode="scaleToFill"
+                  style="width: 24px; height: 24px"
+                />
+                <image
+                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/huizhang1.png"
+                  mode="scaleToFill"
+                  style="width: 24px; height: 24px"
+                />
+                <image
+                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/huizhang1.png"
+                  mode="scaleToFill"
+                  style="width: 24px; height: 24px"
+                />
+                <image
+                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/huizhang1.png"
+                  mode="scaleToFill"
+                  style="width: 24px; height: 24px"
+                />
                 <image
                   src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/huizhang1.png"
                   mode="scaleToFill"
@@ -158,7 +175,7 @@
         ></view>
       </view>
       <view class="dt">
-        <view class="item"  v-for="(item,index) in 20" :key="index" >
+        <view class="item">
           <image
             src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
             mode="widthFix"
@@ -177,27 +194,112 @@
             </view>
           </view>
         </view>
+        <view class="item">
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
+          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+          <view class="buttom">
+            <view class="left">
+              <u-avatar :src="src" size="18"></u-avatar>
+              <view class="value">滑板高手</view>
+            </view>
+            <view class="right">
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
+              />
+              <view class="value">1000</view>
+            </view>
+          </view>
+        </view>
+        <view class="item">
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
+          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+          <view class="buttom">
+            <view class="left">
+              <u-avatar :src="src" size="18"></u-avatar>
+              <view class="value">滑板高手</view>
+            </view>
+            <view class="right">
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
+              />
+              <view class="value">1000</view>
+            </view>
+          </view>
+        </view>
+        <view class="item">
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
+          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+          <view class="buttom">
+            <view class="left">
+              <u-avatar :src="src" size="18"></u-avatar>
+              <view class="value">滑板高手</view>
+            </view>
+            <view class="right">
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
+              />
+              <view class="value">1000</view>
+            </view>
+          </view>
+        </view>
+        <view class="item">
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
+          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+          <view class="buttom">
+            <view class="left">
+              <u-avatar :src="src" size="18"></u-avatar>
+              <view class="value">滑板高手</view>
+            </view>
+            <view class="right">
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/无火花.png"
+              />
+              <view class="value">1000</view>
+            </view>
+          </view>
+        </view>
+        <view class="item">
+          <image
+            src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/02.jpg"
+            mode="widthFix"
+          />
+          <view class="value">环境非常优美在40楼 打卡全广州最高的健身房</view>
+          <view class="buttom">
+            <view class="left">
+              <u-avatar :src="src" size="18"></u-avatar>
+              <view class="value">滑板高手</view>
+            </view>
+            <view class="right">
+              <image
+                src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/火花.png"
+              />
+              <view class="value">1000</view>
+            </view>
+          </view>
+        </view>
       </view>
     </view>
-
-    <SideBar :visible="visible" @update:visible="visible = $event">
-    </SideBar>
+    <u-toast ref="notice"></u-toast>
   </view>
 </template>
 
 <script>
-import WNavbar from "@/components/WNavbar/index.vue";
-import SideBar from "./components/SideBar.vue";
-
 export default {
-  components: {
-    WNavbar,
-    SideBar,
-  },
   data() {
     return {
       current: 0,
-      visible: true,
       list: [
         {
           name: "动态",
@@ -239,8 +341,8 @@ export default {
     no-repeat;
 
   .more {
-    width: 32rpx;
-    height: 32rpx;
+    width: 16px;
+    height: 16px;
     margin-left: 5%;
   }
 
@@ -249,7 +351,7 @@ export default {
     height: auto;
     position: absolute;
     background: #ffffff;
-    border-radius: 40rpx;
+    border-radius: 20px;
     top: 20%;
     left: 0%;
 
@@ -258,33 +360,33 @@ export default {
       margin: auto;
       .first {
         display: flex;
-        gap: 20rpx;
+        gap: 10px;
         align-items: center;
         image {
-          width: 160rpx;
-          height: 160rpx;
-          margin-top: -40rpx;
+          width: 80px;
+          height: 80px;
+          margin-top: -20px;
         }
         .v {
           display: flex;
           flex-direction: column;
-          gap: 12rpx;
+          gap: 6px;
           .v-top {
             font-weight: 600;
-            font-size: 36rpx;
+            font-size: 18px;
             color: #1d2326;
           }
           .value {
             font-weight: 400;
-            font-size: 24rpx;
+            font-size: 12px;
             color: rgba(29, 35, 38, 0.6);
-            gap: 6rpx;
+            gap: 3px;
             display: flex;
             align-items: center;
             image {
-              width: 32rpx;
-              height: 32rpx;
-              margin-top: 0rpx;
+              width: 16px;
+              height: 16px;
+              margin-top: 0px;
             }
           }
         }
@@ -295,6 +397,7 @@ export default {
         justify-content: space-between;
         align-items: center;
         .s-left {
+          // gap: 20px;
           display: flex;
           align-items: center;
           .item:nth-child(1) {
@@ -303,9 +406,9 @@ export default {
               content: "";
               position: absolute;
               right: 0;
-              top: 55%;
-              height: 30%;
-              border-right: 2rpx solid #f0f0f0;
+              top: 55%; // 控制边框起始位置
+              height: 30%; // 限制边框长度为父元素的60%
+              border-right: 1px solid #f0f0f0;
               transform: translateY(-50%);
             }
           }
@@ -315,22 +418,22 @@ export default {
               content: "";
               position: absolute;
               right: 0;
-              top: 55%;
-              height: 30%;
-              border-right: 2rpx solid #f0f0f0;
+              top: 55%; // 控制边框起始位置
+              height: 30%; // 限制边框长度为父元素的60%
+              border-right: 1px solid #f0f0f0;
               transform: translateY(-50%);
             }
           }
           .item {
             font-weight: 400;
-            font-size: 24rpx;
+            font-size: 12px;
             color: rgba(29, 35, 38, 0.5);
-            padding: 20rpx;
+            padding: 10px;
             .num {
               font-weight: 800;
-              font-size: 32rpx;
+              font-size: 16px;
               color: #1d2326;
-              margin-right: 12rpx;
+              margin-right: 6px;
             }
           }
         }
@@ -338,59 +441,59 @@ export default {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 8rpx 24rpx;
+          padding: 4px 12px;
           background-color: #f0f0f0;
-          border-radius: 20rpx;
+          border-radius: 10px;
           font-weight: 400;
-          font-size: 24rpx;
+          font-size: 12px;
           color: rgba(29, 35, 38, 0.8);
         }
       }
 
       .third {
-        border: 2rpx solid #f5f5f5;
-        border-radius: 20rpx;
+        border: 1px solid #f5f5f5;
+        border-radius: 10px;
         display: flex;
-        height: 228rpx;
+        height: 114px;
 
         .left {
           display: flex;
           flex-direction: column;
-          gap: 20rpx;
+          gap: 10px;
           width: 60%;
-          margin-left: 30rpx;
+          margin-left: 15px;
           .info {
             display: flex;
             align-items: center;
-            margin-top: 28rpx;
+            margin-top: 14px;
             image {
-              width: 326rpx;
-              height: 36rpx;
+              width: 163px;
+              height: 18px;
             }
             text {
               font-weight: 400;
-              font-size: 28rpx;
+              font-size: 14px;
               color: rgba(29, 35, 38, 0.5);
-              margin-left: -180rpx;
+              margin-left: -90px;
             }
           }
           .value {
             font-weight: 400;
-            font-size: 24rpx;
+            font-size: 12px;
             color: rgba(29, 35, 38, 0.8);
           }
         }
         image {
-          width: 248rpx;
-          height: 208rpx;
+          width: 124px;
+          height: 104px;
         }
       }
 
       .fourth {
         display: flex;
         flex-direction: column;
-        gap: 20rpx;
-        margin-top: 30rpx;
+        gap: 10px;
+        margin-top: 15px;
         .top {
           display: flex;
           align-items: center;
@@ -399,15 +502,15 @@ export default {
             display: flex;
             align-items: center;
             text {
-              margin-left: 6rpx;
+              margin-left: 3px;
               font-weight: 400;
-              font-size: 28rpx;
+              font-size: 14px;
               color: #1d2326;
             }
             .prizes {
-              margin-left: 18rpx;
+              margin-left: 9px;
               display: flex;
-              gap: 14rpx;
+              gap: 7px;
             }
           }
           .right {
@@ -415,7 +518,7 @@ export default {
             align-items: center;
             text {
               font-weight: 400;
-              font-size: 24rpx;
+              font-size: 12px;
               color: rgba(29, 35, 38, 0.5);
             }
           }
@@ -424,28 +527,28 @@ export default {
 
       .fifth {
         display: flex;
-        gap: 20rpx;
-        margin-top: 48rpx;
+        gap: 10px;
+        margin-top: 24px;
         overflow-x: scroll;
         .item {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          border: 2rpx solid #f0f0f0;
+          border: 1px solid #f0f0f0;
           box-sizing: border-box;
-          padding: 20rpx;
-          width: 236rpx;
-          height: 104rpx;
+          padding: 10px;
+          width: 118px;
+          height: 52px;
           flex-shrink: 0;
           .left {
             .v1 {
               font-weight: 600;
-              font-size: 24rpx;
+              font-size: 12px;
               color: #1d2326;
             }
             .v2 {
               font-weight: 400;
-              font-size: 20rpx;
+              font-size: 10px;
               color: rgba(29, 35, 38, 0.5);
             }
           }
@@ -453,43 +556,43 @@ export default {
       }
 
       .sixth {
-        width: 366rpx;
-        margin-top: 64rpx;
+        width: 183px;
+        margin-top: 32px;
       }
     }
     .dt {
       column-count: 2;
-      column-gap: 20rpx;
+      column-gap: 10px;
       background: #fafafa;
-      border-radius: 40rpx;
-      padding: 20rpx;
+      border-radius: 20px;
+      padding: 10px;
       .item {
         width: 100%;
-        break-inside: avoid;
-        margin-bottom: 20rpx;
+        break-inside: avoid; /* 防止元素被分割到不同列 */
+        margin-bottom: 10px;
         image {
           width: 100%;
-          border-radius: 20rpx;
+          border-radius: 10px;
         }
         .value {
-          font-size: 28rpx;
+          font-size: 14px;
           color: #353738;
           font-weight: 600;
         }
         .buttom {
           display: flex;
           justify-content: space-between;
-          margin-top: 14rpx;
+          margin-top: 7px;
           .left {
             display: flex;
             align-items: center;
-            gap: 10rpx;
+            gap: 5px;
             image {
-              width: 36rpx;
-              height: 36rpx !important;
+              width: 18px;
+              height: 18px !important;
             }
             .value {
-              font-size: 24rpx;
+              font-size: 12px;
               font-weight: 400;
               color: #474747;
             }
@@ -497,14 +600,14 @@ export default {
           .right {
             display: flex;
             align-items: center;
-            gap: 4rpx;
+            gap: 2px;
             image {
-              width: 40rpx;
-              height: 40rpx;
+              width: 20px;
+              height: 20px;
             }
             .value {
               font-weight: 400;
-              font-size: 24rpx;
+              font-size: 12px;
               color: #474747;
             }
           }

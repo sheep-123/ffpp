@@ -1,17 +1,17 @@
 <template>
     <view class="map-bottom-box">
         <!-- 赛事内容 match -->
-        <view class="map-bottom-item" v-if="activeNode == 'match'">
+        <view class="map-bottom-item" v-if="activeNode == 'match'&&activeId">
             <MatchItem :doType="2" :item="activeInfo"></MatchItem>
         </view>
 
         <!-- 活动内容 activity-->
-        <view class="map-bottom-item" v-if="activeNode == 'activity'">
+        <view class="map-bottom-item" v-if="activeNode == 'activity'&&activeId">
             <MatchItem :doType="2" :item="activeInfo"></MatchItem>
         </view>
 
         <!-- 场地内容 stadium-->
-        <view class="map-bottom-item" v-if="activeNode == 'stadium'">
+        <view class="map-bottom-item" v-if="activeNode == 'stadium'&&activeId">
             <view class="stadium-item">
                 <div class="left">
                     <image :src="activeInfo.mainImageUrl" />
@@ -33,7 +33,7 @@
         </view>
 
         <!-- 征召内容 invitation-->
-        <view class="map-bottom-item" v-if="activeNode == 'invitation'">
+        <view class="map-bottom-item" v-if="activeNode == 'invitation'&&activeId">
             <div class="invitation-item">
                 <div class="top">
                     <div class="left">
@@ -129,6 +129,22 @@ export default {
     },
     components: {
         MatchItem,
+    },
+    watch: {
+        activeId(newVal) {
+            if(this.activeNode == 'invitation' && newVal) {
+                console.log('invitation', newVal)
+            } else if (this.activeNode == 'activity' && newVal) {
+                console.log('activity', newVal)
+                
+            } else if (this.activeNode == 'match' && newVal) {
+                console.log('match', newVal)
+
+            } else if (this.activeNode == 'stadium' && newVal) {
+                console.log('stadium', newVal)
+
+            }
+        },
     },
     data() {
         return {

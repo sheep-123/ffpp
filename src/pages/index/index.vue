@@ -31,7 +31,7 @@
 						<view class="right">
 							<image
 								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/more.png"
-								class="more" @click="edit"></image>
+								class="more" @click="$utils.toPath.navigateTo('/else/index/editSport')"></image>
 						</view>
 					</view>
 				</div>
@@ -42,7 +42,7 @@
 				<!-- 循环activeLIST -->
 
 				<block v-for="(item, index) in activeList" :key="index">
-					<view @click="activeNode = item.type">
+					<view @click="topTabsChange(item.type)">
 						<view v-if="item.type == activeNode" class="active-img">
 							<image :src="item.activeImg"></image>
 						</view>
@@ -54,92 +54,109 @@
 			</view>
 
 			<!-- 场地标记 -->
-			<view v-if="isMapOpen"  @click="$utils.toPath.navigateTo('/else/index/markSite')"  class="site-mark" >
-				<image :src="img.sitemark" ></image>
+			<view v-if="isMapOpen" @click="$utils.toPath.navigateTo('/else/index/markSite')" class="site-mark">
+				<image :src="img.sitemark"></image>
 			</view>
 
 			<!-- 地图底部信息内容 展开时候出现 -->
 			<view v-if="isMapOpen" class="map-bottom-info">
-				<mapBottomBox :activeNode="activeNode" />
+				<mapBottomBox :activeId="activeId" :activeNode="activeNode" />
 			</view>
 
-			<map :enable-scroll="isMapOpen" class="map-example" :latitude="nowAddInfo.latitude"
-				:longitude="nowAddInfo.longitude" :markers="markers" :scale="16">
+			<map @callouttap="choseMatch" @tap="tapHandle" :enable-scroll="isMapOpen" class="map-example"
+				:latitude="nowAddInfo.latitude" :longitude="nowAddInfo.longitude" :markers="markers" :scale="16">
 
 				<!-- 首页地图部分 -->
 
 				<!-- 赛事 -->
 				<cover-view v-if="isMapOpen && activeNode == 'match'" slot="callout">
-					<cover-view v-for="(item, index) in markers" :key="index" :marker-id="item.id" class="map-callout">
-						<cover-view class="top">
-							<cover-view class="img-box">
-								<cover-image
-									src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/Frame.png">
-								</cover-image>
-							</cover-view>
-							<cover-view class="title">
-								篮球1v1挑战赛 6.12中大篮球1v1挑战赛 6.12中大篮球1v1挑战赛 6.12中大
-							</cover-view>
-						</cover-view>
-						<cover-view class="bottom">
-							<cover-view class="type1">进行中</cover-view>
-							<cover-view class="avatar-box">
-								<cover-view class="avatar-item" :key="index"
-									v-for="(item, index) in activeInfo.recentUsers">
-									<cover-image class="avatar" :src="item.avatarUrl"></cover-image>
+					<cover-view :class="activeId == item.id ? 'map-callout-match' : 'map-callout-match-no'"
+						v-for="(item, index) in markers" :key="index" :marker-id="item.id">
+						<cover-view v-if="item.customCallout" class="map-callout">
+							<cover-view class="top">
+								<cover-view class="img-box">
+									<cover-image :src="item.labelImageUrl">
+									</cover-image>
 								</cover-view>
-								<cover-view class="add">
-									<u-icon name="plus" color="#ffffff" size="6"></u-icon>
+								<cover-view class="title">
+									{{ item.name }}
 								</cover-view>
 							</cover-view>
+							<cover-view class="bottom">
+								<!-- 3 报名中 -->
+								<!-- 5 报名中 -->
+								<cover-view class="type1" v-if="item.matchState == '5'">进行中</cover-view>
+								<cover-view class="type2" v-if="item.matchState == '3'">报名中</cover-view>
+								<cover-view class="avatar-box">
+									<cover-view class="avatar-item" :key="userIndex"
+										v-for="(user, userIndex) in item.users">
+										<cover-image class="avatar" :src="user.userAvatar"></cover-image>
+									</cover-view>
+									<cover-view class="add">
+										<u-icon name="plus" color="#ffffff" size="6"></u-icon>
+									</cover-view>
+								</cover-view>
+							</cover-view>
 						</cover-view>
+						<cover-view class="sanjiao" v-if="item.customCallout"></cover-view>
 					</cover-view>
 				</cover-view>
 
 				<!-- 活动 -->
 				<cover-view v-if="isMapOpen && activeNode == 'activity'" slot="callout">
-					<cover-view v-for="(item, index) in markers" :key="index" :marker-id="item.id" class="map-callout">
-						<cover-view class="top">
-							<cover-view class="img-box">
-								<cover-image
-									src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/Frame.png">
-								</cover-image>
-							</cover-view>
-							<cover-view class="title">
-								篮球1v1挑战赛 6.12中大篮球1v1挑战赛 6.12中大篮球1v1挑战赛 6.12中大
-							</cover-view>
-						</cover-view>
-						<cover-view class="bottom">
-							<cover-view class="type1">进行中</cover-view>
-							<cover-view class="avatar-box">
-								<cover-view class="avatar-item" :key="index"
-									v-for="(item, index) in activeInfo.recentUsers">
-									<cover-image class="avatar" :src="item.avatarUrl"></cover-image>
+					<cover-view @click="choseMatch(item)"
+						:class="activeId == item.id ? 'map-callout-match' : 'map-callout-match-no'"
+						v-for="(item, index) in markers" :key="index" :marker-id="item.id">
+						<cover-view v-if="item.customCallout" class="map-callout">
+							<cover-view class="top">
+								<cover-view class="img-box">
+									<cover-image :src="item.labelImageUrl">
+									</cover-image>
 								</cover-view>
-								<cover-view class="add">
-									<u-icon name="plus" color="#ffffff" size="6"></u-icon>
+								<cover-view class="title">
+									{{ item.name }}
 								</cover-view>
 							</cover-view>
+							<cover-view class="bottom">
+								<!-- 3 报名中 -->
+								<!-- 5 报名中 -->
+								<cover-view class="type1" v-if="item.matchState == '5'">进行中</cover-view>
+								<cover-view class="type2" v-if="item.matchState == '3'">报名中</cover-view>
+								<cover-view class="avatar-box">
+									<cover-view class="avatar-item" :key="userIndex"
+										v-for="(user, userIndex) in item.users">
+										<cover-image class="avatar" :src="user.userAvatar"></cover-image>
+									</cover-view>
+									<cover-view class="add">
+										<u-icon name="plus" color="#ffffff" size="6"></u-icon>
+									</cover-view>
+								</cover-view>
+							</cover-view>
 						</cover-view>
-
+						<cover-view class="sanjiao" v-if="item.customCallout"></cover-view>
 					</cover-view>
 				</cover-view>
 
 
 				<!-- 场地 -->
 				<cover-view v-if="isMapOpen && activeNode == 'stadium'" slot="callout">
-					<cover-view v-for="(item, index) in markers" :key="index" :marker-id="item.id"
-						class="map-callout-stadium">
-						<cover-view class="map-callout-stadium-box">
-							<cover-image class="map-callout-stadium-img"
-								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/Frame.png">
-							</cover-image>
-							<cover-view class="map-callout-stadium-title">
-								佐佐排球馆
+					<cover-view  :class="activeId==item.id?'map-callout-stadium-main':'map-callout-stadium-main-no'" v-for="(item, index) in markers" :key="index"
+						:marker-id="item.id">
+						<cover-view class="map-callout-stadium">
+							<cover-view class="map-callout-stadium-box">
+								<cover-image class="map-callout-stadium-img"
+									src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/Frame.png">
+								</cover-image>
+								<cover-view class="map-callout-stadium-title">
+									{{ item.name }}
+								</cover-view>
 							</cover-view>
 						</cover-view>
+						<cover-view class="sanjiao" v-if="item.customCallout"></cover-view>
 
 					</cover-view>
+
+
 				</cover-view>
 				<!-- 征召 -->
 				<cover-view v-if="isMapOpen && activeNode == 'invitation'" slot="callout">
@@ -226,48 +243,10 @@ const mapHeight = 208; //地图可视区域常量
 const pullHeight = 30; //滑动器高度常量
 import navbar from '@/components/WNavbar/index.vue';
 import mapBottomBox from './components/mapBottomBox.vue';
-const active = JSON.parse(JSON.stringify({
-	"address": "广东省广州市天河区",
-	"color": "#1B4CA7",
-	"createTime": "2025-04-30 11:27:58",
-	"distance": 3.84,
-	"endTime": "2025-06-30 11:24:00",
-	"entryFee": 648.00,
-	"heat": 0,
-	"id": 16,
-	"mainImageUrl": "https://testfeifanpaopao.jireplayer.com/download/upload/20250430/tmp_7561ca43e2e817b742eb26c2a592068e.jpg",
-	"name": "大胃🫅比赛",
-	"recentUsers": [
-		{
-			"avatarUrl": "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/boy.jpg",
-			"userId": 16
-		},
-		{
-			"avatarUrl": "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/boy.jpg",
-			"userId": 15
-		},
-		{
-			"avatarUrl": "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/boy.jpg",
-			"userId": 15
-		},
-		{
-			"avatarUrl": "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/myavatar.jpg",
-			"userId": 17
-		}
-	],
-	"registerNum": 4,
-	"registrationEndTime": "2025-05-31 11:24:00",
-	"serialNum": "202504001186",
-	"startTime": "2025-05-30 11:24:00"
-})
-)
 export default {
 	data() {
 		return {
-
-			// 首页地图模块
-			activeInfo: active,
-
+			activeId: '',
 			activeNode: 'match',
 			activeList: [
 				{
@@ -303,9 +282,9 @@ export default {
 			bgColor: 'transparent',
 			scrollY: mapHeight, //初始下挪高度 单位px
 			isDragging: false, //下拉状态
-			list: ['关注', '美式橄榄球', '篮球', '飞盘', '电竞', '关注', '美式橄榄球', '篮球', '飞盘', '电竞', '关注', '美式橄榄球', '篮球', '飞盘', '电竞'],
+			list: ['关注', '美式橄榄球', '篮球', '飞盘', '电竞'],
 			nowAddInfo: {
-				id: 1,
+				id: 0,
 				latitude: null,
 				longitude: null,
 				width: 58,
@@ -316,50 +295,9 @@ export default {
 				page: 1,
 				pageSize: 10
 			},
-			markers: [
-				{
-					id: 1,
-					latitude: 23.12463,
-					longitude: 113.36199,
-					width: 4,
-					height: 4,
-					iconPath: 'https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/Frame.png',
-					customCallout: {
-						anchorX: 0,
-						anchorY: 0,
-						display: 'ALWAYS'
-					},
-				},
-				{
-					id: 2,
-					latitude: 23.12363,
-					longitude: 113.37199,
-					width: 4,
-					height: 4,
-					iconPath: 'https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/Frame.png',
-					customCallout: {
-						anchorX: 0,
-						anchorY: 0,
-						display: 'ALWAYS'
-					},
-				},
-				{
-					id: 3,
-					latitude: 23.12563,
-					longitude: 113.36699,
-					width: 4,
-					height: 4,
-					iconPath: 'https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/Frame.png',
-					customCallout: {
-						anchorX: 0,
-						anchorY: 0,
-						display: 'ALWAYS'
-					},
-				},
-			],
+			markers: [],
 			newsList: [],
 			loadStatus: 'loadmore', //loadmore还有更多 nomore没有了
-			// tabsHeight:0,// tab栏高度
 			scrollTop: 0,
 			isScrolling: false,
 			scrollDoFlag: false,
@@ -402,14 +340,92 @@ export default {
 	onShow() { },
 	async onLoad() {
 		this.getList();
+
 		if (!this.globalData.location.latitude) {
 			await this.getLocation();
 		}
-		this.nowAddInfo.latitude = this.globalData.location.latitude;
-		this.nowAddInfo.longitude = this.globalData.location.longitude;
-		// this.markers = [this.nowAddInfo];
+		this.setMapCenter(this.globalData.location.latitude, this.globalData.location.longitude);
 	},
 	methods: {
+		topTabsChange(type) {
+			this.activeNode = type;
+			this.activeId = '';
+			this.markers = [this.nowAddInfo];
+			// 更新经纬度之后获取周边数据 activeNode
+			this.activeNode == 'match' && this.getMatchMapList()
+			this.activeNode == 'stadium' && this.getStadiumMapList()
+		},
+		choseMatch(e) {
+			this.activeId = e.markerId
+		},
+		tapHandle(e) {
+			console.log(e.detail, '点击事件')
+			this.setMapCenter(e.detail.latitude, e.detail.longitude)
+		},
+		setMapCenter(latitude, longitude) {
+			if (!latitude || !longitude) {
+				return
+			}
+			this.nowAddInfo.latitude = latitude;
+			this.nowAddInfo.longitude = longitude;
+			this.markers = [this.nowAddInfo];
+			// 更新经纬度之后获取周边数据 activeNode
+			this.activeNode == 'match' && this.getMatchMapList()
+			this.activeNode == 'stadium' && this.getStadiumMapList()
+		},
+		async getStadiumMapList() {
+			const res = await this.$requestAll.home.getMapCdInfo({
+				lat: this.nowAddInfo.latitude,
+				lng: this.nowAddInfo.longitude,
+				radius: 1,
+				cdCount: 5,
+			});
+			const marks = res.data.map(item => {
+				return {
+					...item,
+					width: 1,
+					height: 1,
+					id: item.cdId,
+					iconPath: '/static/templateImage/tran.png',
+					latitude: item.lat,
+					longitude: item.lng,
+					customCallout: {
+						anchorX: 0,
+						anchorY: 0,
+						display: 'ALWAYS'
+					}
+				}
+			})
+			this.markers = [...this.markers, ...marks]
+		},
+		async getMatchMapList() {
+			const res = await this.$requestAll.home.getMapMatchInfo({
+				lat: this.nowAddInfo.latitude,
+				lng: this.nowAddInfo.longitude,
+				radius: 5,
+				matchCount: 5,
+				userCount: 5,
+			});
+			const marks = res.data.map(item => {
+				return {
+					...item,
+					width: 1,
+					height: 1,
+					iconPath: '/static/templateImage/tran.png',
+					id: item.matchId,
+					latitude: item.lat,
+					longitude: item.lng,
+					customCallout: {
+						anchorX: 0,
+						anchorY: 0,
+						display: 'ALWAYS'
+					}
+				}
+			})
+			this.markers = [...this.markers, ...marks]
+		},
+
+		// ===========
 		toDetail(id) {
 			this.$utils.toPath.navigateTo('/dynamic/publish/dongTaiDetail?newId=' + id);
 		},
@@ -454,12 +470,12 @@ export default {
 
 			const endY = parseInt(e.changedTouches[0].clientY);
 			const deltaY = endY - this.start; // 计算滑动的距离
-			if(deltaY > 0) {
+			if (deltaY > 0) {
 				// 向下滑动
 				// 如果scrollY在顶部和mapHeight之间，向下滑动时，toCenterHandle()，否则不做处理
 				if (this.scrollY <= mapHeight) {
 					this.toCenterHandle()
-				} 
+				}
 				// 如果scrollY在mapHeight和底部之间，向下滑动时，toBottomHandle()，否则不做处理
 				if (this.scrollY > mapHeight && this.scrollY <= this.systemInfo.windowHeight - pullHeight) {
 					this.toBottomHandle()
@@ -473,7 +489,7 @@ export default {
 					this.toCenterHandle()
 				} else if (this.scrollY > this.systemInfo.windowHeight - pullHeight) {
 					this.toBottomHandle()
-				} 
+				}
 
 			}
 
@@ -521,7 +537,7 @@ export default {
 </script>
 
 <style lang="scss">
-.site-mark{
+.site-mark {
 	position: absolute;
 	top: 60%;
 	right: 0;
@@ -534,6 +550,7 @@ export default {
 		height: 100%;
 	}
 }
+
 .invitation-box {
 	width: 200rpx;
 	height: 108rpx;
@@ -582,110 +599,300 @@ export default {
 	}
 }
 
+.map-callout-stadium-main {
+	.sanjiao {
+		// 正三角形
+		width: 0;
+		height: 0;
+		border-left: 12rpx solid transparent;
+		border-right: 12rpx solid transparent;
+		border-top: 18rpx solid #fff;
+		margin: 0 auto;
 
-.map-callout-stadium {
-	width: 220rpx;
-	height: 122rpx;
-	background: #F4F4F3;
-	border-radius: 20rpx;
-	border: 2rpx solid #fff;
-	box-sizing: border-box;
-	opacity: .8;
-	overflow: visible !important;
-
-	.map-callout-stadium-box {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-
-		.map-callout-stadium-img {
-			width: 82rpx;
-			height: 82rpx;
-		}
-
-		.map-callout-stadium-title {
-			font-weight: 600;
-			font-size: 24rpx;
-			color: rgba(29, 35, 38, 0.6);
-		}
 	}
+	.map-callout-stadium {
+		width: 220rpx;
+		height: 122rpx;
+		background: #fff;
+		border-radius: 20rpx;
+		box-sizing: border-box;
 
+
+		.map-callout-stadium-box {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+
+			.map-callout-stadium-img {
+				width: 82rpx;
+				height: 82rpx;
+			}
+
+			.map-callout-stadium-title {
+				width: 220rpx;
+				padding: 0 12rpx;
+				box-sizing: border-box;
+				text-align: center;
+				font-weight: 600;
+				text-overflow: ellipsis;
+				font-size: 24rpx;
+				color: rgba(29, 35, 38, 0.6);
+			}
+		}
+
+	}
+}
+.map-callout-stadium-main-no {
+	opacity: .8;
+	.sanjiao {
+		// 正三角形
+		width: 0;
+		height: 0;
+		border-left: 12rpx solid transparent;
+		border-right: 12rpx solid transparent;
+		border-top: 18rpx solid #F4F4F3;
+		margin: 0 auto;
+
+	}
+	.map-callout-stadium {
+		width: 220rpx;
+		height: 122rpx;
+		background: #F4F4F3;
+		border-radius: 20rpx;
+		box-sizing: border-box;
+
+
+		.map-callout-stadium-box {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+
+			.map-callout-stadium-img {
+				width: 82rpx;
+				height: 82rpx;
+			}
+
+			.map-callout-stadium-title {
+				width: 220rpx;
+				padding: 0 12rpx;
+				box-sizing: border-box;
+				text-align: center;
+				font-weight: 600;
+				text-overflow: ellipsis;
+				font-size: 24rpx;
+				color: rgba(29, 35, 38, 0.6);
+			}
+		}
+
+	}
 }
 
-.map-callout {
-	width: 260rpx;
-	height: 122rpx;
-	background: #FFFFFF;
-	border-radius: 20rpx;
-	padding: 12rpx 8rpx;
-	box-sizing: border-box;
 
-	.bottom {
-		display: flex;
-		align-items: center;
+// 地图选中的样式
+.map-callout-match {
+	position: relative;
 
-		.type1 {
-			font-weight: 600;
-			font-size: 20rpx;
-			color: #EC384A;
-			margin-right: 12rpx;
-		}
+	.sanjiao {
+		// 正三角形
+		width: 0;
+		height: 0;
+		border-left: 12rpx solid transparent;
+		border-right: 12rpx solid transparent;
+		border-top: 18rpx solid #fff;
+		margin: 0 auto;
 
-		.avatar-box {
+	}
+
+	.map-callout {
+		width: 260rpx;
+		height: 122rpx;
+		background: #FFFFFF;
+		border-radius: 20rpx;
+		padding: 12rpx 8rpx;
+		box-sizing: border-box;
+		// background-image: url(https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/定位.png);
+
+
+		.bottom {
 			display: flex;
 			align-items: center;
 
-			.add {
-				width: 24rpx;
-				height: 24rpx;
-				background: #CECECE;
-				border-radius: 50%;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				color: #fff;
+			.type2 {
+				font-weight: 600;
+				font-size: 20rpx;
+				color: #2A8ABA;
+				margin-right: 12rpx;
 			}
 
-			.avatar-item {
-				width: 24rpx;
-				height: 24rpx;
-				border-radius: 50%;
-				overflow: hidden;
-				margin-right: -6rpx;
+			.type1 {
+				font-weight: 600;
+				font-size: 20rpx;
+				color: #EC384A;
+				margin-right: 12rpx;
+			}
 
-				>image {
-					width: 100%;
-					height: 100%;
+			.avatar-box {
+				display: flex;
+				align-items: center;
+
+				.add {
+					width: 24rpx;
+					height: 24rpx;
+					background: #CECECE;
+					border-radius: 50%;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					color: #fff;
+				}
+
+				.avatar-item {
+					width: 24rpx;
+					height: 24rpx;
+					border-radius: 50%;
+					overflow: hidden;
+					margin-right: -6rpx;
+
+					>image {
+						width: 100%;
+						height: 100%;
+					}
 				}
 			}
 		}
+
+		.top {
+			display: flex;
+			margin-bottom: 10rpx;
+
+			.img-box {
+				display: inline-block;
+				width: 56rpx;
+				height: 56rpx;
+				margin-right: 4rpx;
+
+				>cover-image {
+					width: 100%;
+					height: 100%;
+					border-radius: 50%;
+				}
+			}
+
+			.title {
+				width: 172rpx;
+				height: 56rpx;
+				font-weight: 600;
+				font-size: 24rpx;
+				color: #1D2326;
+				line-height: 56rpx;
+				text-overflow: ellipsis;
+			}
+		}
+	}
+}
+
+// 地图未选中的样式
+.map-callout-match-no {
+	// 整块背景模糊
+	opacity: .8;
+	z-index: 999;
+
+	.sanjiao {
+		// 正三角形
+		width: 0;
+		height: 0;
+		border-left: 12rpx solid transparent;
+		border-right: 12rpx solid transparent;
+		border-top: 18rpx solid #F4F4F3;
+		margin: 0 auto;
+
 	}
 
-	.top {
-		display: flex;
-		margin-bottom: 10rpx;
+	.map-callout {
+		width: 260rpx;
+		height: 122rpx;
+		background: #F4F4F3;
 
-		.img-box {
-			display: inline-block;
-			width: 56rpx;
-			height: 56rpx;
-			margin-right: 4rpx;
+		border-radius: 20rpx;
+		padding: 12rpx 8rpx;
+		box-sizing: border-box;
+		// background-image: url(https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/定位.png);
 
-			>cover-image {
-				width: 100%;
-				height: 100%;
-				border-radius: 50%;
+
+		.bottom {
+			display: flex;
+			align-items: center;
+
+			.type1 {
+				font-weight: 600;
+				font-size: 20rpx;
+				color: #EC384A;
+				margin-right: 12rpx;
+			}
+
+			.type2 {
+				font-weight: 600;
+				font-size: 20rpx;
+				color: #2A8ABA;
+				margin-right: 12rpx;
+			}
+
+			.avatar-box {
+				display: flex;
+				align-items: center;
+
+				.add {
+					width: 24rpx;
+					height: 24rpx;
+					background: #CECECE;
+					border-radius: 50%;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					color: #fff;
+				}
+
+				.avatar-item {
+					width: 24rpx;
+					height: 24rpx;
+					border-radius: 50%;
+					overflow: hidden;
+					margin-right: -6rpx;
+
+					>image {
+						width: 100%;
+						height: 100%;
+					}
+				}
 			}
 		}
 
-		.title {
-			width: 172rpx;
-			height: 56rpx;
-			font-weight: 600;
-			font-size: 24rpx;
-			color: #1D2326;
-			line-height: 56rpx;
-			text-overflow: ellipsis;
+		.top {
+			display: flex;
+			margin-bottom: 10rpx;
+
+			.img-box {
+				display: inline-block;
+				width: 56rpx;
+				height: 56rpx;
+				margin-right: 4rpx;
+
+				>cover-image {
+					width: 100%;
+					height: 100%;
+					border-radius: 50%;
+				}
+			}
+
+			.title {
+				width: 172rpx;
+				height: 56rpx;
+				font-weight: 600;
+				font-size: 24rpx;
+				color: #1D2326;
+				line-height: 56rpx;
+				text-overflow: ellipsis;
+			}
 		}
 	}
 }

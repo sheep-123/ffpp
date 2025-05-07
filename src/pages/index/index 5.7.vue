@@ -374,7 +374,7 @@ export default {
 				lat: this.nowAddInfo.latitude,
 				lng: this.nowAddInfo.longitude,
 				radius: 1,
-				cdCount: 5,
+				cdCount: 3,
 			});
 			const marks = res.data.map(item => {
 				return {
@@ -398,8 +398,8 @@ export default {
 			const res = await this.$requestAll.home.getMapMatchInfo({
 				lat: this.nowAddInfo.latitude,
 				lng: this.nowAddInfo.longitude,
-				radius: 5,
-				matchCount: 5,
+				radius: 1,
+				matchCount: 3,
 				userCount: 5,
 			});
 			const marks = res.data.map(item => {

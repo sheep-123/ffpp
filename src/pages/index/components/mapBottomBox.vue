@@ -1,5 +1,5 @@
 <template>
-    <view class="map-bottom-box">
+    <view class="map-bottom-box" v-if="activeInfo" >
         <!-- 赛事内容 match -->
         <view class="map-bottom-item" v-if="activeNode == 'match'&&activeId">
             <MatchItem :doType="2" :item="activeInfo"></MatchItem>
@@ -18,15 +18,15 @@
                 </div>
                 <div class="right">
                     <div class="stadium-name">
-                        Fiteon健身工作室
+                        {{activeInfo.name}}
                     </div>
-                    <div class="stadium-time">
-                        <text class="good">营业时间</text>
+                    <div class="stadium-time" >
+                        <text class="good" >营业时间</text>
                         <text>周一至周日 08:00-22:00</text>
                     </div>
                     <div class="stadium-address">
                         <u-icon name="map"></u-icon>
-                        <text>广东省深圳市南山区深圳大学城</text>
+                        <text class="u-line-1"> {{ activeInfo.distance }}km | {{ activeInfo.address }}</text>
                     </div>
                 </div>
             </view>
@@ -84,42 +84,9 @@
 </template>
 
 <script>
+const app = getApp();
+
 import MatchItem from '@/components/MatchItem.vue';
-const active = JSON.parse(JSON.stringify({
-    "address": "广东省广州市天河区",
-    "color": "#1B4CA7",
-    "createTime": "2025-04-30 11:27:58",
-    "distance": 3.84,
-    "endTime": "2025-06-30 11:24:00",
-    "entryFee": 648.00,
-    "heat": 0,
-    "id": 16,
-    "mainImageUrl": "https://testfeifanpaopao.jireplayer.com/download/upload/20250430/tmp_7561ca43e2e817b742eb26c2a592068e.jpg",
-    "name": "大胃🫅比赛",
-    "recentUsers": [
-        {
-            "avatarUrl": "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/boy.jpg",
-            "userId": 16
-        },
-        {
-            "avatarUrl": "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/boy.jpg",
-            "userId": 15
-        },
-        {
-            "avatarUrl": "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/boy.jpg",
-            "userId": 15
-        },
-        {
-            "avatarUrl": "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/myavatar.jpg",
-            "userId": 17
-        }
-    ],
-    "registerNum": 4,
-    "registrationEndTime": "2025-05-31 11:24:00",
-    "serialNum": "202504001186",
-    "startTime": "2025-05-30 11:24:00"
-})
-)
 
 export default {
     name: 'MapBottomBox',
@@ -136,11 +103,16 @@ export default {
                 console.log('invitation', newVal)
             } else if (this.activeNode == 'activity' && newVal) {
                 console.log('activity', newVal)
+
                 
             } else if (this.activeNode == 'match' && newVal) {
+                this.activeInfo = ''
+                this.getMatchInfo()
                 console.log('match', newVal)
 
             } else if (this.activeNode == 'stadium' && newVal) {
+                this.activeInfo = ''
+                this.getCdDetail()
                 console.log('stadium', newVal)
 
             }
@@ -148,9 +120,29 @@ export default {
     },
     data() {
         return {
-            activeInfo: active,
+			globalData: app.globalData,
+            activeInfo: '',
             activeImg: this.$img.home.caption
         }
+    },
+    methods: {
+        // 获取场地详情
+        async getCdDetail() {
+            const res = await this.$requestAll.home.getCdDetail({
+                cdId: this.activeId,
+                lat : this.globalData.location.latitude,
+                lng : this.globalData.location.longitude,
+            });
+            this.activeInfo = res.data
+        },
+        async getMatchInfo() {
+            const res = await this.$requestAll.home.getMatchDetail({
+                matchId: this.activeId,
+                lat : this.globalData.location.latitude,
+                lng : this.globalData.location.longitude,
+            });
+            this.activeInfo = res.data[0]
+        },
     },
 }
 </script>
@@ -177,7 +169,7 @@ export default {
 
         .stadium-address {
             display: flex;
-            align-items: center;
+            // align-items: center;
             font-weight: 400;
             font-size: 24rpx;
             color: rgba(29, 35, 38, 0.6);

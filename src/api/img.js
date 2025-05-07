@@ -29,6 +29,7 @@ export default {
 		saishi: getTemplateImg('home/saishi.png'),
 		zhangzhao: getTemplateImg('home/zhangzhao.png'),
 		caption	: getTemplateImg('home/caption.png'),
+		sitemark: getTemplateImg('home/sitemark.png'),
 	},
 	dynamic: {
 		topArrow: getImg('topArrow.svg'),

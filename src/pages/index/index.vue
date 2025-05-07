@@ -53,6 +53,10 @@
 				</block>
 			</view>
 
+			<!-- 场地标记 -->
+			<view v-if="isMapOpen"  @click="$utils.toPath.navigateTo('/else/index/markSite')"  class="site-mark" >
+				<image :src="img.sitemark" ></image>
+			</view>
 
 			<!-- 地图底部信息内容 展开时候出现 -->
 			<view v-if="isMapOpen" class="map-bottom-info">
@@ -182,7 +186,7 @@
 							<view class="right">
 								<image
 									src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/more.png"
-									class="more" @click="edit"></image>
+									class="more" @click="$utils.toPath.navigateTo('/else/index/editSport')"></image>
 							</view>
 						</view>
 					</view>
@@ -428,7 +432,7 @@ export default {
 		},
 		handleTouchMove(e) {
 			if (e.stopPropagation && (this.scrollY == this.systemInfo.windowHeight - 3)) {
-				event.stopPropagation();
+				e.stopPropagation();
 			}
 			if (!this.isDragging) {
 				return
@@ -447,19 +451,46 @@ export default {
 			// 点击某处时候不触发
 			if (this.start == parseInt(e.changedTouches[0].clientY)) return
 			this.isDragging = false;
-			if (this.scrollY <= mapHeight / 2) {
-				this.toTopHandle()
+
+			const endY = parseInt(e.changedTouches[0].clientY);
+			const deltaY = endY - this.start; // 计算滑动的距离
+			if(deltaY > 0) {
+				// 向下滑动
+				// 如果scrollY在顶部和mapHeight之间，向下滑动时，toCenterHandle()，否则不做处理
+				if (this.scrollY <= mapHeight) {
+					this.toCenterHandle()
+				} 
+				// 如果scrollY在mapHeight和底部之间，向下滑动时，toBottomHandle()，否则不做处理
+				if (this.scrollY > mapHeight && this.scrollY <= this.systemInfo.windowHeight - pullHeight) {
+					this.toBottomHandle()
+				}
+
+			} else {
+				// 向上滑动
+				if (this.scrollY <= mapHeight) {
+					this.toTopHandle()
+				} else if (this.scrollY > mapHeight && this.scrollY <= this.systemInfo.windowHeight - pullHeight) {
+					this.toCenterHandle()
+				} else if (this.scrollY > this.systemInfo.windowHeight - pullHeight) {
+					this.toBottomHandle()
+				} 
+
 			}
-			if (this.scrollY > mapHeight / 2 && this.scrollY <= mapHeight) {
-				this.toCenterHandle()
-			}
-			if (this.scrollY > mapHeight && this.scrollY <= mapHeight + (this.systemInfo.windowHeight - mapHeight) /
-				2) {
-				this.toCenterHandle()
-			}
-			if (this.scrollY > mapHeight + (this.systemInfo.windowHeight - mapHeight) / 2) {
-				this.toBottomHandle()
-			}
+
+			// 根据scrollY的值来判断吸顶的状态
+			// if (this.scrollY <= mapHeight / 2) {
+			// 	this.toTopHandle()
+			// }
+			// if (this.scrollY > mapHeight / 2 && this.scrollY <= mapHeight) {
+			// 	this.toCenterHandle()
+			// }
+			// if (this.scrollY > mapHeight && this.scrollY <= mapHeight + (this.systemInfo.windowHeight - mapHeight) /
+			// 	2) {
+			// 	this.toCenterHandle()
+			// }
+			// if (this.scrollY > mapHeight + (this.systemInfo.windowHeight - mapHeight) / 2) {
+			// 	this.toBottomHandle()
+			// }
 		},
 		dragstart() {
 			this.stop = true;
@@ -490,6 +521,19 @@ export default {
 </script>
 
 <style lang="scss">
+.site-mark{
+	position: absolute;
+	top: 60%;
+	right: 0;
+	z-index: 1000;
+	width: 60rpx;
+	height: 128rpx;
+
+	>image {
+		width: 100%;
+		height: 100%;
+	}
+}
 .invitation-box {
 	width: 200rpx;
 	height: 108rpx;
@@ -500,6 +544,7 @@ export default {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+
 	.invitation-bottom {
 		display: flex;
 		align-items: center;
@@ -606,7 +651,7 @@ export default {
 				height: 24rpx;
 				border-radius: 50%;
 				overflow: hidden;
-				margin-right: -2rpx;
+				margin-right: -6rpx;
 
 				>image {
 					width: 100%;

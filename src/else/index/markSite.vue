@@ -1,912 +1,414 @@
 <template>
-  <view class="box">
-    <u-navbar
-      class="nav"
-      autoBack
-      leftText="发布动态"
-      :fixed="false"
-      bgColor="#fff"
-    >
-      <view
-        class="u-nav-slot"
-        slot="left"
-        style="display: flex; align-items: center"
-      >
-        <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/left.png"
-          @click="back"
-          class="back-btn"
-        />
-        <text class="navTitle">标记场地</text>
+  <view class="mark-site-container">
+    <Wnavbar title="标记场地"></Wnavbar>
+    <view class="form-container">
+      <view class="form-item">
+        <view class="label required">场地名称</view>
+        <input class="input" type="text" v-model="formData.siteName" placeholder="请与场地招牌上的名字保持一致" />
       </view>
-    </u-navbar>
-    <view>
-      <scroll-view
-        scroll-y
-        :style="{
-          height: windowHeight - bottomBoxHeight - statusBarHeight - 44 + 'px',
-        }"
-      >
-        <view class="formBox">
-          <u-form
-            labelPosition="top"
-            :borderBottom="false"
-            :model="model1"
-            :rules="rules"
-            ref="uForm"
-            style="width: 100%"
-          >
-            <u-gap height="12" bgColor="#F7F7F7"></u-gap>
-            <u-form-item
-              class="formItemBox"
-              prop="userInfo.name"
-              ref="item1"
-              :borderBottom="false"
-            >
-              <template #label>
-                <view
-                  style="
-                    width: 100%;
-                    height: 54px;
-                    display: flex;
-                    align-items: center;
-                  "
-                >
-                  <text
-                    class="label"
-                    style="
-                      font-family: PingFang SC, PingFang SC;
-                      font-weight: 600;
-                      font-size: 14px;
-                      color: #1d2326;
-                      line-height: 22px;
-                      text-align: left;
-                      font-style: normal;
-                      text-transform: none;
-                    "
-                    >场地入口照片</text
-                  >
-                  <text
-                    class="starIcon"
-                    style="padding-left: 4px; color: #ec384a"
-                    >*</text
-                  >
-                </view>
-              </template>
-              <u-upload
-                :fileList="fileList"
-                @clickPreview="clickPreview"
-                @afterRead="afterRead"
-                @delete="deletePic"
-                accept="image"
-                name="6"
-                multiple
-                :maxCount="1"
-                width="86"
-                height="86"
-                :deleteIcon="'close'"
-                :deleteIconColor="'#ff0000'"
-                :deleteIconSize="20"
-                :previewFullImage="true"
-              >
-                <view class="custom-upload">
-                  <view class="plusIcon">
-                    <u-icon name="plus" size="20px" color="#CCCCCC"></u-icon>
-                  </view>
-                  <text class="upload-text">上传图片</text>
-                </view>
-              </u-upload>
-            </u-form-item>
-            <u-gap height="12" bgColor="#F7F7F7"></u-gap>
-            <u-form-item
-              class="formItemBox"
-              prop="userInfo.name"
-              ref="item1"
-              :borderBottom="false"
-            >
-              <template #label>
-                <view
-                  style="
-                    width: 100%;
-                    height: 54px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                  "
-                >
-                  <view>
-                    <text
-                      class="label"
-                      style="
-                        font-family: PingFang SC, PingFang SC;
-                        font-weight: 600;
-                        font-size: 14px;
-                        color: #1d2326;
-                        line-height: 22px;
-                        text-align: left;
-                        font-style: normal;
-                        text-transform: none;
-                      "
-                      >场地位置</text
-                    >
-                    <text
-                      class="starIcon"
-                      style="padding-left: 4px; color: #ec384a"
-                      >*</text
-                    >
-                  </view>
-                  <view>
-                    <text
-                      class="tips"
-                      style="
-                        font-family: PingFang SC, PingFang SC;
-                        font-weight: 400;
-                        font-size: 12px;
-                        color: rgba(29, 35, 38, 0.3);
-                        line-height: 16px;
-                        text-align: left;
-                        font-style: normal;
-                        text-transform: none;
-                      "
-                      >需要使用您的定位信息</text
-                    >
-                  </view>
-                </view>
-              </template>
-              <view class="SitePositonBox">
-                <view>
-                  <image
-                    src="@https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/whileLocation.svg"
-                    mode="scaleToFill"
-                  />
-                  <view>
-                    <text>请在地图上选择位置</text>
-                  </view>
-                </view>
-              </view>
-              <view class="addressDetailBox">
-                <view class="left">
-                  <text>广州市</text>
-                  <u-icon
-                    name="arrow-down-fill"
-                    size="12"
-                    style="margin-left: 6px"
-                  ></u-icon>
-                </view>
-                <view>
-                  <u-input
-                    v-model="addressDetail"
-                    placeholder="请填写详情地址(选填)"
-                    placeholder-class="input-placeholder"
-                    placeholder-style="text-align:right;color: rgba(29,35,38,0.3);font-size:14px"
-                    border="false"
-                    @input=""
-                  />
-                </view>
-              </view>
-            </u-form-item>
-            <u-gap height="12" bgColor="#F7F7F7"></u-gap>
-          </u-form>
-          <u-form
-            labelPosition="left"
-            :model="model1"
-            :rules="rules"
-            ref="uForm"
-            style="width: 80%"
-          >
-            <view style="background-color: #fff; border-radius: 8px">
-              <view
-                style="
-                  background-color: #fff;
-                  padding-left: 12px;
-                  padding-top: 12px;
-                  border-radius: 8px;
-                "
-              >
-                <text
-                  style="
-                    font-family: PingFang SC, PingFang SC;
-                    font-weight: 600;
-                    font-size: 16px;
-                    color: #1d2326;
-                    line-height: 24px;
-                    text-align: center;
-                    font-style: normal;
-                    text-transform: none;
-                  "
-                  >商家信息</text
-                >
-              </view>
-              <u-form-item
-                prop="userInfo.name"
-                ref="item1"
-                :borderBottom="true"
-              >
-                <template #label>
-                  <view
-                    style="height: 54px; display: flex; align-items: center"
-                  >
-                    <text
-                      class="label"
-                      style="
-                        font-family: PingFang SC, PingFang SC;
-                        font-weight: 600;
-                        font-size: 14px;
-                        color: #1d2326;
-                        line-height: 22px;
-                        text-align: left;
-                        font-style: normal;
-                        text-transform: none;
-                      "
-                      >商家类型</text
-                    >
-                  </view>
-                </template>
-                <view
-                  style="width: 100%; display: flex; justify-content: flex-end"
-                >
-                  <view>
-                    <view style="display: flex">
-                      <text
-                        style="
-                          font-family: PingFang SC, PingFang SC;
-                          font-weight: 400;
-                          font-size: 14px;
-                          color: rgba(29, 35, 38, 0.3);
-                          line-height: 22px;
-                          text-align: right;
-                          font-style: normal;
-                          text-transform: none;
-                          text-align: end;
-                        "
-                        >请选择商家类型</text
-                      >
-                      <u-icon name="arrow-right" size="12px"></u-icon>
-                    </view>
-                  </view>
-                </view>
-              </u-form-item>
-              <u-form-item
-                prop="userInfo.name"
-                ref="item1"
-                :borderBottom="true"
-              >
-                <template #label>
-                  <view
-                    style="height: 54px; display: flex; align-items: center"
-                  >
-                    <text
-                      class="label"
-                      style="
-                        font-family: PingFang SC, PingFang SC;
-                        font-weight: 600;
-                        font-size: 14px;
-                        color: #1d2326;
-                        line-height: 22px;
-                        text-align: left;
-                        font-style: normal;
-                        text-transform: none;
-                      "
-                      >手机号</text
-                    >
-                  </view>
-                </template>
-                <view
-                  style="width: 100%; display: flex; justify-content: flex-end"
-                >
-                  <view>
-                    <u-input
-                      v-model="model1.userInfo.name"
-                      border="none"
-                      placeholder="请填写手机号"
-                      placeholder-style="text-align:right;color: rgba(29,35,38,0.3);font-size:14px"
-                    ></u-input>
-                  </view>
-                </view>
-              </u-form-item>
-              <u-form-item
-                prop="userInfo.name"
-                ref="item1"
-                :borderBottom="true"
-              >
-                <template #label>
-                  <view
-                    style="height: 54px; display: flex; align-items: center"
-                  >
-                    <text
-                      class="label"
-                      style="
-                        font-family: PingFang SC, PingFang SC;
-                        font-weight: 600;
-                        font-size: 14px;
-                        color: #1d2326;
-                        line-height: 22px;
-                        text-align: left;
-                        font-style: normal;
-                        text-transform: none;
-                      "
-                      >经营状态</text
-                    >
-                  </view>
-                </template>
-                <view
-                  style="width: 100%; display: flex; justify-content: flex-end"
-                >
-                  <view>
-                    <view style="display: flex">
-                      <text
-                        style="
-                          font-family: PingFang SC, PingFang SC;
-                          font-weight: 400;
-                          font-size: 14px;
-                          color: rgba(29, 35, 38, 0.3);
-                          line-height: 22px;
-                          text-align: right;
-                          font-style: normal;
-                          text-transform: none;
-                          text-align: end;
-                        "
-                        >请选择经营状态</text
-                      >
-                      <u-icon name="arrow-right" size="12px"></u-icon>
-                    </view>
-                  </view>
-                </view>
-              </u-form-item>
-              <u-form-item
-                prop="userInfo.name"
-                ref="item1"
-                :borderBottom="false"
-              >
-                <template #label>
-                  <view
-                    style="height: 54px; display: flex; align-items: center"
-                  >
-                    <text
-                      class="label"
-                      style="
-                        font-family: PingFang SC, PingFang SC;
-                        font-weight: 600;
-                        font-size: 14px;
-                        color: #1d2326;
-                        line-height: 22px;
-                        text-align: left;
-                        font-style: normal;
-                        text-transform: none;
-                      "
-                      >经营时间</text
-                    >
-                  </view>
-                </template>
-                <view
-                  style="width: 100%; display: flex; justify-content: flex-end"
-                >
-                  <view>
-                    <view style="display: flex">
-                      <text
-                        style="
-                          font-family: PingFang SC, PingFang SC;
-                          font-weight: 400;
-                          font-size: 14px;
-                          color: rgba(29, 35, 38, 0.3);
-                          line-height: 22px;
-                          text-align: right;
-                          font-style: normal;
-                          text-transform: none;
-                          text-align: end;
-                        "
-                        >请选择经营时间</text
-                      >
-                      <u-icon name="arrow-right" size="12px"></u-icon>
-                    </view>
-                  </view>
-                </view>
-              </u-form-item>
-            </view>
-          </u-form>
-          <u-gap height="12" bgColor="#F7F7F7"></u-gap>
-          <u-form
-            labelPosition="left"
-            :model="model1"
-            :rules="rules"
-            ref="uForm"
-            style="width: 80%"
-          >
-            <view style="background-color: #fff; border-radius: 8px">
-              <view
-                style="
-                  background-color: #fff;
-                  padding-left: 12px;
-                  padding-top: 12px;
-                  border-radius: 8px;
-                "
-              >
-                <text
-                  style="
-                    font-family: PingFang SC, PingFang SC;
-                    font-weight: 600;
-                    font-size: 16px;
-                    color: #1d2326;
-                    line-height: 24px;
-                    text-align: center;
-                    font-style: normal;
-                    text-transform: none;
-                  "
-                  >场地信息</text
-                >
-              </view>
-              <u-form-item
-                prop="userInfo.name"
-                ref="item1"
-                :borderBottom="true"
-              >
-                <template #label>
-                  <view
-                    style="height: 54px; display: flex; align-items: center"
-                  >
-                    <text
-                      class="label"
-                      style="
-                        font-family: PingFang SC, PingFang SC;
-                        font-weight: 600;
-                        font-size: 14px;
-                        color: #1d2326;
-                        line-height: 22px;
-                        text-align: left;
-                        font-style: normal;
-                        text-transform: none;
-                      "
-                      >场地类型</text
-                    >
-                  </view>
-                </template>
-                <view
-                  style="width: 100%; display: flex; justify-content: flex-end"
-                >
-                  <view>
-                    <view style="display: flex">
-                      <text
-                        style="
-                          font-family: PingFang SC, PingFang SC;
-                          font-weight: 400;
-                          font-size: 14px;
-                          color: rgba(29, 35, 38, 0.3);
-                          line-height: 22px;
-                          text-align: right;
-                          font-style: normal;
-                          text-transform: none;
-                          text-align: end;
-                        "
-                        >请选择场地类型</text
-                      >
-                      <u-icon name="arrow-right" size="12px"></u-icon>
-                    </view>
-                  </view>
-                </view>
-              </u-form-item>
-              <u-form-item
-                prop="userInfo.name"
-                ref="item1"
-                :borderBottom="true"
-              >
-                <template #label>
-                  <view
-                    style="height: 54px; display: flex; align-items: center"
-                  >
-                    <text
-                      class="label"
-                      style="
-                        font-family: PingFang SC, PingFang SC;
-                        font-weight: 600;
-                        font-size: 14px;
-                        color: #1d2326;
-                        line-height: 22px;
-                        text-align: left;
-                        font-style: normal;
-                        text-transform: none;
-                      "
-                      >最小场地单元</text
-                    >
-                  </view>
-                </template>
-                <view
-                  style="width: 100%; display: flex; justify-content: flex-end"
-                >
-                  <view>
-                    <u-input
-                      v-model="model1.userInfo.name"
-                      border="none"
-                      placeholder="请选择最小单元"
-                      placeholder-style="text-align:right;color: rgba(29,35,38,0.3);font-size:14px"
-                    ></u-input>
-                  </view>
-                </view>
-              </u-form-item>
-              <u-form-item
-                prop="userInfo.name"
-                ref="item1"
-                :borderBottom="true"
-              >
-                <template #label>
-                  <view
-                    style="height: 54px; display: flex; align-items: center"
-                  >
-                    <text
-                      class="label"
-                      style="
-                        font-family: PingFang SC, PingFang SC;
-                        font-weight: 600;
-                        font-size: 14px;
-                        color: #1d2326;
-                        line-height: 22px;
-                        text-align: left;
-                        font-style: normal;
-                        text-transform: none;
-                      "
-                      >场地数量</text
-                    >
-                  </view>
-                </template>
-                <view
-                  style="width: 100%; display: flex; justify-content: flex-end"
-                >
-                  <view>
-                    <view style="display: flex">
-                      <text
-                        style="
-                          font-family: PingFang SC, PingFang SC;
-                          font-weight: 400;
-                          font-size: 14px;
-                          color: rgba(29, 35, 38, 0.3);
-                          line-height: 22px;
-                          text-align: right;
-                          font-style: normal;
-                          text-transform: none;
-                          text-align: end;
-                        "
-                        >请选择场地数量</text
-                      >
-                      <u-icon name="arrow-right" size="12px"></u-icon>
-                    </view>
-                    <!-- <u-input v-model="model1.userInfo.name" border="none" placeholder="请填写手机号"
-                placeholder-style="text-align:right;color: rgba(29,35,38,0.3);"></u-input> -->
-                  </view>
-                </view>
-              </u-form-item>
-              <u-form-item
-                prop="userInfo.name"
-                ref="item1"
-                :borderBottom="false"
-              >
-                <template #label>
-                  <view
-                    style="height: 54px; display: flex; align-items: center"
-                  >
-                    <text
-                      class="label"
-                      style="
-                        font-family: PingFang SC, PingFang SC;
-                        font-weight: 600;
-                        font-size: 14px;
-                        color: #1d2326;
-                        line-height: 22px;
-                        text-align: left;
-                        font-style: normal;
-                        text-transform: none;
-                      "
-                      >适合运动</text
-                    >
-                  </view>
-                </template>
-                <view
-                  style="width: 100%; display: flex; justify-content: flex-end"
-                >
-                  <view>
-                    <view style="display: flex">
-                      <text
-                        style="
-                          font-family: PingFang SC, PingFang SC;
-                          font-weight: 400;
-                          font-size: 14px;
-                          color: rgba(29, 35, 38, 0.3);
-                          line-height: 22px;
-                          text-align: right;
-                          font-style: normal;
-                          text-transform: none;
-                          text-align: end;
-                        "
-                        >请选择标签</text
-                      >
-                      <u-icon name="arrow-right" size="12px"></u-icon>
-                    </view>
-                  </view>
-                </view>
-              </u-form-item>
-              <view
-                style="
-                  display: flex;
-                  justify-content: center;
-                  background-color: #fff;
-                  width: calc(100% - 24px);
-                  padding: 0 12px;
-                  border-radius: 8px;
-                "
-              >
-                <view
-                  style="
-                    display: flex;
-                    border-radius: 8px 8px 8px 8px;
-                    width: 100%;
-                    justify-content: center;
-                    border: 1px solid #f0f0f0;
-                    padding: 10px 0;
-                    margin-bottom: 12px;
-                  "
-                >
-                  <image
-                    src="@https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/redAdd.svg"
-                    mode="scaleToFill"
-                    style="width: 24px; height: 24px"
-                  />
-                  <text
-                    style="
-                      padding-left: 2px;
-                      font-family: PingFang SC, PingFang SC;
-                      font-weight: 600;
-                      font-size: 16px;
-                      color: #ec384a;
-                      line-height: 24px;
-                      text-align: left;
-                      font-style: normal;
-                      text-transform: none;
-                    "
-                    >添加其他类型</text
-                  >
-                </view>
-              </view>
-            </view>
-          </u-form>
+      <view class="form-item">
+        <view class="label required">场地入口照片</view>
+        <view class="upload-box" @tap="chooseImage">
+          <image v-if="formData.siteImage" :src="formData.siteImage" mode="aspectFill" class="preview-image"></image>
+          <view v-else class="upload-placeholder">
+            <text class="iconfont icon-add">+</text>
+            <text class="upload-text">上传图片</text>
+          </view>
         </view>
-      </scroll-view>
+      </view>
+      <view class="form-item">
+        <view class="label required">场地位置</view>
+        <view class="map-container">
+          <view class="map-box">
+            <view class="map-placeholder">请在地图上选择位置</view>
+          </view>
+        </view>
+        <view class="location-input">
+          <view class="city-select" @tap="selectCity">
+            <text>{{ formData.city || '广州市' }}</text>
+            <div class="triangle-down-999C9D"></div>
+          </view>
+          <view>
+            <u-input border="none" class="address-input" type="text" v-model="formData.address"
+              placeholder="请填写详细地址(选填)" />
+
+          </view>
+        </view>
+      </view>
+
+      <!-- 商家信息 -->
+      <div class="form-box">
+        <view class="section-title">商家信息</view>
+        <view class="form-item-s flex-jb bottom-b">
+          <view class="label-s">商家类型</view>
+          <view class="value-box-s " @tap="selectBusinessType">
+            <text>{{ formData.businessType || '请选择' }}</text>
+            <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
+          </view>
+        </view>
+
+        <!-- 手机号 -->
+        <view class="form-item-s  flex-jb  bottom-b">
+          <view class="label-s">手机号</view>
+          <view class="value-box-c" >
+            <u-input border="none"  type="text" v-model="formData.phone"
+              placeholder="请输入手机号" />
+          </view>
+        </view>
+
+        <view class="form-item-s flex-jb bottom-b">
+          <view class="label-s">经营状态</view>
+          <view class="value-box-s" @tap="selectBusinessStatus">
+            <text>{{ formData.businessStatus || '请选择' }}</text>
+            <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
+          </view>
+        </view>
+
+        <view class="form-item-s flex-jb bottom-b">
+          <view class="label-s">经营时间</view>
+          <view class="value-box-s" @tap="selectBusinessHours">
+            <text>{{ formData.businessHours || '请选择' }}</text>
+            <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
+          </view>
+        </view>
+        
+      </div>
+
+      <!-- 场地信息 -->
+      <div class="form-box">
+        <view class="section-title">场地信息</view>
+        <view class="form-item-s flex-jb bottom-b">
+          <view class="label-s">场地类型</view>
+          <view class="value-box-s" @tap="selectSiteType">
+            <text>{{ formData.siteType || '请选择' }}</text>
+            <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
+          </view>
+        </view>
+
+        <view class="form-item-s flex-jb bottom-b">
+          <view class="label-s">最小单元</view>
+          <view class="value-box-s" @tap="selectMinUnit">
+            <text>{{ formData.minUnit || '请选择' }}</text>
+            <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
+          </view>
+        </view>
+
+        <view class="form-item-s flex-jb bottom-b">
+          <view class="label-s">场地数量</view>
+          <view class="value-box-s" @tap="selectSiteCount">
+            <text>{{ formData.siteCount || '请选择' }}</text>
+            <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
+          </view>
+        </view>
+
+        <!-- 运动类型 -->
+        <view class="form-item-s flex-jb bottom-b">
+          <view class="label-s">运动类型</view>
+          <view class="value-box-s" @tap="selectSports">
+            <text>{{ formData.sports.length > 0 ? formData.sports.join(', ') : '请选择' }}</text>
+            <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
+          </view>
+        </view>
+      </div>
+
+      <!-- 添加其他类型按钮 -->
     </view>
 
-    <view class="bottomBox">
-      <u-button class="publishButton" color="#15181A">
-        <text>提交</text>
-      </u-button>
+    <view style="height: 136rpx;"></view>
+    <view class="safe-bottom bottom-btn">
+      <view class="btn" @click="sureHandle" :style="{ 'background-color': '#15181A' }">
+        确认选择
+      </view>
     </view>
   </view>
 </template>
+
 <script>
+import Wnavbar from '@/components/WNavbar/index.vue';
 export default {
+  components: {
+    Wnavbar
+  },
   data() {
     return {
-      fileList: [],
-      addressDetail: "",
-      bottomBoxHeight: 0,
-      windowHeight: uni.getSystemInfoSync().windowHeight,
-      statusBarHeight: uni.getSystemInfoSync().statusBarHeight,
+      formData: {
+        siteName: '',
+        siteImage: '',
+        city: '广州市',
+        address: '',
+        businessType: '',
+        phone: '',
+        businessStatus: '',
+        businessHours: '',
+        siteType: '',
+        minUnit: '',
+        siteCount: '',
+        sports: []
+      }
     };
   },
   methods: {
-    //图片读取后的处理函数
-    afterRead(e) {
-      console.log(e);
-      // this.fileList = e.file
-      e.file.forEach((element) => {
-        this.fileList.push(element);
+    chooseImage() {
+      uni.chooseImage({
+        count: 1,
+        success: (res) => {
+          this.formData.siteImage = res.tempFilePaths[0];
+        }
       });
     },
-    //图片删除函数
-    deletePic(e) {
-      this.fileList.splice(e.index, 1);
+    selectCity() {
+      // 城市选择逻辑
     },
-  },
-  onLoad() {
-    this.$nextTick(() => {
-      uni
-        .createSelectorQuery()
-        .select(".bottomBox")
-        .boundingClientRect((data) => {
-          this.bottomBoxHeight = data.height;
-          console.log(this.statusBarHeight);
-          console.log(this.windowHeight);
-        })
-        .exec();
-    });
-  },
+    selectBusinessType() {
+      // 商家类型选择逻辑
+    },
+    selectBusinessStatus() {
+      // 经营状态选择逻辑
+    },
+    selectBusinessHours() {
+      // 经营时间选择逻辑
+    },
+    selectSiteType() {
+      // 场地类型选择逻辑
+    },
+    selectMinUnit() {
+      // 最小单元选择逻辑
+    },
+    selectSiteCount() {
+      // 场地数量选择逻辑
+    },
+    selectSports() {
+      // 运动类型选择逻辑
+    },
+    addOtherType() {
+      // 添加其他类型逻辑
+    },
+    submitForm() {
+      // 表单提交逻辑
+      console.log(this.formData);
+    }
+  }
 };
 </script>
 
-<style scoped lang="scss">
-::v-deep
-  .u-button.u-reset-button.data-v-3bf2dba7.u-button--square.u-button--normal {
-  border-radius: 40px;
+<style lang="scss">
+page {
+  height: 100%;
+  background-color: #f5f5f5;
 }
 
-::v-deep .u-input.data-v-fdbb9fe6.u-input--square {
-  padding-right: 0px !important;
+.bottom-b{
+  border-bottom: 1rpx solid #F0F0F0;
 }
 
-::v-deep .u-form-item__body.data-v-5e7216f1 {
-  width: calc(100% - 24px);
+.form-item-s {
+  padding: 32rpx 0;
+
+  .label-s {
+    font-weight: 600;
+    font-size: 28rpx;
+    color: #1D2326;
+  }
+  .value-box-c{
+    display: flex;
+    align-items: end;
+  }
+  .value-box-s {
+    display: flex;
+    align-items: center;
+
+    >text {
+      font-weight: 400;
+      font-size: 28rpx;
+      color: #CCCCCC;
+      margin-right: 6rpx;
+    }
+
+  }
+}
+
+.form-box {
   background-color: #fff;
-  border-radius: 8px 8px 8px 8px;
-  padding: 0 12px !important;
+  margin-bottom: 20rpx;
+  padding: 24rpx 32rpx;
 }
 
-::v-deep .u-form-item__body__left__content__label.data-v-5e7216f1 {
-  font-family: PingFang SC, PingFang SC;
+.triangle-down-999C9D {
+  width: 0;
+  height: 0;
+  border-left: 10rpx solid transparent;
+  border-right: 10rpx solid transparent;
+  border-top: 12rpx solid #15181a;
+}
+
+.bottom-btn {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 136rpx;
+  background-color: #fff;
+  padding: 24rpx 38rpx;
+  z-index: 1000;
+
+  .btn {
+    font-weight: 600;
+    font-size: 32rpx;
+    color: #FFFFFF;
+    width: 654rpx;
+    height: 88rpx;
+    background: #15181A;
+    border-radius: 80rpx 80rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.mark-site-container {}
+
+.form-container {
+  padding: 24rpx 32rpx;
+}
+
+.form-item {
+  background-color: #fff;
+  padding: 32rpx 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.label {
   font-weight: 600;
-  font-size: 14px;
-  color: #1d2326;
-  line-height: 22px;
-  text-align: left;
-  font-style: normal;
-  text-transform: none;
+  font-size: 28rpx;
+  color: #1D2326;
+  margin-bottom: 24rpx;
+
+  &.required::after {
+    content: '*';
+    color: #ff4d4f;
+    margin-left: 4rpx;
+  }
 }
 
-::v-deep .u-input__content__field-wrapper__field.data-v-fdbb9fe6 {
-  font-family: PingFang SC, PingFang SC;
-  font-weight: 400;
-  font-size: 14px;
-  color: rgba(29, 35, 38, 0.3);
-  line-height: 22px;
-  text-align: left;
-  font-style: normal;
-  text-transform: none;
+.input {
+  width: 100%;
+  height: 80rpx;
+  font-size: 28rpx;
+  color: #333;
 }
 
-::v-deep .u-upload__deletable.data-v-49deb6f2 {
-  white-space: nowrap;
-  /* 禁止换行 */
-}
-
-::v-deep .u-upload__wrap.data-v-49deb6f2 {
-  flex-wrap: nowrap !important;
-}
-
-::v-deep .u-upload__wrap__preview.data-v-49deb6f2 {
-  margin: 0px 8px 0px 0px !important;
-}
-
-::v-deep .u-upload__deletable.data-v-49deb6f2 {
-  border-bottom-left-radius: 5px;
-  border-top-right-radius: 5px;
-  background-color: #71767c;
-}
-
-::v-deep .custom-upload.data-v-5180a08a {
-  margin-bottom: 12px;
-}
-
-.custom-upload {
+.upload-box {
+  width: 172rpx;
+  height: 172rpx;
+  background-color: #f7f7f7;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  background-color: #f5f5f5;
-  width: 86px;
-  height: 86px;
-  border-radius: 4px;
+  justify-content: center;
+}
 
-  .plusIcon {
-    width: 36px;
-    height: 36px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .icon-add {
+    font-size: 60rpx;
+    color: #999;
   }
 
   .upload-text {
-    width: 55px;
-    height: 16px;
-    font-family: PingFang SC, PingFang SC;
-    font-weight: 400;
-    font-size: 12px;
-    color: rgba(29, 35, 38, 0.6);
-    line-height: 16px;
-    text-align: center;
-    font-style: normal;
-    text-transform: none;
+    font-size: 24rpx;
+    color: #999;
+    margin-top: 10rpx;
   }
 }
 
-.SitePositonBox {
+.preview-image {
   width: 100%;
-  height: 86px;
-  border-radius: 4px 4px 4px 4px;
-  background-color: #000;
+  height: 100%;
+}
+
+.map-container {
+  width: 100%;
+  height: 172rpx;
+  background-color: #484B4C;
+  margin-bottom: 20rpx;
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: center;
-
-  view {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    image {
-      width: 24px;
-      height: 24px;
-    }
-
-    text {
-      padding-top: 6px;
-      font-family: PingFang SC, PingFang SC;
-      font-weight: 400;
-      font-size: 14px;
-      color: #ffffff;
-      line-height: 22px;
-      text-align: center;
-      font-style: normal;
-      text-transform: none;
-    }
-  }
+  color: #fff;
 }
 
-.addressDetailBox {
+.location-input {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin: 16px 0;
+  justify-content: space-between;
 
-  .left {
+  .city-select {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    font-weight: 400;
+    font-size: 28rpx;
+    color: #1D2326;
+
+    >text {
+      margin-right: 8rpx;
+    }
+  }
+
+}
+
+.section-title {
+  font-weight: 600;
+  font-size: 32rpx;
+  color: #1D2326;
+  margin-bottom: 8rpx;
+}
+
+.value-box {
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .placeholder {
+    color: #999;
+    font-size: 28rpx;
+  }
+
+  .arrow {
+    color: #999;
+    font-size: 28rpx;
   }
 }
 
-.box {
-  width: 100vw;
-  height: 100vh;
-  background-color: #f7f7f7;
+.add-more {
+  height: 100rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  margin-top: 20rpx;
 
-  .back-btn {
-    width: 24px;
-    height: 24px;
-    margin-right: 16px;
+  .add-icon {
+    color: #ff4d4f;
+    margin-right: 10rpx;
   }
+}
 
-  .navTitle {
-    margin-left: 4px;
-    font-family: PingFang SC, PingFang SC;
-    font-weight: 600;
-    font-size: 16px;
-    color: #1d2326;
-    line-height: 24px;
-    text-align: left;
-    font-style: normal;
-    text-transform: none;
-  }
-
-  .formBox {
-    width: calc(100% - 32px);
-    padding: 12px 16px;
-  }
-
-  .bottomBox {
-    width: calc(100vw - 48px);
-    padding: 0 24px;
-    padding-top: 12px;
-    background-color: #fff;
-    position: absolute;
-    bottom: 0;
-    padding-bottom: 34px;
-
-    .publishButton {
-      text {
-        font-family: PingFang SC, PingFang SC;
-        font-weight: 600;
-        font-size: 16px;
-        color: #ffffff;
-        line-height: 24px;
-        text-align: left;
-        font-style: normal;
-        text-transform: none;
-      }
-    }
-  }
+.submit-btn {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100rpx;
+  background-color: #000;
+  color: #fff;
+  font-size: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

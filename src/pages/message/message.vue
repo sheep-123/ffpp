@@ -38,24 +38,45 @@
       </view>
 
       <view class="type" v-if="active == 1">
-        <view class="player">玩家</view>
-        <view class="item">小队</view>
-        <view class="item">场地</view>
+        <view
+          :class="typeIndex == index ? 'item-active' : 'item'"
+          v-for="(item, index) in typeList"
+          :key="inex"
+          @click="typeIndex = index"
+          >{{ item }}</view
+        >
       </view>
 
       <view class="list">
-        <view class="item" @click="toChat" v-if="active == 1">
-          <view class="avatar">
-            <u-avatar :src="src" size="48"></u-avatar>
+        <view
+          class="item"
+          @click="toChat(item)"
+          v-if="active == 1"
+          v-for="(item, index) in messageList"
+          :key="index"
+        >
+          <view class="avatar" v-if="item.type == 1">
+            <u-avatar :src="item.avatar" size="48"></u-avatar>
             <view class="dian"></view>
           </view>
 
-          <view class="right">
+          <view class="right" v-if="item.type == 1">
             <view class="top-value">
-              <view class="name">奶瓶打不开</view>
-              <view class="time">12:00</view>
+              <view class="name">{{ item.nick }}</view>
+              <view class="time">{{ item.msgTime }}</view>
             </view>
-            <view class="value">那好吧，我下次再找你吧</view>
+            <view class="value">{{ item.message }}</view>
+          </view>
+          <view class="avatar" v-if="item.type == 2">
+            <u-avatar :src="item.groupInfo.faceUrl" size="48"></u-avatar>
+            <view class="dian"></view>
+          </view>
+          <view class="right" v-if="item.type == 2">
+            <view class="top-value">
+              <view class="name">{{ item.groupInfo.name }}</view>
+              <view class="time">{{ item.groupInfo.lastMsgTime }}</view>
+            </view>
+            <view class="value">{{ item.groupInfo.lastMsg }}</view>
           </view>
         </view>
         <view class="move" v-if="active == 2">
@@ -77,6 +98,7 @@
         </view>
       </view>
     </view>
+    <u-toast ref="notice"></u-toast>
   </view>
 </template>
 
@@ -86,18 +108,123 @@ export default {
     return {
       keyword: "",
       active: 1, //1为聊天，2为互动
+      messageList: [],
+      typeList: ["玩家", "小队", "场地"],
+      typeIndex: 0,
     };
   },
+  onShow() {
+    this.getMessageList();
+  },
   methods: {
-    toChat() {
+    toChat(item) {
       uni.navigateTo({
-        url: "/else/message/chat",
+        url:
+          "/else/message/chat?Peer_Account=" +
+          item.to_Account +
+          "&nick=" +
+          item.nick +
+          "&avatar=" +
+          item.avatar,
       });
     },
     toSearch() {
       uni.navigateTo({
         url: "/else/message/search",
       });
+    },
+    formatTime(timestamp) {
+      const date = new Date(timestamp * 1000);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
+    },
+    async getMessageList() {
+      const data = {
+        From_Account: uni.getStorageSync("user").id,
+        TimeStamp: 0,
+        StartIndex: 0,
+        TopTimeStamp: 0,
+        TopStartIndex: 0,
+        AssistFlags: 15,
+      };
+      let res = await this.$api.getMessageList(data);
+      if (res.status == 200) {
+        this.messageList = res.data.sessionItem;
+        const params = {
+          To_Account: this.messageList
+            .filter((item) => item.type != 2)
+            .map((item) => item.to_Account),
+          TagList: ["Tag_Profile_IM_Nick", "Tag_Profile_IM_Image"],
+        };
+        var result = await this.$api.getUserProfile(params);
+        if (result.status == 200) {
+          result.data.userProfileItem.map((item) => {
+            this.messageList.map(async (element) => {
+              if (element.to_Account == item.to_Account) {
+                this.$set(element, "nick", item.profileItem[0].value);
+                this.$set(element, "avatar", item.profileItem[1].value);
+                this.$set(element, "msgTime", this.formatTime(element.msgTime));
+                var data = {
+                  Operator_Account: uni.getStorageSync("user").id,
+                  Peer_Account: element.to_Account,
+                  MaxCnt: 1,
+                  MinTime: 1,
+                  MaxTime: Math.floor(Date.now() / 1000),
+                };
+                var res = await this.$api.getMessageHistory(data);
+                this.$set(
+                  element,
+                  "message",
+                  res.data.msgList[0].msgBody[0].MsgContent.Text
+                );
+              }
+            });
+          });
+
+          console.log(this.messageList);
+        }
+        var groupData = {
+          GroupIdList: this.messageList
+            .filter((item) => item.type == 2)
+            .map((item) => item.groupId),
+          ResponseFilter: {
+            GroupBaseInfoFilter: ["Name", "FaceUrl", "LastMsgTime"],
+          },
+        };
+        var groupResult = await this.$api.getGroupList(groupData);
+        if (groupResult.status == 200) {
+          const groupInfo = groupResult.data.groupInfo;
+          this.messageList.map(async (item) => {
+            if (item.type == 2) {
+              item.groupInfo = groupInfo.filter(
+                (item2) => item2.groupId == item.groupId
+              )[0];
+              item.groupInfo.lastMsgTime = this.formatTime(
+                item.groupInfo.lastMsgTime
+              );
+              var data = {
+                GroupId: item.groupInfo.groupId,
+                ReqMsgNumber: 1,
+              };
+              var result = await this.$api.getGroupHistory(data);
+              if (result.status == 200) {
+                // item.groupInfo.lastMsg =
+                //   result.data.rspMsgList[0].msgBody[0].MsgContent.Text;
+                this.$set(
+                  item.groupInfo,
+                  "lastMsg",
+                  result.data.rspMsgList[0].msgBody[0].MsgContent.Text
+                );
+              }
+            }
+          });
+        }
+      }
     },
   },
 };
@@ -192,7 +319,7 @@ export default {
       display: flex;
       align-items: center;
       gap: 12px;
-      .player {
+      .item-active {
         background: url("https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/group.png")
           no-repeat center;
         width: 70px;

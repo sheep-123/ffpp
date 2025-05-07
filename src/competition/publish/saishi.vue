@@ -403,7 +403,7 @@
               <view class="left">报名人数 <view class="icon">*</view></view>
               <view class="right">
                 <view style="width: 110px">
-                  <u-input
+                  <input
                     v-model="number"
                     placeholder="请输入报名人数"
                     input-align="right"
@@ -411,7 +411,7 @@
                     type="number"
                     @change="blur3"
                     placeholderClass="pl-class"
-                  ></u-input>
+                  ></input>
                 </view>
               </view>
             </view>
@@ -556,7 +556,7 @@
               <view class="left">参赛费用设置<view class="icon">*</view></view>
               <view class="right">
                 <view class="input">
-                  <u-input
+                  <input
                     v-model="entryFee"
                     placeholder="请填写参赛费用"
                     input-align="right"
@@ -564,7 +564,7 @@
                     @change="blur4"
                     placeholderClass="pl-class"
                     type="number"
-                  ></u-input>
+                  ></input>
                   ￥</view
                 ></view
               >
@@ -646,12 +646,12 @@
             </view>
             <view v-for="(item, index) in items" :key="index" class="item">
               <view class="left" style="width: 40%">
-                <u-input
+                <input
                   placeholder="请输入添加内容"
                   border="none"
                   v-model="item.scheTypeName"
                   placeholder-class="pl-class"
-                ></u-input>
+                ></input>
               </view>
               <view class="right-r" @click="showTimePicker(index)">
                 <text :style="{ color: item.scheTime ? 'black' : '' }">{{
@@ -710,7 +710,7 @@
               <view class="left">奖金金额 <view class="icon">*</view></view>
               <view class="right">
                 <view style="width: 50px">
-                  <u-input
+                  <input
                     v-model="reward.rewardAmount"
                     placeholder="￥0.00"
                     border="none"
@@ -718,7 +718,7 @@
                     type="number"
                     placeholderClass="pl-class"
                     input-align="right"
-                  ></u-input>
+                  ></input>
                 </view>
               </view>
             </view>
@@ -792,14 +792,14 @@
                   </view>
                   <view class="right">
                     <view style="width: 110px">
-                      <u-input
+                      <input
                         v-model="item.rewardName"
                         placeholder="请填写奖品名称"
                         border="none"
                         @change="(n) => blur7(n, index)"
                         input-align="right"
                         placeholderClass="pl-class"
-                      ></u-input>
+                      ></input>
                     </view>
                   </view>
                 </view>
@@ -807,7 +807,7 @@
                   <view class="left" style="width: 45%">
                     <view class="l1">数量</view>
                     <view style="width: 50%">
-                      <u-input
+                      <input
                         v-model="item.rewardNum"
                         placeholder="请输入"
                         border="none"
@@ -815,21 +815,21 @@
                         input-align="right"
                         placeholderClass="pl-class"
                         type="number"
-                      ></u-input>
+                      ></input>
                     </view>
                   </view>
 
                   <view class="right" style="width: 45%">
                     <view class="r1">单位</view>
                     <view style="width: 50%">
-                      <u-input
+                      <input
                         v-model="item.rewardUnit"
                         placeholder="请输入"
                         border="none"
                         @change="(n) => blur9(n, index)"
                         input-align="right"
                         placeholderClass="pl-class"
-                      ></u-input>
+                      ></input>
                     </view>
                   </view>
                 </view>
@@ -854,7 +854,7 @@
               <view class="item">
                 <view class="left">联系方式 <view class="icon">*</view></view>
                 <view class="right">
-                  <u-input
+                  <input
                     v-model="item.contactInfo"
                     placeholder="请填写联系方式"
                     border="none"
@@ -862,7 +862,7 @@
                     type="number"
                     input-align="right"
                     placeholderClass="pl-class"
-                  ></u-input>
+                  ></input>
                 </view>
               </view>
             </view>

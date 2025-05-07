@@ -1,10 +1,6 @@
 <template>
   <view class="box">
-    <u-navbar :fixed="false">
-      <view class="nav" slot="left" @click="back">
-        <u-icon name="arrow-left" color="black"></u-icon>场地聊天室
-      </view>
-    </u-navbar>
+    <u-navbar :fixed="false" :title="nick" autoBack> </u-navbar>
 
     <view class="challenge" v-if="challengeStatus" :style="{ top: stickyTop }">
       <view class="top">
@@ -44,7 +40,12 @@
     </view>
     <view class="second" :style="{ height: upStatus ? '381px' : '102px' }">
       <view class="top">
-        <input class="input" placeholder="来聊聊你的想法..." />
+        <input
+          class="input"
+          placeholder="来聊聊你的想法..."
+          v-model="talk"
+          @confirm="send"
+        />
         <image
           src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/发表情.png"
           mode="scaleToFill"
@@ -96,17 +97,26 @@
       活动列表
     </view>
     <scroll-view
-      class="content"
       id="main"
       :scroll-top="scrollTop"
       scroll-y
       @click="show = false"
+      style="height: 73%"
     >
       <view class="main">
-        <view class="others">
+        <view
+          class="others"
+          v-if="!item.isSelf"
+          v-for="(item, index) in message"
+          :key="index"
+        >
           <view class="avatar">
-            <u-avatar :src="src" size="36" @tap.stop="toggleTooltip"></u-avatar>
-            <view class="tooltip" v-show="show">
+            <u-avatar
+              :src="avatar"
+              size="36"
+              @tap.stop="toggleTooltip(index)"
+            ></u-avatar>
+            <view class="tooltip" v-show="currentIndex === index">
               <view class="item"> 查看主页 </view>
               <view class="item" @click="tozudui"> 邀请组队 </view>
               <view class="item" @click="tochallenge"> 发起挑战 </view>
@@ -114,11 +124,11 @@
           </view>
 
           <view class="right">
-            <view class="name">小明</view>
-            <view class="text">今天天气不错，一起出去玩吧！</view>
+            <view class="name">{{ nick }}</view>
+            <view class="text chat-message">{{ item.text }}</view>
           </view>
         </view>
-        <view class="others">
+        <!-- <view class="others">
           <view class="avatar">
             <u-avatar :src="src" size="36"></u-avatar>
           </view>
@@ -141,14 +151,14 @@
               </view>
             </view>
           </view>
-        </view>
-        <view class="user">
+        </view> -->
+        <view class="user" v-else>
           <view class="right">
-            <view class="text">今天天气不错，一起出去玩吧！</view>
+            <view class="text chat-message">{{ item.text }}</view>
           </view>
           <u-avatar :src="src" size="36"></u-avatar>
         </view>
-        <view class="user">
+        <!-- <view class="user">
           <view class="right">
             <view class="content">
               <view class="top">
@@ -168,9 +178,10 @@
             </view>
           </view>
           <u-avatar :src="src" size="36"></u-avatar>
-        </view>
+        </view> -->
       </view>
     </scroll-view>
+    <u-toast ref="notice"></u-toast>
   </view>
 </template>
 
@@ -178,7 +189,7 @@
 export default {
   data() {
     return {
-      src: "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/头像.png",
+      src: uni.getStorageSync("user").avatarUrl,
       urls: [
         "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/头像.png",
         "https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/头像.png",
@@ -190,25 +201,92 @@ export default {
       upStatus: false,
       scrollTop: 0,
       show: false,
-      challengeStatus: true,
+      challengeStatus: false,
       statusBarHeight: 0,
       navbarHeight: 44,
+      Peer_Account: null,
+      nick: null,
+      avatar: null,
+      message: [],
+      talk: "",
+      currentIndex: null,
+      allMessage: uni.getStorageSync("allMessage") || [],
+      socket: null,
     };
   },
   onLoad(options) {
-    this.scrollToBottom();
+    this.initWebSocket();
     if (options.challengeStatus) {
       this.challengeStatus = true;
+    }
+    if (options.Peer_Account) {
+      this.Peer_Account = options.Peer_Account;
+      this.getMessageHistory();
+    }
+    if (options.nick) {
+      this.nick = options.nick;
+    }
+    if (options.avatar) {
+      this.avatar = options.avatar;
     }
     const systemInfo = uni.getSystemInfoSync();
     this.statusBarHeight = systemInfo.statusBarHeight;
   },
+
   computed: {
     stickyTop() {
       return `${this.statusBarHeight + this.navbarHeight}px`;
     },
   },
   methods: {
+    async getMessageHistory() {
+      try {
+        var data = {
+          Operator_Account: uni.getStorageSync("user").id,
+          Peer_Account: this.Peer_Account,
+          MaxCnt: 20,
+          MinTime: 1,
+          MaxTime: Math.floor(Date.now() / 1000) + 30,
+        };
+        var res = await this.$api.getMessageHistory(data);
+
+        if (res.status == 200) {
+          const list = res.data.msgList;
+          this.message = list.map((msg) => {
+            const textElem = msg.msgBody.find(
+              (body) => body.MsgType == "TIMTextElem"
+            );
+            return {
+              text: textElem.MsgContent.Text,
+              isSelf: msg.from_Account == uni.getStorageSync("user").id,
+            };
+          });
+          const userIndex = this.allMessage.findIndex(
+            (item) => item.Peer_Account == this.Peer_Account
+          );
+          if (userIndex >= 0) {
+            this.allMessage[userIndex].message = this.message;
+          } else {
+            this.allMessage.push({
+              Peer_Account: this.Peer_Account,
+              nick: this.nick,
+              avatar: this.avatar,
+              message: this.message,
+            });
+          }
+          uni.setStorageSync("allMessage", this.allMessage);
+          this.$nextTick(() => {
+            this.scrollToBottom();
+          });
+        }
+      } catch (e) {
+        console.log(e);
+        this.refs.notice.show({
+          type: "default",
+          message: e.data.message,
+        });
+      }
+    },
     add() {
       if (this.upStatus) {
         this.upStatus = false;
@@ -222,21 +300,15 @@ export default {
       });
     },
     scrollToBottom() {
-      uni
-        .createSelectorQuery()
-        .select("#main")
-        .boundingClientRect((rect) => {
-          if (rect) {
-            this.scrollTop = rect.height; // 更新滚动位置
-          }
-        })
-        .exec();
+      setTimeout(() => {
+        this.scrollTop = 1000000000000;
+      }, 50);
     },
     back() {
       uni.switchTab({ url: "/pages/message/message" });
     },
-    toggleTooltip() {
-      this.show = !this.show; // 切换工具提示显示状态
+    toggleTooltip(index) {
+      this.currentIndex = index;
     },
     tohuodong() {
       uni.navigateTo({
@@ -246,6 +318,56 @@ export default {
     tochallenge() {
       uni.navigateTo({
         url: "/else/message/challenge",
+      });
+    },
+    async send() {
+      if (!this.talk.trim()) return;
+      var data = {
+        From_Account: uni.getStorageSync("user").id,
+        To_Account: this.Peer_Account,
+        MsgRandom: Math.floor(Math.random() * 9000000) + 1000000,
+        MsgBody: [
+          {
+            MsgType: "TIMTextElem",
+            MsgContent: {
+              Text: this.talk,
+            },
+          },
+        ],
+        SyncOtherMachine: 1,
+        OnlineOnlyFlag: 0,
+      };
+      var result = await this.$api.sendMessage(data);
+      if (result.status == 200) {
+        this.getMessageHistory();
+        this.scrollTop += 10000000000000000000000;
+        this.talk = "";
+      }
+    },
+    initWebSocket() {
+      const userId = uni.getStorageSync("user").id;
+      const ws = `ws://192.168.3.46:8001/ws/message/${userId}`;
+      this.socket = uni.connectSocket({
+        url: ws,
+        success: () => {
+          console.log("连接成功");
+        },
+        fail: (err) => {
+          console.log("连接失败", err);
+        },
+      });
+      uni.onSocketMessage((res) => {
+        console.log("接收到消息", res);
+        this.getMessageHistory();
+      });
+      uni.onSocketOpen((res) => {
+        console.log("连接成功", res);
+      });
+      uni.onSocketClose((res) => {
+        console.log("连接关闭", res);
+      });
+      uni.onSocketError((res) => {
+        console.log("连接错误", res);
       });
     },
   },
@@ -307,7 +429,8 @@ export default {
     left: 0;
     background-color: #fff;
     width: 100%;
-    height: 102px;
+    height: 27%;
+    //  height: 102px;
 
     z-index: 99;
     .top {
@@ -464,12 +587,8 @@ export default {
   .main {
     width: 90%;
     margin: auto;
-    display: flex;
-    flex-direction: column;
-    overflow-y: scroll;
-    flex: 1;
     z-index: 88;
-    padding-bottom: 105px;
+    padding-bottom: 16px;
     box-sizing: border-box;
     .others {
       display: flex;
@@ -512,7 +631,7 @@ export default {
       }
 
       .right {
-        width: 65%;
+        max-width: 70%;
         .name {
           font-weight: 400;
           font-size: 12px;
@@ -618,7 +737,7 @@ export default {
       margin-top: 16px;
 
       .right {
-        width: 65%;
+        max-width: 70%;
         .name {
           font-weight: 400;
           font-size: 12px;
@@ -718,5 +837,10 @@ export default {
       }
     }
   }
+}
+.chat-message {
+  word-break: break-all; //保留空白符，允许自动换行
+  white-space: pre-wrap; //强制英文/数字在边界处换行
+  overflow-wrap: break-word; //长词会换行到下一行
 }
 </style>

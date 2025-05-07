@@ -4,6 +4,13 @@
   },
   "pages": [
     {
+      "path": "pages/message/message",
+      "style": {
+        "navigationBarTitleText": "消息",
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/index/index",
       "style": {
         "navigationBarTitleText": "首页",
@@ -15,7 +22,8 @@
       "path": "pages/play/play",
       "style": {
         "navigationBarTitleText": "去玩",
-        "navigationStyle": "custom"
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": true
       }
     },
 
@@ -30,13 +38,6 @@
       "path": "pages/add/add",
       "style": {
         "navigationBarTitleText": "添加",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/message/message",
-      "style": {
-        "navigationBarTitleText": "消息",
         "navigationStyle": "custom"
       }
     }

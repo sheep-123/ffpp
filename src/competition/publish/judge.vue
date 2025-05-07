@@ -1,11 +1,8 @@
 <template>
   <view class="container">
-    <u-navbar leftText="赛事裁判" @leftClick="back"></u-navbar>
+    <u-navbar leftText="赛事裁判" @leftClick="back" :fixed="false"></u-navbar>
 
-    <view
-      class="main"
-      :style="{ marginTop: statusBarHeight + navbarHeight + 'px' }"
-    >
+    <view class="main">
       <view class="item">
         <view class="top"> 默认裁判 </view>
         <view class="next">
@@ -59,16 +56,11 @@ export default {
       navbarHeight: 44,
     };
   },
-  onShow() {
-    const systemInfo = uni.getSystemInfoSync();
-    this.statusBarHeight = systemInfo.statusBarHeight;
-  },
-
-  methods:{
+  methods: {
     back() {
       uni.navigateBack();
     },
-  }
+  },
 };
 </script>
 

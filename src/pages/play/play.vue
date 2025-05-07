@@ -21,27 +21,32 @@
             <view class="rank-num">2ST</view>
             <view class="b1">
               <view class="b2">
-                <u-avatar :src="src"></u-avatar>
+                <u-avatar
+                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/myavatar.jpg"
+                ></u-avatar>
               </view>
             </view>
 
-            <view class="name">健身小趴菜</view>
+            <view class="name">重</view>
             <view class="score">
               <div class="item">黄金1</div>
-              <div class="item">445</div>
+              <div class="item">441</div>
             </view>
           </view>
           <view class="item" style="margin-top: -10px">
             <view class="rank-num">1ST</view>
             <view class="b3">
               <view class="b4">
-                <u-avatar :src="src" size="50"></u-avatar>
+                <u-avatar
+                  src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/boy.jpg"
+                  size="50"
+                ></u-avatar>
               </view>
             </view>
 
             <view class="name">健身小趴菜</view>
             <view class="score">
-              <div class="item">黄金1</div>
+              <div class="item">铂金I</div>
               <div class="item">445</div>
             </view>
           </view>
@@ -49,13 +54,15 @@
             <view class="rank-num">3ST</view>
             <view class="b1">
               <view class="b2">
-                <u-avatar :src="src"></u-avatar>
+                <u-avatar
+                  src="https://testfeifanpaopao.jireplayer.com/download/upload/20250428/SvjBGuB3Y5Yneaf4eec46b5e880680f801aa9e5ceb11.jpg"
+                ></u-avatar>
               </view>
             </view>
-            <view class="name">健身小趴菜</view>
+            <view class="name">小花</view>
             <view class="score">
-              <div class="item">黄金1</div>
-              <div class="item">445</div>
+              <div class="item">黄金II</div>
+              <div class="item">430</div>
             </view>
           </view>
         </view>
@@ -116,16 +123,7 @@
       </view>
     </view>
 
-    <scroll-view
-      class="content"
-      scroll-y
-      :refresher-triggered="refresh"
-      :refresher-enabled="true"
-      :lower-threshold="12"
-      @refresherrefresh="search"
-      @scrolltolower="scrollTolower"
-      style="height: 101vh"
-    >
+    <view class="content" @scroll="handleScroll">
       <view class="item" v-for="(item, index) in matchList" :key="index">
         <view class="left">
           <image
@@ -172,7 +170,7 @@
         </view>
       </view>
       <u-loadmore :status="status" @loadmore="getQueryMatchList" />
-    </scroll-view>
+    </view>
 
     <u-popup
       :show="show"
@@ -266,7 +264,7 @@ export default {
       refresh: false,
     };
   },
-  onShow() {
+  onLoad() {
     this.pageNum = 1;
     this.matchList = [];
     const systemInfo = uni.getSystemInfoSync();
@@ -277,6 +275,18 @@ export default {
     this.getLocationInfo();
     this.getAreaByCode();
   },
+  onPullDownRefresh() {
+    this.pageNum = 1;
+    this.matchList = [];
+    this.getQueryMatchList().finally(() => {
+      uni.stopPullDownRefresh(); // 停止刷新动画
+    });
+  },
+  onReachBottom() {
+    if (this.status !== "loading" && this.status !== "nomore") {
+      this.getQueryMatchList();
+    }
+  },
   methods: {
     initIntersectionObserver() {
       this.$nextTick(() => {
@@ -286,6 +296,18 @@ export default {
         });
       });
     },
+    handleScroll(e) {
+      const scrollTop = e.detail.scrollTop;
+      const scrollHeight = e.detail.scrollHeight;
+      const clientHeight = uni.getSystemInfoSync().windowHeight;
+
+      if (scrollHeight - scrollTop - clientHeight < 50) {
+        if (this.status !== "loading" && this.status !== "nomore") {
+          this.getQueryMatchList();
+        }
+      }
+    },
+
     join(item) {
       uni.navigateTo({
         url: `/competition/apply/appear?matchId=${item.id}`,
@@ -324,14 +346,21 @@ export default {
           if (newData.length > 0) {
             this.matchList = this.matchList.concat(newData);
             this.pageNum++;
-            this.status = "loadmore";
+            setTimeout(() => {
+              this.status = "loadmore";
+            }, 1000);
           } else {
             this.status = "nomore";
+            setTimeout(() => {
+              this.status = "nomore";
+            }, 1000);
           }
           this.refresh = false;
         }
       } catch (err) {
-        this.status = "loadmore";
+        setTimeout(() => {
+          this.status = "loadmore";
+        }, 1000);
       }
     },
     async queryMatchLabel() {
@@ -495,8 +524,6 @@ body {
           }
           .score {
             display: flex;
-            width: 100%;
-            height: 20px;
             .item {
               flex: 1;
               font-weight: 600;
@@ -507,6 +534,8 @@ body {
               display: flex;
               align-items: center;
               justify-content: center;
+              white-space: nowrap;
+              padding: 2px 4px;
             }
           }
 
@@ -637,7 +666,6 @@ body {
       padding: 12px;
       border-radius: 10px;
       background: #fff;
-      margin-bottom: 12px;
 
       .left {
         width: 30%;

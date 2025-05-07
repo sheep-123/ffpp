@@ -102,10 +102,10 @@ export default {
 </script>
 
 <style lang="scss">
-.box {
-  width: 100%;
-  height: 100vh;
+page {
   background-color: #f7f7f7;
+}
+.box {
   .nav {
     display: flex;
     align-items: center;
@@ -121,6 +121,7 @@ export default {
     flex-direction: column;
     gap: 12px;
     padding-bottom: 60px;
+    padding-top: 12px;
 
     .item {
       display: flex;

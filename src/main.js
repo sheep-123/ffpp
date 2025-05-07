@@ -7,6 +7,7 @@ import uView from "uview-ui";
 import minxi from "@/mixins/index.js";
 import img from "./api/img";
 import jk from "./api/api";
+import store from '@/store/index.js'
 
 Vue.use(uView);
 
@@ -18,6 +19,7 @@ Vue.prototype.$img = img;
 Vue.mixin(minxi);
 App.mpType = "app";
 const app = new Vue({
+  store,
   ...App,
 });
 

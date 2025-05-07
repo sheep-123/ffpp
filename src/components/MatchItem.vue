@@ -54,6 +54,11 @@ export default {
 		};
 	},
 	methods: {
+		join(item) {
+			uni.navigateTo({
+				url: `/competition/apply/appear?matchId=${item.id}`,
+			});
+		},
 		choseMatchHandle(item) {
 			this.$emit('choseMatch', item)
 		},

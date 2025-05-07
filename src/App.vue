@@ -12,6 +12,9 @@ export default {
   },
   onLaunch: function () {
     console.log("App Launch");
+    //获取手机信息
+    const res = uni.getSystemInfoSync();
+    uni.setStorageSync("systemInfo", res);
   },
   onShow: function () {
     console.log("App Show");

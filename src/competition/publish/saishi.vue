@@ -2783,7 +2783,7 @@ export default {
       uni.setStorageSync("rewards", this.rewards);
     },
     blur5(n, index) {
-      this.rewards[index].rewardAmount = n;
+      this.rewards[index].rewardAmount = n.value[0];
       uni.setStorageSync("rewards", this.rewards);
     },
     chooseAddress(a, b) {

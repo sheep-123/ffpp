@@ -94,9 +94,10 @@ export default {
               });
             }
           } catch (err) {
+            console.log(err);
             this.$refs.notice.show({
               type: "default",
-              message: err.message,
+              message: err.data.message || "登录失败",
             });
           }
         },

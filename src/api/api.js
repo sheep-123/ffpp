@@ -26,4 +26,10 @@ export default {
   getGroupHistory(params) {
     return uni.$u.http.post("/api/im/message/group/history", params);
   },
+  sendGroupMessage(params) {
+    return uni.$u.http.post("/api/im/message/group/send", params);
+  },
+  getGroupMember(params) {
+    return uni.$u.http.post("/api/im/group/member/info", params);
+  },
 };

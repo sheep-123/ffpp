@@ -112,7 +112,7 @@
         >
           <view class="avatar">
             <u-avatar
-              :src="avatar"
+              :src="type == 2 ? item.avatar : avatar"
               size="36"
               @tap.stop="toggleTooltip(index)"
             ></u-avatar>
@@ -124,7 +124,7 @@
           </view>
 
           <view class="right">
-            <view class="name">{{ nick }}</view>
+            <view class="name">{{ type == 2 ? item.nick : nick }}</view>
             <view class="text chat-message">{{ item.text }}</view>
           </view>
         </view>
@@ -212,6 +212,9 @@ export default {
       currentIndex: null,
       allMessage: uni.getStorageSync("allMessage") || [],
       socket: null,
+      GroupId: null,
+      type: null,
+      memberList: [],
     };
   },
   onLoad(options) {
@@ -219,18 +222,35 @@ export default {
     if (options.challengeStatus) {
       this.challengeStatus = true;
     }
-    if (options.Peer_Account) {
-      this.Peer_Account = options.Peer_Account;
-      this.getMessageHistory();
+    if (options.type == 1) {
+      this.type = 1;
+      if (options.nick) {
+        this.nick = options.nick;
+      }
+      if (options.avatar) {
+        this.avatar = options.avatar;
+      }
+      if (options.Peer_Account) {
+        this.Peer_Account = options.Peer_Account;
+        this.getMessageHistory();
+      }
     }
-    if (options.nick) {
-      this.nick = options.nick;
+    if (options.type == 2) {
+      this.type = 2;
+      if (options.nick) {
+        this.nick = options.nick;
+      }
+      if (options.GroupId) {
+        this.GroupId = options.GroupId;
+        this.getGroupHistory();
+      }
     }
-    if (options.avatar) {
-      this.avatar = options.avatar;
-    }
+
     const systemInfo = uni.getSystemInfoSync();
     this.statusBarHeight = systemInfo.statusBarHeight;
+  },
+  onUnload() {
+    uni.closeSocket();
   },
 
   computed: {
@@ -241,6 +261,16 @@ export default {
   methods: {
     async getMessageHistory() {
       try {
+        // const cached = this.allMessage.find(
+        //   (item) => item.Peer_Account == this.Peer_Account
+        // );
+        // if (cached) {
+        //   this.message = cached.message;
+        //   this.nick = cached.nick;
+        //   this.avatar = cached.avatar;
+        //   this.scrollToBottom();
+        //   return;
+        // }
         var data = {
           Operator_Account: uni.getStorageSync("user").id,
           Peer_Account: this.Peer_Account,
@@ -257,7 +287,7 @@ export default {
               (body) => body.MsgType == "TIMTextElem"
             );
             return {
-              text: textElem.MsgContent.Text,
+              text: textElem?.MsgContent.Text || "",
               isSelf: msg.from_Account == uni.getStorageSync("user").id,
             };
           });
@@ -275,15 +305,13 @@ export default {
             });
           }
           uni.setStorageSync("allMessage", this.allMessage);
-          this.$nextTick(() => {
-            this.scrollToBottom();
-          });
+          this.scrollTop += 10000000000000000000000;
         }
       } catch (e) {
         console.log(e);
-        this.refs.notice.show({
+        this.$refs.notice.show({
           type: "default",
-          message: e.data.message,
+          message: e.data.message || "获取消息失败",
         });
       }
     },
@@ -301,7 +329,7 @@ export default {
     },
     scrollToBottom() {
       setTimeout(() => {
-        this.scrollTop = 1000000000000;
+        this.scrollTop += 10000000000000000;
       }, 50);
     },
     back() {
@@ -322,26 +350,59 @@ export default {
     },
     async send() {
       if (!this.talk.trim()) return;
-      var data = {
-        From_Account: uni.getStorageSync("user").id,
-        To_Account: this.Peer_Account,
-        MsgRandom: Math.floor(Math.random() * 9000000) + 1000000,
-        MsgBody: [
-          {
-            MsgType: "TIMTextElem",
-            MsgContent: {
-              Text: this.talk,
-            },
-          },
-        ],
-        SyncOtherMachine: 1,
-        OnlineOnlyFlag: 0,
-      };
-      var result = await this.$api.sendMessage(data);
-      if (result.status == 200) {
-        this.getMessageHistory();
-        this.scrollTop += 10000000000000000000000;
-        this.talk = "";
+      try {
+        if (this.type == 1) {
+          var data = {
+            From_Account: uni.getStorageSync("user").id,
+            To_Account: this.Peer_Account,
+            MsgRandom: Math.floor(Math.random() * 9000000) + 1000000,
+            MsgBody: [
+              {
+                MsgType: "TIMTextElem",
+                MsgContent: {
+                  Text: this.talk,
+                },
+              },
+            ],
+            SyncOtherMachine: 1,
+            OnlineOnlyFlag: 0,
+          };
+          var result = await this.$api.sendMessage(data);
+          if (result.status == 200) {
+            this.getMessageHistory();
+            this.$nextTick(() => {
+              this.scrollToBottom();
+            });
+            this.talk = "";
+          }
+        } else {
+          var data = {
+            GroupId: this.GroupId,
+            Random: Math.floor(Math.random() * 1000000),
+            MsgBody: [
+              {
+                MsgType: "TIMTextElem",
+                MsgContent: {
+                  Text: this.talk,
+                },
+              },
+            ],
+            From_Account: uni.getStorageSync("user").id,
+          };
+          var res = await this.$api.sendGroupMessage(data);
+          if (res.status == 200) {
+            this.$nextTick(() => {
+              this.scrollToBottom();
+            });
+            this.talk = "";
+          }
+        }
+      } catch (err) {
+        console.log(err);
+        this.$refs.notice.show({
+          type: "default",
+          message: err.data.message || "发送失败",
+        });
       }
     },
     initWebSocket() {
@@ -349,26 +410,106 @@ export default {
       const ws = `ws://192.168.3.46:8001/ws/message/${userId}`;
       this.socket = uni.connectSocket({
         url: ws,
-        success: () => {
-          console.log("连接成功");
-        },
-        fail: (err) => {
-          console.log("连接失败", err);
-        },
       });
       uni.onSocketMessage((res) => {
-        console.log("接收到消息", res);
-        this.getMessageHistory();
+        this.getGroupHistory();
       });
-      uni.onSocketOpen((res) => {
-        console.log("连接成功", res);
-      });
-      uni.onSocketClose((res) => {
-        console.log("连接关闭", res);
-      });
+
       uni.onSocketError((res) => {
-        console.log("连接错误", res);
+        console.log("连接失败", res);
       });
+    },
+    async getGroupHistory() {
+      try {
+        // const cached = this.allMessage.find(
+        //   (item) => item.GroupId === this.GroupId
+        // );
+
+        // if (cached) {
+        //   this.message = cached.message;
+        //   this.nick = cached.nick;
+        //   await this.getGroupMember(); // 获取成员信息用于渲染头像和昵称
+        //   // this.injectSenderInfoToMessages(); // 注入发送者信息
+        //   this.scrollToBottom();
+        //   return;
+        // }
+        var data = {
+          GroupId: this.GroupId,
+          ReqMsgNumber: 20,
+        };
+        var res = await this.$api.getGroupHistory(data);
+        if (res.status == 200) {
+          const list = res.data.rspMsgList;
+          const newList = list.filter((item) => Array.isArray(item.msgBody));
+          this.message = newList
+            .map((msg) => {
+              const textElem = msg.msgBody.find(
+                (body) => body.MsgType === "TIMTextElem"
+              );
+              const sender = this.memberList.find(
+                (item) => item.member_Account == msg.from_Account
+              );
+              return {
+                text: textElem?.MsgContent.Text || "",
+                isSelf: msg.from_Account == uni.getStorageSync("user").id,
+                nick: sender?.nick || "",
+                avatar: sender?.avatar || "",
+                from_Account: msg.from_Account,
+              };
+            })
+            .reverse();
+          const userIndex = this.allMessage.findIndex(
+            (item) => item.GroupId == this.GroupId
+          );
+          if (userIndex >= 0) {
+            this.allMessage[userIndex].message = this.message;
+          } else {
+            this.allMessage.push({
+              GroupId: this.GroupId,
+              message: this.message,
+              nick: this.nick,
+            });
+          }
+
+          uni.setStorageSync("allMessage", this.allMessage);
+          this.$nextTick(() => {
+            this.scrollToBottom();
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async getGroupMember() {
+      var result = await this.$api.getGroupMember({
+        GroupId: this.GroupId,
+      });
+      if (result.status == 200) {
+        const memberList = result.data.memberList;
+        const member_Account = memberList.map(
+          (member) => member.member_Account
+        );
+        const res = await this.$api.getUserProfile({
+          To_Account: member_Account,
+          TagList: ["Tag_Profile_IM_Nick", "Tag_Profile_IM_Image"],
+        });
+        if (res.status == 200) {
+          const profiles = res.data.userProfileItem;
+          const profileMap = {};
+          profiles.forEach((profile) => {
+            profileMap[profile.to_Account] = {
+              nick: profile.profileItem[0].value,
+              avatar: profile.profileItem[1].value,
+            };
+          });
+          const info = memberList.map((member) => ({
+            ...member,
+            nick: profileMap[member.member_Account]?.nick || "",
+            avatar: profileMap[member.member_Account]?.avatar || "",
+          }));
+          this.memberList = info;
+        }
+      }
     },
   },
 };
@@ -430,8 +571,6 @@ export default {
     background-color: #fff;
     width: 100%;
     height: 27%;
-    //  height: 102px;
-
     z-index: 99;
     .top {
       display: flex;
@@ -638,6 +777,7 @@ export default {
           color: rgba(29, 35, 38, 0.6);
         }
         .text {
+          display: inline-block;
           box-sizing: border-box;
           padding: 10px 12px;
           font-weight: 400;

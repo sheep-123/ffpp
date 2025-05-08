@@ -59,11 +59,13 @@ export default {
   },
   methods: {
     switchTab(index) {
-      const { url } = this.tabList[index];
-      if (!url) return; // 如果没有配置跳转路径，则不处理
-      this.currentIndex = index;
-      //   uni.switchTab({ url });
-      uni.navigateTo({ url });
+      const path = this.list[index].pagePath;
+      uni.switchTab({
+        url: `/${path}`,
+        success: () => {
+          this.currentIndex = index;
+        },
+      });
     },
   },
 };

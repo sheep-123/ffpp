@@ -210,6 +210,16 @@ img {
   justify-content: space-around;
 }
 
+.flex-ac{
+	display: flex;
+	align-items: center;
+}
+.flex-center{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
 .flex-x-center {
   display: -webkit-box;
   display: -webkit-flex;

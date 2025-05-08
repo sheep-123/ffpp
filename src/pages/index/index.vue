@@ -271,7 +271,6 @@ export default {
 			],
 
 			// 首页内容模块
-			customEasing: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
 			globalData: app.globalData,
 			img: this.$img.home,
 			keyword: '',
@@ -333,14 +332,22 @@ export default {
 			newI <= this.topHeight ? this.bgColor = '#fff' : this.bgColor = 'transparent';
 		}
 	},
-	onShow() { },
-	async onLoad() {
+	async onShow() { 
 		this.getList();
 
-		if (!this.globalData.location.latitude) {
+		if(uni.getStorageSync('token')&&!this.globalData.location.latitude){
 			await this.getLocation();
+			console.log('执行这里了吗')
+			this.setMapCenter(this.globalData.location.latitude, this.globalData.location.longitude);
 		}
-		this.setMapCenter(this.globalData.location.latitude, this.globalData.location.longitude);
+
+	},
+	async onLoad() {
+
+		// if (!this.globalData.location.latitude) {
+		// 	await this.getLocation();
+		// }
+		// this.setMapCenter(this.globalData.location.latitude, this.globalData.location.longitude);
 	},
 	methods: {
 		topTabsChange(type) {
@@ -435,7 +442,10 @@ export default {
 		async getList() {
 			const res = await this.$requestAll.dynamics.getMainNews(this.searchParmas);
 			res.data.length ? this.loadStatus = 'loadmore' : this.loadStatus = 'nomore';
-			this.newsList = [...this.newsList, ...res.data];
+			const newsList = [...this.newsList, ...res.data];
+
+			// 去重
+			this.newsList = this.$utils.uniqueById(newsList, 'id');
 		},
 		handleTouchStart(e) {
 			this.start = parseInt(e.touches[0].clientY);

@@ -1,6 +1,7 @@
 <template>
-    <u-popup mode="left" :show="visible" @close="handleClose" custom-class="sidebar-popup">
-        <div class="sidebar-content">
+	<view>
+		<Navbar title="设置" />
+		<div class="sidebar-content">
             <div class="cell-box" v-for="(item, index) in list" :key="index">
                 <div 
                     class="cell-item flex-jb" 
@@ -21,42 +22,42 @@
                 </div>
             </div>
         </div>
-    </u-popup>
-</template>
-
-<style scoped lang="scss">
-.cell-item.no-border {
-    border-bottom: none !important ;
-}
-</style>
+		<!-- 退出登录按钮 白色背景 左右间距32 	#1D2326 字体颜色居中 -->
+		<div class="logout-box" @click="logout">
+			<view class="logout-button">退出登录</view>
+		</div>
+	</view>
+</template> 
 
 <script>
+import 	Navbar from "@/components/WNavbar/index.vue";
 export default {
-    name: "SideBar",
-    props: {
-        visible: {
-            type: Boolean,
-            required: true,
-        },
-    },
-    data() {
-        return {
-            list: [
+	components: {
+		Navbar
+	},
+	data() {
+		return {
+			list: [
                 {
                     cellList: [
                         {
                             icon: "iconfont icon-shouye",
-                            text: "设置",
-                            url: "/user/setting",
+                            text: "账号与安全",
+                            url: "/user/account-setting",
                         },
                         {
                             icon: "iconfont icon-wode",
-                            text: "品牌认证",
+                            text: "用户协议",
                             url: "",
                         },
                         {
                             icon: "iconfont icon-wode",
-                            text: "标记场地",
+                            text: "隐私政策",
+                            url: "",
+                        },
+						{
+                            icon: "iconfont icon-wode",
+                            text: "关于我们",
                             url: "",
                         },
                     ],
@@ -65,54 +66,54 @@ export default {
                     cellList: [
                         {
                             icon: "iconfont icon-shouye",
-                            text: "我的小队",
+                            text: "徽章展示",
                             url: "",
                         },
                         {
                             icon: "iconfont icon-wode",
-                            text: "我的订单",
+                            text: "奖杯展示",
                             url: "/pages/user/user",
                         },
                         {
                             icon: "iconfont icon-wode",
-                            text: "预约记录",
-                            url: "",
-                        },
-                    ],
-                },
-                {
-                    cellList: [
-                        {
-                            icon: "iconfont icon-shouye",
-                            text: "帮助中心",
-                            url: "",
-                        },
-                        {
-                            icon: "iconfont icon-wode",
-                            text: "意见反馈",
+                            text: "运动等级",
                             url: "",
                         },
                     ],
                 },
             ]
-        }
-    },
-
-    emits: ["update:visible"],
-    methods: {
-        handleClose() {
-            this.$emit("update:visible", false);
-        },
-    },
-};
+		};
+	}
+}
 </script>
-
 <style scoped lang="scss">
+.cell-item.no-border {
+    border-bottom: none !important ;
+}
+</style>
+<style lang="scss">
+page{
+	height: 100%;
+	background-color: #F7F7F7;
+}
+
+.logout-box{
+	padding: 0 32rpx;
+	.logout-button{
+		width: 686rpx;
+height: 96rpx;
+background: #FFFFFF;
+border-radius: 16rpx 16rpx 16rpx 16rpx;
+color: #1D2326 ;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 32rpx;
+	}
+}
 .sidebar-content {
-    width: 616rpx;
-    height: 100vh;
     background-color: #F7F7F7;
-    padding: 140rpx 32rpx;
+    padding: 32rpx 0;
     box-sizing: border-box;
 
     .cell-box {

@@ -210,8 +210,8 @@
 					...this.commentSearchParmas
 				})
 				res.data.content.length ? this.loadStatus = 'loadmore' : this.loadStatus = 'nomore';
-				this.commentList = [...this.commentList, ...res.data.content];
-
+				const commentList = [...this.commentList, ...res.data.content];
+				this.commentList = this.$utils.uniqueById(commentList,'id');
 			},
 			async getDetail() {
 				const res = await this.$requestAll.dynamics.newsDetail({

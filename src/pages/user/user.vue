@@ -35,7 +35,7 @@
             <view class="item"> <text class="num">1.7w</text>获赞 </view>
           </view>
 
-          <view class="bt">编辑资料</view>
+          <view class="bt" @click="$utils.toPath.navigateTo('/user/updateUserInfo')" >编辑资料</view>
         </view>
 
         <view class="third">
@@ -105,8 +105,8 @@
         </view>
 
         <view class="fifth">
-          <view class="item">
-            <view class="left">
+          <view class="item" @click="$utils.toPath.navigateTo('/user/my-order')" >
+            <view class="left"   >
               <view class="v1">我的订单</view>
               <view class="v2">新增赛事6个</view>
             </view>
@@ -197,7 +197,7 @@ export default {
   data() {
     return {
       current: 0,
-      visible: true,
+      visible: false,
       list: [
         {
           name: "动态",

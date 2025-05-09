@@ -182,6 +182,7 @@
 
     <SideBar :visible="visible" @update:visible="visible = $event">
     </SideBar>
+	<tabar-view :currentIndex="4"></tabar-view>
   </view>
 </template>
 
@@ -225,7 +226,6 @@ export default {
     },
   },
   onShow() {
-    uni.showTabBar();
   },
 };
 </script>
@@ -233,7 +233,7 @@ export default {
 <style lang="scss">
 .box {
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 84px);
   position: relative;
   background: url("https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/05.jpg")
     no-repeat;
@@ -463,6 +463,7 @@ export default {
       background: #fafafa;
       border-radius: 40rpx;
       padding: 20rpx;
+	  padding-bottom:84px ;
       .item {
         width: 100%;
         break-inside: avoid;

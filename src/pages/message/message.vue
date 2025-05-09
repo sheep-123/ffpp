@@ -99,6 +99,8 @@
       </view>
     </view>
     <u-toast ref="notice"></u-toast>
+  
+	<tabar-view :currentIndex="3"></tabar-view>
   </view>
 </template>
 

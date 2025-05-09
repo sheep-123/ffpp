@@ -232,6 +232,9 @@
         </view>
       </view>
     </u-popup>
+ 
+ 
+	<tabar-view :currentIndex="1"></tabar-view>
   </view>
 </template>
 

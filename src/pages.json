@@ -56,34 +56,23 @@
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "首页",
-        "iconPath": "static/images/首页.png",
-        "selectedIconPath": "static/images/首页选中.png"
+        "text": "首页"
       },
       {
         "pagePath": "pages/play/play",
-        "text": "去玩",
-        "iconPath": "static/images/去玩.png",
-        "selectedIconPath": "static/images/去玩选中.png"
+        "text": "去玩"
       },
       {
         "pagePath": "pages/add/add",
-        "text": "",
-        "iconPath": "static/images/发布.png",
-        "selectedIconPath": "static/images/发布.png",
-        "iconWidth": "90px"
+        "text": ""
       },
       {
         "pagePath": "pages/message/message",
-        "text": "消息",
-        "iconPath": "static/images/消息.png",
-        "selectedIconPath": "static/images/消息选中.png"
+        "text": "消息"
       },
       {
         "pagePath": "pages/user/user",
-        "text": "我的",
-        "iconPath": "static/images/我的.png",
-        "selectedIconPath": "static/images/我的选中.png"
+        "text": "我的"
       }
     ]
   },
@@ -355,6 +344,7 @@
     }
   ],
   "usingComponents": {
-    "bt": "/components/bt/bt"
+    "bt": "/components/bt/bt",
+	"tabar-view":"/components/tabbar"
   }
 }

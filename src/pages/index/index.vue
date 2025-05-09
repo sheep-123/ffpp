@@ -230,6 +230,7 @@
 				</view>
 			</map>
 		</view>
+		<tabar-view :currentIndex="0"></tabar-view>
 	</view>
 </template>
 
@@ -312,7 +313,7 @@ export default {
 		scrollViewHeight() {
 			const tabsHeight = uni.upx2px(134);
 			const marginToHeight = uni.upx2px(40);
-			return `calc(100vh - ${this.scrollY + tabsHeight + pullHeight - marginToHeight}px)`
+			return `calc(100vh - ${this.scrollY + tabsHeight + pullHeight - marginToHeight+84}px)`
 		},
 		isTopTabsShow() {
 			return this.bgColor == '#fff'
@@ -333,6 +334,7 @@ export default {
 		}
 	},
 	async onShow() { 
+		// uni.hideTabBar()
 		this.getList();
 
 		if(uni.getStorageSync('token')&&!this.globalData.location.latitude){
@@ -448,11 +450,13 @@ export default {
 			this.newsList = this.$utils.uniqueById(newsList, 'id');
 		},
 		handleTouchStart(e) {
+			console.log('执行了==========1111');
 			this.start = parseInt(e.touches[0].clientY);
 			this.difference = parseInt(e.touches[0].clientY) - this.scrollY;
 			this.isDragging = true;
 		},
 		handleTouchMove(e) {
+			console.log('执行了==========');
 			if (e.stopPropagation && (this.scrollY == this.systemInfo.windowHeight - 3)) {
 				e.stopPropagation();
 			}
@@ -913,7 +917,7 @@ export default {
 	position: fixed;
 	z-index: 111;
 	padding: 0 32rpx;
-	bottom: 48rpx;
+	bottom: calc(48rpx + 84px);
 }
 
 
@@ -1106,7 +1110,7 @@ export default {
 .box {
 	.map-example {
 		width: 750rpx;
-		height: 100vh;
+		height: calc(100vh - 84px) ;
 
 		.pull {
 			display: flex;

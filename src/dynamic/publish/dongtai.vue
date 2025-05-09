@@ -317,7 +317,7 @@ export default {
         const res = await Promise.all(
           e.file.map((item) =>
             this.$utils.uploadImg(
-              "http://192.168.3.46:8001/news/upload",
+              "/news/upload",
               item.url,
               {
                 file: item.url,

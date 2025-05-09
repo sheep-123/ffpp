@@ -1,9 +1,9 @@
 <template>
 	<view class="box" v-if="detail">
 		<Navbar bgColor="#fff">
-			<view @click="$utils.toPath.back()" slot="left" style="display: flex; align-items: center">
-				<u-icon bold name="arrow-left" size="19"></u-icon>
-				<image :src="detail.releaseUserUrl" mode="scaleToFill" class="img-1" />
+			<view  slot="left" style="display: flex; align-items: center">
+				<u-icon @click="$utils.toPath.back()" bold name="arrow-left" size="19"></u-icon>
+				<image @click="$utils.toPath.navigateTo('/user/personPage/personPage')" :src="detail.releaseUserUrl" mode="scaleToFill" class="img-1" />
 				<view class="img-2">{{detail.releaseUserName}}</view>
 			</view>
 		</Navbar>
@@ -11,9 +11,10 @@
 			<swiper :indicator-dots="false" :circular="true" :current="current" :autoplay="true">
 				<block v-for="(item, index) in detail.matchFiles" :key="index">
 					<swiper-item>
-						<image @click="lookImgHandle" style="height: 504rpx; width: 702rpx; border-radius: 8rpx"
+						<!-- <image @click="lookImgHandle" style="height: 504rpx; width: 702rpx; border-radius: 8rpx"
 							:src="item.fileUrl" mode="">
-						</image>
+						</image> -->
+						{{index}}
 					</swiper-item>
 				</block>
 			</swiper>

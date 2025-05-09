@@ -1,4 +1,5 @@
 import citys from "@/utils/city.json";
+const config = require("@/config");
 const toast = (title, icon = "none", duration = 1500) => {
   uni.showToast({
     icon,
@@ -62,7 +63,7 @@ const uploadImg = (requestUrl, filePath, params) => {
   });
   return new Promise((resolve, reject) => {
     uni.uploadFile({
-      url: requestUrl,
+      url: config.url+requestUrl,
       filePath,
       name: "file",
       fileType: "image",

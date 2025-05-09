@@ -327,6 +327,13 @@
 					"style": {
 						"navigationBarTitleText": "订单详情"
 					}
+				},
+				{
+					"path" : "personPage/personPage",
+					"style" : 
+					{
+						"navigationBarTitleText" : "个人主页"
+					}
 				}
 			]
 		}

@@ -232,9 +232,8 @@
         </view>
       </view>
     </u-popup>
- 
- 
-	<tabar-view :currentIndex="1"></tabar-view>
+
+    <tabar-view :currentIndex="1"></tabar-view>
   </view>
 </template>
 
@@ -804,6 +803,7 @@ body {
 .local {
   height: 332px;
   position: relative;
+  z-index: 100;
   .top {
     display: flex;
     align-items: center;

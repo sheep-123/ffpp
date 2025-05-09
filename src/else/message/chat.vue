@@ -1,7 +1,6 @@
 <template>
-  <view class="box">
+  <view class="box" @click="hideTooltip">
     <u-navbar :fixed="false" :title="nick" autoBack> </u-navbar>
-
     <view class="challenge" v-if="challengeStatus" :style="{ top: stickyTop }">
       <view class="top">
         <view class="left"> <text>篮球使者</text> 对你发起篮球1V1挑战</view>
@@ -38,20 +37,26 @@
       </view>
       <u-icon name="list" size="16"></u-icon>
     </view>
-    <view class="second" :style="{ height: upStatus ? '381px' : '102px' }">
+    <view class="second" :style="upStatus ? 'height: 47%' : 'height: 13%'">
       <view class="top">
         <input
           class="input"
           placeholder="来聊聊你的想法..."
           v-model="talk"
           @confirm="send"
+          cursor-spacing="12"
         />
         <image
           src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/发表情.png"
           mode="scaleToFill"
           style="width: 30px; height: 30px; display: block"
         />
-        <view @click="add">
+        <view
+          @click="
+            upStatus = !upStatus;
+            this.scrollToBottom();
+          "
+        >
           <u-icon name="plus-circle" size="35" color="black"></u-icon
         ></view>
       </view>
@@ -101,7 +106,7 @@
       :scroll-top="scrollTop"
       scroll-y
       @click="show = false"
-      style="height: 73%"
+      :style="upStatus ? 'height: 39%' : 'height: 73%'"
     >
       <view class="main">
         <view
@@ -116,10 +121,13 @@
               size="36"
               @tap.stop="toggleTooltip(index)"
             ></u-avatar>
-            <view class="tooltip" v-show="currentIndex === index">
+            <view
+              class="tooltip"
+              v-show="showTooltip && currentIndex === index"
+            >
               <view class="item"> 查看主页 </view>
-              <view class="item" @click="tozudui"> 邀请组队 </view>
-              <view class="item" @click="tochallenge"> 发起挑战 </view>
+              <view class="item" @tap.stop="tozudui"> 邀请组队 </view>
+              <view class="item" @tap.stop="tochallenge"> 发起挑战 </view>
             </view>
           </view>
 
@@ -211,6 +219,7 @@ export default {
       message: [],
       talk: "",
       currentIndex: null,
+      showTooltip: false,
       allMessage: uni.getStorageSync("allMessage") || [],
       socket: null,
       GroupId: null,
@@ -225,26 +234,46 @@ export default {
     }
     if (options.type == 1) {
       this.type = 1;
-      if (options.nick) {
-        this.nick = options.nick;
+      this.Peer_Account = options.Peer_Account;
+      this.nick = options.nick;
+      this.avatar = options.avatar;
+      // 先从缓存获取消息
+      const cached = this.allMessage.find(
+        (item) => item.Peer_Account === this.Peer_Account
+      );
+      if (cached) {
+        this.message = cached.message || [];
+        this.nick = cached.nick || this.nick;
+        this.avatar = cached.avatar || this.avatar;
+        this.$nextTick(() => {
+          this.scrollToBottom();
+        });
+        return;
       }
-      if (options.avatar) {
-        this.avatar = options.avatar;
-      }
-      if (options.Peer_Account) {
-        this.Peer_Account = options.Peer_Account;
-        this.getMessageHistory();
-      }
+
+      // 如果没有缓存，则请求接口
+      this.getMessageHistory();
     }
     if (options.type == 2) {
       this.type = 2;
-      if (options.nick) {
-        this.nick = options.nick;
+      this.GroupId = options.GroupId;
+      this.nick = options.nick;
+
+      // 先从缓存获取消息
+      const cached = this.allMessage.find(
+        (item) => item.GroupId === this.GroupId
+      );
+      if (cached) {
+        this.message = cached.message || [];
+        this.nick = cached.nick || this.nick;
+        this.$nextTick(() => {
+          this.scrollToBottom();
+        });
+        return;
       }
-      if (options.GroupId) {
-        this.GroupId = options.GroupId;
-        this.getGroupHistory();
-      }
+
+      // 如果没有缓存，则请求接口
+      this.getGroupHistory();
     }
 
     const systemInfo = uni.getSystemInfoSync();
@@ -262,16 +291,6 @@ export default {
   methods: {
     async getMessageHistory() {
       try {
-        // const cached = this.allMessage.find(
-        //   (item) => item.Peer_Account == this.Peer_Account
-        // );
-        // if (cached) {
-        //   this.message = cached.message;
-        //   this.nick = cached.nick;
-        //   this.avatar = cached.avatar;
-        //   this.scrollToBottom();
-        //   return;
-        // }
         var data = {
           Operator_Account: uni.getStorageSync("user").id,
           Peer_Account: this.Peer_Account,
@@ -299,14 +318,18 @@ export default {
             this.allMessage[userIndex].message = this.message;
           } else {
             this.allMessage.push({
+              type: 1,
               Peer_Account: this.Peer_Account,
               nick: this.nick,
               avatar: this.avatar,
               message: this.message,
             });
           }
+
           uni.setStorageSync("allMessage", this.allMessage);
-          this.scrollTop += 10000000000000000000000;
+          this.$nextTick(() => {
+            this.scrollToBottom();
+          });
         }
       } catch (e) {
         console.log(e);
@@ -316,14 +339,8 @@ export default {
         });
       }
     },
-    add() {
-      if (this.upStatus) {
-        this.upStatus = false;
-      } else {
-        this.upStatus = true;
-      }
-    },
     tozudui() {
+      this.hideTooltip();
       uni.navigateTo({
         url: "/else/message/team",
       });
@@ -337,7 +354,16 @@ export default {
       uni.switchTab({ url: "/pages/message/message" });
     },
     toggleTooltip(index) {
+      if (this.currentIndex === index) {
+        this.showTooltip = !this.showTooltip;
+      } else {
+        this.showTooltip = true;
+      }
       this.currentIndex = index;
+    },
+    hideTooltip() {
+      this.showTooltip = false;
+      this.currentIndex = null;
     },
     tohuodong() {
       uni.navigateTo({
@@ -345,6 +371,7 @@ export default {
       });
     },
     tochallenge() {
+      this.hideTooltip();
       uni.navigateTo({
         url: "/else/message/challenge",
       });
@@ -370,11 +397,31 @@ export default {
           };
           var result = await this.$api.sendMessage(data);
           if (result.status == 200) {
-            this.getMessageHistory();
+            const messageItem = {
+              text: this.talk,
+              isSelf: true,
+            };
+
+            // 更新缓存
+            const userIndex = this.allMessage.findIndex(
+              (item) => item.Peer_Account === this.Peer_Account
+            );
+            if (userIndex >= 0) {
+              this.allMessage[userIndex].message.push(messageItem);
+            } else {
+              this.allMessage.push({
+                type: 1,
+                Peer_Account: this.Peer_Account,
+                nick: this.nick,
+                avatar: this.avatar,
+                message: [messageItem],
+              });
+            }
+            uni.setStorageSync("allMessage", this.allMessage);
+            this.talk = "";
             this.$nextTick(() => {
               this.scrollToBottom();
             });
-            this.talk = "";
           }
         } else {
           var data = {
@@ -392,10 +439,33 @@ export default {
           };
           var res = await this.$api.sendGroupMessage(data);
           if (res.status == 200) {
+            const messageItem = {
+              text: this.talk,
+              isSelf: true,
+              nick: this.nick,
+              avatar: this.src,
+              from_Account: uni.getStorageSync("user").id,
+            };
+
+            // 更新缓存
+            const groupIndex = this.allMessage.findIndex(
+              (item) => item.GroupId === this.GroupId
+            );
+            if (groupIndex >= 0) {
+              this.allMessage[groupIndex].message.push(messageItem);
+            } else {
+              this.allMessage.push({
+                type: 2,
+                GroupId: this.GroupId,
+                nick: this.nick,
+                message: [messageItem],
+              });
+            }
+            uni.setStorageSync("allMessage", this.allMessage);
+            this.talk = "";
             this.$nextTick(() => {
               this.scrollToBottom();
             });
-            this.talk = "";
           }
         }
       } catch (err) {
@@ -411,8 +481,12 @@ export default {
       this.socket = uni.connectSocket({
         url: ws,
       });
-      uni.onSocketMessage((res) => {
-        this.getGroupHistory();
+      uni.onSocketMessage(async (res) => {
+        if (this.type == 1) {
+          this.getMessageHistory();
+        } else {
+          this.getGroupHistory();
+        }
       });
 
       uni.onSocketError((res) => {
@@ -421,18 +495,6 @@ export default {
     },
     async getGroupHistory() {
       try {
-        // const cached = this.allMessage.find(
-        //   (item) => item.GroupId === this.GroupId
-        // );
-
-        // if (cached) {
-        //   this.message = cached.message;
-        //   this.nick = cached.nick;
-        //   await this.getGroupMember(); // 获取成员信息用于渲染头像和昵称
-        //   // this.injectSenderInfoToMessages(); // 注入发送者信息
-        //   this.scrollToBottom();
-        //   return;
-        // }
         var data = {
           GroupId: this.GroupId,
           ReqMsgNumber: 20,
@@ -465,9 +527,10 @@ export default {
             this.allMessage[userIndex].message = this.message;
           } else {
             this.allMessage.push({
+              type: 2,
               GroupId: this.GroupId,
-              message: this.message,
               nick: this.nick,
+              message: this.message,
             });
           }
 
@@ -478,6 +541,10 @@ export default {
         }
       } catch (err) {
         console.log(err);
+        this.$refs.notice.show({
+          type: "default",
+          message: err.data.message || "消息获取失败",
+        });
       }
     },
     async getGroupMember() {
@@ -570,7 +637,6 @@ export default {
     left: 0;
     background-color: #fff;
     width: 100%;
-    height: 27%;
     z-index: 99;
     .top {
       display: flex;

@@ -131,6 +131,7 @@
 		font-weight: 600;
 		font-size: 10px;
 		color: #1d2326;
+		box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
 		z-index: 9999999999999999999;
 		.tabbar-item {
 			margin-top: 12px;

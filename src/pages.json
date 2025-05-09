@@ -12,6 +12,13 @@
       }
     },
     {
+      "path": "pages/message/message",
+      "style": {
+        "navigationBarTitleText": "消息",
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/play/play",
       "style": {
         "navigationBarTitleText": "去玩",

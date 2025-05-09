@@ -3,18 +3,17 @@
 		<Navbar bgColor="#fff">
 			<view  slot="left" style="display: flex; align-items: center">
 				<u-icon @click="$utils.toPath.back()" bold name="arrow-left" size="19"></u-icon>
-				<image @click="$utils.toPath.navigateTo('/user/personPage/personPage')" :src="detail.releaseUserUrl" mode="scaleToFill" class="img-1" />
-				<view class="img-2">{{detail.releaseUserName}}</view>
+				<image  @click="$utils.toPath.navigateTo('/user/personPage/personPage?uId='+detail.releaseUser)" :src="detail.releaseUserUrl" mode="scaleToFill" class="img-1" />
+				<view	@click="$utils.toPath.navigateTo('/user/personPage/personPage?uId='+detail.releaseUser)" class="img-2">{{detail.releaseUserName}}</view>
 			</view>
 		</Navbar>
 		<view class="parent">
-			<swiper :indicator-dots="false" :circular="true" :current="current" :autoplay="true">
+			<swiper @change="swpierChange" :indicator-dots="false" :circular="true" :current="current" :autoplay="true">
 				<block v-for="(item, index) in detail.matchFiles" :key="index">
-					<swiper-item>
+					<swiper-item  >
 						<image @click="lookImgHandle" style="height: 504rpx; width: 702rpx; border-radius: 8rpx"
 							:src="item.fileUrl" mode="">
 						</image>
-						<!-- {{index}} -->
 					</swiper-item>
 				</block>
 			</swiper>
@@ -142,6 +141,9 @@
 			this.getCommetList();
 		},
 		methods: {
+			swpierChange(e){
+				this.current = e.detail.current
+			},
 			commetItemHandle(evt) {
 				this.focus = true;
 				this.choseCommetUser = evt;
@@ -200,6 +202,7 @@
 						this.commentBody.replyTo = '';
 						this.commentBody.replyType = '';
 						this.commentBody.content = '';
+						this.getDetail();
 					}
 				} else {
 					this.$utils.toast(res.message);

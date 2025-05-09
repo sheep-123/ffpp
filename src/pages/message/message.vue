@@ -97,12 +97,8 @@
       </view>
     </view>
     <u-toast ref="notice"></u-toast>
-<<<<<<< HEAD
   
 	<tabar-view :currentIndex="3"></tabar-view>
-=======
-    <!-- <Tabbar /> -->
->>>>>>> e9d4616731eb93f4ba29241c878d23e3fd4a61a0
   </view>
 </template>
 

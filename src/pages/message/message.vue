@@ -97,16 +97,11 @@
       </view>
     </view>
     <u-toast ref="notice"></u-toast>
-    <!-- <Tabbar /> -->
   </view>
 </template>
 
 <script>
-// import Tabbar from "@/components/tabbar.vue";
 export default {
-  // components: {
-  //   Tabbar,
-  // },
   data() {
     return {
       keyword: "",
@@ -114,12 +109,13 @@ export default {
       messageList: [],
       typeList: ["玩家", "小队", "场地"],
       typeIndex: 0,
+      status: "loadmore",
     };
   },
-  onLoad() {},
-  onShow() {
+  onLoad() {
     this.getMessageList();
   },
+  onShow() {},
   methods: {
     toChat(item) {
       if (item.type == 2) {
@@ -162,19 +158,6 @@ export default {
     },
     async getMessageList() {
       const user = uni.getStorageSync("user");
-      const allMessage = uni.getStorageSync("allMessage") || [];
-      const messageMap = {};
-      if (allMessage.length > 0) {
-        allMessage.forEach((item) => {
-          if (item.Peer_Account)
-            messageMap[item.Peer_Account] =
-              item.message?.[item.message.length - 1]?.text || "";
-          if (item.GroupId)
-            messageMap[`group_${item.GroupId}`] =
-              item.message?.[item.message.length - 1]?.text || "";
-        });
-      }
-
       const data = {
         From_Account: user.id,
         TimeStamp: 0,
@@ -208,12 +191,13 @@ export default {
                 (item) => item.to_Account === profile.to_Account
               );
               if (matched) {
-                let lastMessage = messageMap[matched.to_Account] || "";
+                // let lastMessage = messageMap[matched.to_Account] || "";
+                let lastMessage = matched.message || "";
                 if (!lastMessage) {
                   const data = {
                     Operator_Account: uni.getStorageSync("user").id,
                     Peer_Account: matched.to_Account,
-                    MaxCnt: 1,
+                    MaxCnt: 20,
                     MinTime: 1,
                     MaxTime: Math.floor(Date.now() / 1000) + 30,
                   };
@@ -253,7 +237,7 @@ export default {
                 (item) => item.groupId === g.groupId
               );
               if (matched) {
-                let lastMsg = messageMap[`group_${g.groupId}`] || "";
+                let lastMsg = matched.groupInfo?.lastMsg || "";
                 if (!lastMsg) {
                   const result = await this.$api.getGroupHistory({
                     GroupId: matched.groupId,
@@ -282,7 +266,7 @@ export default {
             });
           }
           for (let item of this.messageList) {
-            if (item.type === 2 && !item.groupInfo.lastMsg) {
+            if (item.type === 2 && !item.groupInfo?.lastMsg) {
               const data = {
                 GroupId: item.groupId,
                 ReqMsgNumber: 1,
@@ -302,6 +286,7 @@ export default {
           }
         }
         this.messageList = this.messageList.reverse();
+        console.log(this.messageList);
       }
     },
   },
@@ -428,7 +413,6 @@ export default {
       flex-direction: column;
       margin-top: 20px;
       gap: 18px;
-      padding-bottom: 60px;
       .item {
         display: flex;
         align-items: center;

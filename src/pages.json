@@ -11,13 +11,7 @@
         "disableScroll": true
       }
     },
-    {
-      "path": "pages/message/message",
-      "style": {
-        "navigationBarTitleText": "消息",
-        "navigationStyle": "custom"
-      }
-    },
+
     {
       "path": "pages/play/play",
       "style": {
@@ -53,7 +47,7 @@
     "navigationBarTitleText": "uni-app",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8",
-	"navigationStyle": "custom"
+    "navigationStyle": "custom"
   },
   "tabBar": {
     "color": "#777B7D",
@@ -324,39 +318,34 @@
           }
         },
         {
-        	"path" : "setting",
-        	"style" : 
-        	{
-        		"navigationBarTitleText" : "设置"
-        	}
+          "path": "setting",
+          "style": {
+            "navigationBarTitleText": "设置"
+          }
         },
         {
-        	"path" : "account-setting",
-        	"style" : 
-        	{
-        		"navigationBarTitleText" : "账号与安全"
-        	}
+          "path": "account-setting",
+          "style": {
+            "navigationBarTitleText": "账号与安全"
+          }
         },
         {
-        	"path" : "updateUserInfo",
-        	"style" : 
-        	{
-        		"navigationBarTitleText" : "编辑资料"
-        	}
+          "path": "updateUserInfo",
+          "style": {
+            "navigationBarTitleText": "编辑资料"
+          }
         },
         {
-        	"path" : "my-order",
-        	"style" : 
-        	{
-        		"navigationBarTitleText" : "我的订单"
-        	}
+          "path": "my-order",
+          "style": {
+            "navigationBarTitleText": "我的订单"
+          }
         },
         {
-        	"path" : "order-detail",
-        	"style" : 
-        	{
-        		"navigationBarTitleText" : "订单详情"
-        	}
+          "path": "order-detail",
+          "style": {
+            "navigationBarTitleText": "订单详情"
+          }
         }
       ]
     }

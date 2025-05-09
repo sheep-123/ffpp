@@ -186,6 +186,7 @@
 </template>
 
 <script>
+import config from "@/config";
 export default {
   data() {
     return {
@@ -406,8 +407,9 @@ export default {
       }
     },
     initWebSocket() {
-      const userId = uni.getStorageSync("user").id;
-      const ws = `ws://192.168.3.46:8001/ws/message/${userId}`;
+      // const userId = uni.getStorageSync("user").id;
+      // const ws = `ws://192.168.3.46:8001/ws/message/${userId}`;
+      const ws = config.wsUrl;
       this.socket = uni.connectSocket({
         url: ws,
       });

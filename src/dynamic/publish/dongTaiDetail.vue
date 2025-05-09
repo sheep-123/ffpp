@@ -11,10 +11,10 @@
 			<swiper :indicator-dots="false" :circular="true" :current="current" :autoplay="true">
 				<block v-for="(item, index) in detail.matchFiles" :key="index">
 					<swiper-item>
-						<!-- <image @click="lookImgHandle" style="height: 504rpx; width: 702rpx; border-radius: 8rpx"
+						<image @click="lookImgHandle" style="height: 504rpx; width: 702rpx; border-radius: 8rpx"
 							:src="item.fileUrl" mode="">
-						</image> -->
-						{{index}}
+						</image>
+						<!-- {{index}} -->
 					</swiper-item>
 				</block>
 			</swiper>

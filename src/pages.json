@@ -1,346 +1,338 @@
 {
-  "easycom": {
-    "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
-  },
-  "pages": [
-    {
-      "path": "pages/index/index",
-      "style": {
-        "navigationBarTitleText": "首页",
-        "navigationStyle": "custom",
-        "disableScroll": true
-      }
-    },
-
-    {
-      "path": "pages/play/play",
-      "style": {
-        "navigationBarTitleText": "去玩",
-        "navigationStyle": "custom",
-        "enablePullDownRefresh": true
-      }
-    },
-    {
-      "path": "pages/message/message",
-      "style": {
-        "navigationBarTitleText": "消息",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/user/user",
-      "style": {
-        "navigationBarTitleText": "我的",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/add/add",
-      "style": {
-        "navigationBarTitleText": "添加",
-        "navigationStyle": "custom"
-      }
-    }
-  ],
-  "globalStyle": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8",
-    "navigationStyle": "custom"
-  },
-  "tabBar": {
-    "color": "#777B7D",
-    "selectedColor": "#1D2326",
-    "borderStyle": "black",
-    "backgroundColor": "#FFFFFF",
-    "list": [
-      {
-        "pagePath": "pages/index/index",
-        "text": "首页"
-      },
-      {
-        "pagePath": "pages/play/play",
-        "text": "去玩"
-      },
-      {
-        "pagePath": "pages/add/add",
-        "text": ""
-      },
-      {
-        "pagePath": "pages/message/message",
-        "text": "消息"
-      },
-      {
-        "pagePath": "pages/user/user",
-        "text": "我的"
-      }
-    ]
-  },
-  "subPackages": [
-    {
-      "root": "competition",
-      "pages": [
-        {
-          "path": "publish/saishi",
-          "style": {
-            "navigationBarTitleText": "发赛事",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "publish/judge",
-          "style": {
-            "navigationBarTitleText": "裁判",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "publish/place",
-          "style": {
-            "navigationBarTitleText": "地点",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "publish/project",
-          "style": {
-            "navigationBarTitleText": "项目",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "publish/templete",
-          "style": {
-            "navigationBarTitleText": "模版",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "apply/appear",
-          "style": {
-            "navigationBarTitleText": "报名比赛",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "apply/more",
-          "style": {
-            "navigationBarTitleText": "更多赞助",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "apply/sponsor",
-          "style": {
-            "navigationBarTitleText": "赞助",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "apply/sponsorship",
-          "style": {
-            "navigationBarTitleText": "申请赞助",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "apply/pay",
-          "style": {
-            "navigationBarTitleText": "支付订单",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "apply/share",
-          "style": {
-            "navigationBarTitleText": "支付订单",
-            "navigationStyle": "custom"
-          }
-        }
-      ]
-    },
-    {
-      "root": "else",
-      "pages": [
-        {
-          "path": "play/more",
-          "style": {
-            "navigationBarTitleText": "发赛事",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "user/login",
-          "style": {
-            "navigationBarTitleText": "发赛事",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "index/markSite",
-          "style": {
-            "navigationBarTitleText": "标记",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "index/editSport",
-          "style": {
-            "navigationBarTitleText": "编辑运动",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "message/chat",
-          "style": {
-            "navigationBarTitleText": "聊天",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "message/team",
-          "style": {
-            "navigationBarTitleText": "组队",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "message/huodong",
-          "style": {
-            "navigationBarTitleText": "活动列表",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "message/search",
-          "style": {
-            "navigationBarTitleText": "搜索",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "message/challenge",
-          "style": {
-            "navigationBarTitleText": "发起挑战",
-            "navigationStyle": "custom"
-          }
-        }
-      ]
-    },
-    {
-      "root": "dynamic",
-      "pages": [
-        {
-          "path": "publish/addLocation",
-          "style": {
-            "navigationBarTitleText": "添加标记",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "publish/dongtai",
-          "style": {
-            "navigationBarTitleText": "发布动态",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "publish/choseMatch",
-          "style": {
-            "navigationBarTitleText": "关联赛事",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "publish/dongTaiDetail",
-          "style": {
-            "navigationBarTitleText": "动态详情",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "publish/dongTaiPreview",
-          "style": {
-            "navigationBarTitleText": "动态预览",
-            "navigationStyle": "custom"
-          }
-        }
-      ]
-    },
-    {
-      "root": "user",
-      "pages": [
-        {
-          "path": "competition",
-          "style": {
-            "navigationBarTitleText": "我的赛事",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "execute",
-          "style": {
-            "navigationBarTitleText": "执行赛事",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "sponsorIndex",
-          "style": {
-            "navigationBarTitleText": "我的赞助",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "sponsorCheck",
-          "style": {
-            "navigationBarTitleText": "赞助审核",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "sponsorAlter",
-          "style": {
-            "navigationBarTitleText": "修改赞助",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "setting",
-          "style": {
-            "navigationBarTitleText": "设置"
-          }
-        },
-        {
-          "path": "account-setting",
-          "style": {
-            "navigationBarTitleText": "账号与安全"
-          }
-        },
-        {
-          "path": "updateUserInfo",
-          "style": {
-            "navigationBarTitleText": "编辑资料"
-          }
-        },
-        {
-          "path": "my-order",
-          "style": {
-            "navigationBarTitleText": "我的订单"
-          }
-        },
-        {
-          "path": "order-detail",
-          "style": {
-            "navigationBarTitleText": "订单详情"
-          }
-        }
-      ]
-    }
-  ],
-  "usingComponents": {
-    "bt": "/components/bt/bt",
-	"tabar-view":"/components/tabbar"
-  }
+	"easycom": {
+		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+	},
+	"pages": [{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页",
+				"navigationStyle": "custom",
+				"disableScroll": true
+			}
+		},
+		{
+			"path": "pages/play/play",
+			"style": {
+				"navigationBarTitleText": "去玩",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/message/message",
+			"style": {
+				"navigationBarTitleText": "消息",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/user/user",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/add/add",
+			"style": {
+				"navigationBarTitleText": "添加",
+				"navigationStyle": "custom"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8",
+		"navigationStyle": "custom"
+	},
+	"tabBar": {
+		"color": "#777B7D",
+		"selectedColor": "#1D2326",
+		"borderStyle": "black",
+		"backgroundColor": "#FFFFFF",
+		"list": [{
+				"pagePath": "pages/index/index",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/play/play",
+				"text": "去玩"
+			},
+			{
+				"pagePath": "pages/add/add",
+				"text": ""
+			},
+			{
+				"pagePath": "pages/message/message",
+				"text": "消息"
+			},
+			{
+				"pagePath": "pages/user/user",
+				"text": "我的"
+			}
+		]
+	},
+	"subPackages": [{
+			"root": "competition",
+			"pages": [{
+					"path": "publish/saishi",
+					"style": {
+						"navigationBarTitleText": "发赛事",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "publish/judge",
+					"style": {
+						"navigationBarTitleText": "裁判",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "publish/place",
+					"style": {
+						"navigationBarTitleText": "地点",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "publish/project",
+					"style": {
+						"navigationBarTitleText": "项目",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "publish/templete",
+					"style": {
+						"navigationBarTitleText": "模版",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "apply/appear",
+					"style": {
+						"navigationBarTitleText": "报名比赛",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "apply/more",
+					"style": {
+						"navigationBarTitleText": "更多赞助",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "apply/sponsor",
+					"style": {
+						"navigationBarTitleText": "赞助",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "apply/sponsorship",
+					"style": {
+						"navigationBarTitleText": "申请赞助",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "apply/pay",
+					"style": {
+						"navigationBarTitleText": "支付订单",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "apply/share",
+					"style": {
+						"navigationBarTitleText": "支付订单",
+						"navigationStyle": "custom"
+					}
+				}
+			]
+		},
+		{
+			"root": "else",
+			"pages": [{
+					"path": "play/more",
+					"style": {
+						"navigationBarTitleText": "发赛事",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "user/login",
+					"style": {
+						"navigationBarTitleText": "发赛事",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "index/markSite",
+					"style": {
+						"navigationBarTitleText": "标记",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "index/editSport",
+					"style": {
+						"navigationBarTitleText": "编辑运动",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "message/chat",
+					"style": {
+						"navigationBarTitleText": "聊天",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "message/team",
+					"style": {
+						"navigationBarTitleText": "组队",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "message/huodong",
+					"style": {
+						"navigationBarTitleText": "活动列表",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "message/search",
+					"style": {
+						"navigationBarTitleText": "搜索",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "message/challenge",
+					"style": {
+						"navigationBarTitleText": "发起挑战",
+						"navigationStyle": "custom"
+					}
+				}
+			]
+		},
+		{
+			"root": "dynamic",
+			"pages": [{
+					"path": "publish/addLocation",
+					"style": {
+						"navigationBarTitleText": "添加标记",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "publish/dongtai",
+					"style": {
+						"navigationBarTitleText": "发布动态",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "publish/choseMatch",
+					"style": {
+						"navigationBarTitleText": "关联赛事",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "publish/dongTaiDetail",
+					"style": {
+						"navigationBarTitleText": "动态详情",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "publish/dongTaiPreview",
+					"style": {
+						"navigationBarTitleText": "动态预览",
+						"navigationStyle": "custom"
+					}
+				}
+			]
+		},
+		{
+			"root": "user",
+			"pages": [{
+					"path": "competition",
+					"style": {
+						"navigationBarTitleText": "我的赛事",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "execute",
+					"style": {
+						"navigationBarTitleText": "执行赛事",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "sponsorIndex",
+					"style": {
+						"navigationBarTitleText": "我的赞助",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "sponsorCheck",
+					"style": {
+						"navigationBarTitleText": "赞助审核",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "sponsorAlter",
+					"style": {
+						"navigationBarTitleText": "修改赞助",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "setting",
+					"style": {
+						"navigationBarTitleText": "设置"
+					}
+				},
+				{
+					"path": "account-setting",
+					"style": {
+						"navigationBarTitleText": "账号与安全"
+					}
+				},
+				{
+					"path": "updateUserInfo",
+					"style": {
+						"navigationBarTitleText": "编辑资料"
+					}
+				},
+				{
+					"path": "my-order",
+					"style": {
+						"navigationBarTitleText": "我的订单"
+					}
+				},
+				{
+					"path": "order-detail",
+					"style": {
+						"navigationBarTitleText": "订单详情"
+					}
+				}
+			]
+		}
+	],
+	"usingComponents": {
+		"bt": "/components/bt/bt",
+		"tabar-view": "/components/tabbar"
+	}
 }

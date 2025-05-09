@@ -46,12 +46,12 @@ const toPath = {
       uni.navigateBack({
         delta: 1,
       });
-      showTabar && uni.showTabBar();
+      // showTabar && uni.showTabBar();
     } else {
       uni.reLaunch({
         url: "/pages/index/index",
       });
-      showTabar && uni.showTabBar();
+      // showTabar && uni.showTabBar();
     }
   },
 };
@@ -103,24 +103,22 @@ const getCodeByCity = (code) => {
   return findCityCode(provinceList, code);
 };
 
-
 /**
  * @description 去重方法
  * @param {Array} arr 去重数组
  * @param {String} key 去重依据
  * @returns 去重后的数组
- * 
-*/
-function uniqueById(arr,key='id') {
-	const map = new Map();
-	arr.forEach(item => {
-		if (!map.has(item[key])) {
-			map.set(item[key], item);
-		}
-	});
-	return Array.from(map.values());
+ *
+ */
+function uniqueById(arr, key = "id") {
+  const map = new Map();
+  arr.forEach((item) => {
+    if (!map.has(item[key])) {
+      map.set(item[key], item);
+    }
+  });
+  return Array.from(map.values());
 }
-
 
 export default {
   uniqueById,

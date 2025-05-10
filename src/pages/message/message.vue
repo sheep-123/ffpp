@@ -93,7 +93,7 @@
       </view>
     </view>
     <u-toast ref="notice"></u-toast>
-	<tabar-view :currentIndex="3"></tabar-view>
+    <tabar-view :currentIndex="3"></tabar-view>
   </view>
 </template>
 
@@ -111,9 +111,11 @@ export default {
     };
   },
   onLoad() {
+    // this.getMessageList();
+  },
+  onShow() {
     this.getMessageList();
   },
-  onShow() {},
   methods: {
     toChat(item) {
       if (item.type == 2) {
@@ -154,138 +156,7 @@ export default {
       const minutes = String(date.getMinutes()).padStart(2, "0");
       return `${year}-${month}-${day} ${hours}:${minutes}`;
     },
-    //   const user = uni.getStorageSync("user");
-    //   const data = {
-    //     From_Account: user.id,
-    //     TimeStamp: 0,
-    //     StartIndex: 0,
-    //     TopTimeStamp: 0,
-    //     TopStartIndex: 0,
-    //     AssistFlags: 15,
-    //   };
-    //   let res = await this.$api.getMessageList(data);
 
-    //   if (res.status === 200) {
-    //     this.messageList = res.data.sessionItem;
-    //     const users = this.messageList
-    //       .filter((item) => item.type !== 2)
-    //       .map((item) => item.to_Account);
-    //     const groups = this.messageList
-    //       .filter((item) => item.type === 2)
-    //       .map((item) => item.groupId);
-
-    //     // 获取用户资料
-    //     if (users.length > 0) {
-    //       const profileParams = {
-    //         To_Account: users,
-    //         TagList: ["Tag_Profile_IM_Nick", "Tag_Profile_IM_Image"],
-    //       };
-    //       const profileRes = await this.$api.getUserProfile(profileParams);
-
-    //       if (profileRes.status === 200) {
-    //         profileRes.data.userProfileItem.forEach(async (profile) => {
-    //           const matched = this.messageList.find(
-    //             (item) => item.to_Account === profile.to_Account
-    //           );
-    //           if (matched) {
-    //             // let lastMessage = messageMap[matched.to_Account] || "";
-    //             let lastMessage = matched.message || "";
-    //             if (!lastMessage) {
-    //               const data = {
-    //                 Operator_Account: uni.getStorageSync("user").id,
-    //                 Peer_Account: matched.to_Account,
-    //                 MaxCnt: 20,
-    //                 MinTime: 1,
-    //                 MaxTime: Math.floor(Date.now() / 1000) + 30,
-    //               };
-    //               const res = await this.$api.getMessageHistory(data);
-    //               if (res.status === 200 && res.data.msgList.length > 0) {
-    //                 const textElem = res.data.msgList[0].msgBody.find(
-    //                   (body) => body.MsgType === "TIMTextElem"
-    //                 );
-    //                 lastMessage = textElem?.MsgContent.Text || "";
-    //               }
-    //             }
-
-    //             matched.nick = profile.profileItem[0].value;
-    //             matched.avatar = profile.profileItem[1].value;
-    //             matched.msgTime = this.formatTime(matched.msgTime);
-    //             matched.message =
-    //               (lastMessage || "").substring(0, 20) +
-    //               (lastMessage.length > 20 ? "..." : "");
-    //           }
-    //         });
-    //       }
-    //     }
-
-    //     // 获取群组信息
-    //     if (groups.length > 0) {
-    //       const groupData = {
-    //         GroupIdList: groups,
-    //         ResponseFilter: {
-    //           GroupBaseInfoFilter: ["Name", "FaceUrl", "LastMsgTime"],
-    //         },
-    //       };
-    //       const groupRes = await this.$api.getGroupList(groupData);
-
-    //       if (groupRes.status === 200) {
-    //         groupRes.data.groupInfo.forEach(async (g) => {
-    //           const matched = this.messageList.find(
-    //             (item) => item.groupId === g.groupId
-    //           );
-    //           if (matched) {
-    //             let lastMsg = matched.groupInfo?.lastMsg || "";
-    //             if (!lastMsg) {
-    //               const result = await this.$api.getGroupHistory({
-    //                 GroupId: matched.groupId,
-    //                 ReqMsgNumber: 1,
-    //               });
-    //               if (result.status === 200) {
-    //                 const msgBody = result.data.rspMsgList[0].msgBody;
-    //                 const textElem = Array.isArray(msgBody)
-    //                   ? msgBody.find((body) => body.MsgType === "TIMTextElem")
-    //                   : msgBody?.MsgType === "TIMTextElem"
-    //                   ? msgBody
-    //                   : null;
-
-    //                 lastMsg = textElem?.MsgContent.Text || "";
-    //               }
-    //             }
-    //             this.$set(matched, "groupInfo", {
-    //               nick: g.name,
-    //               faceUrl: g.FaceUrl || "",
-    //               lastMsgTime: this.formatTime(g.lastMsgTime),
-    //               lastMsg:
-    //                 (lastMsg || "").substring(0, 20) +
-    //                 (lastMsg.length > 20 ? "..." : ""),
-    //             });
-    //           }
-    //         });
-    //       }
-    //       for (let item of this.messageList) {
-    //         if (item.type === 2 && !item.groupInfo?.lastMsg) {
-    //           const data = {
-    //             GroupId: item.groupId,
-    //             ReqMsgNumber: 1,
-    //           };
-    //           const result = await this.$api.getGroupHistory(data);
-    //           if (result.status === 200 && result.data.rspMsgList.length > 0) {
-    //             const msgBody = result.data.rspMsgList[0].msgBody;
-    //             const textElem = Array.isArray(msgBody)
-    //               ? msgBody.find((body) => body.MsgType === "TIMTextElem")
-    //               : msgBody?.MsgType === "TIMTextElem"
-    //               ? msgBody
-    //               : null;
-
-    //             item.groupInfo.lastMsg = textElem?.MsgContent.Text;
-    //           }
-    //         }
-    //       }
-    //     }
-    //     this.messageList = this.messageList.reverse();
-    //     console.log(this.messageList);
-    //   }
-    // },
     async getMessageList() {
       const user = uni.getStorageSync("user");
       const data = {
@@ -309,7 +180,6 @@ export default {
           .filter((item) => item.type === 2)
           .map((item) => item.groupId);
 
-        // 存储最终结果
         const allMessage = [];
 
         // 获取用户资料
@@ -326,31 +196,7 @@ export default {
                 (item) => item.to_Account === profile.to_Account
               );
               if (matched) {
-                let lastMessage = matched.message || "";
-                if (!lastMessage) {
-                  const historyData = {
-                    Operator_Account: user.id,
-                    Peer_Account: matched.to_Account,
-                    MaxCnt: 20,
-                    MinTime: 1,
-                    MaxTime: Math.floor(Date.now() / 1000) + 30,
-                  };
-                  const historyRes = await this.$api.getMessageHistory(
-                    historyData
-                  );
-                  if (
-                    historyRes.status === 200 &&
-                    historyRes.data.msgList?.length > 0
-                  ) {
-                    const textElem = historyRes.data.msgList[0].msgBody.find(
-                      (body) => body.MsgType === "TIMTextElem"
-                    );
-                    lastMessage = textElem?.MsgContent.Text || "";
-                  }
-                }
-
-                // 获取历史消息
-                const fullHistoryRes = await this.$api.getMessageHistory({
+                const historyRes = await this.$api.getMessageHistory({
                   Operator_Account: user.id,
                   Peer_Account: matched.to_Account,
                   MaxCnt: 20,
@@ -360,10 +206,10 @@ export default {
 
                 const messages = [];
                 if (
-                  fullHistoryRes.status === 200 &&
-                  fullHistoryRes.data.msgList?.length > 0
+                  historyRes.status === 200 &&
+                  historyRes.data.msgList?.length > 0
                 ) {
-                  fullHistoryRes.data.msgList.forEach((msg) => {
+                  historyRes.data.msgList.forEach((msg) => {
                     const textElem = msg.msgBody.find(
                       (body) => body.MsgType === "TIMTextElem"
                     );
@@ -371,17 +217,23 @@ export default {
                       messages.push({
                         text: textElem.MsgContent.Text,
                         time: msg.msgTime,
+                        isSelf: msg.from_Account == user.id,
                       });
                     }
                   });
                 }
+
+                const lastMsg =
+                  messages.length > 0
+                    ? messages[messages.length - 1]?.text
+                    : "";
 
                 allMessage.push({
                   type: 1,
                   Peer_Account: matched.to_Account,
                   nick: profile.profileItem[0]?.value || "未知用户",
                   avatar: profile.profileItem[1]?.value || "",
-                  lastMsg: lastMessage,
+                  lastMsg: lastMsg,
                   message: messages,
                   msgTime: this.formatTime(matched.msgTime),
                 });
@@ -407,24 +259,6 @@ export default {
               );
 
               if (matched) {
-                let lastMsg = matched.groupInfo?.lastMsg || "";
-                if (!lastMsg) {
-                  const result = await this.$api.getGroupHistory({
-                    GroupId: matched.groupId,
-                    ReqMsgNumber: 1,
-                  });
-                  if (
-                    result.status === 200 &&
-                    result.data.rspMsgList?.length > 0
-                  ) {
-                    const textElem = result.data.rspMsgList[0].msgBody.find(
-                      (body) => body.MsgType === "TIMTextElem"
-                    );
-                    lastMsg = textElem?.MsgContent.Text || "";
-                  }
-                }
-
-                // 获取全部群消息
                 const groupHistoryRes = await this.$api.getGroupHistory({
                   GroupId: matched.groupId,
                   ReqMsgNumber: 20,
@@ -435,18 +269,52 @@ export default {
                   groupHistoryRes.status === 200 &&
                   groupHistoryRes.data.rspMsgList?.length > 0
                 ) {
+                  const fromAccounts = [
+                    ...new Set(
+                      groupHistoryRes.data.rspMsgList.map(
+                        (msg) => msg.from_Account
+                      )
+                    ),
+                  ];
+                  const profileRes = await this.$api.getUserProfile({
+                    To_Account: fromAccounts,
+                    TagList: ["Tag_Profile_IM_Nick", "Tag_Profile_IM_Image"],
+                  });
+                  let userProfiles = {};
+                  if (
+                    profileRes.status === 200 &&
+                    profileRes.data.userProfileItem
+                  ) {
+                    // 构建一个 from_Account -> 用户信息 的映射表
+                    for (const profile of profileRes.data.userProfileItem) {
+                      const accountId = profile.to_Account;
+                      const nick = profile.profileItem[0]?.value || "匿名";
+                      const avatar = profile.profileItem[1]?.value || "";
+
+                      userProfiles[accountId] = { nick, avatar };
+                    }
+                  }
                   groupHistoryRes.data.rspMsgList.forEach((msg) => {
                     const textElem = msg.msgBody.find(
                       (body) => body.MsgType === "TIMTextElem"
                     );
+
                     if (textElem) {
                       groupMessages.push({
                         text: textElem.MsgContent.Text,
                         time: msg.msgTime,
+                        isSelf: msg.from_Account == user.id,
+                        from_Account: msg.from_Account,
+                        nick:
+                          userProfiles[msg.from_Account]?.nick || "未知用户",
+                        avatar: userProfiles[msg.from_Account]?.avatar || "",
                       });
                     }
                   });
                 }
+
+                const lastMsg =
+                  groupMessages.length > 0 ? groupMessages[0]?.text : "";
 
                 allMessage.push({
                   type: 2,
@@ -454,7 +322,7 @@ export default {
                   nick: g.name,
                   faceUrl: g.FaceUrl || "",
                   lastMsg: lastMsg,
-                  message: groupMessages,
+                  message: groupMessages.reverse(),
                   lastMsgTime: this.formatTime(g.lastMsgTime),
                 });
               }
@@ -462,14 +330,12 @@ export default {
           }
         }
 
-        // 设置 allMessage
         this.allMessage = allMessage.sort((a, b) => {
           const timeA = a.message[a.message.length - 1]?.time || 0;
           const timeB = b.message[b.message.length - 1]?.time || 0;
           return timeB - timeA;
         });
-
-        console.log("allMessage:", this.allMessage);
+        uni.setStorageSync("allMessage", this.allMessage);
       }
     },
   },

@@ -1,49 +1,8 @@
 <template>
   <view class="box">
-    <u-navbar :fixed="false">
-      <view class="nav" slot="left" @click="back">
-        <u-icon name="arrow-left" color="black"></u-icon>快速组队
-      </view>
-    </u-navbar>
+    <u-navbar :fixed="false" leftText="快速组队" autoBack> </u-navbar>
     <view class="main">
-      <view class="o-text">
-        <view class="item">
-          <view class="left">队伍人数 <view class="icon">*</view></view>
-          <view class="right" @click="toSaiShiProject"
-            ><text :style="{ color: typeName ? 'black' : '' }">{{
-              typeName || "去选择"
-            }}</text>
-            <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
-          </view>
-        </view>
-        <view class="item">
-          <view class="left">队伍标签 <view class="icon">*</view></view>
-          <view class="right" @click="toSaiShiProject"
-            ><text :style="{ color: typeName ? 'black' : '' }">{{
-              typeName || "去选择"
-            }}</text>
-            <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
-          </view>
-        </view>
-        <view class="item">
-          <view class="left">集合时间 <view class="icon">*</view></view>
-          <view class="right" @click="toSaiShiProject"
-            ><text :style="{ color: typeName ? 'black' : '' }">{{
-              typeName || "去选择"
-            }}</text>
-            <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
-          </view>
-        </view>
-        <view class="item">
-          <view class="left">集合地点 <view class="icon">*</view></view>
-          <view class="right" @click="toSaiShiProject"
-            ><text :style="{ color: typeName ? 'black' : '' }">{{
-              typeName || "去选择"
-            }}</text>
-            <u-icon name="arrow-right" size="12" color="#CCCCCC"></u-icon>
-          </view>
-        </view>
-      </view>
+      <teamSet :list="list" @item-click="handleItemClick"></teamSet>
       <view class="member">
         <view class="item">
           <view class="avatar">
@@ -273,14 +232,48 @@
         </view>
       </view>
     </u-popup>
+    <u-picker
+      :show="show1"
+      ref="uPicker"
+      :columns="columns"
+      @confirm="confirm"
+    ></u-picker>
+    <u-datetime-picker
+      :show="show2"
+      v-model="selectedTime"
+      mode="datetime"
+      @confirm="handleConfirm"
+      @cancel="show2 = false"
+    ></u-datetime-picker>
   </view>
 </template>
 
 <script>
+import teamSet from "./components/teamSet.vue";
 export default {
+  components: { teamSet },
   data() {
     return {
       show: false,
+      show1: false,
+      show2: false,
+      selectItem: null,
+      columns: [],
+      list: [
+        {
+          name: "队伍人数",
+          column: [["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]],
+          type: "select",
+        },
+        {
+          name: "运动类型",
+          type: "select",
+          column: [["足球", "篮球", "乒乓球"]],
+        },
+        { name: "集合时间", type: "time" },
+        { name: "集合地点", type: "address" },
+      ],
+      selectedTime: Date.now(),
     };
   },
   methods: {
@@ -288,6 +281,45 @@ export default {
       uni.navigateBack({
         delta: 1,
       });
+    },
+    handleItemClick({ item, index }) {
+      this.selectItem = index;
+      switch (item.type) {
+        case "time":
+          this.show2 = true;
+          break;
+        case "select":
+          this.show1 = true;
+          this.columns = item.column;
+          break;
+        case "address":
+          uni.chooseLocation({
+            success: (res) => {
+              this.$set(this.list[this.selectItem], "value", res.address);
+            },
+            fail: function () {},
+            complete: function () {},
+          });
+          break;
+      }
+    },
+    formatTime(timestamp) {
+      const date = new Date(timestamp);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
+    },
+    handleConfirm(n) {
+      const time = n.value;
+      this.list[this.selectItem].value = this.formatTime(time);
+      this.show2 = false;
+    },
+    confirm(n) {
+      this.list[this.selectItem].value = n.value[0];
+      this.show1 = false;
     },
   },
 };

@@ -7,7 +7,8 @@ const configs = {
   },
   production: {
     url: "https://testfeifanpaopao.jireplayer.com/wjapi",
-    wsUrl: `ws://192.168.3.46:8001/ws/message/${userId}`,
+    wsUrl: `wss://testfeifanpaopao.jireplayer.com/websocket/ws/message/${userId}`,
+    // wsUrl: `ws://192.168.3.46:8001/ws/message/${userId}`,
   },
 };
 

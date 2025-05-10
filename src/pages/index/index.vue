@@ -140,7 +140,8 @@
 
 				<!-- 场地 -->
 				<cover-view v-if="isMapOpen && activeNode == 'stadium'" slot="callout">
-					<cover-view :class="activeId == item.id ? 'map-callout-stadium-main' : 'map-callout-stadium-main-no'"
+					<cover-view
+						:class="activeId == item.id ? 'map-callout-stadium-main' : 'map-callout-stadium-main-no'"
 						v-for="(item, index) in markers" :key="index" :marker-id="item.id">
 						<cover-view class="map-callout-stadium">
 							<cover-view class="map-callout-stadium-box">
@@ -313,7 +314,7 @@ export default {
 		scrollViewHeight() {
 			const tabsHeight = uni.upx2px(134);
 			const marginToHeight = uni.upx2px(40);
-			return `calc(100vh - ${this.scrollY + tabsHeight + pullHeight - marginToHeight+84}px)`
+			return `calc(100vh - ${this.scrollY + tabsHeight + pullHeight - marginToHeight + 84}px)`
 		},
 		isTopTabsShow() {
 			return this.bgColor == '#fff'
@@ -333,11 +334,11 @@ export default {
 			newI <= this.topHeight ? this.bgColor = '#fff' : this.bgColor = 'transparent';
 		}
 	},
-	async onShow() { 
+	async onShow() {
 		// uni.hideTabBar()
 		this.getList();
 
-		if(uni.getStorageSync('token')&&!this.globalData.location.latitude){
+		if (uni.getStorageSync('token') && !this.globalData.location.latitude) {
 			await this.getLocation();
 			console.log('执行这里了吗')
 			this.setMapCenter(this.globalData.location.latitude, this.globalData.location.longitude);
@@ -614,8 +615,8 @@ export default {
 		// 正三角形
 		width: 0;
 		height: 0;
-		border-left: 12rpx solid transparent;
-		border-right: 12rpx solid transparent;
+		border-left: 12px solid rgba(255, 255, 255, 0);
+		border-right: 12px solid rgba(255, 255, 255, 0);
 		border-top: 18rpx solid #fff;
 		margin: 0 auto;
 
@@ -661,8 +662,10 @@ export default {
 		// 正三角形
 		width: 0;
 		height: 0;
-		border-left: 12rpx solid transparent;
-		border-right: 12rpx solid transparent;
+		border-left: 12rpx solid rgba(255, 255, 255, 0);
+		border-right: 12rpx solid rgba(255, 255, 255, 0);
+		// border-left: 12px solid rgba(255, 255, 255, 0);
+		// border-right: 12px solid rgba(255, 255, 255, 0);
 		border-top: 18rpx solid #F4F4F3;
 		margin: 0 auto;
 
@@ -710,8 +713,8 @@ export default {
 		// 正三角形
 		width: 0;
 		height: 0;
-		border-left: 12rpx solid transparent;
-		border-right: 12rpx solid transparent;
+		border-left: 12px solid rgba(255, 255, 255, 0);
+		border-right: 12px solid rgba(255, 255, 255, 0);
 		border-top: 18rpx solid #fff;
 		margin: 0 auto;
 
@@ -815,8 +818,8 @@ export default {
 		// 正三角形
 		width: 0;
 		height: 0;
-		border-left: 12rpx solid transparent;
-		border-right: 12rpx solid transparent;
+		border-left: 12px solid rgba(255, 255, 255, 0);
+		border-right: 12px solid rgba(255, 255, 255, 0);
 		border-top: 18rpx solid #F4F4F3;
 		margin: 0 auto;
 
@@ -1110,7 +1113,7 @@ export default {
 .box {
 	.map-example {
 		width: 750rpx;
-		height: calc(100vh - 84px) ;
+		height: calc(100vh - 84px);
 
 		.pull {
 			display: flex;

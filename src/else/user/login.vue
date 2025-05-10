@@ -73,8 +73,15 @@ export default {
           try {
             let result = await uni.$u.http.post("/player/login", { code });
             if (result.status == 200) {
+
+
               uni.setStorageSync("token", result.data.token);
               uni.setStorageSync("user", result.data.user);
+
+              // 调用vuex的获取用户信息 action
+              this.$store.dispatch("user/getUserInfo");
+
+
               this.$refs.notice.show({
                 type: "default",
                 message: result.message,

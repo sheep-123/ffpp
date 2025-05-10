@@ -140,7 +140,8 @@
 
 				<!-- 场地 -->
 				<cover-view v-if="isMapOpen && activeNode == 'stadium'" slot="callout">
-					<cover-view :class="activeId == item.id ? 'map-callout-stadium-main' : 'map-callout-stadium-main-no'"
+					<cover-view
+						:class="activeId == item.id ? 'map-callout-stadium-main' : 'map-callout-stadium-main-no'"
 						v-for="(item, index) in markers" :key="index" :marker-id="item.id">
 						<cover-view class="map-callout-stadium">
 							<cover-view class="map-callout-stadium-box">
@@ -230,6 +231,7 @@
 				</view>
 			</map>
 		</view>
+		<tabar-view :currentIndex="0"></tabar-view>
 	</view>
 </template>
 
@@ -271,7 +273,6 @@ export default {
 			],
 
 			// 首页内容模块
-			customEasing: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
 			globalData: app.globalData,
 			img: this.$img.home,
 			keyword: '',
@@ -313,7 +314,7 @@ export default {
 		scrollViewHeight() {
 			const tabsHeight = uni.upx2px(134);
 			const marginToHeight = uni.upx2px(40);
-			return `calc(100vh - ${this.scrollY + tabsHeight + pullHeight - marginToHeight}px)`
+			return `calc(100vh - ${this.scrollY + tabsHeight + pullHeight - marginToHeight + 84}px)`
 		},
 		isTopTabsShow() {
 			return this.bgColor == '#fff'
@@ -333,14 +334,23 @@ export default {
 			newI <= this.topHeight ? this.bgColor = '#fff' : this.bgColor = 'transparent';
 		}
 	},
-	onShow() { },
-	async onLoad() {
+	async onShow() {
+		// uni.hideTabBar()
 		this.getList();
 
-		if (!this.globalData.location.latitude) {
+		if (uni.getStorageSync('token') && !this.globalData.location.latitude) {
 			await this.getLocation();
+			console.log('执行这里了吗')
+			this.setMapCenter(this.globalData.location.latitude, this.globalData.location.longitude);
 		}
-		this.setMapCenter(this.globalData.location.latitude, this.globalData.location.longitude);
+
+	},
+	async onLoad() {
+
+		// if (!this.globalData.location.latitude) {
+		// 	await this.getLocation();
+		// }
+		// this.setMapCenter(this.globalData.location.latitude, this.globalData.location.longitude);
 	},
 	methods: {
 		topTabsChange(type) {
@@ -435,14 +445,19 @@ export default {
 		async getList() {
 			const res = await this.$requestAll.dynamics.getMainNews(this.searchParmas);
 			res.data.length ? this.loadStatus = 'loadmore' : this.loadStatus = 'nomore';
-			this.newsList = [...this.newsList, ...res.data];
+			const newsList = [...this.newsList, ...res.data];
+
+			// 去重
+			this.newsList = this.$utils.uniqueById(newsList, 'id');
 		},
 		handleTouchStart(e) {
+			console.log('执行了==========1111');
 			this.start = parseInt(e.touches[0].clientY);
 			this.difference = parseInt(e.touches[0].clientY) - this.scrollY;
 			this.isDragging = true;
 		},
 		handleTouchMove(e) {
+			console.log('执行了==========');
 			if (e.stopPropagation && (this.scrollY == this.systemInfo.windowHeight - 3)) {
 				e.stopPropagation();
 			}
@@ -600,8 +615,8 @@ export default {
 		// 正三角形
 		width: 0;
 		height: 0;
-		border-left: 12rpx solid transparent;
-		border-right: 12rpx solid transparent;
+		border-left: 12px solid rgba(255, 255, 255, 0);
+		border-right: 12px solid rgba(255, 255, 255, 0);
 		border-top: 18rpx solid #fff;
 		margin: 0 auto;
 
@@ -647,8 +662,10 @@ export default {
 		// 正三角形
 		width: 0;
 		height: 0;
-		border-left: 12rpx solid transparent;
-		border-right: 12rpx solid transparent;
+		border-left: 12rpx solid rgba(255, 255, 255, 0);
+		border-right: 12rpx solid rgba(255, 255, 255, 0);
+		// border-left: 12px solid rgba(255, 255, 255, 0);
+		// border-right: 12px solid rgba(255, 255, 255, 0);
 		border-top: 18rpx solid #F4F4F3;
 		margin: 0 auto;
 
@@ -696,8 +713,8 @@ export default {
 		// 正三角形
 		width: 0;
 		height: 0;
-		border-left: 12rpx solid transparent;
-		border-right: 12rpx solid transparent;
+		border-left: 12px solid rgba(255, 255, 255, 0);
+		border-right: 12px solid rgba(255, 255, 255, 0);
 		border-top: 18rpx solid #fff;
 		margin: 0 auto;
 
@@ -801,8 +818,8 @@ export default {
 		// 正三角形
 		width: 0;
 		height: 0;
-		border-left: 12rpx solid transparent;
-		border-right: 12rpx solid transparent;
+		border-left: 12px solid rgba(255, 255, 255, 0);
+		border-right: 12px solid rgba(255, 255, 255, 0);
 		border-top: 18rpx solid #F4F4F3;
 		margin: 0 auto;
 
@@ -903,7 +920,7 @@ export default {
 	position: fixed;
 	z-index: 111;
 	padding: 0 32rpx;
-	bottom: 48rpx;
+	bottom: calc(48rpx + 84px);
 }
 
 
@@ -1096,7 +1113,7 @@ export default {
 .box {
 	.map-example {
 		width: 750rpx;
-		height: 100vh;
+		height: calc(100vh - 84px);
 
 		.pull {
 			display: flex;

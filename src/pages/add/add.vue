@@ -1,38 +1,31 @@
 <template>
   <view class="box">
-    <image
-      src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/fabu-bg.png"
-      style="width: 100%"
-    />
+    <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/fabu-bg.png"
+      style="width: 100%" />
     <view class="main">
       <view class="tips">
-        <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/tips.png"
-        />
-        <text>你已加入泡泡365天</text>
+        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/tips.png" />
+        <text>你已加入泡泡{{
+           joinDate
+        }}天</text>
       </view>
       <view class="content">
         <view class="item" v-for="(item, index) in navList" :key="index">
-          <image
-            :src="item.imgUrl"
-            @click="$utils.toPath.navigateTo(item.path)"
-          />
+          <image :src="item.imgUrl" @click="$utils.toPath.navigateTo(item.path)" />
           <view class="title">{{ item.title }}</view>
           <view class="value">{{ item.value }}</view>
         </view>
       </view>
       <view class="delete" @click="$utils.toPath.back(true)">
-        <image
-          src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/delete.png"
-          mode="scaleToFill"
-          style="width: 24px; height: 24px"
-        />
+        <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/delete.png"
+          mode="scaleToFill" style="width: 24px; height: 24px" />
       </view>
     </view>
   </view>
 </template>
 
 <script>
+
 export default {
   data() {
     return {
@@ -68,6 +61,11 @@ export default {
       ],
     };
   },
+  computed: {
+    joinDate(){
+		return uni.getStorageSync('userInfo').joinDays||0
+	}
+  },
   onShow() {
     uni.hideTabBar();
   },
@@ -80,6 +78,7 @@ export default {
 .box {
   width: 100vw;
   height: 100vh;
+
   .main {
     width: 90%;
     margin: auto;
@@ -92,6 +91,7 @@ export default {
       align-items: center;
       padding: 4px;
       border-radius: 8rpx;
+
       image {
         width: 45px;
         height: 16px;

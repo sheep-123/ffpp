@@ -1,21 +1,31 @@
 <template>
+	<!-- 
+		订单 : 
+		根据 订单状态是否为 4、5 
+		是： 按订单状态展示 （查看）
+		否: 查看退款状态 
+		非1 ： 按退款状态展示 （查看）
+		是1：判断支付状态
+		
+	 -->
+
 	<view class="box">
 		<WNavbar title="我的订单" />
-		<u-sticky :offsetTop="(44+systemInfo.statusBarHeight)+'px'">
+		<!-- <u-sticky :offsetTop="(44+systemInfo.statusBarHeight)+'px'">
 			<view class="tabs-box">
 				<u-tabs :activeStyle="{color:'#1D2326','font-weight':600}" lineColor="#EC384A" :list="list1"></u-tabs>
 			</view>
-		</u-sticky>
+		</u-sticky> -->
 
 		<div class="search-box">
-			<u-input :value="value" @clear="clearHandle" @input="$emit('input', $event)" clearable
+			<u-input v-model="searchParmas.keywords" @clear="clearHandle" @input="$emit('input', $event)" clearable
 				:customStyle="{'background':'#FFF',height:'68rpx'}" border="none" shape="circle" placeholder="请输入订单关键词">
 				<template slot="prefix">
 					<view class="prefix-location" @click="$emit('choseAddHandle')">
 						<text>赛事</text>
-						<view class="triangle-down-999C9D">
-
-						</view>
+						<!-- <view class="triangle-down-999C9D">
+							
+						</view> -->
 					</view>
 				</template>
 				<template slot="suffix">
@@ -29,66 +39,78 @@
 		</div>
 
 		<div class="tab-btn-box">
-			<div :class="searchParmas.activeTab==item.key?'tab-btn-box_item active':'tab-btn-box_item'"
+			<div @click="tabChangleHandle(item)"
+				:class="searchParmas.paymentStatus==item.key?'tab-btn-box_item active':'tab-btn-box_item'"
 				v-for="(item,index) in tabs" :key="index">
 				{{item.value}}
 			</div>
 		</div>
 
-		<div class="order-list">
+		<div class="order-list" v-if="orderList.length" >
 			<div class="order-list_item" v-for="(item,index) in orderList" :key="index">
 				<div class="top flex-jb">
 					<div class="left flex-ac">
-						<div class="type flex-center">托管奖金</div>
-						<div class="title">{{item.name}}</div>
+						<div class="type flex-center">{{orderType[item.orderType]}}</div>
+						<div class="title">{{item.matchName}}</div>
 					</div>
 					<div class="right">
-						已支付
+						{{getOrderStatus(item).statusText}}
 					</div>
 				</div>
 				<div class="center">
 					<div class="img-box">
-						<!-- <image src="" mode=""></image> -->
+						<image :src="item.matchMainImage" mode=""></image>
 					</div>
 					<div class="info">
-						<div class="price">托管奖金 ¥500</div>
-						<div class="date">取消日期：2025-12-16 12:59:46</div>
+						<div class="price">托管奖金 ¥{{item.amount}}</div>
+						<div class="date">{{getOrderStatus(item).dateText}}：{{item.updateTime}}</div>
 					</div>
 				</div>
 				<div class="bottom">
 					<div class="btns">
-						<div class="bt1 flex-center" @click="$utils.toPath.navigateTo('/user/order-detail')" >
+						<div v-if="getOrderStatus(item).btns.includes('detail')"  class="bt1 flex-center" @click="$utils.toPath.navigateTo('/user/order-detail?orderId='+item.id)">
 							查看
+						</div>
+						<div v-if="getOrderStatus(item).btns.includes('pay')"  class="bt1 flex-center" @click="$utils.toPath.navigateTo('/user/order-detail?orderId='+item.id)">
+							去支付
+						</div>
+						<div v-if="getOrderStatus(item).btns.includes('back')"  class="bt1 flex-center" @click="$utils.toPath.navigateTo('/user/order-detail?orderId='+item.id)">
+							退款
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		
+		<emptyPage text="暂无订单信息" v-else ></emptyPage>
 	</view>
 </template>
 
 
 <script>
 	const app = getApp();
-	import WNavbar from '@/components/WNavbar/index.vue'
+	import WNavbar from '@/components/WNavbar/index.vue';
+	import emptyPage from '@/components/emptyPage/index.vue'
 	export default {
 		components: {
 			WNavbar,
+			emptyPage
 		},
 		data() {
 			return {
+				orderType: {
+					'1': '托管奖金',
+					'2': '赞助奖金',
+					'3': '报名费',
+				},
 				value: '',
 				list1: [{
 					name: '支付',
 				}, {
 					name: '收入',
 				}],
-				searchParmas: {
-					value: '',
-					activeTab: 0,
-				},
 				tabs: [{
-						key: 0,
+						key: '',
 						value: '全部'
 					},
 					{
@@ -104,20 +126,94 @@
 						value: '已发放'
 					},
 				],
-				orderList: [{
-					id: 1,
-					type: '1',
-					name: '非凡泡泡16人制羽毛球单打赛',
-					price: 500,
-					time: '2025-12-16 12:59:46',
-					status: 0
-				}, ]
+				searchParmas: {
+					// userId:uni.getStorageSync('user').id,
+					userId: 4,
+					page: 1,
+					size: 10,
+					paymentStatus: '',
+					keywords: ''
+				},
+				orderList: []
 			}
 		},
 		onReachBottom() {
-
+		
 		},
-		async onLoad() {},
+		methods: {
+			getOrderStatus(item) {
+				// 订单 : 
+				// 根据 订单状态是否为 4、5 
+				// 是： 按订单状态展示 （查看）
+				// 否: 查看退款状态 
+				// 非1 ： 按退款状态展示 （查看）
+				// 是1：判断支付状态
+				// 按钮 detai:查看 pay:支付  back:退款
+				if (item.orderStatus == '4' || item.orderStatus == '5') {
+					return {
+						statusText: item.orderStatus == '4' ? '已取消' : '过期未支付',
+						dateText:'取消日期',
+						btns:['detai']
+					}
+				} else {
+					if (item.refundStatus != '1') {
+						// 发起退款
+						const obj = {
+							'2': '部分退款',
+							'3': '全额退款',
+							'4': '退款处理中',
+							'5': '退款失败'
+						}
+						return {
+							statusText: obj[item.refundStatus],
+							dateText:'退款日期',
+							btns:['detai']
+						}
+					} else {
+						const obj = {
+							'1': '未支付',
+							'2': '支付成功',
+							'3': '支付失败'
+						}
+						let btns = ['detail']
+						item.paymentStatus=='1'&&(btns = ['pay']);
+						item.paymentStatus=='2'&&(btns.push('back'));
+						return {
+							statusText: obj[item.paymentStatus],
+							dateText:'支付日期',
+							btns
+						}
+
+					}
+				}
+			},
+			clearHandle() {
+				this.searchParmas.keywords = '';
+				this.startFn();
+			},
+			searchHandle() {
+				this.startFn();
+			},
+
+			startFn() {
+				this.searchParmas.page = 1;
+				this.orderList = [];
+				this.getList();
+			},
+			async getList() {
+				const res = await this.$requestAll.user.getMyOrderList(this.searchParmas);
+				const orderList = [...this.orderList, ...res.data.content]
+				this.orderList = this.$utils.uniqueById(orderList, 'id');
+			},
+			tabChangleHandle(e) {
+				this.searchParmas.paymentStatus = e.key;
+				this.startFn();
+
+			}
+		},
+		onLoad() {
+			this.getList();
+		},
 	}
 </script>
 
@@ -141,16 +237,18 @@
 
 	.order-list {
 		padding: 0 24rpx;
-	
+
 		&_item {
 			padding: 30rpx;
 			border-radius: 8rpx;
 			background-color: #fff;
-			.bottom{
-				.btns{
+			margin-bottom: 24rpx;
+			.bottom {
+				.btns {
 					display: flex;
 					flex-direction: row-reverse;
-					.bt1{
+
+					.bt1 {
 						width: 128rpx;
 						height: 56rpx;
 						border-radius: 56rpx 56rpx 56rpx 56rpx;
@@ -158,38 +256,45 @@
 						font-weight: 400;
 						font-size: 28rpx;
 						color: #1D2326;
+						margin-left: 24rpx;
 					}
 				}
 			}
-			.center{
+
+			.center {
 				display: flex;
 				margin-bottom: 24rpx;
-				.img-box{
+
+				.img-box {
 					width: 124rpx;
 					height: 124rpx;
 					border-radius: 8rpx;
 					overflow: hidden;
 					margin-right: 24rpx;
 					background-color: #F7F7F7;
-					>image{
+
+					>image {
 						width: 100%;
 						height: 100%;
 					}
 				}
-				.info{
-					.price{
+
+				.info {
+					.price {
 						font-weight: 600;
 						font-size: 24rpx;
 						color: #1D2326;
 						margin-bottom: 16rpx;
 					}
-					.date{
+
+					.date {
 						font-weight: 400;
 						font-size: 24rpx;
-						color: rgba(29,35,38,0.6);
+						color: rgba(29, 35, 38, 0.6);
 					}
 				}
 			}
+
 			.top {
 				margin-bottom: 24rpx;
 
@@ -211,10 +316,11 @@
 						color: #1D2326;
 					}
 				}
-				.right{
+
+				.right {
 					font-weight: 400;
 					font-size: 24rpx;
-					color: rgba(29,35,38,0.6);
+					color: rgba(29, 35, 38, 0.6);
 				}
 
 			}

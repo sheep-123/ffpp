@@ -5,7 +5,7 @@
 		}"></view>
 		<WNavbar bgColor="rgba(0,0,0,0)">
 			<view slot="left">
-				<view class="back">
+				<view class="back" @click="$utils.toPath.back()" >
 					<u-icon name="arrow-left" color="#fff"></u-icon>
 				</view>
 			</view>
@@ -72,7 +72,7 @@
 							</view>
 						</view>
 						<view class="right">
-							<text>去获得</text>
+							<!-- <text>去获得</text> -->
 							<image
 								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
 								mode="scaleToFill" style="width: 12px; height: 12px" />
@@ -89,7 +89,7 @@
 							</view>
 						</view>
 						<view class="right">
-							<text>去获得</text>
+							<!-- <text>去获得</text> -->
 							<image
 								src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/right.png"
 								mode="scaleToFill" style="width: 12px; height: 12px" />

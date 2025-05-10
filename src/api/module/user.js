@@ -15,4 +15,19 @@ export default {
             params
         })
     },
+	// 获取我的订单 /userPage/getUserOrderInfo
+	getMyOrderList(data){
+		return defHttp.get('/userPage/getUserOrderInfo',data)
+	},
+	// 获取修改用户信息源数据 /userPage/getUserBasicInfo
+	getUserBasicInfo(userId){
+		return defHttp.get('/userPage/getUserBasicInfo',{userId})
+	},
+    // 修改用户信息 /userPage/updateUserBasicInfo
+    updateUserBasicInfo(data){
+        return defHttp.post('/userPage/updateUserBasicInfo',{
+            userId:uni.getStorageSync('user').id,
+            ...data
+        })
+    },
 }

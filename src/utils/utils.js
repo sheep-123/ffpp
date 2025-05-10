@@ -63,7 +63,8 @@ const uploadImg = (requestUrl, filePath, params) => {
   });
   return new Promise((resolve, reject) => {
     uni.uploadFile({
-      url: config.url+requestUrl,
+      // url: config.url+requestUrl,
+      url: 'https://testfeifanpaopao.jireplayer.com/wjapi'+requestUrl,
       filePath,
       name: "file",
       fileType: "image",

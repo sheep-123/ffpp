@@ -92,7 +92,7 @@
           <view class="item" @click="$utils.toPath.navigateTo('/user/my-order')">
             <view class="left">
               <view class="v1">我的订单</view>
-              <view class="v2">新增赛事6个</view>
+              <!-- <view class="v2">新增赛事6个</view> -->
             </view>
 
             <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/我的订单.png"
@@ -101,7 +101,7 @@
           <view class="item" @click="$utils.toPath.navigateTo('/user/competition')">
             <view class="left">
               <view class="v1">我的赛事</view>
-              <view class="v2">新增课程2个</view>
+              <!-- <view class="v2">新增课程2个</view> -->
             </view>
 
             <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/我的赛事icon.png"
@@ -110,7 +110,7 @@
           <view class="item" @click="$utils.toPath.navigateTo('/user/sponsorIndex')">
             <view class="left">
               <view class="v1">我的赞助</view>
-              <view class="v2">新增课程2个</view>
+              <!-- <view class="v2">新增课程2个</view> -->
             </view>
 
             <image src="https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/我的赞助.png"
@@ -168,10 +168,10 @@ export default {
   },
   computed: {
    bgImg(){
-    if(!this.userInfo.backgroundImage){
+    if(!this.userInfo.background_image){
       return `linear-gradient( 180deg, rgba(0,0,0,0) 0%, #030303 100%), url(/static/templateImage/user/defaultBack.png)`
     }else{
-      return `url(${this.userInfo.backgroundImage})`
+      return `url(${this.userInfo.background_image})`
     }
    }
   },
@@ -511,14 +511,13 @@ export default {
     }
 
     .dt {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20rpx;
-      background: #fafafa;
-      border-radius: 40rpx;
-      padding: 20rpx;
-      padding: 20rpx;
-      padding-bottom: 84px;
+     column-count: 2;
+     column-gap: 20rpx;
+     // background: #ffffff;
+     border-radius: 40rpx;
+     padding: 20rpx; // 新增内边距
+     // box-shadow: 0px -2px 8px 0px rgba(168, 186, 197, 0.2);
+     box-sizing: border-box;
 
       .item {
         width: 100%;

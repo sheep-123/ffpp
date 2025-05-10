@@ -3289,7 +3289,7 @@ export default {
             matchId: this.matchId,
             serialNum: this.serialNum,
             list: arr,
-            saveState: "1",
+            saveState: "2",
           });
         }
       } catch (err) {

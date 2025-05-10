@@ -548,6 +548,62 @@ export default {
 </script>
 
 <style lang="scss">
+/* 公共变量定义 */
+$primary-color: #2A8ABA;
+$danger-color: #EC384A;
+$dark-text: #1D2326;
+$light-bg: #FFFFFF;
+$inactive-bg: #F4F4F3;
+$common-radius: 20rpx;
+$common-padding: 12rpx;
+
+/* 公共混合器 */
+@mixin flex-center {
+	display: flex;
+	align-items: center;
+}
+
+@mixin flex-column-center {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+@mixin full-size {
+	width: 100%;
+	height: 100%;
+}
+
+@mixin circle-icon($size) {
+	width: $size;
+	height: $size;
+	border-radius: 50%;
+}
+
+@mixin triangle($color) {
+	width: 0;
+	height: 0;
+	border-left: 6rpx solid rgba(255, 255, 255, 0);
+	border-right: 6rpx solid rgba(255, 255, 255, 0);
+	border-top: 9rpx solid $color;
+	margin: 0 auto;
+}
+
+@mixin status-tag {
+	font-weight: 600;
+	font-size: 20rpx;
+	margin-right: 12rpx;
+}
+
+@mixin callout-container($width, $height, $bg-color) {
+	width: $width;
+	height: $height;
+	background: $bg-color;
+	border-radius: $common-radius;
+	box-sizing: border-box;
+}
+
+/* 站点标记 */
 .site-mark {
 	position: absolute;
 	top: 60%;
@@ -557,44 +613,37 @@ export default {
 	height: 128rpx;
 
 	>image {
-		width: 100%;
-		height: 100%;
+		@include full-size;
 	}
 }
 
+/* 征召样式 */
 .invitation-box {
-	width: 200rpx;
-	height: 108rpx;
-	background: #FFFFFF;
-	border-radius: 20rpx;
-	padding: 12rpx;
-	box-sizing: border-box;
+	@include callout-container(200rpx, 108rpx, $light-bg);
+	padding: $common-padding;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 
 	.invitation-bottom {
-		display: flex;
-		align-items: center;
+		@include flex-center;
 
 		&_type1 {
 			font-weight: 600;
 			font-size: 20rpx;
-			color: #2A8ABA;
+			color: $primary-color;
 			margin-right: 8rpx;
 		}
 
 		&_num {
 			font-weight: 400;
 			font-size: 24rpx;
-			color: rgba(29, 35, 38, 0.6);
+			color: rgba($dark-text, 0.6);
 		}
 	}
 
 	.invitation-top {
-		display: flex;
-		align-items: center;
-		// margin-bottom: 8rpx;
+		@include flex-center;
 
 		&_img {
 			width: 56rpx;
@@ -605,35 +654,22 @@ export default {
 		&_title {
 			font-weight: 600;
 			font-size: 24rpx;
-			color: #1D2326;
+			color: $dark-text;
 		}
 	}
 }
 
+/* 场馆选中状态 */
 .map-callout-stadium-main {
 	.sanjiao {
-		// 正三角形
-		width: 0;
-		height: 0;
-		border-left: 12px solid rgba(255, 255, 255, 0);
-		border-right: 12px solid rgba(255, 255, 255, 0);
-		border-top: 18rpx solid #fff;
-		margin: 0 auto;
-
+		@include triangle($light-bg);
 	}
 
 	.map-callout-stadium {
-		width: 220rpx;
-		height: 122rpx;
-		background: #fff;
-		border-radius: 20rpx;
-		box-sizing: border-box;
-
+		@include callout-container(220rpx, 122rpx, $light-bg);
 
 		.map-callout-stadium-box {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
+			@include flex-column-center;
 
 			.map-callout-stadium-img {
 				width: 82rpx;
@@ -642,47 +678,31 @@ export default {
 
 			.map-callout-stadium-title {
 				width: 220rpx;
-				padding: 0 12rpx;
+				padding: 0 $common-padding;
 				box-sizing: border-box;
 				text-align: center;
 				font-weight: 600;
 				text-overflow: ellipsis;
 				font-size: 24rpx;
-				color: rgba(29, 35, 38);
+				color: $dark-text;
 			}
 		}
-
 	}
 }
 
+/* 场馆未选中状态 */
 .map-callout-stadium-main-no {
 	opacity: .8;
 
 	.sanjiao {
-		// 正三角形
-		width: 0;
-		height: 0;
-		border-left: 12rpx solid rgba(255, 255, 255, 0);
-		border-right: 12rpx solid rgba(255, 255, 255, 0);
-		// border-left: 12px solid rgba(255, 255, 255, 0);
-		// border-right: 12px solid rgba(255, 255, 255, 0);
-		border-top: 18rpx solid #F4F4F3;
-		margin: 0 auto;
-
+		@include triangle($inactive-bg);
 	}
 
 	.map-callout-stadium {
-		width: 220rpx;
-		height: 122rpx;
-		background: #F4F4F3;
-		border-radius: 20rpx;
-		box-sizing: border-box;
-
+		@include callout-container(220rpx, 122rpx, $inactive-bg);
 
 		.map-callout-stadium-box {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
+			@include flex-column-center;
 
 			.map-callout-stadium-img {
 				width: 82rpx;
@@ -691,72 +711,40 @@ export default {
 
 			.map-callout-stadium-title {
 				width: 220rpx;
-				padding: 0 12rpx;
+				padding: 0 $common-padding;
 				box-sizing: border-box;
 				text-align: center;
 				font-weight: 600;
 				text-overflow: ellipsis;
 				font-size: 24rpx;
-				color: rgba(29, 35, 38, 0.6);
+				color: rgba($dark-text, 0.6);
 			}
 		}
-
 	}
 }
 
-
-// 地图选中的样式
-.map-callout-match {
-	position: relative;
-
-	.sanjiao {
-		// 正三角形
-		width: 0;
-		height: 0;
-		border-left: 12px solid rgba(255, 255, 255, 0);
-		border-right: 12px solid rgba(255, 255, 255, 0);
-		border-top: 18rpx solid #fff;
-		margin: 0 auto;
-
-	}
-
+/* 通用地图气泡类 */
+.map-callout-base {
 	.map-callout {
-		width: 260rpx;
-		height: 122rpx;
-		background: #FFFFFF;
-		border-radius: 20rpx;
-		padding: 12rpx 8rpx;
-		box-sizing: border-box;
-		// background-image: url(https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/定位.png);
-
-
 		.bottom {
-			display: flex;
-			align-items: center;
-
-			.type2 {
-				font-weight: 600;
-				font-size: 20rpx;
-				color: #2A8ABA;
-				margin-right: 12rpx;
-			}
+			@include flex-center;
 
 			.type1 {
-				font-weight: 600;
-				font-size: 20rpx;
-				color: #EC384A;
-				margin-right: 12rpx;
+				@include status-tag;
+				color: $danger-color;
+			}
+
+			.type2 {
+				@include status-tag;
+				color: $primary-color;
 			}
 
 			.avatar-box {
-				display: flex;
-				align-items: center;
+				@include flex-center;
 
 				.add {
-					width: 24rpx;
-					height: 24rpx;
+					@include circle-icon(24rpx);
 					background: #CECECE;
-					border-radius: 50%;
 					display: flex;
 					align-items: center;
 					justify-content: center;
@@ -764,22 +752,19 @@ export default {
 				}
 
 				.avatar-item {
-					width: 24rpx;
-					height: 24rpx;
-					border-radius: 50%;
+					@include circle-icon(24rpx);
 					overflow: hidden;
 					margin-right: -6rpx;
 
 					>image {
-						width: 100%;
-						height: 100%;
+						@include full-size;
 					}
 				}
 			}
 		}
 
 		.top {
-			display: flex;
+			@include flex-center;
 			margin-bottom: 10rpx;
 
 			.img-box {
@@ -789,8 +774,7 @@ export default {
 				margin-right: 4rpx;
 
 				>cover-image {
-					width: 100%;
-					height: 100%;
+					@include full-size;
 					border-radius: 50%;
 				}
 			}
@@ -800,11 +784,26 @@ export default {
 				height: 56rpx;
 				font-weight: 600;
 				font-size: 24rpx;
-				color: #1D2326;
+				color: $dark-text;
 				line-height: 56rpx;
 				text-overflow: ellipsis;
 			}
 		}
+	}
+}
+
+// 地图选中的样式
+.map-callout-match {
+	position: relative;
+	@extend .map-callout-base;
+
+	.sanjiao {
+		@include triangle($light-bg);
+	}
+
+	.map-callout {
+		@include callout-container(260rpx, 122rpx, $light-bg);
+		padding: $common-padding 8rpx;
 	}
 }
 
@@ -813,106 +812,19 @@ export default {
 	// 整块背景模糊
 	opacity: .8;
 	z-index: 999;
+	@extend .map-callout-base;
 
 	.sanjiao {
-		// 正三角形
-		width: 0;
-		height: 0;
-		border-left: 12px solid rgba(255, 255, 255, 0);
-		border-right: 12px solid rgba(255, 255, 255, 0);
-		border-top: 18rpx solid #F4F4F3;
-		margin: 0 auto;
-
+		@include triangle($inactive-bg);
 	}
 
 	.map-callout {
-		width: 260rpx;
-		height: 122rpx;
-		background: #F4F4F3;
-
-		border-radius: 20rpx;
-		padding: 12rpx 8rpx;
-		box-sizing: border-box;
-		// background-image: url(https://testfeifanpaopao.jireplayer.com/download/upload/ffpp_xcx/images/定位.png);
-
-
-		.bottom {
-			display: flex;
-			align-items: center;
-
-			.type1 {
-				font-weight: 600;
-				font-size: 20rpx;
-				color: #EC384A;
-				margin-right: 12rpx;
-			}
-
-			.type2 {
-				font-weight: 600;
-				font-size: 20rpx;
-				color: #2A8ABA;
-				margin-right: 12rpx;
-			}
-
-			.avatar-box {
-				display: flex;
-				align-items: center;
-
-				.add {
-					width: 24rpx;
-					height: 24rpx;
-					background: #CECECE;
-					border-radius: 50%;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					color: #fff;
-				}
-
-				.avatar-item {
-					width: 24rpx;
-					height: 24rpx;
-					border-radius: 50%;
-					overflow: hidden;
-					margin-right: -6rpx;
-
-					>image {
-						width: 100%;
-						height: 100%;
-					}
-				}
-			}
-		}
-
-		.top {
-			display: flex;
-			margin-bottom: 10rpx;
-
-			.img-box {
-				display: inline-block;
-				width: 56rpx;
-				height: 56rpx;
-				margin-right: 4rpx;
-
-				>cover-image {
-					width: 100%;
-					height: 100%;
-					border-radius: 50%;
-				}
-			}
-
-			.title {
-				width: 172rpx;
-				height: 56rpx;
-				font-weight: 600;
-				font-size: 24rpx;
-				color: #1D2326;
-				line-height: 56rpx;
-				text-overflow: ellipsis;
-			}
-		}
+		@include callout-container(260rpx, 122rpx, $inactive-bg);
+		padding: $common-padding 8rpx;
 	}
 }
+
+
 
 .map-bottom-info {
 	width: 750rpx;

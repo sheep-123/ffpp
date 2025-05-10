@@ -21,7 +21,7 @@
               :fileList="fileList"
               @afterRead="afterRead"
               @delete="deletePic"
-              accept="image"
+              accept="all"
               name="6"
               multiple
               :maxCount="18"

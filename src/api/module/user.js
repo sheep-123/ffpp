@@ -30,4 +30,12 @@ export default {
             ...data
         })
     },
+    // 关注用户 /userInteraction/follow
+    followUser(data){
+        return defHttp.post('/userInteraction/follow',data)
+    },
+    // 取消关注用户 /userInteraction/unfollow
+    unfollowUser(data){
+        return defHttp.post('/userInteraction/unfollow',data)
+    },
 }

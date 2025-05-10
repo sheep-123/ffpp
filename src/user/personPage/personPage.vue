@@ -25,8 +25,8 @@
 						<view style="margin-right:12rpx;" >
 							<u-icon size="26" name="chat"></u-icon>
 						</view>
-						<view class="bt" @click="visible = true">
-							关注
+						<view class="bt" @click="fllowHandle">
+							{{ userInfo.isFollowing ? '已关注' : '关注' }}
 						</view>
 					</div>
 				</view>
@@ -174,6 +174,21 @@ export default {
 		};
 	},
 	methods: {
+		async fllowHandle() {
+			const data = {
+				followedId: this.userId,
+				userId: uni.getStorageSync('user').id,
+			};
+			const res = await this.$requestAll.user[this.userInfo.isFollowing?'unfollowUser':'followUser'](data);
+			if (res.status == 200) {
+				this.$utils.toast(this.userInfo.isFollowing ? '关注成功' : '取消关注成功');
+				this.getUserInfo();
+			} else {
+				this.$utils.toast(res.message);
+			}
+			// this.userInfo.isFollowing = !this.userInfo.isFollowing;
+			// this.$requestAll.user.fllowUser(this.userId, this.userInfo.isFollowing ? 1 : 0);
+		},
 		change(e) {
 			this.current = e.index;
 			console.log(this.current, "当前选中");

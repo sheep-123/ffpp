@@ -1041,7 +1041,6 @@ export default {
       });
       if (result.status == 200) {
         this.gameList = result.data;
-        uni.setStorageSync("gameList", this.gameList);
         this.getMatchHitGroup();
       }
     },
@@ -1095,9 +1094,10 @@ export default {
       }
     },
     async apply() {
-      const validate = this.applyData.some((item) => {
-        return item.applyMust === "1" && !item.value;
-      });
+      // 表单校验
+      const validate = this.applyData.some(
+        (item) => item.applyMust === "1" && !item.value
+      );
       if (validate) {
         this.$refs.notice.show({
           type: "default",
@@ -1105,11 +1105,67 @@ export default {
         });
         return;
       }
-      uni.setStorageSync("requestJson", this.oldApplyData);
-      uni.setStorageSync("responseJson", this.applyData);
-      uni.navigateTo({
-        url: `/competition/apply/pay?matchId=${this.matchId}&&way=${this.way}&&serialNum=${this.serialNum}&&templateId=${this.templateId}&&teamType=${this.teamType}&&amount=${this.total}&&number=${this.number}&&teamType=${this.teamType}`,
-      });
+
+      try {
+        // 注册用户信息
+        let registerResult;
+        if (this.way == 1) {
+          registerResult = await uni.$u.http.post("/match/saveMatchRegister", {
+            matchId: this.matchId,
+            serialNum: this.serialNum,
+            templateId: this.templateId,
+            way: this.way,
+            userId: uni.getStorageSync("user").id,
+            requestJson: this.oldApplyData,
+            responseJson: this.applyData,
+            amount: this.total,
+            scheId: this.gameList[0].scheId,
+          });
+        } else if (this.way == 2) {
+          registerResult = await uni.$u.http.post(
+            "/match/saveMatchRegisterTeam",
+            {
+              matchId: this.matchId,
+              serialNum: this.serialNum,
+              templateId: this.templateId,
+              way: this.teamType,
+              amount: this.total,
+              users: [
+                {
+                  userId: uni.getStorageSync("user").id,
+                  requestJson: this.oldApplyData,
+                  responseJson: this.applyData,
+                },
+              ],
+              scheId: this.gameList[0].scheId,
+            }
+          );
+        }
+
+        // 创建微信订单
+        const orderResult = await uni.$u.http.post("/wechat/createOrder", {
+          total: String(0.01),
+          // total: String(this.total),
+          desc: "非常好",
+          orderType: 3,
+          matchId: this.matchId,
+          userId: uni.getStorageSync("user").id,
+          registerNum: this.way === 1 ? 1 : this.number,
+        });
+
+        if (orderResult.status === 200) {
+          const params = orderResult.data.wechatResponse;
+          uni.setStorageSync("wechatOrderParams", params);
+          uni.navigateTo({
+            url: `/competition/apply/pay?matchId=${this.matchId}&amount=${this.total}`,
+          });
+        }
+      } catch (error) {
+        this.$refs.notice.show({
+          type: "default",
+          message: error?.data?.message || "提交失败，请重试",
+        });
+      }
     },
     async getMatchTemplateRegister() {
       try {

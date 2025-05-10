@@ -7,7 +7,7 @@ import uView from "uview-ui";
 import minxi from "@/mixins/index.js";
 import img from "./api/img";
 import jk from "./api/api";
-import store from '@/store/index.js';
+import store from "@/store/index.js";
 import tabar from "@/components/tabbar";
 Vue.component("tabar-view", tabar);
 Vue.use(uView);

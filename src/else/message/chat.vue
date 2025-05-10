@@ -237,6 +237,7 @@ export default {
       this.Peer_Account = options.Peer_Account;
       this.nick = options.nick;
       this.avatar = options.avatar;
+      this.cleanUserNotRead();
       // 先从缓存获取消息
       const cached = this.allMessage.find(
         (item) => item.Peer_Account === this.Peer_Account
@@ -407,6 +408,7 @@ export default {
               (item) => item.Peer_Account === this.Peer_Account
             );
             if (userIndex >= 0) {
+              this.allMessage[userIndex].lastMsg = messageItem.text;
               this.allMessage[userIndex].message.push(messageItem);
             } else {
               this.allMessage.push({
@@ -415,6 +417,7 @@ export default {
                 nick: this.nick,
                 avatar: this.avatar,
                 message: [messageItem],
+                lastMsg: messageItem.text,
               });
             }
             uni.setStorageSync("allMessage", this.allMessage);
@@ -452,6 +455,7 @@ export default {
               (item) => item.GroupId === this.GroupId
             );
             if (groupIndex >= 0) {
+              this.allMessage[groupIndex].lastMsg = messageItem.text;
               this.allMessage[groupIndex].message.push(messageItem);
             } else {
               this.allMessage.push({
@@ -459,6 +463,7 @@ export default {
                 GroupId: this.GroupId,
                 nick: this.nick,
                 message: [messageItem],
+                lastMsg: messageItem.text,
               });
             }
             uni.setStorageSync("allMessage", this.allMessage);
@@ -576,6 +581,26 @@ export default {
           }));
           this.memberList = info;
         }
+      }
+    },
+    async cleanUserNotRead() {
+      try {
+        const data = {
+          Report_Account: uni.getStorageSync("user").id,
+          Peer_Account: this.Peer_Account,
+        };
+        var result = await this.$api.cleanUserNotRead(data);
+        if (result.status == 200) {
+          const index = this.allMessage.findIndex(
+            (item) => item.Peer_Account === this.Peer_Account
+          );
+          if (index >= 0) {
+            this.allMessage[index].unreadCount = 0;
+            uni.setStorageSync("allMessage", this.allMessage);
+          }
+        }
+      } catch (err) {
+        console.log(err);
       }
     },
   },

@@ -60,7 +60,7 @@
               :src="item.type == 1 ? item.avatar : item.groupInfo.faceUrl"
               size="48"
             ></u-avatar>
-            <view class="dian"></view>
+            <view class="dian" v-if="item.unreadCount > 0"></view>
           </view>
 
           <view class="right">
@@ -98,7 +98,9 @@
 </template>
 
 <script>
+import newMessageMixin from "@/mixins/newMessageMixin";
 export default {
+  mixins: [newMessageMixin],
   data() {
     return {
       keyword: "",
@@ -107,16 +109,21 @@ export default {
       typeList: ["玩家", "小队", "场地"],
       typeIndex: 0,
       status: "loadmore",
-      allMessage: [],
+      allMessage: uni.getStorageSync("allMessage") || [],
     };
   },
   onLoad() {
-    // this.getMessageList();
+    this.loadChatData();
   },
   onShow() {
-    this.getMessageList();
+    this.allMessage = uni.getStorageSync("allMessage") || [];
   },
   methods: {
+    async onNewMessage(data) {
+      setTimeout(() => {
+        this.allMessage = uni.getStorageSync("allMessage") || [];
+      }, 1500);
+    },
     toChat(item) {
       if (item.type == 2) {
         uni.navigateTo({
@@ -155,6 +162,219 @@ export default {
       const hours = String(date.getHours()).padStart(2, "0");
       const minutes = String(date.getMinutes()).padStart(2, "0");
       return `${year}-${month}-${day} ${hours}:${minutes}`;
+    },
+    dian(value) {
+      return value.substring(0, 20) + (value.length > 20 ? "..." : "");
+    },
+    async loadChatData() {
+      const user = uni.getStorageSync("user");
+      const data = {
+        From_Account: user.id,
+        TimeStamp: 0,
+        StartIndex: 0,
+        TopTimeStamp: 0,
+        TopStartIndex: 0,
+        AssistFlags: 15,
+      };
+
+      try {
+        // 1. 获取会话列表
+        let res = await this.$api.getMessageList(data);
+        if (res.status !== 200) throw new Error("获取会话失败");
+
+        const sessionItems = res.data.sessionItem;
+
+        const users = sessionItems
+          .filter((item) => item.type !== 2)
+          .map((item) => item.to_Account);
+        const groups = sessionItems
+          .filter((item) => item.type === 2)
+          .map((item) => item.groupId);
+
+        const allMessage = [];
+
+        // 2. 获取用户资料
+        let profileMap = {};
+        if (users.length > 0) {
+          const profileRes = await this.$api.getUserProfile({
+            To_Account: users,
+            TagList: ["Tag_Profile_IM_Nick", "Tag_Profile_IM_Image"],
+          });
+
+          if (profileRes.status === 200) {
+            profileRes.data.userProfileItem.forEach((profile) => {
+              profileMap[profile.to_Account] = {
+                nick: profile.profileItem[0]?.value || "未知用户",
+                avatar: profile.profileItem[1]?.value || "",
+              };
+            });
+          }
+        }
+
+        // 3. 获取单聊所有消息 + 最后一条消息 + 用户信息
+        const chatPromises = sessionItems
+          .filter((item) => item.type === 1)
+          .map(async (matched) => {
+            const historyRes = await this.$api.getMessageHistory({
+              Operator_Account: user.id,
+              Peer_Account: matched.to_Account,
+              MaxCnt: 20,
+              MinTime: 0,
+              MaxTime: Math.floor(Date.now() / 1000),
+            });
+
+            let messages = [];
+            let lastMsg = "";
+            if (
+              historyRes.status === 200 &&
+              historyRes.data.msgList?.length > 0
+            ) {
+              messages = historyRes.data.msgList.map((msg) => {
+                const textElem = msg.msgBody.find(
+                  (body) => body.MsgType === "TIMTextElem"
+                );
+                return {
+                  text: textElem?.MsgContent.Text || "",
+                  time: msg.msgTime,
+                  isSelf: msg.from_Account == user.id,
+                };
+              });
+
+              lastMsg =
+                messages.length > 0 ? messages[messages.length - 1]?.text : "";
+            }
+
+            return {
+              type: 1,
+              Peer_Account: matched.to_Account,
+              ...profileMap[matched.to_Account],
+              lastMsg: this.dian(lastMsg),
+              message: messages, // ✅ 完整消息数组
+              msgTime: this.formatTime(matched.msgTime),
+            };
+          });
+
+        const chatResults = await Promise.all(chatPromises);
+        allMessage.push(...chatResults);
+
+        // 4. 获取群组信息 + 所有消息 + 最后一条消息
+        if (groups.length > 0) {
+          const groupRes = await this.$api.getGroupList({
+            GroupIdList: groups,
+            ResponseFilter: {
+              GroupBaseInfoFilter: ["Name", "FaceUrl", "LastMsgTime"],
+            },
+          });
+
+          if (groupRes.status === 200) {
+            for (const g of groupRes.data.groupInfo) {
+              const matched = sessionItems.find(
+                (item) => item.groupId === g.groupId
+              );
+              if (!matched) continue;
+
+              const groupHistoryRes = await this.$api.getGroupHistory({
+                GroupId: matched.groupId,
+                ReqMsgNumber: 20,
+              });
+
+              let groupMessages = [];
+              let lastMsg = "";
+
+              if (
+                groupHistoryRes.status === 200 &&
+                groupHistoryRes.data.rspMsgList?.length > 0
+              ) {
+                const fromAccounts = [
+                  ...new Set(
+                    groupHistoryRes.data.rspMsgList.map(
+                      (msg) => msg.from_Account
+                    )
+                  ),
+                ];
+
+                const profileRes = await this.$api.getUserProfile({
+                  To_Account: fromAccounts,
+                  TagList: ["Tag_Profile_IM_Nick", "Tag_Profile_IM_Image"],
+                });
+
+                let userProfiles = {};
+                if (
+                  profileRes.status === 200 &&
+                  profileRes.data.userProfileItem
+                ) {
+                  profileRes.data.userProfileItem.forEach((profile) => {
+                    userProfiles[profile.to_Account] = {
+                      nick: profile.profileItem[0]?.value || "匿名",
+                      avatar: profile.profileItem[1]?.value || "",
+                    };
+                  });
+                }
+
+                groupMessages = groupHistoryRes.data.rspMsgList.map((msg) => {
+                  const textElem = msg.msgBody.find(
+                    (body) => body.MsgType === "TIMTextElem"
+                  );
+                  return {
+                    text: textElem?.MsgContent.Text || "",
+                    time: msg.msgTime,
+                    isSelf: msg.from_Account == user.id,
+                    from_Account: msg.from_Account,
+                    nick: userProfiles[msg.from_Account]?.nick || "未知用户",
+                    avatar: userProfiles[msg.from_Account]?.avatar || "",
+                  };
+                });
+
+                lastMsg = groupMessages[0]?.text || "";
+              }
+
+              allMessage.push({
+                type: 2,
+                GroupId: g.groupId,
+                nick: g.name,
+                faceUrl: g.FaceUrl || "",
+                lastMsg: this.dian(lastMsg),
+                message: groupMessages.reverse(),
+                lastMsgTime: this.formatTime(g.lastMsgTime),
+              });
+            }
+          }
+        }
+
+        // 5. 获取未读数
+        const peerAccounts = allMessage
+          .filter((item) => item.type === 1)
+          .map((item) => item.Peer_Account);
+
+        const unreadRes = await this.$api.getUserUnreadCount({
+          To_Account: user.id,
+          Peer_Account: peerAccounts,
+        });
+
+        const unreadMap = {};
+        if (unreadRes.status === 200 && unreadRes.data.c2CUnreadMsgNumList) {
+          unreadRes.data.c2CUnreadMsgNumList.forEach((item) => {
+            unreadMap[item.peer_Account] = item.c2CUnreadMsgNum || 0;
+          });
+        }
+
+        // 6. 合并未读数 & 排序
+        const updatedAllMessage = allMessage
+          .map((item) => ({
+            ...item,
+            unreadCount: unreadMap[item.Peer_Account] || 0,
+          }))
+          .sort((a, b) => {
+            const timeA = a.message[a.message.length - 1]?.time || 0;
+            const timeB = b.message[b.message.length - 1]?.time || 0;
+            return timeB - timeA;
+          });
+
+        this.allMessage = updatedAllMessage;
+        uni.setStorageSync("allMessage", this.allMessage);
+      } catch (err) {
+        console.error("加载聊天数据失败:", err);
+      }
     },
 
     async getMessageList() {
@@ -233,7 +453,7 @@ export default {
                   Peer_Account: matched.to_Account,
                   nick: profile.profileItem[0]?.value || "未知用户",
                   avatar: profile.profileItem[1]?.value || "",
-                  lastMsg: lastMsg,
+                  lastMsg: this.dian(lastMsg),
                   message: messages,
                   msgTime: this.formatTime(matched.msgTime),
                 });
@@ -321,7 +541,7 @@ export default {
                   GroupId: g.groupId,
                   nick: g.name,
                   faceUrl: g.FaceUrl || "",
-                  lastMsg: lastMsg,
+                  lastMsg: this.dian(lastMsg),
                   message: groupMessages.reverse(),
                   lastMsgTime: this.formatTime(g.lastMsgTime),
                 });
@@ -336,6 +556,43 @@ export default {
           return timeB - timeA;
         });
         uni.setStorageSync("allMessage", this.allMessage);
+      }
+    },
+    async getUserUnreadCount() {
+      try {
+        const user = uni.getStorageSync("user");
+        const allMessage = this.allMessage;
+        const peerAccounts = allMessage
+          .filter((item) => item.type === 1) // type=1 是单聊
+          .map((item) => item.Peer_Account);
+
+        const result = await this.$api.getUserUnreadCount({
+          To_Account: user.id,
+          Peer_Account: peerAccounts, // 动态传入所有单聊用户
+        });
+
+        if (result.status === 200) {
+          const unreadList = result.data.unreadList || [];
+
+          const unreadMap = {};
+          unreadList.forEach((item) => {
+            const key = item.Peer_Account || item.GroupId;
+            unreadMap[key] = item.unreadCount || 0;
+          });
+
+          const updatedAllMessage = this.allMessage.map((item) => {
+            const key = item.Peer_Account || item.GroupId;
+            return {
+              ...item,
+              unreadCount: unreadMap[key] || 0,
+            };
+          });
+
+          this.allMessage = updatedAllMessage;
+          uni.setStorageSync("allMessage", this.allMessage);
+        }
+      } catch (err) {
+        console.error("获取未读消息失败:", err);
       }
     },
   },

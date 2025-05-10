@@ -32,4 +32,10 @@ export default {
   getGroupMember(params) {
     return uni.$u.http.post("/api/im/group/member/info", params);
   },
+  cleanUserNotRead(params) {
+    return uni.$u.http.post("/api/im/message/unread/clean", params);
+  },
+  getUserUnreadCount(params) {
+    return uni.$u.http.post("/api/im/message/unread/count", params);
+  },
 };

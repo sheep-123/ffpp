@@ -131,7 +131,7 @@
             style="width: 90px; height: 90px; border-radius: 4px"
             mode="aspectFill"
           />
-          <view class="buttom">
+          <view class="buttom" v-show="item.recentUsers.length > 0">
             <u-avatar-group
               :urls="item.recentUsers"
               size="18"
